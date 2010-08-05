@@ -1,8 +1,7 @@
-package org.brailleblaster.JliblouisX;
+package org.brailleblaster.jllouislibs;
 
 public class Jliblouisutdml
 {
-
   public static final int dontInit = 1;
   public static final int htmlDoc = 2;
 
