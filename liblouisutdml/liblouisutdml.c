@@ -148,7 +148,7 @@ lbu_translateString (const char *configFileName,
   int inlen = strlen (inbuf);
   if (!read_configuration_file
       (configFileName, logFileName, settingsString, mode))
-      return 0;
+    return 0;
   ud->inbuf = inbuf;
   ud->inlen = inlen;
   ud->outbuf = (widechar *) outbuf;
@@ -187,20 +187,22 @@ lbu_translateString (const char *configFileName,
 
 int
   EXPORT_CALL lbu_translateFile
-  (char *configFileName, char *inFileName, char *outFileName, 
-const char *logFileName, const char *settingsString, unsigned
-   int mode)
+  (char *configFileName, char *inFileName, char *outFileName,
+   const char *logFileName, const char *settingsString, unsigned int mode)
 {
 /* Translate the well-formed xml expression in inFileName into 
 * braille according to the specifications in configFileName. If the 
-* expression is not well-formed or there are other errors, print 
-* an error message and return 0.*/
+* expression is not well-formed or there are other errors, 
+* return 0. */
   widechar outbuf[2 * BUFSIZE];
+  widechar pagebuf[2 * BUFSIZE];
   if (!read_configuration_file
       (configFileName, logFileName, settingsString, mode))
-      return 0;
+    return 0;
   ud->outbuf = outbuf;
   ud->outlen = (sizeof (outbuf) / CHARSIZE) - 4;
+  ud->pagebuf = pagebuf;
+  ud->pagelen = (sizeof (pagebuf) / CHARSIZE) - 4;
   if (strcmp (outFileName, "stdout"))
     {
       if (!(ud->outFile = fopen (outFileName, "w")))
@@ -220,16 +222,15 @@ const char *logFileName, const char *settingsString, unsigned
 
 int
   EXPORT_CALL lbu_translateTextFile
-  (char *configFileName, char *inFileName, char *outFileName, 
-const char *logFileName, const char *settingsString, unsigned
-   int mode)
+  (char *configFileName, char *inFileName, char *outFileName,
+   const char *logFileName, const char *settingsString, unsigned int mode)
 {
 /* Translate the text file in inFileName into braille according to
 * the specifications in configFileName. If there are errors, print 
 * an error message and return 0.*/
   if (!read_configuration_file
       (configFileName, logFileName, settingsString, mode))
-      return 0;
+    return 0;
   if (strcmp (inFileName, "stdin"))
     {
       if (!(ud->inFile = fopen (inFileName, "r")))
@@ -262,14 +263,13 @@ int EXPORT_CALL
 lbu_backTranslateString (const char *configFileName,
 			 char *inbuf, unsigned char *outbuf,
 			 int *outlen,
-			 const char *logFileName, const char 
-*settingsString,
-			 unsigned int mode)
+			 const char *logFileName, const char
+			 *settingsString, unsigned int mode)
 {
   int inlen = strlen (inbuf);
   if (!read_configuration_file
       (configFileName, logFileName, settingsString, mode))
-      return 0;
+    return 0;
   ud->inbuf = inbuf;
   ud->inlen = inlen;
   ud->outbuf = (widechar *) outbuf;
@@ -282,9 +282,8 @@ lbu_backTranslateString (const char *configFileName,
 
 int
   EXPORT_CALL lbu_backTranslateFile
-  (char *configFileName, char *inFileName, char *outFileName, 
-const char *logFileName, const char *settingsString, unsigned
-   int mode)
+  (char *configFileName, char *inFileName, char *outFileName,
+   const char *logFileName, const char *settingsString, unsigned int mode)
 {
 /* Back translate the braille file in inFileName into either an 
 * xml file or a text file according to
@@ -292,7 +291,7 @@ const char *logFileName, const char *settingsString, unsigned
 * error message and return 0.*/
   if (!read_configuration_file
       (configFileName, logFileName, settingsString, mode))
-      return 0;
+    return 0;
   if (strcmp (inFileName, "stdin"))
     {
       if (!(ud->inFile = fopen (inFileName, "r")))
