@@ -535,6 +535,22 @@ compileConfig (FileInfo * nested)
     "38",
     "braillePageNumber",
     "39",
+    "mergeUnnumberedPages",
+    "40",
+    "pageNumberTopSeparateLine",
+    "41",
+    "pageNumberBottomSeparateLine",
+    "42",
+    "printPageNumberRange",
+    "43",
+    "pageSeparator",
+    "44",
+    "pageSeparatorNumber",
+    "45",
+    "ignoreEmptyPages",
+    "46",
+    "continuePages",
+    "47",
     "style",
     "90",
     NULL
@@ -746,6 +762,38 @@ compileConfig (FileInfo * nested)
 	case 39:
 	  ud->braille_page_number = atoi (nested->value);
 	  break;
+	case 40:
+	  if ((k = checkValues (nested, yesNo)) != NOTFOUND)
+	    ud->merge_unnumbered_pages = k;
+	  break;
+	case 41:
+	  if ((k = checkValues (nested, yesNo)) != NOTFOUND)
+	    ud->page_number_top_separate_line = k;
+	  break;
+	case 42:
+	  if ((k = checkValues (nested, yesNo)) != NOTFOUND)
+	    ud->page_number_bottom_separate_line = k;
+	  break;
+	case 43:
+	  if ((k = checkValues (nested, yesNo)) != NOTFOUND)
+	    ud->print_page_number_range = k;
+	  break;
+	case 44:
+	  if ((k = checkValues (nested, yesNo)) != NOTFOUND)
+	    ud->page_separator = k;
+	  break;
+	case 45:
+	  if ((k = checkValues (nested, yesNo)) != NOTFOUND)
+	    ud->page_separator_number = k;
+	  break;
+	case 46:
+	  if ((k = checkValues (nested, yesNo)) != NOTFOUND)
+	    ud->ignore_empty_pages = k;
+	  break;
+	case 47:
+	  if ((k = checkValues (nested, yesNo)) != NOTFOUND)
+	    ud->continue_pages = k;
+	  break;
 	case 90:
 	  {
 	    static const char *actions[] = {
@@ -933,6 +981,14 @@ read_configuration_file (const char *configFileList, const char
       ud->outlen_so_far = 0;
       ud->lines_on_page = 0;
       ud->braille_page_number = ud->beginning_braille_page_number;
+      ud->print_page_number_first[0] = '_';
+      ud->print_page_number[1] = 0;
+      ud->print_page_number_first[1] = 0;
+      ud->print_page_number_last[0] = 0;
+      ud->page_separator_number_first[0] = 0;
+      ud->page_separator_number_first[0] = 0;
+      ud->pagelen_so_far = 0;
+      ud->fill_pages = 0;
       return 1;
     }
   lbu_free ();
