@@ -11,17 +11,17 @@
    All rights reserved
 
    This file is free software; you can redistribute it and/or modify it
-   under the terms of the Lesser or Library GNU General Public License 
+   under the terms of the Lesser or Library GNU General Public License
    as published by the
    Free Software Foundation; either version 3, or (at your option) any
    later version.
 
    This file is distributed in the hope that it will be useful, but
    WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    Library GNU General Public License for more details.
 
-   You should have received a copy of the Library GNU General Public 
+   You should have received a copy of the Library GNU General Public
    License along with this program; see the file COPYING.  If not, write to
    the Free Software Foundation, 51 Franklin Street, Fifth Floor,
    Boston, MA 02110-1301, USA.
@@ -52,10 +52,32 @@ static char tempFileName[MAXNAMELEN];
 static int saved_udContents;
 static int saved_linesOnPage;
 static int saved_braillePageNumber;
+static widechar saved_printPageNumber[MAXNUMLEN];
+static widechar saved_printPageNumberFirst[MAXNUMLEN];
+static widechar saved_printPageNumberLast[MAXNUMLEN];
+static BrlPageNumFormat saved_braillePageNumberFormat;
+static StyleRecord *styleSpec;
 
 int
 initialize_contents (void)
 {
+    int k;
+    saved_braillePageNumberFormat = ud->brl_page_num_format;
+
+    for (k = 0; ud->print_page_number[k]; k++) {
+        saved_printPageNumber[k] = ud->print_page_number[k];
+    }
+    saved_printPageNumber[k] = 0;
+    for (k = 0; ud->print_page_number_first[k]; k++) {
+        saved_printPageNumberFirst[k] = ud->print_page_number_first[k];
+    }
+    saved_printPageNumberFirst[k] = 0;
+    for (k = 0; ud->print_page_number_last[k]; k++) {
+        saved_printPageNumberLast[k] = ud->print_page_number_last[k];
+    }
+    saved_printPageNumberLast[k] = 0;
+
+    ud->after_contents = 1;
   saved_udContents = ud->contents;
   saved_linesOnPage = ud->lines_on_page;
   saved_braillePageNumber = ud->braille_page_number;
@@ -159,8 +181,25 @@ make_contents (void)
   ud->outFile = saved_outFile;
   if (firstHeading != NULL)
     {
+        int k;
       ud->lines_on_page = saved_linesOnPage;
       ud->braille_page_number = saved_braillePageNumber;
+        styleSpec = &ud->style_stack[ud->style_top];
+        styleSpec->curBrlNumFormat = saved_braillePageNumberFormat;
+        ud->brl_page_num_format = saved_braillePageNumberFormat;
+
+        for (k = 0; saved_printPageNumber[k]; k++) {
+            ud->print_page_number[k] = saved_printPageNumber[k];
+        }
+        ud->print_page_number[k] = 0;
+        for (k = 0; saved_printPageNumberFirst[k]; k++) {
+            ud->print_page_number_first[k] = saved_printPageNumberFirst[k];
+        }
+        ud->print_page_number_first[k] = 0;
+        for (k = 0; saved_printPageNumberLast[k]; k++) {
+            ud->print_page_number_last[k] = saved_printPageNumberLast[k];
+        }
+        ud->print_page_number_last[k] = 0;
       do_newpage ();
       ud->contents = 2;
       currentHeading = firstHeading;
