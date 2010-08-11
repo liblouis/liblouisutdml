@@ -1,7 +1,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.59)
-AC_INIT(liblouisutdml, 1.2.0, john.boyer@abilitiessoft.com)
+AC_INIT(liblouisutdml, 1.3.0, john.boyer@abilitiessoft.com)
 AC_CONFIG_SRCDIR([liblouisutdml/semantics.c])
 AC_CONFIG_HEADER([liblouisutdml/config.h])
 # AM_MAINTAINER_MODE
@@ -15,7 +15,7 @@ LIBLOUISUTDML_CURRENT=1
 
 # increment any time the source changes; set to
 #  0 if you increment CURRENT
-LIBLOUISUTDML_REVISION=2
+LIBLOUISUTDML_REVISION=3
 
 # increment if any interfaces have been added; set to 0
 #  if any interfaces have been changed or removed. removal has
@@ -78,6 +78,7 @@ esac
 AC_CONFIG_FILES([Makefile
 	 gnulib/Makefile
        doc/Makefile
+	java/Makefile
 	 man/Makefile
        lbu_files/Makefile
       liblouisutdml/Makefile

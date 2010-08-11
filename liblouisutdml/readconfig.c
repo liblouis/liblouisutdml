@@ -632,7 +632,7 @@ compileConfig (FileInfo * nested)
 	  break;
 	case 11:
 	  if ((k = checkValues (nested, topBottom)) != NOTFOUND)
-	    ud->print_page_number_at = ud->braille_page_number_at = k;
+	    ud->print_page_number_at = k;
 	  break;
 	case 12:
 	  if ((k = checkValues (nested, topBottom)) != NOTFOUND)
@@ -641,7 +641,7 @@ compileConfig (FileInfo * nested)
 		k = 0;
 	      else
 		k = 1;
-	      ud->print_page_number_at = ud->braille_page_number_at = k;
+	      ud->print_page_number_at = k;
 	    }
 	  break;
 	case 13:
@@ -919,10 +919,6 @@ compileConfig (FileInfo * nested)
 	  continue;
 	}
     }
-  if (!((ud->print_page_number_at && ud->braille_page_number_at) ||
-	(!ud->print_page_number_at && !ud->braille_page_number_at)))
-    configureError (nested,
-		    "invalid combination of braille and print page number placements");
   return 1;
 }
 

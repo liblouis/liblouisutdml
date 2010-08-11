@@ -3026,6 +3026,7 @@ end_style ()
   ud->brl_page_num_format = styleSpec->curBrlNumFormat;
   insert_translation (ud->main_braille_table);
   styleBody ();
+  if (!ud->after_contents)
   finishStyle ();
   memcpy (&prevStyleSpec, styleSpec, sizeof (prevStyleSpec));
   prevStyle = prevStyleSpec.style;
