@@ -73,7 +73,7 @@ include louisutdml.h */
 
   int EXPORT_CALL lbu_translateString
     (const char *configFileName,
-     char *inbuf, unsigned char *outbuf, int *outlen,
+     const char *inbuf, int inlen, unsigned char *outbuf, int *outlen,
      const char *logFileName, const char *settingsString, unsigned int mode);
 
 /* This function takes a well-formed xml expression in inbuf and
@@ -96,25 +96,25 @@ if a conplete translation could not be done.  */
 
   int EXPORT_CALL lbu_backTranslateString
     (const char *configFileName,
-     char *inbuf, unsigned char *outbuf, int *outlen,
+     const char *inbuf, int inlen, unsigned char *outbuf, int *outlen,
      const char *logFileName, const char *settingsString, unsigned int mode);
 
-  int EXPORT_CALL lbu_translateFile (char *configFileName, char
+  int EXPORT_CALL lbu_translateFile (const char *configFileName, const char
 				     *inputFileName,
-				     char *outputFileName,
+				     const char *outputFileName,
 				     const char *logFileName,
 				     const char *settingsString,
 				     unsigned int mode);
 
-  int EXPORT_CALL lbu_translateTextFile (char *configFileName, char
-					 *inputFileName,
-					 char *outputFileName,
+  int EXPORT_CALL lbu_translateTextFile (const char *configFileName,
+					 const char *inputFileName,
+					 const char *outputFileName,
 					 const char *logFileName,
 					 const char *settingsString,
 					 unsigned int mode);
-  int EXPORT_CALL lbu_backTranslateFile (char *configFileName,
-					 char *inputFileName,
-					 char *outputFileName,
+  int EXPORT_CALL lbu_backTranslateFile (const char *configFileName,
+					 const char *inputFileName,
+					 const char *outputFileName,
 					 const char *logFileName,
 					 const char *settingsString,
 					 unsigned int mode);

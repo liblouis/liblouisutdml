@@ -20,6 +20,8 @@ liblouisutdml_la_LDFLAGS =	\
 	$(BASE_DEPENDENCIES_LIBS)
 
 liblouisutdml_la_SOURCES =			\
+	../java/Jliblouisutdml.h \
+	../java/Jliblouisutdml.c \
 	change_table.c \
 	makeContents.c \
 	examine_document.c \

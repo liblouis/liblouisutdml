@@ -38,8 +38,8 @@ change_table (xmlNode * node)
 {
   xmlNode *child;
   int branchCount = 0;
-  char *oldTable;
-  char *newTable;
+  const char *oldTable;
+  const char *newTable;
   char completePath[MAXNAMELEN];
   newTable = (char *) get_attr_value (node);
   if (strlen ((char *) newTable) < 5)

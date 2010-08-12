@@ -134,18 +134,16 @@ lbu_initialize (const char *configFileName,
 
 int EXPORT_CALL
 lbu_translateString (const char *configFileName,
-		     char *inbuf, unsigned char *outbuf,
+		     const char *inbuf, int inlen, unsigned char *outbuf,
 		     int *outlen,
 		     const char *logFileName, const char *settingsString,
 		     unsigned int mode)
 {
 /* Translate the well-formed xml expression in inbuf into braille 
 * according to the specifications in configFileName. If the expression 
-* is not well-formed or there are oteer errors, print an error 
-* message and return 0.*/
+* is not well-formed or there are oteer errors, return 0.*/
   int k;
   char *xmlInbuf;
-  int inlen = strlen (inbuf);
   if (!read_configuration_file
       (configFileName, logFileName, settingsString, mode))
     return 0;
@@ -163,7 +161,7 @@ lbu_translateString (const char *configFileName,
       return 1;
     }
   if (inbuf[k + 1] == '?')
-    xmlInbuf = inbuf;
+   xmlInbuf = (char *)inbuf;
   else
     {
       inlen += strlen (ud->xml_header);
@@ -187,8 +185,9 @@ lbu_translateString (const char *configFileName,
 
 int
   EXPORT_CALL lbu_translateFile
-  (char *configFileName, char *inFileName, char *outFileName,
-   const char *logFileName, const char *settingsString, unsigned int mode)
+  (const char *configFileName, const char *inFileName,
+   const char *outFileName, const char *logFileName,
+   const char *settingsString, unsigned int mode)
 {
 /* Translate the well-formed xml expression in inFileName into 
 * braille according to the specifications in configFileName. If the 
@@ -222,8 +221,9 @@ int
 
 int
   EXPORT_CALL lbu_translateTextFile
-  (char *configFileName, char *inFileName, char *outFileName,
-   const char *logFileName, const char *settingsString, unsigned int mode)
+  (const char *configFileName, const char *inFileName,
+   const char *outFileName, const char *logFileName,
+   const char *settingsString, unsigned int mode)
 {
 /* Translate the text file in inFileName into braille according to
 * the specifications in configFileName. If there are errors, print 
@@ -261,12 +261,12 @@ int
 
 int EXPORT_CALL
 lbu_backTranslateString (const char *configFileName,
-			 char *inbuf, unsigned char *outbuf,
+			 const char *inbuf, int inlen, unsigned char
+			 *outbuf,
 			 int *outlen,
 			 const char *logFileName, const char
 			 *settingsString, unsigned int mode)
 {
-  int inlen = strlen (inbuf);
   if (!read_configuration_file
       (configFileName, logFileName, settingsString, mode))
     return 0;
@@ -282,8 +282,9 @@ lbu_backTranslateString (const char *configFileName,
 
 int
   EXPORT_CALL lbu_backTranslateFile
-  (char *configFileName, char *inFileName, char *outFileName,
-   const char *logFileName, const char *settingsString, unsigned int mode)
+  (const char *configFileName, const char *inFileName,
+   const char *outFileName, const char *logFileName,
+   const char *settingsString, unsigned int mode)
 {
 /* Back translate the braille file in inFileName into either an 
 * xml file or a text file according to

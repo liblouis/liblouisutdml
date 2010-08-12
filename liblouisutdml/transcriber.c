@@ -81,7 +81,7 @@ static int writeOutbufDirect (void);
 static char *makeRomanNumber (int n);
 static int utd_start ();
 static int utd_finish ();
-static int utd_insert_translation (char *table);
+static int utd_insert_translation (const char *table);
 static void utd_insert_text (xmlNode * node, int length);
 static int utd_makeBlankLines (int number, int beforeAfter);
 static int utd_startStyle (void);
@@ -388,7 +388,7 @@ minimum (int x, int y)
 }
 
 int
-insert_utf8 (unsigned char *text)
+insert_utf8 (const unsigned char *text)
 {
   int length = strlen ((char *) text);
   int charsToDo = 0;
@@ -402,7 +402,7 @@ insert_utf8 (unsigned char *text)
     {
       /*Handle buffer overflow */
       StyleType *style = find_current_style ();
-      char *table;
+      const char *table;
       if (style == NULL)
 	style = lookup_style ("para");
       switch (style->action)
@@ -444,7 +444,7 @@ insert_utfwc (widechar * text, int length)
 }
 
 int
-insert_translation (char *table)
+insert_translation (const char *table)
 {
   int translationLength;
   int translatedLength;
@@ -486,7 +486,7 @@ insert_translation (char *table)
   ud->text_length = 0;
   if (!k)
     {
-      table[0] = 0;
+      table = NULL;
       return 0;
     }
   if ((ud->translated_length + translatedLength) < MAX_TRANS_LENGTH)
@@ -2317,7 +2317,7 @@ static int
 editTrans (void)
 {
   if (!(ud->contents == 2) && !(style->format == computerCoded) &&
-      *ud->edit_table_name && (ud->has_math || ud->has_chem || ud->has_music))
+      ud->edit_table_name && (ud->has_math || ud->has_chem || ud->has_music))
     {
       translationLength = ud->translated_length;
       translatedLength = MAX_TRANS_LENGTH;
@@ -2326,7 +2326,7 @@ editTrans (void)
 				&translationLength, ud->text_buffer,
 				&translatedLength, NULL, NULL, 0))
 	{
-	  ud->edit_table_name[0] = 0;
+	  ud->edit_table_name = NULL;
 	  return 0;
 	}
       translatedBuffer = ud->text_buffer;
@@ -3343,7 +3343,7 @@ makeNewline (xmlNode * parent, int start)
 }
 
 static int
-utd_insert_translation (char *table)
+utd_insert_translation (const char *table)
 {
   int translationLength;
   int translatedLength;
@@ -3364,7 +3364,7 @@ utd_insert_translation (char *table)
   ud->text_length = 0;
   if (!k)
     {
-      table[0] = 0;
+      table = NULL;
       return 0;
     }
   if ((ud->translated_length + translatedLength) < MAX_TRANS_LENGTH)

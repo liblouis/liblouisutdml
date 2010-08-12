@@ -212,16 +212,16 @@ main (int argc, char **argv)
 	fclose (inputFile);
       outbufx = malloc (memSize);
       outlenx = memSize;
-      if (lbu_translateString (configurationFileName, memArea, 
+      if (lbu_translateString (configurationFileName, memArea, 2000,
 (unsigned char *) outbufx,
 			       &outlenx, NULL, NULL, 0) < 0)
 	printf ("Error 1\n");
       outlenx = memSize;
-      if (lbu_translateString (configurationFileName, memArea, 
+/*      if (lbu_translateString (configurationFileName, memArea, 
 (unsigned char *) outbufx,
 			       &outlenx, NULL, NULL, 1) < 0)
 	printf ("error 2\n");
-      for (k = 0; k < outlenx; k++)
+*/      for (k = 0; k < outlenx; k++)
 	fputc ((char) outbufx[k], outputFile);
       if (outputFile != stdout)
 	fclose (outputFile);

@@ -5,7 +5,7 @@ This is ../../doc/liblouisutdml.info, produced by makeinfo version 4.11 from ../
 * Liblouisutdml: (liblouisutdml). An xml to Braille Translation Library.
 END-INFO-DIR-ENTRY
 
-   This manual is for liblouisutdml (version 1.2.0, 10 August 2010), an
+   This manual is for liblouisutdml (version 1.3.0, 10 August 2010), an
 xml to Braille Translation Library.
 
    This file may contain code borrowed from the Linux screenreader
@@ -35,7 +35,7 @@ File: liblouisutdml.info,  Node: Top,  Next: Introduction,  Prev: (dir),  Up: (d
 Liblouisutdml User's and Programmer's Manual
 ********************************************
 
-This manual is for liblouisutdml (version 1.2.0, 10 August 2010), an
+This manual is for liblouisutdml (version 1.3.0, 10 August 2010), an
 xml to Braille Translation Library.
 
    This file may contain code borrowed from the Linux screenreader
