@@ -1,0 +1,48 @@
+#! /bin/bash
+
+usage () {
+  cat <<"EOF"
+
+msword2brl [OPTION] infile outfile
+
+Options:
+  --help     Print this message
+  --version  Print version information
+
+Infile must be a Microsoft Word file. The script first calls the
+`antiword' program, so you must have this installed on your machine.
+`antiword' is called with `-x db', which causes the output to be in
+docbook format. This is piped to `xml2brl'. The output file from
+`xml2brl' contains much of the formatting, including emphasis, of the
+word file.
+EOF
+}
+
+version () {
+    cat <<EOF
+$(basename $0) @VERSION@
+Copyright (C) 2004-2007 ViewPlus Technologies, Inc.
+Copyright (C) 2007,2008 JJB Software, Inc.
+License LGPL: GNU LGPL <http://gnu.org/licenses/lgpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+Written by John J. Boyer
+EOF
+}
+
+while [ $# -gt 0 ]; do
+  case "$1" in
+    -h | --help | -help )
+      usage
+      exit 0 ;;
+    --version )
+      version
+      exit 0 ;;
+    * )
+      break ;;
+  esac
+done
+
+antiword -x db $1 | xml2brl >$2
+

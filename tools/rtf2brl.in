@@ -1,0 +1,47 @@
+#! /bin/bash
+
+usage () {
+  cat <<"EOF"
+
+rtf2brl [OPTION] infile outfile
+
+Options:
+  --help     Print this message
+  --version  Print version information
+
+Infile must be a rich-text (rtf) file. The script first calls the
+`rtf2xml' program, so you must have this installed on your machine.
+You can find it on the downloads page of www.abilitiessoft.com.
+rtf2brl produces an xml file with the root element `doc'. This is
+piped to `xml2brl'. The output file from `xml2brl' contains much of
+the formatting, including emphasis, of the rtf file.
+EOF
+}
+
+version () {
+    cat <<EOF
+$(basename $0) @VERSION@
+Copyright (C) 2004-2009 ViewPlus Technologies, Inc.
+Copyright (C) 2007,2009 Abilitiessoft, Inc.
+License LGPL: GNU LGPL <http://gnu.org/licenses/lgpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+Written by John J. Boyer
+EOF
+}
+
+while [ $# -gt 0 ]; do
+  case "$1" in
+    -h | --help | -help )
+      usage
+      exit 0 ;;
+    --version )
+      version
+      exit 0 ;;
+    * )
+      break ;;
+  esac
+done
+
+rtf2xml $1 |xml2brl >$2
