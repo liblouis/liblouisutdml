@@ -50,6 +50,6 @@ public class Jliblouisutdml
 
   static
   {
-    System.loadLibrary ("Jliblouisxml");
+    System.loadLibrary ("liblouisutdml");
   }
 }
