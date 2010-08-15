@@ -1,6 +1,12 @@
-package org.brailleblaster.jllouislibs;
+//package org.brailleblaster.jllouislibs;
 
-public class Jfile2brl;
+//import org.brailleblaster.jlouislibs.*;
+
+public class Jfile2brl
 {
+public static void main (String[] args)
+{
+Jliblouisutdml bindings = new Jliblouisutdml ();
+}
 }
 
