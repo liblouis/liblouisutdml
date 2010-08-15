@@ -15,7 +15,7 @@ AM_LDFLAGS =	\
 	$(BASE_DEPENDENCIES_LDFLAGS)
 
 bin_PROGRAMS = \
-	utdml2brl \
+	file2brl \
 	lbu_devonly
 
 bin_SCRIPTS = \
@@ -25,6 +25,6 @@ bin_SCRIPTS = \
 
 CLEANFILES = $(bin_SCRIPTS)
 
-utdml2brl_SOURCES = utdml2brl.c
+file2brl_SOURCES = file2brl.c
 
 lbu_devonly_SOURCES = lbu_devonly.c
