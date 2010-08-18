@@ -33,6 +33,7 @@ static const char *semNames[] = {
   "boxline",
   "italicx",
   "boldx",
+  "underlinex",
   "linespacing",
   "blankline",
   "softreturn",

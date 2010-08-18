@@ -1385,13 +1385,26 @@ insert_text (xmlNode * node)
   switch (ud->stack[ud->top])
     {
     case italicx:
+if (!(ud->emphasis & italic))
+break;
       memset (&ud->typeform[ud->old_text_length], italic, wcLength);
       break;
+    case underlinex:
+if (!(ud->emphasis & underline))
+break;
+      memset (&ud->typeform[ud->old_text_length], underline, wcLength);
+      break;
     case boldx:
+if (!(ud->emphasis & bold))
+break;
       memset (&ud->typeform[ud->old_text_length], bold, wcLength);
       break;
     case compbrl:
-      memset (&ud->typeform[ud->old_text_length], computer_braille, wcLength);
+
+if (!(ud->emphasis & computer_braille))
+break;
+      memset 
+(&ud->typeform[ud->old_text_length], computer_braille, wcLength);
       break;
     default:
       break;
@@ -3410,12 +3423,23 @@ utd_insert_text (xmlNode * node, int length)
   switch (ud->stack[ud->top])
     {
     case italicx:
+if (!(ud->emphasis & italic))
+break;
       memset (&ud->typeform[ud->old_text_length], italic, wcLength);
       break;
+    case underlinex:
+if (!(ud->emphasis & underline))
+break;
+      memset (&ud->typeform[ud->old_text_length], underline, wcLength);
+      break;
     case boldx:
+if (!(ud->emphasis & bold))
+break;
       memset (&ud->typeform[ud->old_text_length], bold, wcLength);
       break;
     case compbrl:
+if (!(ud->emphasis & computer_braille))
+break;
       memset (&ud->typeform[ud->old_text_length], computer_braille, wcLength);
       break;
     default:
