@@ -429,23 +429,28 @@ orValues (FileInfo * nested, const char **values)
   int k;
   int word = 0;
   int wordLength = 0;
-{
-  for (k = 0; values[k]; k += 2)
-    if (nested->valueLength == strlen (values[k]) &&
-	ignoreCaseComp (values[k], nested->value, nested->valueLength) == 0)
-{
-result |= atoi (values[k + 1]);
-      break;
-}
-//  if (values[k] == NULL)
-}
-if (result == 0)
+  while (word < nested->valueLength)
+    {
+      for (; word < nested->valueLength && nested->value[word] <= ' ';
+	   word++);
+      for (wordLength = 0; (word + wordLength) < nested->valueLength &&
+	   nested->value[word + wordLength] > ' '; wordLength++);
+      for (k = 0; values[k]; k += 2)
+	if (wordLength == strlen (values[k]) &&
+	    ignoreCaseComp (values[k], &nested->value[word], wordLength) == 0)
+	  {
+	    result |= atoi (values[k + 1]);
+	    break;
+	  }
+      word += wordLength;
+    }
+  if (result == 0)
     {
       configureError (nested, "word %s in column 2 not recognized",
 		      nested->value);
       return NOTFOUND;
     }
-return result;
+  return result;
 }
 
 static int
@@ -604,14 +609,14 @@ compileConfig (FileInfo * nested)
     NULL
   };
 
-static const char *typeForms[] = {
-"italic", "1",
-"underline", "2",
-"bold", "4",
-"computer_braille", "8",
-"all", "15",
-NULL
-};
+  static const char *typeForms[] = {
+    "italic", "1",
+    "underline", "2",
+    "bold", "4",
+    "computer_braille", "8",
+    "all", "15",
+    NULL
+  };
 
   int k;
   while (parseLine (nested))
@@ -832,10 +837,10 @@ NULL
 	  if ((k = checkValues (nested, yesNo)) != NOTFOUND)
 	    ud->continue_pages = k;
 	  break;
-case 48:
-if ((k = orValues (nested, typeForms)) != NOTFOUND)
-ud->emphasis = k;
-break;
+	case 48:
+	  if ((k = orValues (nested, typeForms)) != NOTFOUND)
+	    ud->emphasis = k;
+	  break;
 	case 90:
 	  {
 	    static const char *actions[] = {
