@@ -68,6 +68,7 @@ typedef enum
   boxline,
   italicx,
   boldx,
+  underlinex,
   linespacing,
   blankline,
   softreturn,

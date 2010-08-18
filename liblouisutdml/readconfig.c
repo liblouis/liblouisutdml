@@ -423,6 +423,32 @@ checkValues (FileInfo * nested, const char **values)
 }
 
 static int
+orValues (FileInfo * nested, const char **values)
+{
+  int result = 0;
+  int k;
+  int word = 0;
+  int wordLength = 0;
+{
+  for (k = 0; values[k]; k += 2)
+    if (nested->valueLength == strlen (values[k]) &&
+	ignoreCaseComp (values[k], nested->value, nested->valueLength) == 0)
+{
+result |= atoi (values[k + 1]);
+      break;
+}
+//  if (values[k] == NULL)
+}
+if (result == 0)
+    {
+      configureError (nested, "word %s in column 2 not recognized",
+		      nested->value);
+      return NOTFOUND;
+    }
+return result;
+}
+
+static int
 checkSubActions (FileInfo * nested, const char **mainActions, const char
 		 **subActions)
 {
@@ -551,6 +577,8 @@ compileConfig (FileInfo * nested)
     "46",
     "continuePages",
     "47",
+    "emphasis",
+    "48",
     "style",
     "90",
     NULL
@@ -572,8 +600,18 @@ compileConfig (FileInfo * nested)
     "textDevice", "0",
     "browser", "1",
     "utd", "2",
+    "pef", "3",
     NULL
   };
+
+static const char *typeForms[] = {
+"italic", "1",
+"underline", "2",
+"bold", "4",
+"computer_braille", "8",
+"all", "15",
+NULL
+};
 
   int k;
   while (parseLine (nested))
@@ -794,6 +832,10 @@ compileConfig (FileInfo * nested)
 	  if ((k = checkValues (nested, yesNo)) != NOTFOUND)
 	    ud->continue_pages = k;
 	  break;
+case 48:
+if ((k = orValues (nested, typeForms)) != NOTFOUND)
+ud->emphasis = k;
+break;
 	case 90:
 	  {
 	    static const char *actions[] = {

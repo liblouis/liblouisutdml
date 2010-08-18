@@ -119,7 +119,8 @@ typedef enum
 {
   textDevice = 0,
   browser,
-  utd
+  utd,
+  pef
 } FormatFor;
 
 typedef enum
@@ -166,6 +167,7 @@ typedef struct
   int has_contentsheader;
   unsigned int mode;
   translationModes louis_mode;
+  int emphasis;
   int debug;
   int top_margin;
   int left_margin;
