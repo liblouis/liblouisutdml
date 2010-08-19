@@ -1385,26 +1385,25 @@ insert_text (xmlNode * node)
   switch (ud->stack[ud->top])
     {
     case italicx:
-if (!(ud->emphasis & italic))
-break;
+      if (!(ud->emphasis & italic))
+	break;
       memset (&ud->typeform[ud->old_text_length], italic, wcLength);
       break;
     case underlinex:
-if (!(ud->emphasis & underline))
-break;
+      if (!(ud->emphasis & underline))
+	break;
       memset (&ud->typeform[ud->old_text_length], underline, wcLength);
       break;
     case boldx:
-if (!(ud->emphasis & bold))
-break;
+      if (!(ud->emphasis & bold))
+	break;
       memset (&ud->typeform[ud->old_text_length], bold, wcLength);
       break;
     case compbrl:
 
-if (!(ud->emphasis & computer_braille))
-break;
-      memset 
-(&ud->typeform[ud->old_text_length], computer_braille, wcLength);
+      if (!(ud->emphasis & computer_braille))
+	break;
+      memset (&ud->typeform[ud->old_text_length], computer_braille, wcLength);
       break;
     default:
       break;
@@ -3040,7 +3039,7 @@ end_style ()
   insert_translation (ud->main_braille_table);
   styleBody ();
   if (!ud->after_contents)
-  finishStyle ();
+    finishStyle ();
   memcpy (&prevStyleSpec, styleSpec, sizeof (prevStyleSpec));
   prevStyle = prevStyleSpec.style;
   ud->style_top--;
@@ -3423,23 +3422,23 @@ utd_insert_text (xmlNode * node, int length)
   switch (ud->stack[ud->top])
     {
     case italicx:
-if (!(ud->emphasis & italic))
-break;
+      if (!(ud->emphasis & italic))
+	break;
       memset (&ud->typeform[ud->old_text_length], italic, wcLength);
       break;
     case underlinex:
-if (!(ud->emphasis & underline))
-break;
+      if (!(ud->emphasis & underline))
+	break;
       memset (&ud->typeform[ud->old_text_length], underline, wcLength);
       break;
     case boldx:
-if (!(ud->emphasis & bold))
-break;
+      if (!(ud->emphasis & bold))
+	break;
       memset (&ud->typeform[ud->old_text_length], bold, wcLength);
       break;
     case compbrl:
-if (!(ud->emphasis & computer_braille))
-break;
+      if (!(ud->emphasis & computer_braille))
+	break;
       memset (&ud->typeform[ud->old_text_length], computer_braille, wcLength);
       break;
     default:
