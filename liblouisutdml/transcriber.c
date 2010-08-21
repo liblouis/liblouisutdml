@@ -451,7 +451,7 @@ insert_translation (const char *table)
   int k;
   if (ud->contains_utd)
     return 1;
-  if (table[0] == 0)
+  if (table == NULL)
     {
       memset (ud->typeform, 0, sizeof (ud->typeform));
       ud->text_length = 0;
@@ -490,9 +490,7 @@ insert_translation (const char *table)
       return 0;
     }
   if ((ud->translated_length + translatedLength) < MAX_TRANS_LENGTH)
-    {
       ud->translated_length += translatedLength;
-    }
   else
     {
       ud->translated_length = MAX_TRANS_LENGTH;
@@ -503,6 +501,7 @@ insert_translation (const char *table)
 }
 
 static int cellsOnLine;
+
 static int
 insertCharacters (char *chars, int length)
 {
