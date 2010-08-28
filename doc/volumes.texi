@@ -1,0 +1,15 @@
+@section Dividing a Book Into Volumes
+
+The multi-volume feature is triggered by the configuration setting 
+@code{volumeSem filename}. Filename is the name of a semantic file which 
+assigns semantic actions and styles to xml tags for the purpose of 
+interpreting the UTD protions of the document and using the structure of 
+the document to divide the output into volumes. This feature operates in 
+two passes. In the first, the UTD portion of the document is created. In 
+the second the book is actually divided into volumes and each volume is 
+output as a separate file. These files have the extensions .001 .002 
+etc. added afgter the original filename given for output. If this 
+filename had an extension, the volume numbers are simply added onto the 
+end.
+
+

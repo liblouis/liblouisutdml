@@ -1,0 +1,1 @@
+java -classpath bin org.brailleblaster.jlouislibs.Jfile2brl testbindings test.brl
