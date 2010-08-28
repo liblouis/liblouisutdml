@@ -1,4 +1,4 @@
-//package org.brailleblaster.jllouislibs;
+package org.brailleblaster.jlouislibs;
 
 public class Jliblouisutdml
 {
@@ -50,6 +50,6 @@ public class Jliblouisutdml
 
   static
   {
-    System.loadLibrary ("liblouisutdml");
+    System.loadLibrary ("louisutdml");
   }
 }
