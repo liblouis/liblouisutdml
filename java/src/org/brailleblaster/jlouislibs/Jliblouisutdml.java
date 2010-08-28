@@ -1,4 +1,4 @@
-package org.brailleblaster.jllouislibs;
+package org.brailleblaster.jlouislibs;
 
 public class Jliblouisutdml
 {
