@@ -656,7 +656,6 @@ static int makePageSeparator (xmlChar * printPageNumber, int length);
 static int
 handlePagenum (xmlChar * printPageNumber, int length)
 {
-
   int k;
   int kk;
   widechar translationBuffer[MAXNUMLEN];
@@ -665,10 +664,8 @@ handlePagenum (xmlChar * printPageNumber, int length)
   int translatedLength = MAXNUMLEN;
   widechar separatorLine[128];
   char setup[MAXNAMELEN];
-
   if (!*printPageNumber)
     {
-
       if (!ud->merge_unnumbered_pages)
 	{
 	  ud->print_page_number[0] = '_';
@@ -681,83 +678,56 @@ handlePagenum (xmlChar * printPageNumber, int length)
 	}
       return 1;
     }
-
   strcpy (setup, " ");
   if (!(printPageNumber[0] >= '0' && printPageNumber[0] <= '9'))
-    {
       strcat (setup, LETSIGN);
-    }
   strcat (setup, printPageNumber);
   length = strlen (setup);
   utf8ToWc (setup, &length, &translationBuffer[0], &translationLength);
-
   if (!lou_translateString (ud->main_braille_table, translationBuffer,
 			    &translationLength, translatedBuffer,
 			    &translatedLength, NULL, NULL, 0))
-    {
       return 0;
-    }
   ud->print_page_number[0] = ' ';
   for (k = 1; k < translatedLength; k++)
-    {
       ud->print_page_number[k] = translatedBuffer[k];
-    }
   ud->print_page_number[k] = 0;
-
   if (!ud->page_separator_number_first[0] ||
       ud->page_separator_number_first[0] == '_' || ud->ignore_empty_pages)
     {
       for (k = 0; ud->print_page_number[k]; k++)
-	{
 	  ud->page_separator_number_first[k] = ud->print_page_number[k];
-	}
       ud->page_separator_number_first[k] = 0;
     }
   else
     {
       for (k = 0; ud->print_page_number[k]; k++)
-	{
 	  ud->page_separator_number_last[k] = ud->print_page_number[k];
-	}
       ud->page_separator_number_last[k] = 0;
-
     }
-
   return 1;
-
 }
 
 static void
 getPrintPageString (void)
 {
-
   int k;
-
   if (ud->print_page_number_first[0] != '_')
     {
-
       if (ud->print_page_number_first[0] != ' '
 	  && ud->print_page_number_first[0] != '+')
-	{
 	  pageNumberString[pageNumberLength++] =
 	    ud->print_page_number_first[0];
-	}
-
+}
       for (k = 1; ud->print_page_number_first[k]; k++)
-	{
 	  pageNumberString[pageNumberLength++] =
 	    ud->print_page_number_first[k];
-	}
-
       if (ud->print_page_number_last[0])
 	{
 	  pageNumberString[pageNumberLength++] = '-';
 	  for (k = 1; ud->print_page_number_last[k]; k++)
-	    {
 	      pageNumberString[pageNumberLength++] =
 		ud->print_page_number_last[k];
-	    }
-	}
     }
 }
 
@@ -810,10 +780,8 @@ static void
 addPagesToPrintPageNumber ()
 {
   int k;
-
   if (ud->braille_pages && ud->page_separator_number_first[0])
     {
-
       if ((ud->lines_on_page == 0
 	   && (ud->ignore_empty_pages
 	       || ud->print_page_number_first[0] != ' '))
@@ -821,61 +789,43 @@ addPagesToPrintPageNumber ()
 	  || (ud->print_page_number_range
 	      && ud->print_page_number_first[0] == '_'))
 	{
-
 	  for (k = 0; ud->page_separator_number_first[k]; k++)
-	    {
 	      ud->print_page_number_first[k] =
 		ud->page_separator_number_first[k];
-	    }
 	  ud->print_page_number_first[k] = 0;
-
 	}
       else if (ud->page_separator_number_first[0] != '_'
 	       && (ud->print_page_number_range
 		   || (ud->lines_on_page == 0 && !ud->ignore_empty_pages)))
 	{
-
 	  for (k = 0; ud->page_separator_number_first[k]; k++)
-	    {
 	      ud->print_page_number_last[k] =
 		ud->page_separator_number_first[k];
-	    }
 	  ud->print_page_number_last[k] = 0;
-
 	}
-
       if (ud->page_separator_number_last[0]
 	  && (ud->print_page_number_range || ud->lines_on_page == 0))
 	{
-
 	  for (k = 0; ud->page_separator_number_last[k]; k++)
-	    {
 	      ud->print_page_number_last[k] =
 		ud->page_separator_number_last[k];
-	    }
 	  ud->print_page_number_last[k] = 0;
-
 	}
     }
-
   ud->page_separator_number_first[0] = 0;
   ud->page_separator_number_last[0] = 0;
-
 }
 
 static void
 nextPrintPage (void)
 {
-
   int k;
   int kk;
   widechar separatorLine[128];
   int pageSeparatorNumberFirstLength = 0;
   int pageSeparatorNumberLastLength = 0;
-
   if (ud->page_separator_number_first[0])
     {
-
       if (ud->braille_pages && ud->lines_on_page == 0)
 	{
 
@@ -887,12 +837,10 @@ nextPrintPage (void)
       else if (ud->braille_pages &&
 	       (ud->lines_on_page == ud->lines_per_page - 1))
 	{
-
 	  ud->lines_on_page++;
 	  cellsOnLine = 0;
 	  getPageNumber ();
 	  finishLine ();
-
 	}
       else if (ud->braille_pages &&
 	       (ud->lines_on_page == ud->lines_per_page - 2) &&
@@ -903,133 +851,91 @@ nextPrintPage (void)
 		     || (ud->braille_page_number_at
 			 && currentBraillePageNumFormat != blank)))))
 	{
-
 	  ud->lines_on_page++;
 	  insertCharacters (ud->lineEnd, strlen (ud->lineEnd));
 	  ud->lines_on_page++;
 	  getPageNumber ();
 	  finishLine ();
-
 	}
       else if (ud->fill_pages > 0)
 	{
-
 	}
       else
 	{
-
 	  if (!ud->page_separator_number)
 	    {
-
 	      for (k = 0; k < ud->cells_per_line; k++)
-		{
 		  separatorLine[k] = '-';
-		}
-
 	    }
 	  else
 	    {
-
 	      for (k = 0; ud->page_separator_number_first[k] != 0; k++)
-		{
 		  pageSeparatorNumberFirstLength++;
-		}
 	      for (k = 0; ud->page_separator_number_last[k] != 0; k++)
-		{
 		  pageSeparatorNumberLastLength++;
-		}
 	      if (ud->ignore_empty_pages)
-		{
-		  pageSeparatorNumberLastLength = 0;
+		{		  pageSeparatorNumberLastLength = 0;
 		}
 
 	      k = 0;
-
 	      while (k <
 		     (ud->cells_per_line - pageSeparatorNumberFirstLength -
 		      pageSeparatorNumberLastLength + 1))
-		{
 		  separatorLine[k++] = '-';
-		}
 	      kk = 1;
 	      while (k < (ud->cells_per_line - pageSeparatorNumberLastLength))
-		{
 		  separatorLine[k++] = ud->page_separator_number_first[kk++];
-		}
 	      if (pageSeparatorNumberLastLength > 0)
 		{
 		  separatorLine[k++] = '-';
 		  kk = 1;
 		  while (k < (ud->cells_per_line))
-		    {
 		      separatorLine[k++] =
 			ud->page_separator_number_last[kk++];
-		    }
 		}
 	    }
-
 	  insertWidechars (separatorLine, ud->cells_per_line);
 	  insertCharacters (ud->lineEnd, strlen (ud->lineEnd));
 	  if (ud->braille_pages)
-	    {
 	      ud->lines_on_page++;
-	    }
 	  write_outbuf ();
-
 	}
-
       addPagesToPrintPageNumber ();
-
     }
 }
 
 static void
 continuePrintPageNumber (void)
 {
-
   int k;
-
   if (ud->print_page_number[0] == '_')
     {
     }
   else if (!ud->continue_pages)
-    {
       ud->print_page_number[0] = '+';
-    }
   else if (ud->print_page_number[0] == ' ')
-    {
       ud->print_page_number[0] = 'a';
-    }
   else if (ud->print_page_number[0] == 'z')
     {
       ud->print_page_number[0] = '_';
       ud->print_page_number[1] = 0;
     }
   else
-    {
       ud->print_page_number[0]++;
-    }
-
   for (k = 0; ud->print_page_number[k]; k++)
-    {
       ud->print_page_number_first[k] = ud->print_page_number[k];
-    }
   ud->print_page_number_first[k] = 0;
   ud->print_page_number_last[0] = 0;
-
 }
 
 static int
 nextBraillePage (void)
 {
-
   if (ud->braille_pages)
     {
-
       if (ud->print_page_number_range && ud->print_pages
 	  && ud->print_page_number_at)
 	{
-
 	  write_outbuf ();
 	  ud->lines_on_page = 1;
 	  cellsOnLine = 0;
@@ -1039,20 +945,14 @@ nextBraillePage (void)
 	  writePagebuf ();
 	}
       else
-	{
 	  write_outbuf ();
-	}
-
       if (!insertCharacters (ud->pageEnd, strlen (ud->pageEnd)))
-	{
 	  return 0;
-	}
       writeOutbufDirect ();
       ud->lines_on_page = 0;
       ud->braille_page_number++;
       continuePrintPageNumber ();
     }
-
   return 1;
 }
 
@@ -1064,94 +964,57 @@ startLine (void)
     {
       ud->after_contents = 0;
       if (ud->page_separator_number_first[0])
-	{
 	  nextPrintPage ();
-	}
-
       if (!ud->braille_pages)
-	{
 	  return ud->cells_per_line;
-	}
-
       cellsOnLine = 0;
       ud->lines_on_page++;
-
       if (ud->lines_on_page == 1)
 	{
-
 	  currentBraillePageNumFormat = ud->brl_page_num_format;
 	  getBraillePageString ();
-
 	  if ((ud->print_page_number_range && ud->print_pages
 	       && ud->print_page_number_at))
 	    {
-
 	      pageNumberLength = 0;
 	      ud->lines_on_page++;
 	      availableCells = ud->cells_per_line;
-
 	    }
 	  else
 	    {
-
 	      getPageNumber ();
-
 	      if (ud->running_head_length > 0 ||
 		  (style->skip_number_lines && pageNumberLength > 0) ||
 		  (ud->page_number_top_separate_line && pageNumberLength > 0))
-		{
-
 		  availableCells = 0;
-
-		}
 	      else
-		{
 		  availableCells = ud->cells_per_line - pageNumberLength;
-		}
 	    }
-
 	}
       else if (ud->lines_on_page == ud->lines_per_page)
 	{
-
 	  getPageNumber ();
-
 	  if (ud->footer_length > 0 ||
 	      (style->skip_number_lines && pageNumberLength > 0) ||
 	      (ud->page_number_bottom_separate_line && pageNumberLength > 0))
-	    {
-
 	      availableCells = 0;
-
-	    }
 	  else
-	    {
 	      availableCells = ud->cells_per_line - pageNumberLength;
-	    }
-
 	}
       else
 	{
 	  pageNumberLength = 0;
 	  availableCells = ud->cells_per_line;
 	}
-
       if (availableCells == 0 || ud->fill_pages > 0)
-	{
 	  finishLine ();
-	}
-
       if (ud->fill_pages > 0 && ud->lines_on_page == 0)
 	{
 	  ud->fill_pages--;
 	  if (ud->fill_pages == 0)
-	    {
 	      availableCells = ud->cells_per_line;
-	    }
 	  else
-	    {
 	      availableCells = 0;
-	    }
 	}
     }
   return availableCells;
@@ -1249,9 +1112,7 @@ finishLine (void)
       if (ud->braille_pages && ud->lines_on_page == ud->lines_per_page)
 	{
 	  if (!nextBraillePage ())
-	    {
 	      return 0;
-	    }
 	}
     }
   return 1;
