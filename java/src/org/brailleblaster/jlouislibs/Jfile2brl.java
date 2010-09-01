@@ -9,7 +9,7 @@ public static void main (String[] args)
 Jliblouisutdml bindings = new Jliblouisutdml ();
 bindings.lbu_translateFile ("default.cfg", args[0], args[1], 
 "logfile", 
-null, 0);
+"debug yes\n", 0);
 bindings.lbu_free ();
 }
 }
