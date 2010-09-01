@@ -132,6 +132,7 @@ jboolean
   const jbyte *logf = NULL;
   const jbyte *settings = NULL;
   jboolean result = JNI_FALSE;
+printf ("Starting translateFile\n");
   cfl = (*env)->GetStringUTFChars (env, configFileList, NULL);
   if (cfl == NULL)
     goto release;
@@ -147,6 +148,9 @@ jboolean
   settings = (*env)->GetStringUTFChars (env, settingsString, NULL);
   if (settings == NULL)
     goto release;
+printf ("calling translateFile");
+prinntf ("cfl=%x\n", cfl);
+printf ("inFile=%x\n", inFile);
   result = lbu_translateFile (cfl, inFile, outFile, logf, settings, mode);
 release:
   if (cfl != NULL)
