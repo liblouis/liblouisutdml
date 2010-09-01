@@ -1000,12 +1000,7 @@ read_configuration_file (const char *configFileList, const char
   int listLength;
   int currentListPos = 0;
   errorCount = 0;
-  if (logFileName)
-    {
-      strcpy ((char *) ud->typeform, ud->writeable_path);
-      strcat ((char *) ud->typeform, logFileName);
-      lou_logFile ((char *) ud->typeform);
-    }
+  /*Process logFileName later, after writeable_path is set */
   if (mode & dontInit)
     {
       ud->has_comp_code = 0;
@@ -1107,9 +1102,15 @@ read_configuration_file (const char *configFileList, const char
 	  ud->typeform[k] = 0;
 	  strcat ((char *) ud->typeform, configString);
 	  config_compileSettings ((char *) ud->typeform);
-	  memset (ud->typeform, 0, sizeof (ud->typeform));
 	}
     }
+  if (logFileName)
+    {
+      strcpy ((char *) ud->typeform, ud->writeable_path);
+      strcat ((char *) ud->typeform, logFileName);
+      lou_logFile ((char *) ud->typeform);
+    }
+  memset (ud->typeform, 0, sizeof (ud->typeform));
   ud->braille_page_number = ud->beginning_braille_page_number;
   if (entities)
     strcat (ud->xml_header, "]>\n");
