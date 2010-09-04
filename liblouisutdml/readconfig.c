@@ -970,7 +970,8 @@ compileConfig (FileInfo * nested)
 }
 
 static int
-initConfigFiles (const char *firstConfigFile, char *fileName)
+initConfigFiles (const char *firstConfigFile, char *fileName, const 
+char *logFileName)
 {
   char configPath[MAXNAMELEN];
   int k;
@@ -983,6 +984,12 @@ initConfigFiles (const char *firstConfigFile, char *fileName)
     k++;
   configPath[k] = 0;
   set_paths (configPath);
+  if (logFileName)
+    {
+      strcpy ((char *) ud->typeform, ud->writeable_path);
+      strcat ((char *) ud->typeform, logFileName);
+      lou_logFile ((char *) ud->typeform);
+    }
   if (!config_compileSettings ("canonical.cfg"))
     return 0;
   return 1;
@@ -1066,14 +1073,14 @@ read_configuration_file (const char *configFileList, const char
 	  break;
       if (k == listLength || k == 0)
 	{			/* Only one file */
-	  initConfigFiles (configFileList, mainFile);
+	  initConfigFiles (configFileList, mainFile, logFileName);
 	  config_compileSettings (mainFile);
 	}
       else
 	{			/* Compile a list of files */
 	  strncpy (subFile, configFileList, k);
 	  subFile[k] = 0;
-	  initConfigFiles (subFile, mainFile);
+	  initConfigFiles (subFile, mainFile, logFileName);
 	  currentListPos = k + 1;
 	  config_compileSettings (mainFile);
 	  while (currentListPos < listLength)
@@ -1103,12 +1110,6 @@ read_configuration_file (const char *configFileList, const char
 	  strcat ((char *) ud->typeform, configString);
 	  config_compileSettings ((char *) ud->typeform);
 	}
-    }
-  if (logFileName)
-    {
-      strcpy ((char *) ud->typeform, ud->writeable_path);
-      strcat ((char *) ud->typeform, logFileName);
-      lou_logFile ((char *) ud->typeform);
     }
   memset (ud->typeform, 0, sizeof (ud->typeform));
   ud->braille_page_number = ud->beginning_braille_page_number;
