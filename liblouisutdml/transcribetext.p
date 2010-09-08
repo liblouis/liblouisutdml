@@ -1,6 +1,9 @@
 int
-transcribe_text_string (void)
+utd_transcribe_text_string (void)
 {
+xmlNode *addPara = makeDaisyDoc ();
+xmlNode *newPara;
+xmlNode *newNode;
   int charsProcessed = 0;
   int charsInParagraph = 0;
   int ch;
@@ -57,8 +60,11 @@ transcribe_text_string (void)
 }
 
 int
-transcribe_text_file (void)
+udt_transcribe_text_file (void)
 {
+xmlNode *addPara = makeDaisyDoc ();
+xmlNode *newPara;
+xmlNode *newNode;
   int charsInParagraph = 0;
   int ch;
   int pch = 0;
