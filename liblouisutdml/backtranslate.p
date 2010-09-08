@@ -44,7 +44,7 @@ makeParagraph (void)
 				&translatedLength,
 				(char *) ud->typeform, NULL, 0))
     return 0;
-??  for (k = 0; k < translatedLength; k++)
+  for (k = 0; k < translatedLength; k++)
     if (ud->translated_buffer[k] == 0)
       ud->translated_buffer[k] = 32;
   while (charactersWritten < translatedLength)
@@ -69,44 +69,6 @@ makeParagraph (void)
 	    }
 	}
       pieceStart = charactersWritten;
-      if (ud->back_text == html)
-	{
-	  for (k = charactersWritten; k < charactersWritten + lineLength; k++)
-	    if (ud->translated_buffer[k] == '<'
-		|| ud->translated_buffer[k] == '&'
-		|| ud->translated_buffer[k] == escapeChar)
-	      {
-		if (!insertWidechars
-		    (&ud->translated_buffer[pieceStart], k - pieceStart))
-		  return 0;
-		if (ud->translated_buffer[k] == '<')
-		  {
-		    if (!insertCharacters ("&lt;", 4))
-		      return 0;
-		  }
-		else if (ud->translated_buffer[k] == '&')
-		  {
-		    if (!insertCharacters ("&amp;", 5))
-		      return 0;
-		  }
-		else
-		  {
-		    int kk;
-		    for (kk = k;
-			 kk < translatedLength
-			 && ud->translated_buffer[kk] == escapeChar; kk++);
-		    kk -= k + 1;
-		    if (!insertCharacters (xmlTags[kk], strlen (xmlTags[kk])))
-		      return 0;
-		    k += kk;
-		  }
-		pieceStart = k + 1;
-	      }
-	  if (!insertWidechars (&ud->translated_buffer[pieceStart], k -
-				pieceStart))
-	    return 0;
-	}
-      else
 	{
 	  if (!insertWidechars
 	      (&ud->translated_buffer[charactersWritten], lineLength))
@@ -120,11 +82,6 @@ makeParagraph (void)
 	  if (!insertCharacters (ud->lineEnd, strlen (ud->lineEnd)))
 	    return 0;
 	}
-    }
-  if (ud->back_text == html)
-    {
-      if (!insertCharacters ("</p>", 4))
-	return 0;
     }
   if (!insertCharacters (ud->lineEnd, strlen (ud->lineEnd)))
     return 0;
@@ -197,6 +154,9 @@ discardPageNumber (void)
 int
 utd_back_translate_file (void)
 {
+xmlNode *addPara = makeDaisyDoc ();
+xmlNode *newPara;
+xmlNode *newNode;
   int ch;
   int ppch = 0;
   int pch = 0;
@@ -261,5 +221,8 @@ utd_back_translate_file (void)
 int
 back_translate_braille_string (void)
 {
+xmlNode *addPara = makeDaisyDoc ();
+xmlNode *newPara;
+xmlNode *newNode;
   return 1;
 }
