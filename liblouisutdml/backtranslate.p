@@ -156,7 +156,7 @@ utd_back_translate_file (void)
 {
 xmlNode *addPara = makeDaisyDoc ();
 xmlNode *newPara;
-xmlNode *newNode;
+xmlNode *textNode;
   int ch;
   int ppch = 0;
   int pch = 0;

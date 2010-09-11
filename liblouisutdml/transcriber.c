@@ -2716,6 +2716,83 @@ back_translate_file (void)
 int
 back_translate_braille_string (void)
 {
+  int charsProcessed = 0;
+  int ch;
+  int ppch = 0;
+  int pch = 0;
+  int leadingBlanks = 0;
+  int printPage = 0;
+  int newPage = 0;
+  char *htmlStart = "<html><head><title>No Title</title></head><body>";
+  char *htmlEnd = "</body></html>";
+  if (!start_document ())
+    return 0;
+  if (ud->back_text == html)
+    {
+      if (!insertCharacters (htmlStart, strlen (htmlStart)))
+	return 0;
+      if (!insertCharacters (ud->lineEnd, strlen (ud->lineEnd)))
+	return 0;
+      ud->output_encoding = utf8;
+    }
+  else
+    ud->output_encoding = ascii8;
+  while (charsProcessed < ud->inlen)
+    {
+      ch = ud->inbuf[charsProcessed++];
+      if (ch == 13)
+	continue;
+      if (pch == 10 && ch == 32)
+	{
+	  leadingBlanks++;
+	  continue;
+	}
+      if (ch == escapeChar)
+	ch = 32;
+      if (ch == '[' || ch == '\\' || ch == '^' || ch == ']' || ch == '@'
+	  || (ch >= 'A' && ch <= 'Z'))
+	ch |= 32;
+      if (ch == 10 && printPage)
+	{
+	  handlePrintPageNumber ();
+	  printPage = 0;
+	}
+      if (ch == 10 && newPage)
+	{
+	  discardPageNumber ();
+	  newPage = 0;
+	}
+      if (pch == 10 && (ch == 10 || leadingBlanks > 1))
+	{
+	  makeParagraph ();
+	  leadingBlanks = 0;
+	}
+      if (!printPage && ppch == 10 && pch == '-' && ch == '-')
+	printPage = 1;
+      if (!newPage && pch == 10 && ch == ud->pageEnd[0])
+	{
+	  discardPageNumber ();
+	  newPage = 1;
+	  continue;
+	}
+      if (ch == 10)
+	leadingBlanks = 0;
+      ppch = pch;
+      pch = ch;
+      if (ud->text_length >= MAX_LENGTH)
+	makeParagraph ();
+      ud->text_buffer[ud->text_length++] = ch;
+    }
+  makeParagraph ();
+  if (ud->back_text == html)
+    {
+      if (!insertCharacters (htmlEnd, strlen (htmlEnd)))
+	return 0;
+      if (!insertCharacters (ud->lineEnd, strlen (ud->lineEnd)))
+	return 0;
+      write_outbuf ();
+      ud->output_encoding = ascii8;
+    }
   return 1;
 }
 
