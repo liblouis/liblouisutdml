@@ -61,23 +61,18 @@ static StyleRecord *styleSpec;
 int
 initialize_contents (void)
 {
-    int k;
-    saved_braillePageNumberFormat = ud->brl_page_num_format;
-
-    for (k = 0; ud->print_page_number[k]; k++) {
-        saved_printPageNumber[k] = ud->print_page_number[k];
-    }
-    saved_printPageNumber[k] = 0;
-    for (k = 0; ud->print_page_number_first[k]; k++) {
-        saved_printPageNumberFirst[k] = ud->print_page_number_first[k];
-    }
-    saved_printPageNumberFirst[k] = 0;
-    for (k = 0; ud->print_page_number_last[k]; k++) {
-        saved_printPageNumberLast[k] = ud->print_page_number_last[k];
-    }
-    saved_printPageNumberLast[k] = 0;
-
-    ud->after_contents = 1;
+  int k;
+  saved_braillePageNumberFormat = ud->brl_page_num_format;
+  for (k = 0; ud->print_page_number[k]; k++)
+      saved_printPageNumber[k] = ud->print_page_number[k];
+  saved_printPageNumber[k] = 0;
+  for (k = 0; ud->print_page_number_first[k]; k++)
+      saved_printPageNumberFirst[k] = ud->print_page_number_first[k];
+  saved_printPageNumberFirst[k] = 0;
+  for (k = 0; ud->print_page_number_last[k]; k++)
+      saved_printPageNumberLast[k] = ud->print_page_number_last[k];
+  saved_printPageNumberLast[k] = 0;
+  ud->after_contents = 1;
   saved_udContents = ud->contents;
   saved_linesOnPage = ud->lines_on_page;
   saved_braillePageNumber = ud->braille_page_number;
@@ -154,7 +149,7 @@ finish_heading (sem_act action)
 	}
     }
   if (initHeadingLength == heading.headingLength)
-    /* No page numbers*/
+    /* No page numbers */
     heading.headingChars[heading.headingLength++] = 0xa0;
   headingSize += heading.headingLength * CHARSIZE;
   headingPtr = malloc (headingSize);
@@ -181,25 +176,28 @@ make_contents (void)
   ud->outFile = saved_outFile;
   if (firstHeading != NULL)
     {
-        int k;
+      int k;
       ud->lines_on_page = saved_linesOnPage;
       ud->braille_page_number = saved_braillePageNumber;
-        styleSpec = &ud->style_stack[ud->style_top];
-        styleSpec->curBrlNumFormat = saved_braillePageNumberFormat;
-        ud->brl_page_num_format = saved_braillePageNumberFormat;
+      styleSpec = &ud->style_stack[ud->style_top];
+      styleSpec->curBrlNumFormat = saved_braillePageNumberFormat;
+      ud->brl_page_num_format = saved_braillePageNumberFormat;
 
-        for (k = 0; saved_printPageNumber[k]; k++) {
-            ud->print_page_number[k] = saved_printPageNumber[k];
-        }
-        ud->print_page_number[k] = 0;
-        for (k = 0; saved_printPageNumberFirst[k]; k++) {
-            ud->print_page_number_first[k] = saved_printPageNumberFirst[k];
-        }
-        ud->print_page_number_first[k] = 0;
-        for (k = 0; saved_printPageNumberLast[k]; k++) {
-            ud->print_page_number_last[k] = saved_printPageNumberLast[k];
-        }
-        ud->print_page_number_last[k] = 0;
+      for (k = 0; saved_printPageNumber[k]; k++)
+	{
+	  ud->print_page_number[k] = saved_printPageNumber[k];
+	}
+      ud->print_page_number[k] = 0;
+      for (k = 0; saved_printPageNumberFirst[k]; k++)
+	{
+	  ud->print_page_number_first[k] = saved_printPageNumberFirst[k];
+	}
+      ud->print_page_number_first[k] = 0;
+      for (k = 0; saved_printPageNumberLast[k]; k++)
+	{
+	  ud->print_page_number_last[k] = saved_printPageNumberLast[k];
+	}
+      ud->print_page_number_last[k] = 0;
       do_newpage ();
       ud->contents = 2;
       currentHeading = firstHeading;

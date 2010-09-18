@@ -2998,9 +2998,9 @@ end_style ()
 
 /* Routines for Unified Tactile Ducument Markup Language */
 
-#define ENDTEXT 0xffff
-/* Dot patterns must include B16 */
+#define ENDSEGMENT 0xffff
 #define SPACE B16
+/* Dot patterns must include B16 and be enclosed in parentheses.*/
 #define NBSP (B16 | B10)
 #define CR (B16 | B11)
 #define HYPHEN (B16 | B3 | B6)
@@ -3009,7 +3009,7 @@ end_style ()
 #define EDOTS (B16 | B1 |  B5)
 #define RDOTS (B16 | B1 | B2 | B3 | B5)
 
-static int *inputPos;
+static int *indices;
 static xmlNode *brlNode;
 static xmlNode *firstBrlNode;
 static xmlNode *prevBrlNode;
@@ -3036,7 +3036,7 @@ utd_start ()
   brlNode = firstBrlNode = prevBrlNode = NULL;
   maxVertLinePos = ud->top_margin + NORMALLINE * ud->lines_per_page;
   ud->louis_mode = dotsIO;
-  inputPos = malloc (ud->outlen * sizeof (int));
+  indices = malloc (ud->outlen * sizeof (int));
   if (spaces[0] != SPACE)
     for (k = 0; k < 3 * MAXNUMLEN; k++)
       spaces[k] = SPACE;
@@ -3318,19 +3318,20 @@ insertTextFragment (widechar * content, int length)
 }
 
 static int
-insertIndex (int length)
+insertIndex (xmlNode node, int length)
 {
   int k;
   int kk = 0;
   char pos[MAXNUMLEN];
   for (k = 0; k < length; k++)
     {
-      int posLen = sprintf (pos, "%d,", inputPos[k]);
+      int posLen = sprintf (pos, "%d,", indices[k]);
       strcpy (&utilStringBuf[kk], pos);
       kk += posLen;
     }
   utilStringBuf[--kk] = 0;
-  xmlNewProp (brlNode, (xmlChar *) "index", (xmlChar *) utilStringBuf);
+  xmlNewProp (node, (xmlChar *) "index", (xmlChar *) 
+utilStringBuf);
   return 1;
 }
 
@@ -3454,7 +3455,7 @@ utd_insert_translation (const char *table)
 		     &ud->
 		     translated_buffer[ud->translated_length],
 		     &translatedLength,
-		     (char *) ud->typeform, NULL, NULL, inputPos,
+		     (char *) ud->typeform, NULL, NULL, indices,
 		     NULL, dotsIO);
   memset (ud->typeform, 0, sizeof (ud->typeform));
   ud->text_length = 0;
@@ -3467,8 +3468,8 @@ utd_insert_translation (const char *table)
     ud->translated_length += translatedLength;
   else
     ud->translated_length = MAX_TRANS_LENGTH;
-  ud->translated_buffer[ud->translated_length++] = ENDTEXT;
-  insertIndex (translatedLength);
+  ud->translated_buffer[ud->translated_length++] = ENDSEGMENT;
+  insertIndex (brlNode, translatedLength);
   return 1;
 }
 
@@ -3490,7 +3491,7 @@ utd_insert_text (xmlNode * node, int length)
 		      &ud->translated_buffer[ud->translated_length],
 		      ud->text_length);
       ud->translated_length += ud->text_length;
-      ud->translated_buffer[ud->translated_length++] = ENDTEXT;
+      ud->translated_buffer[ud->translated_length++] = ENDSEGMENT;
       ud->text_length = 0;
       return;
     case pagenum:
@@ -3769,12 +3770,12 @@ utd_doOrdinaryText (void)
 								   [charactersWritten
 								    +
 								    cellsToWrite])
-	       != ENDTEXT; cellsToWrite++)
+	       != ENDSEGMENT; cellsToWrite++)
 	    if (dots == SPACE)
 	      lastSpace = cellsToWrite;
 	  if (cellsToWrite == availableCells)
 	    newLineNeeded = 1;
-	  if (dots != ENDTEXT && lastSpace != 0)
+	  if (dots != ENDSEGMENT && lastSpace != 0)
 	    cellsToWrite = lastSpace;
 	  cellsOnLine += cellsToWrite;
 	  availableCells -= cellsToWrite;
@@ -3791,6 +3792,7 @@ utd_doOrdinaryText (void)
 		case centered:
 		  leadingBlanks = (origAvailableCells - cellsOnLine) / 2;
 		  break;
+		case rightJustified:
 		  leadingBlanks = origAvailableCells - cellsOnLine;
 		  break;
 		}
@@ -3799,7 +3801,7 @@ utd_doOrdinaryText (void)
 	      newLineNeeded = 1;
 	    }
 	}
-      while (dots != ENDTEXT);
+      while (dots != ENDSEGMENT);
       charactersWritten++;
       prevBrlNode = brlNode;
       brlNode = brlNode->_private;
@@ -4421,7 +4423,7 @@ linesPerPage=%d", ud->braille_page_number, ud->top_margin, ud->left_margin, ud->
       xmlNewProp (newNode, (xmlChar *) "content", (xmlChar *) utilStringBuf);
       xmlAddChild (ud->head_node, newNode);
     }
-  free (inputPos);
+  free (indices);
   if (ud->volume_sem)
     makeVolumes ();
   else
