@@ -2998,7 +2998,6 @@ end_style ()
 
 /* Routines for Unified Tactile Ducument Markup Language */
 
-#define ENDSEGMENT 0xffff
 #define SPACE B16
 /* Dot patterns must include B16 and be enclosed in parentheses.*/
 #define NBSP (B16 | B10)
@@ -3036,7 +3035,7 @@ utd_start ()
   brlNode = firstBrlNode = prevBrlNode = NULL;
   maxVertLinePos = ud->top_margin + NORMALLINE * ud->lines_per_page;
   ud->louis_mode = dotsIO;
-  indices = malloc (ud->outlen * sizeof (int));
+  indices = malloc (MAX_TRANS_LENGTH * sizeof (int));
   if (spaces[0] != SPACE)
     for (k = 0; k < 3 * MAXNUMLEN; k++)
       spaces[k] = SPACE;
@@ -3318,20 +3317,37 @@ insertTextFragment (widechar * content, int length)
 }
 
 static int
-insertIndex (xmlNode node, int length)
+assignIndices (void)
 {
-  int k;
-  int kk = 0;
-  char pos[MAXNUMLEN];
-  for (k = 0; k < length; k++)
+  int prevSegment = 0;
+  int curPos = 0;
+  brlNode = firstBrlNode;
+  while (curPos < translatedLength)
     {
-      int posLen = sprintf (pos, "%d,", indices[k]);
-      strcpy (&utilStringBuf[kk], pos);
-      kk += posLen;
+      if (translatedBuffer[curPos] == ENDSEGMENT)
+	{
+	  int indexPos = prevSegment;
+	  int firstIndex = indices[indexPos];
+	  int kk;
+	  while (translatedBuffer[indexPos] != ENDSEGMENT)
+	    {
+	      int k;
+	      kk = 0;
+	      char pos[MAXNUMLEN];
+	      int posLen =
+		sprintf (pos, "%d,", indices[indexPos] - firstIndex);
+	      strcpy (&utilStringBuf[kk], pos);
+	      kk += posLen;
+	      indexPos++;
+	    }
+	  utilStringBuf[--kk] = 0;
+	  xmlNewProp (brlNode, (xmlChar *) "index", (xmlChar *)
+		      utilStringBuf);
+	  brlNode = brlNode->_private;
+	  curPos += indexPos;
+	}
+      curPos++;
     }
-  utilStringBuf[--kk] = 0;
-  xmlNewProp (node, (xmlChar *) "index", (xmlChar *) 
-utilStringBuf);
   return 1;
 }
 
@@ -3447,15 +3463,14 @@ utd_insert_translation (const char *table)
   int k;
   translatedLength = MAX_TRANS_LENGTH - ud->translated_length;
   translationLength = ud->text_length;
-  ud->text_buffer[ud->text_length++] = 32;
-  ud->text_buffer[ud->text_length++] = 32;
   k = lou_translate (table,
 		     ud->text_buffer,
 		     &translationLength,
 		     &ud->
 		     translated_buffer[ud->translated_length],
 		     &translatedLength,
-		     (char *) ud->typeform, NULL, NULL, indices,
+		     (char *) ud->typeform, NULL, NULL, 
+&indices[ud->translated_length],
 		     NULL, dotsIO);
   memset (ud->typeform, 0, sizeof (ud->typeform));
   ud->text_length = 0;
@@ -3468,8 +3483,6 @@ utd_insert_translation (const char *table)
     ud->translated_length += translatedLength;
   else
     ud->translated_length = MAX_TRANS_LENGTH;
-  ud->translated_buffer[ud->translated_length++] = ENDSEGMENT;
-  insertIndex (brlNode, translatedLength);
   return 1;
 }
 
@@ -3478,6 +3491,8 @@ utd_insert_text (xmlNode * node, int length)
 {
   int wcLength;
   xmlNode *newNode;
+
+  int k;
   newNode = xmlNewNode (NULL, (xmlChar *) "brl");
   link_brl_node (xmlAddNextSibling (node, newNode));
   switch (ud->stack[ud->top])
@@ -3490,6 +3505,8 @@ utd_insert_text (xmlNode * node, int length)
       lou_charToDots (ud->main_braille_table, ud->text_buffer,
 		      &ud->translated_buffer[ud->translated_length],
 		      ud->text_length);
+for (k = 0; k < ud->text_length; k++)
+indices[ud->translated_length + k] = k;
       ud->translated_length += ud->text_length;
       ud->translated_buffer[ud->translated_length++] = ENDSEGMENT;
       ud->text_length = 0;
@@ -3504,6 +3521,7 @@ utd_insert_text (xmlNode * node, int length)
       break;
     }
   wcLength = insert_utf8 (node->content);
+  ud->text_buffer[ud->text_length++] = ENDSEGMENT;
   switch (ud->stack[ud->top])
     {
     case italicx:
@@ -3529,7 +3547,6 @@ utd_insert_text (xmlNode * node, int length)
     default:
       break;
     }
-  utd_insert_translation (ud->main_braille_table);
   return;
 }
 
@@ -3765,18 +3782,18 @@ utd_doOrdinaryText (void)
 	    }
 	  lastSpace = 0;
 	  for (cellsToWrite = 0; cellsToWrite < availableCells && (dots
-								   =
-								   translatedBuffer
-								   [charactersWritten
-								    +
-								    cellsToWrite])
+   =
+	   translatedBuffer
+   [charactersWritten
+    +
+	    cellsToWrite])
 	       != ENDSEGMENT; cellsToWrite++)
 	    if (dots == SPACE)
 	      lastSpace = cellsToWrite;
 	  if (cellsToWrite == availableCells)
 	    newLineNeeded = 1;
 	  if (dots != ENDSEGMENT && lastSpace != 0)
-	    cellsToWrite = lastSpace;
+	    cellsToWrite = lastSpace + 1;
 	  cellsOnLine += cellsToWrite;
 	  availableCells -= cellsToWrite;
 	  insertTextFragment (&translatedBuffer[charactersWritten],
@@ -4291,26 +4308,42 @@ utd_startStyle (void)
 }
 
 static int
-utd_styleBody (void)
+utd_editTrans (void)
 {
-  if (ud->translated_length == 0)
-    return 1;
-  if (!editTrans ())
-    return 0;
-  cellsOnLine = 0;
-  sem_act action = style->action;
-  if (style->format != computerCoded && action != document)
+  if (!(ud->contents == 2) && !(style->format == computerCoded) &&
+      ud->edit_table_name && (ud->has_math || ud->has_chem || ud->has_music))
     {
-      int realStart;
-      for (realStart = 0; realStart < translatedLength &&
-	   translatedBuffer[realStart] == SPACE &&
-	   translatedBuffer[realStart] != escapeChar; realStart++);
-      if (realStart > 0)
+      lou_dotsToChar (ud->edit_table_name, ud->translated_buffer,
+		      ud->text_buffer, ud->translated_length);
+      translationLength = ud->translated_length;
+      translatedLength = MAX_TRANS_LENGTH;
+      if (!lou_translate (ud->edit_table_name,
+			  ud->text_buffer,
+			  &translationLength,
+			  ud->translated_buffer,
+			  &translatedLength, NULL, NULL,
+			  NULL, indices, NULL, dotsIO))
 	{
-	  translatedBuffer = &translatedBuffer[realStart];
-	  translatedLength -= realStart;
+	  ud->edit_table_name = NULL;
+	  return 0;
 	}
     }
+  translatedBuffer = ud->translated_buffer;
+  translatedLength = ud->translated_length;
+  return 1;
+}
+
+static int
+utd_styleBody (void)
+{
+  sem_act action;
+  if (ud->translated_length == 0)
+    return 1;
+  if (!utd_editTrans ())
+    return 0;
+  assignIndices ();
+  cellsOnLine = 0;
+  action = style->action;
   if (action == contentsheader && ud->contents != 2)
     {
       initialize_contents ();
@@ -4429,12 +4462,12 @@ linesPerPage=%d", ud->braille_page_number, ud->top_margin, ud->left_margin, ud->
   else
     {
       if (ud->outFile)
-	xmlDocFormatDump (ud->outFile, ud->doc, 1);
+	xmlDocDump (ud->outFile, ud->doc);
       else
 	{
 	  xmlChar *dumpLoc;
 	  int dumpSize;
-	  xmlDocDumpFormatMemory (ud->doc, &dumpLoc, &dumpSize, 1);
+	  xmlDocDumpMemory (ud->doc, &dumpLoc, &dumpSize);
 	  if (dumpSize > (CHARSIZE * ud->outlen))
 	    ud->outlen_so_far = 0;
 	  else
