@@ -43,7 +43,7 @@ typedef struct
   int lineNumber;
   int numEntries;
   int unedited;
-  char line[2 * MAXNAMELEN];
+  char line[5 * MAXNAMELEN];
 }
 FileInfo;
 
@@ -156,13 +156,12 @@ hashFree (HashTable * table)
   free (table);
 }
 
-static void hashInsert (HashTable * table, const unsigned char *key, int 
-type, int
-	    semNum, InsertsType * inserts, StyleType * style);
+static void hashInsert (HashTable * table, const unsigned char *key, int
+			type, int
+			semNum, InsertsType * inserts, StyleType * style);
 
 void
 clean_semantic_table (void)
-
 {
   int i;
   HashEntry *e, *next;
@@ -620,6 +619,10 @@ compileLine (FileInfo * nested)
   char *curchar = NULL;
   int ch = 0;
   int func = 0;
+  char *funcName;
+  int funcNameLength;
+  char *argsStart;
+  int argsLength;
   EntryType type = 0;
   char *action = NULL;
   int actionLength = 0;
@@ -655,12 +658,10 @@ compileLine (FileInfo * nested)
       static const char *funcNames[] = {
 	"xpath",
 	"1",
+	"now",
+	"2",
 	NULL
       };
-      char *funcName;
-      int funcNameLength;
-      char *argsStart;
-      int argsLength;
       while ((ch = *curchar++) <= 32 && ch != 0);
       funcName = curchar - 1;
       while ((ch = *curchar++) > 32 && ch != '(');
@@ -674,6 +675,9 @@ compileLine (FileInfo * nested)
 			 funcName);
 	  return 0;
 	}
+    }
+  if (func != 2)
+    {
       funcName[funcNameLength] = ch;
       if (ch != '(')
 	while ((ch = *curchar++) <= 32 && ch != 0);
@@ -758,9 +762,44 @@ compileLine (FileInfo * nested)
     }
   if (actionNum < 0)
     actionNum = generic;
-  hashInsert (semanticTable, (xmlChar *) lookFor, type, actionNum,
-	      inserts, style);
-  nested->numEntries++;
+  if (func == 2)
+    {
+      int k;
+      int kk = 0;
+      char configString[2 * MAXNAMELEN];
+      switch (actionNum)
+	{
+	case configfile:
+	  if (!find_file (insertions, configString))
+	    return 0;
+	  config_compileSettings (configString);
+	  break;
+	case configstring:
+	  configString[kk++] = ud->string_escape;
+	  for (k = 0; k < insertionsLength; kk++)
+	    {
+	      if (insertions[k] == '=')
+		configString[kk++] = ' ';
+	      else if (insertions[k] == ';')
+		configString[kk++] = '\n';
+	      else
+		configString[kk++] = (char) insertions[k];
+	    }
+	  configString[kk] = 0;
+	  config_compileSettings (configString);
+	  break;
+	default:
+	  semanticError (nested,
+			 "The 'now' option is not valid with this semantic action.");
+	  return 0;
+	}
+    }
+  else
+    {
+      hashInsert (semanticTable, (xmlChar *) lookFor, type, actionNum,
+		  inserts, style);
+      nested->numEntries++;
+    }
   return 1;
 }
 
