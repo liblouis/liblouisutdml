@@ -46,7 +46,7 @@ typedef struct
   FILE *in;
   int stringPos;
   int lineNumber;
-  char line[1024];
+  char line[5 * MAXNAMELEN];
   char *action;
   int actionLength;
   char *value;

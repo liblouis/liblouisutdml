@@ -176,13 +176,24 @@ end_document (void)
   return 1;
 }
 
+static int
+isLineend (int *c)
+{
+if (c[0] == 10 && c[1] == 13)
+return 2;
+else if (c[0] == 10 || c[0] == 13)
+return 1;
+else
+return 0;
+}
+
 int
 transcribe_text_string (void)
 {
   int charsProcessed = 0;
   int charsInParagraph = 0;
-  int ch;
-  int pch = 0;
+  int ch[2];
+  int lineend[2];
   FormatFor oldFormat;
   unsigned char *paragraphBuffer = (unsigned char *) ud->translated_buffer;
   StyleType *docStyle;
@@ -202,35 +213,29 @@ transcribe_text_string (void)
       while (charsProcessed < ud->inlen)
 	{
 	  start_style (paraStyle, NULL);
-	  ch = ud->inbuf[charsProcessed++];
-	  if (ch == 0 || ch == 13)
-	    continue;
-	  if (ch == '\n' && pch == '\n')
+ch[0] = ch[1];
+	  ch[1] = ud->inbuf[charsProcessed++];
+lineend[0] = lineend[1];
+lineend[1] = isLineend (ch);
+if (lineend[0] && lineend[1])
 	    break;
-	  if (charsInParagraph == 0 && ch <= 32)
-	    continue;
-	  pch = ch;
-	  if (ch == 10)
-	    ch = ' ';
 	  if (charsInParagraph >= MAX_LENGTH)
 	    break;
-	  paragraphBuffer[charsInParagraph++] = ch;
+	  paragraphBuffer[charsInParagraph++] = ch[1];
 	}
       if (charsInParagraph == 0)
 	break;
-      ch = ud->inbuf[charsProcessed++];
+      ch[1] = ud->inbuf[charsProcessed++];
       paragraphBuffer[charsInParagraph] = 0;
       if (!insert_utf8 (paragraphBuffer))
 	return 0;
       if (!insert_translation (ud->main_braille_table))
 	return 0;
-      if (ch == 10)
+      if (ch[1] == 10)
 	do_blankline ();
       end_style ();
       charsInParagraph = 0;
-      pch = 0;
-      if (ch > 32)
-	paragraphBuffer[charsInParagraph++] = ch;
+	paragraphBuffer[charsInParagraph++] = ch[1];
     }
   ud->input_encoding = utf8;
   end_style ();
@@ -238,6 +243,7 @@ transcribe_text_string (void)
   ud->format_for = oldFormat;
   return 1;
 }
+
 
 int
 transcribe_text_file (void)
@@ -247,12 +253,8 @@ transcribe_text_file (void)
   int pch = 0;
   unsigned char *paragraphBuffer = (unsigned char *) ud->translated_buffer;
   FormatFor oldFormat;
-  widechar outbufx[BUFSIZE];
-  int outlenx = MAX_LENGTH;
   StyleType *docStyle;
   StyleType *paraStyle;
-  ud->outbuf = outbufx;
-  ud->outlen = outlenx;
   if (ud->format_for == utd)
     return utd_transcribe_text_file ();
   oldFormat = ud->format_for;
@@ -2638,13 +2640,10 @@ back_translate_file (void)
   int leadingBlanks = 0;
   int printPage = 0;
   int newPage = 0;
-  widechar outbufx[BUFSIZE];
   char *htmlStart = "<html><head><title>No Title</title></head><body>";
   char *htmlEnd = "</body></html>";
   if (!start_document ())
     return 0;
-  ud->outbuf = outbufx;
-  ud->outlen = MAX_LENGTH;
   if (ud->back_text == html)
     {
       if (!insertCharacters (htmlStart, strlen (htmlStart)))
@@ -3009,6 +3008,9 @@ end_style ()
 #define RDOTS (B16 | B1 | B2 | B3 | B5)
 
 static int *indices;
+static int *backIndices;
+static widechar *backBuf;
+static int backLength;
 static xmlNode *brlNode;
 static xmlNode *firstBrlNode;
 static xmlNode *prevBrlNode;
@@ -3036,6 +3038,9 @@ utd_start ()
   maxVertLinePos = ud->top_margin + NORMALLINE * ud->lines_per_page;
   ud->louis_mode = dotsIO;
   indices = malloc (MAX_TRANS_LENGTH * sizeof (int));
+  backIndices = NULL;
+  backBuf = NULL;
+  backLength = 0;
   if (spaces[0] != SPACE)
     for (k = 0; k < 3 * MAXNUMLEN; k++)
       spaces[k] = SPACE;
@@ -3228,6 +3233,101 @@ link_brl_node (xmlNode * node)
       prevBrlNode = node;
     }
   brlNode = node;
+  return 1;
+}
+
+static int
+backTranslateBlock (xmlNode * node)
+{
+  xmlNode *thisBrl;
+  xmlNode *child;
+  xmlNode *backText;
+  int translationLength;
+  int translatedLength;
+  int goodTrans;
+  int pos;
+  int k, kk;
+  if (node == NULL)
+    return 1;
+  thisBrl = node->children;
+  ud->text_length = 0;
+  child = thisBrl->children;
+  while (child)
+    {
+      if (child->type == XML_TEXT_NODE)
+	insert_utf8 (child->content);
+      child = child->next;
+    }
+  lou_dotsToChar (ud->main_braille_table, ud->text_buffer,
+		  ud->text_buffer, ud->text_length);
+  if (ud->text_length > backLength)
+    {
+      backLength = ud->text_length;
+      if (backBuf != NULL)
+	free (backBuf);
+      backBuf = malloc ((3 * backLength + 4) * CHARSIZE);
+      if (backIndices != NULL)
+	free (backIndices);
+      backIndices = malloc ((3 * backLength + 4) * sizeof (int));
+    }
+  translationLength = ud->text_length;
+  translatedLength = 3 * backLength;
+  goodTrans = lou_backTranslate (ud->main_braille_table, ud->text_buffer,
+				 &translationLength,
+				 backBuf, &translatedLength, NULL, NULL,
+				 backIndices, NULL, NULL, 0);
+  if (!goodTrans)
+    {
+      translatedLength = translationLength;
+      memcpy (backBuf, ud->text_buffer, translatedLength * CHARSIZE);
+    }
+  pos = 0;
+  for (k = 0; k < translatedLength; k++)
+    {
+      widechar ch = backBuf[k];
+      if (ch < 127)
+	{
+	  if (ch == '<' || ch == '&')
+	    {
+	      utilStringBuf[pos++] = '&';
+	      if (ch == '<')
+		{
+		  utilStringBuf[pos++] = 'l';
+		  utilStringBuf[pos++] = 't';
+		}
+	      else
+		{
+		  utilStringBuf[pos++] = 'a';
+		  utilStringBuf[pos++] = 'm';
+		  utilStringBuf[pos++] = 'p';
+		}
+	      utilStringBuf[pos++] = ';';
+	    }
+	  else
+	    utilStringBuf[k] = ch;
+	}
+      else
+	{
+	  unsigned char *utf8str = utfwcto8 (ch);
+	  for (kk = 0; utf8str[kk]; kk++)
+	    utilStringBuf[pos++] = utf8str[kk];
+	}
+    }
+  utilStringBuf[pos] = 0;
+  backText = xmlNewText ((xmlChar *) utilStringBuf);
+  xmlAddPrevSibling (thisBrl, backText);
+  if (!goodTrans)
+    return 1;
+  k = kk = 0;
+  while (k < translatedLength)
+    {
+      char posx[MAXNUMLEN];
+      int posxLen = sprintf (posx, "%d,", backIndices[k]);
+      strcpy (&utilStringBuf[kk], posx);
+      kk += posxLen;
+    }
+  utilStringBuf[--kk] = 0;
+  xmlNewProp (thisBrl, (xmlChar *) "index", (xmlChar *) utilStringBuf);
   return 1;
 }
 
@@ -3469,9 +3569,8 @@ utd_insert_translation (const char *table)
 		     &ud->
 		     translated_buffer[ud->translated_length],
 		     &translatedLength,
-		     (char *) ud->typeform, NULL, NULL, 
-&indices[ud->translated_length],
-		     NULL, dotsIO);
+		     (char *) ud->typeform, NULL, NULL,
+		     &indices[ud->translated_length], NULL, dotsIO);
   memset (ud->typeform, 0, sizeof (ud->typeform));
   ud->text_length = 0;
   if (!k)
@@ -3505,8 +3604,8 @@ utd_insert_text (xmlNode * node, int length)
       lou_charToDots (ud->main_braille_table, ud->text_buffer,
 		      &ud->translated_buffer[ud->translated_length],
 		      ud->text_length);
-for (k = 0; k < ud->text_length; k++)
-indices[ud->translated_length + k] = k;
+      for (k = 0; k < ud->text_length; k++)
+	indices[ud->translated_length + k] = k;
       ud->translated_length += ud->text_length;
       ud->translated_buffer[ud->translated_length++] = ENDSEGMENT;
       ud->text_length = 0;
@@ -3782,11 +3881,11 @@ utd_doOrdinaryText (void)
 	    }
 	  lastSpace = 0;
 	  for (cellsToWrite = 0; cellsToWrite < availableCells && (dots
-   =
-	   translatedBuffer
-   [charactersWritten
-    +
-	    cellsToWrite])
+								   =
+								   translatedBuffer
+								   [charactersWritten
+								    +
+								    cellsToWrite])
 	       != ENDSEGMENT; cellsToWrite++)
 	    if (dots == SPACE)
 	      lastSpace = cellsToWrite;
@@ -4457,6 +4556,10 @@ linesPerPage=%d", ud->braille_page_number, ud->top_margin, ud->left_margin, ud->
       xmlAddChild (ud->head_node, newNode);
     }
   free (indices);
+  if (backIndices != NULL)
+    free (backIndices);
+  if (backBuf != NULL)
+    free (backBuf);
   if (ud->volume_sem)
     makeVolumes ();
   else

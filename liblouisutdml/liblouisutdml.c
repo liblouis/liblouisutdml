@@ -228,9 +228,15 @@ int
 /* Translate the text file in inFileName into braille according to
 * the specifications in configFileName. If there are errors, print 
 * an error message and return 0.*/
+  widechar outbuf[2 * BUFSIZE];
+  widechar pagebuf[2 * BUFSIZE];
   if (!read_configuration_file
       (configFileName, logFileName, settingsString, mode))
     return 0;
+  ud->outbuf = outbuf;
+  ud->outlen = (sizeof (outbuf) / CHARSIZE) - 4;
+  ud->pagebuf = pagebuf;
+  ud->pagelen = (sizeof (pagebuf) / CHARSIZE) - 4;
   if (strcmp (inFileName, "stdin"))
     {
       if (!(ud->inFile = fopen (inFileName, "r")))
@@ -290,9 +296,15 @@ int
 * xml file or a text file according to
 * the specifications in configFileName. If there are errors, print an 
 * error message and return 0.*/
+  widechar outbuf[2 * BUFSIZE];
+  widechar pagebuf[2 * BUFSIZE];
   if (!read_configuration_file
       (configFileName, logFileName, settingsString, mode))
     return 0;
+  ud->outbuf = outbuf;
+  ud->outlen = (sizeof (outbuf) / CHARSIZE) - 4;
+  ud->pagebuf = pagebuf;
+  ud->pagelen = (sizeof (pagebuf) / CHARSIZE) - 4;
   if (strcmp (inFileName, "stdin"))
     {
       if (!(ud->inFile = fopen (inFileName, "r")))
