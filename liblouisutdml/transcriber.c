@@ -179,12 +179,12 @@ end_document (void)
 static int
 isLineend (int *c)
 {
-if (c[0] == 10 && c[1] == 13)
-return 2;
-else if (c[0] == 10 || c[0] == 13)
-return 1;
-else
-return 0;
+  if (c[0] == 10 && c[1] == 13)
+    return 2;
+  else if (c[0] == 10 || c[0] == 13)
+    return 1;
+  else
+    return 0;
 }
 
 int
@@ -213,11 +213,11 @@ transcribe_text_string (void)
       while (charsProcessed < ud->inlen)
 	{
 	  start_style (paraStyle, NULL);
-ch[0] = ch[1];
+	  ch[0] = ch[1];
 	  ch[1] = ud->inbuf[charsProcessed++];
-lineend[0] = lineend[1];
-lineend[1] = isLineend (ch);
-if (lineend[0] && lineend[1])
+	  lineend[0] = lineend[1];
+	  lineend[1] = isLineend (ch);
+	  if (lineend[0] && lineend[1])
 	    break;
 	  if (charsInParagraph >= MAX_LENGTH)
 	    break;
@@ -235,7 +235,7 @@ if (lineend[0] && lineend[1])
 	do_blankline ();
       end_style ();
       charsInParagraph = 0;
-	paragraphBuffer[charsInParagraph++] = ch[1];
+      paragraphBuffer[charsInParagraph++] = ch[1];
     }
   ud->input_encoding = utf8;
   end_style ();
@@ -3047,42 +3047,63 @@ utd_start ()
   return 1;
 }
 
+static xmlParserCtxt *ctxt;
+
 static xmlNode *
 makeDaisyDoc (void)
 {
-  xmlDoc *doc = xmlNewDoc ((xmlChar *) "1.0");
+  xmlDoc *doc;
   xmlNode *newNode;
-  xmlNode *curNode;
+  xmlNode *rootNode;
+  xmlNode *bodyNode;
   xmlNode *bookNode;
   xmlNode *retNode;
-  ud->doc = doc;
-  xmlNewDocPI (doc, (xmlChar *) "mainpi", (xmlChar *)
-	       "<?xml version='1.0' encoding='UTF8' standalone='yes'?>");
-  newNode = xmlNewNode (NULL, (xmlChar *) "dtbook");
-  xmlDocSetRootElement (doc, newNode);
-  curNode = xmlDocGetRootElement (doc);
+  char *starter =
+    "<?xml version='1.0' encoding='UTF-8' standalone='yes'?><dtbook/>";
+  static int initialized = 0;
+  if (!initialized)
+    {
+      initialized = 1;
+      LIBXML_TEST_VERSION xmlKeepBlanksDefault (0);
+      xmlSubstituteEntitiesDefault (1);
+      xmlThrDefIndentTreeOutput (1);
+      xmlThrDefKeepBlanksDefaultValue (0);
+      xmlThrDefLineNumbersDefaultValue (1);
+    }
+  ctxt = xmlNewParserCtxt ();
+  xmlSetGenericErrorFunc (ctxt, libxml_errors);
+  doc = xmlParseMemory (starter, strlen (starter));
+  rootNode = xmlDocGetRootElement (doc);
   newNode = xmlNewNode (NULL, (xmlChar *) "head");
-  ud->head_node = xmlAddChild (curNode, newNode);
+  ud->head_node = xmlAddChild (rootNode, newNode);
   newNode = xmlNewNode (NULL, (xmlChar *) "book");
-  bookNode = curNode = xmlAddChild (curNode, newNode);
+  bookNode = xmlAddChild (rootNode, newNode);
   newNode = xmlNewNode (NULL, (xmlChar *) "frrontmatter");
   xmlAddChild (bookNode, newNode);
   newNode = xmlNewNode (NULL, (xmlChar *) "bodymatter");
-  curNode = xmlAddChild (bookNode, newNode);
+  bodyNode = xmlAddChild (bookNode, newNode);
   newNode = xmlNewNode (NULL, (xmlChar *) "level");
-  retNode = xmlAddChild (curNode, newNode);
+  retNode = xmlAddChild (bodyNode, newNode);
   newNode = xmlNewNode (NULL, (xmlChar *) "h1");
   xmlAddChild (retNode, newNode);
   newNode = xmlNewNode (NULL, (xmlChar *) "rearmater");
   xmlAddChild (bookNode, newNode);
+  ud->doc = doc;
   return retNode;
 }
 
 static int
-processBuiltTree (void)
+processDaisyDoc (void)
 {
-  xmlNode *rootElement = xmlDocGetRootElement (ud->doc);
+  /* This function complements makeDaisyDoc. */
+  xmlNode *rootElement = NULL;
   int haveSemanticFile;
+  if (ud->doc == NULL)
+    {
+      lou_logPrint ("Document could not be processed");
+      return 0;
+    }
+  rootElement = xmlDocGetRootElement (ud->doc);
   if (rootElement == NULL)
     {
       lou_logPrint ("Document is empty");
@@ -3095,6 +3116,10 @@ processBuiltTree (void)
   if (!haveSemanticFile)
     return 0;
   transcribe_document (rootElement);
+  xmlFreeDoc (ud->doc);
+  xmlCleanupParser ();
+  initGenericErrorDefaultFunc (NULL);
+  xmlFreeParserCtxt (ctxt);
   return 1;
 }
 
@@ -3124,7 +3149,7 @@ handleChar (int ch, unsigned char *buf, int *posx)
       buf[pos++] = ';';
     }
   else
-    buf[pos] = ch;
+    buf[pos++] = ch;
   *posx = pos;
   return 1;
 }
@@ -3169,7 +3194,7 @@ utd_transcribe_text_string (void)
       pch = 0;
       handleChar (ch, paragraphBuffer, &charsInParagraph);
     }
-  processBuiltTree ();
+  processDaisyDoc ();
   ud->input_encoding = utf8;
   return 1;
 }
@@ -3201,18 +3226,22 @@ utd_transcribe_text_file (void)
       if (charsInParagraph == 0)
 	break;
       ch = fgetc (ud->inFile);
-      paragraphBuffer[charsInParagraph] = 0;
-      newPara = xmlNewNode (NULL, (xmlChar *) "p");
-      textNode = xmlNewText (paragraphBuffer);
-      xmlAddChild (newPara, textNode);
-      xmlAddChild (addPara, newPara);
-      if (ch == 10)
-	do_blankline ();
+      if (ch != EOF)
+	{
+	  paragraphBuffer[charsInParagraph - 1] = 0;
+	  newPara = xmlNewNode (NULL, (xmlChar *) "p");
+	  if (ch == 10)
+	    xmlNewProp (newPara, (xmlChar *) "before", (xmlChar *) "1");
+	  textNode = xmlNewText (paragraphBuffer);
+	  xmlAddChild (newPara, textNode);
+	  xmlAddChild (addPara, newPara);
+	}
       charsInParagraph = 0;
       pch = 0;
-      handleChar (ch, paragraphBuffer, &charsInParagraph);
+      if (ch != EOF)
+	handleChar (ch, paragraphBuffer, &charsInParagraph);
     }
-  processBuiltTree ();
+  processDaisyDoc ();
   ud->input_encoding = utf8;
   return 1;
 }
@@ -3590,7 +3619,6 @@ utd_insert_text (xmlNode * node, int length)
 {
   int wcLength;
   xmlNode *newNode;
-
   int k;
   newNode = xmlNewNode (NULL, (xmlChar *) "brl");
   link_brl_node (xmlAddNextSibling (node, newNode));
