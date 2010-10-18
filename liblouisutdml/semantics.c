@@ -676,7 +676,7 @@ compileLine (FileInfo * nested)
 	  return 0;
 	}
     }
-  if (func != 2)
+  if (!(func == 0 || func == 2))
     {
       funcName[funcNameLength] = ch;
       if (ch != '(')
