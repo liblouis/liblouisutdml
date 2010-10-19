@@ -1,13 +1,13 @@
-@section Universal Tactile Document (UTD)
+@section Universal Tactile Document Markup Language (UTDML)
 
-Universal Tactile Document (UTD) is  a way of adding braille 
+Universal Tactile Document (UTDML) is  a way of adding braille 
 translations, information synchronizing braille and print, and tactile 
 graphics to an original xml document, while preserving the structureand 
 text of that document. This is done by using a number of new xml 
 elements and attributes. It is best shown by examples.
 
 The first example shows a short xml document designed to show how 
-UTD operates. Note that, though it looks like a Daisy xml file, it is 
+UTDML operates. Note that, though it looks like a Daisy xml file, it is 
 not, and would not validate. liblouisxml, by devault, requires only that 
 an xml document be well-formed. It will perform validation if 
 requested. The verse which this example contains is not intended as a 
@@ -30,17 +30,17 @@ mentality.
 
 The next example was derived from the first in three steps. The files
 needed for these steps are in the @file{lbx_files} directory. First a
-UTD file was produced by aplying @file{makeutd.cfg} (via the
+UTDML file was produced by aplying @file{makeutd.cfg} (via the
 @command{xml1brl} command). The essential feature of this file is that
 it has the configuration setting @code{formatFor utd}. The result is a
-file that contains the UTD tags and Unicode braille encoded as UTF-8.
+file that contains the UTDML tags and Unicode braille encoded as UTF-8.
 This is not very readable, so two more steps were necessary. First, the
-UTD file was opened in a text editor and an x (Any character except
+UTDML file was opened in a text editor and an x (Any character except
 @samp{<} would do.) was added at the beginning. This was to prevent
 liblouisxml from considering it as an xml file. The configuration file
 @file{viewutd.cfg} was then applied to the result. This file uses a
 special liblouis table to produce readable text showing everything in
-the UTD file. The Unicode braille is shown in hexadecimal form, as
+the UTDML file. The Unicode braille is shown in hexadecimal form, as
 liblouis usually shows unknown characters.
 
 @example
@@ -108,18 +108,18 @@ number="2"/> </brl> </book>
 </dtbook>
 @end example
 
-An analysiis of the example will show the main features of UTD.
+An analysiis of the example will show the main features of UTDML.
 
 The @code{<?xml} processing instruction was added by liblouisxml to 
-prooduce a well-formed xml document. it is not part of UTD.
+prooduce a well-formed xml document. it is not part of UTDML.
 
-In the first example the @code{<head>} element is empty. UTD has added a 
+In the first example the @code{<head>} element is empty. UTDML has added a 
 @code{<meta>} sub-element with @code{name="utd"} and @code{content} 
 attributes. The value of the latter id a list of confiburation settings 
 and their values.
 
 The tag @code{<book>} has been assigned the document style in
-@file{dtbook.sem}. UTD therefore adds the first @code{<brl>} node.  It
+@file{dtbook.sem}. UTDML therefore adds the first @code{<brl>} node.  It
 has no @code{index} attribute, since it contains no braille to be
 synchronized with the print text, but does congain braille formatting
 information. It contains a @code{<newpage>} node with the attribute
@@ -148,14 +148,14 @@ half-dots.
 
 Following the @code<newline xy="20,10"/>} are a number of strings within 
 single quotes which give the braille translation in US English Grade 2. 
-This is Unicode braille, which gives the dot patterns. In the UTD file 
+This is Unicode braille, which gives the dot patterns. In the UTDML file 
 it is encoded in UTF-8. It was rendered readable by using a special 
 liblouis table.
 
 The verse in the first example has its second line emphasized. This can 
 be seen within the @code{<brl>} tag for that line. This is even clearer 
 when considering the fourth line of the verse, where the word @samp{had} 
-is emphasized. This is on the UTD line @code{<newline xy="24,20"/>}. 
+is emphasized. This is on the UTDML line @code{<newline xy="24,20"/>}. 
 Here there is a separate @code{<brl>} element for the emphasized word.
 
 The last @code{<newline>} element in the example has co-ordinates 
@@ -175,7 +175,7 @@ Following this, and still inside the @code{<brl>} tag is a second
 Finally, the example concludes with the original @code{</book>} and 
 @code{</dtbook>} tags.
 
-From the above example it can be seen that the characteristics of a UTD 
+From the above example it can be seen that the characteristics of a UTDML 
 document are:
 
 The structure and text of the original document are preserved.
@@ -191,7 +191,7 @@ print text.
 
 An extra @code{<meta>} tag is added to the @code{<head>} element, giving 
 information about the braille poortions of the document. An xml file 
-that is to be augmented with UTD must therefore have a @code{<head>} 
+that is to be augmented with UTDML must therefore have a @code{<head>} 
 element or equivalent, but it may be empty.
 
 These examples do not show the handling of tactile graphics or of 
@@ -200,8 +200,8 @@ handled by @code{<span class="locked">} tags within @code{<brl>} tags.
 The exact way in which tactile graphics will be handled is still being 
 decided.
 
-UTD should handle plain mathematical equations, but the places where 
+UTDML should handle plain mathematical equations, but the places where 
 math and text meet still need work. Matrices may not give good results.
 
 The table of contents generator and handling of computer code still need 
-to be implemented for UTD.
+to be implemented for UTDML.
