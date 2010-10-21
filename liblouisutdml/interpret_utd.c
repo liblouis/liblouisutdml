@@ -52,7 +52,7 @@ doDotsText (xmlNode * node)
   ud->text_length = 0;
   insert_utf8 (node->content);
   if (!lou_dotsToChar (ud->main_braille_table, ud->text_buffer,
-		       ud->outbuf, ud->text_length))
+		       ud->outbuf, ud->text_length, ud->louis_mode))
     return 0;
   ud->outlen_so_far = ud->text_length;
   write_outbuf ();

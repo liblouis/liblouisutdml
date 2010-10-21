@@ -2985,12 +2985,13 @@ end_style ()
   styleSpec = &ud->style_stack[ud->style_top];
   style = styleSpec->style;
   ud->brl_page_num_format = styleSpec->curBrlNumFormat;
-  if (styleSpec->node && !styleSpec->node->children)
-    return 1;
+  if (!(styleSpec->node && !styleSpec->node->children))
+{
   insert_translation (ud->main_braille_table);
   styleBody ();
   if (!ud->after_contents)
     finishStyle ();
+}
   memcpy (&prevStyleSpec, styleSpec, sizeof (prevStyleSpec));
   prevStyle = prevStyleSpec.style;
   ud->style_top--;
@@ -3295,7 +3296,7 @@ backTranslateBlock (xmlNode * node)
       child = child->next;
     }
   lou_dotsToChar (ud->main_braille_table, ud->text_buffer,
-		  ud->text_buffer, ud->text_length);
+		  ud->text_buffer, ud->text_length, ud->louis_mode);
   if (ud->text_length > backLength)
     {
       backLength = ud->text_length;
@@ -3378,7 +3379,8 @@ makeTextNode (xmlNode * node, const widechar * content, int length, int kind)
   if ((3 * length) >= maxContent)
     length = maxContent / 3 - 4;
   if (kind)
-    lou_charToDots (ud->main_braille_table, content, ud->text_buffer, length);
+    lou_charToDots (ud->main_braille_table, content, ud->text_buffer, 
+length, ud->louis_mode);
   else
     memcpy (ud->text_buffer, content, length * CHARSIZE);
   for (k = 0; k < length; k++)
@@ -3435,7 +3437,7 @@ spaceOut (int numSpaces, widechar * text, int length)
   for (k = 0; k < numSpaces; k++)
     buf[k] = ' ';
   for (; k < (numSpaces + length); k++)
-    buf[k] = text[kk];
+    buf[k] = text[kk++];
   if (!shortBrlOnly (buf, numSpaces + length, 1))
     return 0;
   return 1;
@@ -3533,7 +3535,7 @@ makePageSeparator (xmlChar * printPageNumber, int length)
     {
       lou_charToDots (ud->main_braille_table,
 		      ud->print_page_number, translatedBuffer,
-		      translatedLength);
+		      translatedLength, ud->louis_mode);
       translatedBuffer[0] = HYPHEN;
       for (k = 0; k < (ud->cells_per_line - translatedLength); k++)
 	separatorLine[k] = HYPHEN;
@@ -3651,7 +3653,7 @@ utd_insert_text (xmlNode * node, int length)
 	ud->text_length = MAX_TRANS_LENGTH - ud->translated_length;
       lou_charToDots (ud->main_braille_table, ud->text_buffer,
 		      &ud->translated_buffer[ud->translated_length],
-		      ud->text_length);
+		      ud->text_length, ud->louis_mode);
       for (k = 0; k < ud->text_length; k++)
 	indices[ud->translated_length + k] = k;
       ud->translated_length += ud->text_length;
@@ -3809,13 +3811,6 @@ utd_finishLine (int leadingBlanks, int length)
 		      if (!spaceOut
 			  (cellsToWrite, pageNumberString, pageNumberLength))
 			return 0;
-/*		      if (!makeTextNode (brlNode, spaces, cellsToWrite, 
-0))
-			return 0;
-		      if (!shortBrlOnly
-			  (pageNumberString, pageNumberLength, 1))
-			return 0;
-*/
 		    }
 		}
 	      else
@@ -3826,13 +3821,7 @@ utd_finishLine (int leadingBlanks, int length)
 		      if (!spaceOut
 			  (cellsToWrite, pageNumberString, pageNumberLength))
 			return 0;
-/*		      if (!makeTextNode (brlNode, spaces, cellsToWrite, 
-0))
-			return 0;
-		      if (!shortBrlOnly
-			  (pageNumberString, pageNumberLength, 1))
-			return 0;
-*/ }
+ }
 		}
 	    }
 	  else if (ud->lines_on_page == ud->lines_per_page)
@@ -3865,10 +3854,6 @@ utd_finishLine (int leadingBlanks, int length)
 		      if (!spaceOut
 			  (horizLinePos, pageNumberString, pageNumberLength))
 			return 0;
-/*		      if (!shortBrlOnly
-			  (pageNumberString, pageNumberLength, 1))
-			return 0;
-*/
 		    }
 		}
 	    }
@@ -4476,7 +4461,8 @@ utd_editTrans (void)
       ud->edit_table_name && (ud->has_math || ud->has_chem || ud->has_music))
     {
       lou_dotsToChar (ud->edit_table_name, ud->translated_buffer,
-		      ud->text_buffer, ud->translated_length);
+		      ud->text_buffer, ud->translated_length, 
+ud->louis_mode);
       translationLength = ud->translated_length;
       translatedLength = MAX_TRANS_LENGTH;
       if (!lou_translate (ud->edit_table_name,
