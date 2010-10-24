@@ -2634,6 +2634,9 @@ discardPageNumber (void)
   return 1;
 }
 
+static int utd_back_translate_file ();
+static int utd_back_translate_braille_string ();
+
 int
 back_translate_file (void)
 {
@@ -2645,6 +2648,8 @@ back_translate_file (void)
   int newPage = 0;
   char *htmlStart = "<html><head><title>No Title</title></head><body>";
   char *htmlEnd = "</body></html>";
+  if (ud->format_for == utd)
+    return utd_back_translate_file ();
   if (!start_document ())
     return 0;
   if (ud->back_text == html)
@@ -2727,6 +2732,8 @@ back_translate_braille_string (void)
   int newPage = 0;
   char *htmlStart = "<html><head><title>No Title</title></head><body>";
   char *htmlEnd = "</body></html>";
+  if (ud->format_for == utd)
+    return utd_back_translate_braille_string ();
   if (!start_document ())
     return 0;
   if (ud->back_text == html)
@@ -2986,12 +2993,12 @@ end_style ()
   style = styleSpec->style;
   ud->brl_page_num_format = styleSpec->curBrlNumFormat;
   if (!(styleSpec->node && !styleSpec->node->children))
-{
-  insert_translation (ud->main_braille_table);
-  styleBody ();
-  if (!ud->after_contents)
-    finishStyle ();
-}
+    {
+      insert_translation (ud->main_braille_table);
+      styleBody ();
+      if (!ud->after_contents)
+	finishStyle ();
+    }
   memcpy (&prevStyleSpec, styleSpec, sizeof (prevStyleSpec));
   prevStyle = prevStyleSpec.style;
   ud->style_top--;
@@ -3033,25 +3040,20 @@ static int maxVertLinePos;
 static int lineWidth;
 static int numWide;
 static int cellsToWrite;
-static widechar spaces[3 * MAXNUMLEN];
 
 static int
 utd_start ()
 {
-  int k;
   brlContent = (xmlChar *) ud->outbuf;
   maxContent = ud->outlen * CHARSIZE;
   utilStringBuf = (char *) ud->text_buffer;
   brlNode = firstBrlNode = prevBrlNode = NULL;
   maxVertLinePos = ud->top_margin + NORMALLINE * ud->lines_per_page;
   ud->louis_mode = dotsIO;
-  indices = malloc (MAX_TRANS_LENGTH * sizeof (int));
+  indices = NULL;
   backIndices = NULL;
   backBuf = NULL;
   backLength = 0;
-  if (spaces[0] != SPACE)
-    for (k = 0; k < 3 * MAXNUMLEN; k++)
-      spaces[k] = SPACE;
   return 1;
 }
 
@@ -3124,6 +3126,23 @@ processDaisyDoc (void)
   if (!haveSemanticFile)
     return 0;
   transcribe_document (rootElement);
+  xmlFreeDoc (ud->doc);
+  xmlCleanupParser ();
+  initGenericErrorDefaultFunc (NULL);
+  xmlFreeParserCtxt (ctxt);
+  return 1;
+}
+
+static int
+freeDaisyDoc (void)
+{
+/* Call this function if you have used makeDaisyDoc but not 
+* procesDaisyDoc. */
+  if (ud->doc == NULL)
+    {
+      lou_logPrint ("Document could not be processed");
+      return 0;
+    }
   xmlFreeDoc (ud->doc);
   xmlCleanupParser ();
   initGenericErrorDefaultFunc (NULL);
@@ -3295,20 +3314,18 @@ backTranslateBlock (xmlNode * node)
 	insert_utf8 (child->content);
       child = child->next;
     }
-  lou_dotsToChar (ud->main_braille_table, ud->text_buffer,
-		  ud->text_buffer, ud->text_length, ud->louis_mode);
   if (ud->text_length > backLength)
     {
       backLength = ud->text_length;
       if (backBuf != NULL)
 	free (backBuf);
-      backBuf = malloc ((3 * backLength + 4) * CHARSIZE);
+      backBuf = malloc ((4 * backLength + 4) * CHARSIZE);
       if (backIndices != NULL)
 	free (backIndices);
-      backIndices = malloc ((3 * backLength + 4) * sizeof (int));
+      backIndices = malloc ((4 * backLength + 4) * sizeof (int));
     }
   translationLength = ud->text_length;
-  translatedLength = 3 * backLength;
+  translatedLength = 4 * backLength;
   goodTrans = lou_backTranslate (ud->main_braille_table, ud->text_buffer,
 				 &translationLength,
 				 backBuf, &translatedLength, NULL, NULL,
@@ -3341,7 +3358,7 @@ backTranslateBlock (xmlNode * node)
 	      utilStringBuf[pos++] = ';';
 	    }
 	  else
-	    utilStringBuf[k] = ch;
+	    utilStringBuf[pos++] = ch;
 	}
       else
 	{
@@ -3354,9 +3371,12 @@ backTranslateBlock (xmlNode * node)
   backText = xmlNewText ((xmlChar *) utilStringBuf);
   xmlAddPrevSibling (thisBrl, backText);
   if (!goodTrans)
-    return 1;
-  k = kk = 0;
-  while (k < translatedLength)
+    {
+      xmlNewProp (thisBrl, (xmlChar *) "index", (xmlChar *) "-1");
+      return 1;
+    }
+  kk = 0;
+  for (k = 0; k < translatedLength; k++)
     {
       char posx[MAXNUMLEN];
       int posxLen = sprintf (posx, "%d,", backIndices[k]);
@@ -3369,7 +3389,8 @@ backTranslateBlock (xmlNode * node)
 }
 
 static int
-makeTextNode (xmlNode * node, const widechar * content, int length, int kind)
+makeDotsTextNode (xmlNode * node, const widechar * content, int length,
+		  int kind)
 {
   xmlNode *textNode;
   int k;
@@ -3379,8 +3400,8 @@ makeTextNode (xmlNode * node, const widechar * content, int length, int kind)
   if ((3 * length) >= maxContent)
     length = maxContent / 3 - 4;
   if (kind)
-    lou_charToDots (ud->main_braille_table, content, ud->text_buffer, 
-length, ud->louis_mode);
+    lou_charToDots (ud->main_braille_table, content, ud->text_buffer,
+		    length, ud->louis_mode);
   else
     memcpy (ud->text_buffer, content, length * CHARSIZE);
   for (k = 0; k < length; k++)
@@ -3395,6 +3416,112 @@ length, ud->louis_mode);
   return 1;
 }
 
+static xmlNode *addBlock;
+
+static int
+formatBackBlock (void)
+{
+  xmlNode *newBlock;
+  xmlNode *newBrl;
+  int k;
+  if (ud->translated_length <= 0)
+    return 1;
+  newBlock = xmlNewNode (NULL, (xmlChar *) "p");
+  newBrl = xmlNewNode (NULL, (xmlChar *) "brl");
+  xmlAddChild (newBlock, newBrl);
+  makeDotsTextNode (newBrl, ud->translated_buffer, ud->translated_length, 1);
+  ud->translated_length = 0;
+  backTranslateBlock (xmlAddChild (addBlock, newBlock));
+  return 1;
+}
+
+int
+utd_back_translate_file (void)
+{
+  int ch;
+  int ppch = 0;
+  int pch = 0;
+  int leadingBlanks = 0;
+  ud->output_encoding = utf8;
+  utd_start ();
+  addBlock = makeDaisyDoc ();
+  ud->translated_length = 0;
+  while ((ch = fgetc (ud->inFile)) != EOF)
+    {
+      if (ch == 13)
+	continue;
+      if (pch == 10 && ch == 32)
+	{
+	  leadingBlanks++;
+	  continue;
+	}
+      if (ch == '[' || ch == '\\' || ch == '^' || ch == ']' || ch == '@'
+	  || (ch >= 'A' && ch <= 'Z'))
+	ch |= 32;
+      if (pch == 10 && (ch == 10 || leadingBlanks > 1))
+	{
+	  formatBackBlock ();
+	  leadingBlanks = 0;
+	}
+      if (ch == 10)
+	leadingBlanks = 0;
+      ppch = pch;
+      pch = ch;
+      if (ud->translated_length >= MAX_LENGTH)
+	formatBackBlock ();
+      ud->translated_buffer[ud->translated_length++] = ch;
+    }
+  formatBackBlock ();
+  ud->text_length = ud->translated_length = 0;
+  utd_finish ();
+  freeDaisyDoc ();
+  return 1;
+}
+
+int
+utd_back_translate_braille_string (void)
+{
+  int ch;
+  int ppch = 0;
+  int pch = 0;
+  int leadingBlanks = 0;
+  int k;
+  ud->output_encoding = utf8;
+  utd_start ();
+  addBlock = makeDaisyDoc ();
+  for (k = 0; k < ud->inlen; k++)
+    {
+      ch = ud->inbuf[k];
+      if (ch == 13)
+	continue;
+      if (pch == 10 && ch == 32)
+	{
+	  leadingBlanks++;
+	  continue;
+	}
+      if (ch == '[' || ch == '\\' || ch == '^' || ch == ']' || ch == '@'
+	  || (ch >= 'A' && ch <= 'Z'))
+	ch |= 32;
+      if (pch == 10 && (ch == 10 || leadingBlanks > 1))
+	{
+	  formatBackBlock ();
+	  leadingBlanks = 0;
+	}
+      if (ch == 10)
+	leadingBlanks = 0;
+      ppch = pch;
+      pch = ch;
+      if (ud->translated_length >= MAX_LENGTH)
+	formatBackBlock ();
+      ud->translated_buffer[ud->translated_length++] = ch;
+    }
+  formatBackBlock ();
+  ud->text_length = ud->translated_length = 0;
+  utd_finish ();
+  freeDaisyDoc ();
+  return 1;
+}
+
 static int
 utd_insertCharacters (xmlNode * node, char *text, int length)
 {
@@ -3406,7 +3533,7 @@ utd_insertCharacters (xmlNode * node, char *text, int length)
     length = MAXNAMELEN - 4;
   for (k = 0; k < length; k++)
     charBuf[k] = text[k];
-  makeTextNode (node, charBuf, length, 1);
+  makeDotsTextNode (node, charBuf, length, 1);
   return 1;
 }
 
@@ -3424,7 +3551,7 @@ static int
 shortBrlOnly (const widechar * content, int length, int kind)
 {
   makeBrlOnlyNode ();
-  makeTextNode (brlOnlyNode, content, length, kind);
+  makeDotsTextNode (brlOnlyNode, content, length, kind);
   return 1;
 }
 
@@ -3465,7 +3592,7 @@ insertTextFragment (widechar * content, int length)
   if (length <= 0)
     return 1;
   checkTextFragment (content, length);
-  makeTextNode (brlNode, content, length, 0);
+  makeDotsTextNode (brlNode, content, length, 0);
   return 1;
 }
 
@@ -3548,7 +3675,7 @@ makePageSeparator (xmlChar * printPageNumber, int length)
 	utd_fillPage ();
       makeBrlOnlyNode ();
       makeNewline (brlOnlyNode, 0);
-      makeTextNode (brlOnlyNode, separatorLine, ud->cells_per_line, 0);
+      makeDotsTextNode (brlOnlyNode, separatorLine, ud->cells_per_line, 0);
     }
   else
     {
@@ -3612,6 +3739,8 @@ utd_insert_translation (const char *table)
   int translationLength;
   int translatedLength;
   int k;
+  if (indices == NULL)
+    indices = malloc (MAX_TRANS_LENGTH * sizeof (int));
   translatedLength = MAX_TRANS_LENGTH - ud->translated_length;
   translationLength = ud->text_length;
   k = lou_translate (table,
@@ -3821,7 +3950,7 @@ utd_finishLine (int leadingBlanks, int length)
 		      if (!spaceOut
 			  (cellsToWrite, pageNumberString, pageNumberLength))
 			return 0;
- }
+		    }
 		}
 	    }
 	  else if (ud->lines_on_page == ud->lines_per_page)
@@ -3837,13 +3966,6 @@ utd_finishLine (int leadingBlanks, int length)
 		    {
 		      cellsToWrite =
 			ud->cells_per_line - pageNumberLength - cellsOnLine;
-/*		      if (!makeTextNode (brlNode, spaces, cellsToWrite, 
-0))
-			return 0;
-		      if (!shortBrlOnly
-			  (pageNumberString, pageNumberLength, 1))
-			return 0;
-*/
 		    }
 		}
 	      else
@@ -4461,8 +4583,7 @@ utd_editTrans (void)
       ud->edit_table_name && (ud->has_math || ud->has_chem || ud->has_music))
     {
       lou_dotsToChar (ud->edit_table_name, ud->translated_buffer,
-		      ud->text_buffer, ud->translated_length, 
-ud->louis_mode);
+		      ud->text_buffer, ud->translated_length, ud->louis_mode);
       translationLength = ud->translated_length;
       translatedLength = MAX_TRANS_LENGTH;
       if (!lou_translate (ud->edit_table_name,
@@ -4582,14 +4703,17 @@ utd_finish ()
   brlNode = xmlAddChild (documentNode, newNode);
   if (ud->style_top < 0)
     ud->style_top = 0;
-  if (ud->text_length != 0)
-    insert_translation (ud->main_braille_table);
-  if (ud->translated_length != 0)
-    write_paragraph (para, NULL);
-  if (ud->braille_pages)
-    utd_fillPage ();
-  if (ud->contents)
-    make_contents ();
+  if (indices != NULL)
+    {
+      if (ud->text_length != 0)
+	insert_translation (ud->main_braille_table);
+      if (ud->translated_length != 0)
+	write_paragraph (para, NULL);
+      if (ud->braille_pages)
+	utd_fillPage ();
+      if (ud->contents)
+	make_contents ();
+    }
   if (ud->head_node)
     {
       newNode = xmlNewNode (NULL, (xmlChar *) "meta");
@@ -4602,7 +4726,8 @@ linesPerPage=%d", ud->braille_page_number, ud->top_margin, ud->left_margin, ud->
       xmlNewProp (newNode, (xmlChar *) "content", (xmlChar *) utilStringBuf);
       xmlAddChild (ud->head_node, newNode);
     }
-  free (indices);
+  if (indices != NULL)
+    free (indices);
   if (backIndices != NULL)
     free (backIndices);
   if (backBuf != NULL)
