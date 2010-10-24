@@ -64,11 +64,13 @@ structure. This pointer is void and must be cast to (UserData *) in the
 calling program. To access the information in this structure you must
 include louisutdml.h */
 
-/* Enumeration values to be used in mode parameter. may be ored*/
+/* Enumeration values to be used in mode parameter. may be ored.
+* liblouis uses the low-order bits, liblouisutdml uses the high-order 
+* bits,*/
   typedef enum
   {
-    dontInit = 1,
-    htmlDoc = 2
+    dontInit = 1<<30,
+    htmlDoc = 1<<29
   } ProcessingModes;
 
   int EXPORT_CALL lbu_translateString
