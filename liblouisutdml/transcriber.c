@@ -3030,6 +3030,7 @@ static xmlNode *brlNode;
 static xmlNode *firstBrlNode;
 static xmlNode *prevBrlNode;
 static xmlNode *documentNode = NULL;
+static xmlNode *containsBrlOnlyNode;
 static xmlNode *brlOnlyNode;
 static xmlNode *newlineNode;
 static xmlChar *brlContent;
@@ -3293,21 +3294,20 @@ link_brl_node (xmlNode * node)
 }
 
 static int
-backTranslateBlock (xmlNode * node)
+backTranslateBlock (xmlNode * curBlock, xmlNode * curBrl)
 {
-  xmlNode *thisBrl;
   xmlNode *child;
   xmlNode *backText;
+  xmlNode *addBrl;
   int translationLength;
   int translatedLength;
   int goodTrans;
   int pos;
   int k, kk;
-  if (node == NULL)
+  if (curBlock == NULL || curBrl == NULL)
     return 1;
-  thisBrl = node->children;
   ud->text_length = 0;
-  child = thisBrl->children;
+  child = curBrl->children;
   while (child)
     {
       if (child->type == XML_TEXT_NODE)
@@ -3329,11 +3329,12 @@ backTranslateBlock (xmlNode * node)
   goodTrans = lou_backTranslate (ud->main_braille_table, ud->text_buffer,
 				 &translationLength,
 				 backBuf, &translatedLength, NULL, NULL,
-				 backIndices, NULL, NULL, 0);
+				 backIndices, NULL, NULL, dotsIO);
   if (!goodTrans)
     {
       translatedLength = translationLength;
-      memcpy (backBuf, ud->text_buffer, translatedLength * CHARSIZE);
+      lou_dotsToChar (ud->main_braille_table, ud->text_buffer, backBuf,
+		      translatedLength, 0);
     }
   pos = 0;
   for (k = 0; k < translatedLength; k++)
@@ -3369,10 +3370,11 @@ backTranslateBlock (xmlNode * node)
     }
   utilStringBuf[pos] = 0;
   backText = xmlNewText ((xmlChar *) utilStringBuf);
-  xmlAddPrevSibling (thisBrl, backText);
+  xmlAddChild (curBlock, backText);
+  addBrl = xmlAddChild (curBlock, curBrl);
   if (!goodTrans)
     {
-      xmlNewProp (thisBrl, (xmlChar *) "index", (xmlChar *) "-1");
+      xmlNewProp (addBrl, (xmlChar *) "index", (xmlChar *) "-1");
       return 1;
     }
   kk = 0;
@@ -3384,7 +3386,7 @@ backTranslateBlock (xmlNode * node)
       kk += posxLen;
     }
   utilStringBuf[--kk] = 0;
-  xmlNewProp (thisBrl, (xmlChar *) "index", (xmlChar *) utilStringBuf);
+  xmlNewProp (addBrl, (xmlChar *) "index", (xmlChar *) utilStringBuf);
   return 1;
 }
 
@@ -3422,16 +3424,15 @@ static int
 formatBackBlock (void)
 {
   xmlNode *newBlock;
-  xmlNode *newBrl;
+  xmlNode *curBrl;
   int k;
   if (ud->translated_length <= 0)
     return 1;
   newBlock = xmlNewNode (NULL, (xmlChar *) "p");
-  newBrl = xmlNewNode (NULL, (xmlChar *) "brl");
-  xmlAddChild (newBlock, newBrl);
-  makeDotsTextNode (newBrl, ud->translated_buffer, ud->translated_length, 1);
+  curBrl = xmlNewNode (NULL, (xmlChar *) "brl");
+  makeDotsTextNode (curBrl, ud->translated_buffer, ud->translated_length, 1);
   ud->translated_length = 0;
-  backTranslateBlock (xmlAddChild (addBlock, newBlock));
+  backTranslateBlock (xmlAddChild (addBlock, newBlock), curBrl);
   return 1;
 }
 
@@ -3442,6 +3443,9 @@ utd_back_translate_file (void)
   int ppch = 0;
   int pch = 0;
   int leadingBlanks = 0;
+  ud->main_braille_table = ud->contracted_table_name;
+  if (!lou_getTable (ud->main_braille_table))
+    return 0;
   ud->output_encoding = utf8;
   utd_start ();
   addBlock = makeDaisyDoc ();
@@ -3486,6 +3490,9 @@ utd_back_translate_braille_string (void)
   int pch = 0;
   int leadingBlanks = 0;
   int k;
+  ud->main_braille_table = ud->contracted_table_name;
+  if (!lou_getTable (ud->main_braille_table))
+    return 0;
   ud->output_encoding = utf8;
   utd_start ();
   addBlock = makeDaisyDoc ();
@@ -3543,7 +3550,8 @@ makeBrlOnlyNode ()
   xmlNode *newNode;
   newNode = xmlNewNode (NULL, (xmlChar *) "span");
   xmlNewProp (newNode, (xmlChar *) "class", (xmlChar *) "brlonly");
-  brlOnlyNode = xmlAddChild (brlNode, newNode);
+  containsBrlOnlyNode = xmlAddChild (brlNode, newNode);
+  brlOnlyNode = xmlNewNode (NULL, (xmlChar *) "brl");
   return 1;
 }
 
@@ -3552,6 +3560,7 @@ shortBrlOnly (const widechar * content, int length, int kind)
 {
   makeBrlOnlyNode ();
   makeDotsTextNode (brlOnlyNode, content, length, kind);
+  backTranslateBlock (containsBrlOnlyNode, brlOnlyNode);
   return 1;
 }
 
@@ -3601,7 +3610,10 @@ assignIndices (void)
 {
   int prevSegment = 0;
   int curPos = 0;
-  xmlNode *brlNode = firstBrlNode;
+  xmlNode *curBrlNode;
+  if (firstBrlNode == NULL)
+    return 0;
+  curBrlNode = firstBrlNode;
   while (curPos < translatedLength)
     {
       if (translatedBuffer[curPos] == ENDSEGMENT || prevSegment == 0)
@@ -3609,7 +3621,8 @@ assignIndices (void)
 	  int indexPos = prevSegment;
 	  int firstIndex = indices[indexPos];
 	  int kk = 0;
-	  while (translatedBuffer[indexPos] != ENDSEGMENT)
+	  while (translatedBuffer[indexPos] != ENDSEGMENT && indexPos <
+		 translatedLength)
 	    {
 	      char pos[MAXNUMLEN];
 	      int posLen;
@@ -3619,9 +3632,10 @@ assignIndices (void)
 	      indexPos++;
 	    }
 	  utilStringBuf[--kk] = 0;
-	  xmlNewProp (brlNode, (xmlChar *) "index", (xmlChar *)
+	  xmlNewProp (curBrlNode, (xmlChar *) "index", (xmlChar *)
 		      utilStringBuf);
-	  brlNode = brlNode->_private;
+	  if (curBrlNode && curBrlNode->_private != NULL)
+	    curBrlNode = curBrlNode->_private;
 	  curPos += indexPos;
 	}
       curPos++;
