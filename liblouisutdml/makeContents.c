@@ -182,7 +182,6 @@ make_contents (void)
       styleSpec = &ud->style_stack[ud->style_top];
       styleSpec->curBrlNumFormat = saved_braillePageNumberFormat;
       ud->brl_page_num_format = saved_braillePageNumberFormat;
-
       for (k = 0; saved_printPageNumber[k]; k++)
 	{
 	  ud->print_page_number[k] = saved_printPageNumber[k];
@@ -244,7 +243,6 @@ make_contents (void)
       ud->contents = saved_udContents;
       ud->braille_page_number = old_braillePageNumber;
     }
-
   if (!(tempFile = fopen (tempFileName, "r")))
     {
       lou_logPrint ("Can't open temporary file.\n");

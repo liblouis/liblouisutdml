@@ -3032,6 +3032,8 @@ static xmlNode *prevBrlNode;
 static xmlNode *documentNode = NULL;
 static xmlNode *containsBrlOnlyNode;
 static xmlNode *brlOnlyNode;
+static xmlNode *containsContents;
+static xmlNode *addContentsBlock;
 static xmlNode *newlineNode;
 static xmlChar *brlContent;
 static int maxContent;
@@ -4385,6 +4387,7 @@ utd_doListColumns (void)
 static int
 utd_doContents (void)
 {
+  int hasPageNumbers = 1;
   int lastWord;
   int lastWordLength;
   int untilLastWord;
@@ -4395,26 +4398,29 @@ utd_doContents (void)
   int cellsToWrite = 0;
   int availableCells = 0;
   int k;
+  xmlNode *contentsBlock;
+  brlNode = xmlNewNode (NULL, (xmlChar *) "brl");
+  contentsBlock = xmlNewNode (NULL, (xmlChar *) "p");
   if (translatedBuffer[translatedLength - 1] == (NBSP))
     {
       /* No page numbers */
       translatedLength--;
-      utd_doOrdinaryText ();
-      return 1;
+      hasPageNumbers = 0;
     }
   for (k = translatedLength - 1; k > 0 && translatedBuffer[k] != SPACE; k--);
   if (k == 0)
+    hasPageNumbers = 0;
+  if (hasPageNumbers)
     {
-      utd_doOrdinaryText ();
-
-      return 1;
+      numbersStart = k + 1;
+      numbersLength = translatedLength - numbersStart;
+      for (--k; k >= 0 && translatedBuffer[k] > SPACE; k--);
+      lastWord = k + 1;
+      lastWordLength = numbersStart - lastWord;
+      untilLastWord = lastWord - 1;
     }
-  numbersStart = k + 1;
-  numbersLength = translatedLength - numbersStart;
-  for (--k; k >= 0 && translatedBuffer[k] > SPACE; k--);
-  lastWord = k + 1;
-  lastWordLength = numbersStart - lastWord;
-  untilLastWord = lastWord - 1;
+  else
+    untilLastWord = translatedLength;
   while (charactersWritten < untilLastWord)
     {
       int wordTooLong = 0;
@@ -4491,52 +4497,59 @@ utd_doContents (void)
 	leadingBlanks = 0;
       availableCells -= leadingBlanks;
     }
-  if ((lastWordLength + numbersLength + 2) < availableCells)
+  if (!hasPageNumbers)
     {
-      insertCharacters (blanks, 1);
-      availableCells--;
-      if (!insertTextFragment (&translatedBuffer[lastWord], lastWordLength))
-	return 0;
-      availableCells -= lastWordLength;
-      if ((availableCells - numbersLength) < 3)
-	utd_insertCharacters (brlNode, blanks, availableCells -
-			      numbersLength);
+      if ((lastWordLength + numbersLength + 2) < availableCells)
+	{
+	  utd_insertCharacters (brlNode, blanks, 1);
+	  availableCells--;
+	  if (!insertTextFragment
+	      (&translatedBuffer[lastWord], lastWordLength))
+	    return 0;
+	  availableCells -= lastWordLength;
+	  if ((availableCells - numbersLength) < 3)
+	    utd_insertCharacters (brlNode, blanks, availableCells -
+				  numbersLength);
+	  else
+	    {
+	      utd_insertCharacters (brlNode, blanks, 1);
+	      for (k = availableCells - (numbersLength + 1); k > 0; k--)
+		utd_insertCharacters (brlNode, &ud->line_fill, 1);
+	      utd_insertCharacters (brlNode, blanks, 1);
+	    }
+	  if (!insertTextFragment (&translatedBuffer[numbersStart],
+				   numbersLength))
+	    return 0;
+	  utd_finishLine (leadingBlanks, cellsToWrite);
+	}
       else
 	{
-	  insertCharacters (blanks, 1);
-	  for (k = availableCells - (numbersLength + 1); k > 0; k--)
-	    insertCharacters (&ud->line_fill, 1);
-	  insertCharacters (blanks, 1);
+	  utd_finishLine (leadingBlanks, cellsToWrite);
+	  availableCells = utd_startLine ();
+	  leadingBlanks = style->left_margin;
+	  availableCells -= leadingBlanks;
+	  if (!insertTextFragment
+	      (&translatedBuffer[lastWord], lastWordLength))
+	    return 0;
+	  availableCells -= lastWordLength;
+	  if ((availableCells - numbersLength) < 3)
+	    utd_insertCharacters (brlNode, blanks, availableCells -
+				  numbersLength);
+	  else
+	    {
+	      utd_insertCharacters (brlNode, blanks, 1);
+	      for (k = availableCells - (numbersLength + 1); k > 0; k--)
+		utd_insertCharacters (brlNode, &ud->line_fill, 1);
+	      utd_insertCharacters (brlNode, blanks, 1);
+	    }
+	  if (!insertTextFragment (&translatedBuffer[numbersStart],
+				   numbersLength))
+	    return 0;
+	  utd_finishLine (leadingBlanks, numbersLength);
 	}
-      if (!insertTextFragment (&translatedBuffer[numbersStart],
-			       numbersLength))
-	return 0;
-      utd_finishLine (leadingBlanks, cellsToWrite);
     }
-  else
-    {
-      utd_finishLine (leadingBlanks, cellsToWrite);
-      availableCells = utd_startLine ();
-      leadingBlanks = style->left_margin;
-      availableCells -= leadingBlanks;
-      if (!insertTextFragment (&translatedBuffer[lastWord], lastWordLength))
-	return 0;
-      availableCells -= lastWordLength;
-      if ((availableCells - numbersLength) < 3)
-	utd_insertCharacters (brlNode, blanks, availableCells -
-			      numbersLength);
-      else
-	{
-	  insertCharacters (blanks, 1);
-	  for (k = availableCells - (numbersLength + 1); k > 0; k--)
-	    insertCharacters (&ud->line_fill, 1);
-	  insertCharacters (blanks, 1);
-	}
-      if (!insertTextFragment (&translatedBuffer[numbersStart],
-			       numbersLength))
-	return 0;
-      utd_finishLine (leadingBlanks, numbersLength);
-    }
+  backTranslateBlock (contentsBlock, brlNode);
+  xmlAddChild (addContentsBlock, contentsBlock);
   return 1;
 }
 
@@ -4726,7 +4739,13 @@ utd_finish ()
       if (ud->braille_pages)
 	utd_fillPage ();
       if (ud->contents)
-	make_contents ();
+	{
+	  containsContents = xmlNewNode (NULL, (xmlChar *) "brl");
+	  newNode = xmlNewNode (NULL, (xmlChar *) "span");
+	  xmlNewProp (newNode, (xmlChar *) "class", (xmlChar *) "brlonly");
+	  addContentsBlock = xmlAddChild (containsContents, newNode);
+	  make_contents ();
+	}
     }
   if (ud->head_node)
     {
