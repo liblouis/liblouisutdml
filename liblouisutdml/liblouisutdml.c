@@ -180,6 +180,7 @@ lbu_translateString (const char *configFileName,
   *outlen = ud->outlen_so_far;
   if (xmlInbuf != inbuf)
     free (xmlInbuf);
+  lou_logEnd ();
   return 1;
 }
 
@@ -216,6 +217,7 @@ int
     return 0;
   if (ud->outFile != stdout)
     fclose (ud->outFile);
+  lou_logEnd ();
   return 1;
 }
 
@@ -262,6 +264,7 @@ int
     fclose (ud->inFile);
   if (ud->outFile != stdout)
     fclose (ud->outFile);
+  lou_logEnd ();
   return 1;
 }
 
@@ -283,6 +286,7 @@ lbu_backTranslateString (const char *configFileName,
   ud->inFile = ud->outFile = NULL;
   back_translate_braille_string ();
   *outlen = ud->outlen_so_far;
+  lou_logEnd ();
   return 1;
 }
 
@@ -330,6 +334,7 @@ int
     fclose (ud->inFile);
   if (ud->outFile != stdout)
     fclose (ud->outFile);
+  lou_logEnd ();
   return 1;
 }
 

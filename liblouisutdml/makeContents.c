@@ -64,13 +64,13 @@ initialize_contents (void)
   int k;
   saved_braillePageNumberFormat = ud->brl_page_num_format;
   for (k = 0; ud->print_page_number[k]; k++)
-      saved_printPageNumber[k] = ud->print_page_number[k];
+    saved_printPageNumber[k] = ud->print_page_number[k];
   saved_printPageNumber[k] = 0;
   for (k = 0; ud->print_page_number_first[k]; k++)
-      saved_printPageNumberFirst[k] = ud->print_page_number_first[k];
+    saved_printPageNumberFirst[k] = ud->print_page_number_first[k];
   saved_printPageNumberFirst[k] = 0;
   for (k = 0; ud->print_page_number_last[k]; k++)
-      saved_printPageNumberLast[k] = ud->print_page_number_last[k];
+    saved_printPageNumberLast[k] = ud->print_page_number_last[k];
   saved_printPageNumberLast[k] = 0;
   ud->after_contents = 1;
   saved_udContents = ud->contents;
@@ -79,15 +79,18 @@ initialize_contents (void)
   ud->contents = 1;
   firstHeading = NULL;
   lastHeading = &heading;
-  saved_outFile = ud->outFile;
-  strcpy (tempFileName, ud->writeable_path);
-  strcat (tempFileName, "lbu_body.temp");
-  if (!(tempFile = fopen (tempFileName, "w")))
+  if (ud->format_for != utd)
     {
-      lou_logPrint ("Can't open temporary file.\n");
-      return 0;
+      saved_outFile = ud->outFile;
+      strcpy (tempFileName, ud->writeable_path);
+      strcat (tempFileName, "lbu_body.temp");
+      if (!(tempFile = fopen (tempFileName, "w")))
+	{
+	  lou_logPrint ("Can't open temporary file.\n");
+	  return 0;
+	}
+      ud->outFile = tempFile;
     }
-  ud->outFile = tempFile;
   ud->lines_on_page = 0;
   if (ud->has_contentsheader)
     ud->braille_page_number = ud->beginning_braille_page_number;
@@ -138,10 +141,20 @@ finish_heading (sem_act action)
 	}
       if (*ud->braille_page_string)
 	{
-	  if (*ud->print_page_number != '_')
-	    heading.headingChars[heading.headingLength++] = 0xa0;
+	  if (ud->format_for == utd)
+	    {
+	      if (*ud->print_page_number != '_')
+		heading.headingChars[heading.headingLength++] = (B16 | B10);
+	      else
+		heading.headingChars[heading.headingLength++] = B16;
+	    }
 	  else
-	    heading.headingChars[heading.headingLength++] = ' ';
+	    {
+	      if (*ud->print_page_number != '_')
+		heading.headingChars[heading.headingLength++] = 0xa0;
+	      else
+		heading.headingChars[heading.headingLength++] = ' ';
+	    }
 	  k = 0;
 	  while (ud->braille_page_string[k])
 	    heading.headingChars[heading.headingLength++] =
@@ -150,7 +163,12 @@ finish_heading (sem_act action)
     }
   if (initHeadingLength == heading.headingLength)
     /* No page numbers */
-    heading.headingChars[heading.headingLength++] = 0xa0;
+    {
+      if (ud->format_for == utd)
+	heading.headingChars[heading.headingLength++] = (B16 | B10);
+      else
+	heading.headingChars[heading.headingLength++] = 0xa0;
+    }
   headingSize += heading.headingLength * CHARSIZE;
   headingPtr = malloc (headingSize);
   memcpy (headingPtr, &heading, headingSize);
@@ -172,8 +190,11 @@ make_contents (void)
   if (!ud->contents)
     return 1;
   old_braillePageNumber = ud->braille_page_number;
-  fclose (tempFile);
-  ud->outFile = saved_outFile;
+  if (ud->format_for != utd)
+    {
+      fclose (tempFile);
+      ud->outFile = saved_outFile;
+    }
   if (firstHeading != NULL)
     {
       int k;
@@ -243,6 +264,8 @@ make_contents (void)
       ud->contents = saved_udContents;
       ud->braille_page_number = old_braillePageNumber;
     }
+  if (ud->format_for == utd)
+    return 1;
   if (!(tempFile = fopen (tempFileName, "r")))
     {
       lou_logPrint ("Can't open temporary file.\n");
