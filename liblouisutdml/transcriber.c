@@ -309,9 +309,9 @@ transcribe_text_file (void)
 #define MAXBYTES 7
 static int first0Bit[MAXBYTES] = { 0x80, 0xC0, 0xE0, 0xF0, 0xF8, 0xFC, 0XFE };
 
-static int
-utf8ToWc (const unsigned char *utf8str, int *inSize, widechar *
-	  utfwcstr, int *outSize)
+int
+utf8_string_to_wc (const unsigned char *instr, int *inSize, widechar *
+	  outstr, int *outSize)
 {
   int in = 0;
   int out = 0;
@@ -323,10 +323,10 @@ utf8ToWc (const unsigned char *utf8str, int *inSize, widechar *
   int k;
   while (in < *inSize)
     {
-      ch = utf8str[in++] & 0xff;
+      ch = instr[in++] & 0xff;
       if (ch < 128 || ud->input_encoding == ascii8)
 	{
-	  utfwcstr[out++] = (widechar) ch;
+	  outstr[out++] = (widechar) ch;
 	  if (out >= *outSize)
 	    {
 	      *inSize = in;
@@ -345,11 +345,11 @@ utf8ToWc (const unsigned char *utf8str, int *inSize, widechar *
 	{
 	  if (in >= *inSize)
 	    break;
-	  utf32 = (utf32 << 6) + (utf8str[in++] & 0x3f);
+	  utf32 = (utf32 << 6) + (instr[in++] & 0x3f);
 	}
       if (CHARSIZE == 2 && utf32 > 0xffff)
 	utf32 = 0xffff;
-      utfwcstr[out++] = (widechar) utf32;
+      outstr[out++] = (widechar) utf32;
       if (out >= *outSize)
 	{
 	  *inSize = lastInSize;
@@ -362,21 +362,69 @@ utf8ToWc (const unsigned char *utf8str, int *inSize, widechar *
   return 1;
 }
 
+int
+wc_string_to_utf8 (const widechar * instr, int *inSize, unsigned char *outstr,
+		int *outSize)
+{
+  int in = 0;
+  int out = 0;
+  unsigned int ch = 0;
+  unsigned char utf8Str[10];
+  unsigned int utf8Bytes[MAXBYTES] = { 0, 0, 0, 0, 0, 0, 0 };
+  int utf8Length;
+  int numBytes;
+  unsigned int utf32;
+  int k;
+  while (in < *inSize)
+    {
+      utf32 = instr[in++];
+      if (ch < 128)
+	{
+	  utf8Str[0] = utf32;
+	  utf8Length = 1;
+	}
+      for (numBytes = 0; numBytes < MAXBYTES - 1; numBytes++)
+	{
+	  utf8Bytes[numBytes] = utf32 & 0x3f;
+	  utf32 >>= 6;
+	  if (utf32 == 0)
+	    break;
+	}
+      utf8Str[0] = first0Bit[numBytes] | utf8Bytes[numBytes];
+      numBytes--;
+      utf8Length = 1;
+      while (numBytes >= 0)
+	utf8Str[utf8Length++] = utf8Bytes[numBytes--] | 0x80;
+      if ((out + utf8Length) > *outSize)
+	{
+	  *inSize = in;
+	  *outSize = out;
+	  return 1;
+	}
+      for (k = 0; k < utf8Length; k++)
+	outstr[in++] = utf8Str[k];
+    }
+  outstr[out++] = 0;
+  *inSize = in;
+  *outSize = out;
+  return 1;
+}
+
 static unsigned char *
-utfwcto8 (widechar utfwcChar)
+wcCharToUtf8 (widechar ch)
 {
   static unsigned char utf8Str[10];
   unsigned int utf8Bytes[MAXBYTES] = { 0, 0, 0, 0, 0, 0, 0 };
   int numBytes;
   int k;
   unsigned int utf32;
-  if (utfwcChar < 128)
+  if (ch < 128)
     {
-      utf8Str[0] = utfwcChar;
+      utf8Str[0] = ch;
       utf8Str[1] = 0;
       return utf8Str;
     }
-  utf32 = utfwcChar;
+  utf32 = ch;
   for (numBytes = 0; numBytes < MAXBYTES - 1; numBytes++)
     {
       utf8Bytes[numBytes] = utf32 & 0x3f;
@@ -410,7 +458,7 @@ insert_utf8 (const unsigned char *text)
   int charsDone = length;
   int outSize = MAX_LENGTH - ud->text_length;
   ud->old_text_length = ud->text_length;
-  utf8ToWc (text, &charsDone, &ud->text_buffer[ud->text_length], &outSize);
+  utf8_string_to_wc (text, &charsDone, &ud->text_buffer[ud->text_length], &outSize);
   ud->text_length += outSize;
   while (charsDone < length)
     {
@@ -439,7 +487,7 @@ insert_utf8 (const unsigned char *text)
       if (charsToDo <= 0)
 	charsToDo = minimum (MAX_LENGTH, length - charsDone);
       maxSize = MAX_LENGTH;
-      utf8ToWc (&text[charsDone], &charsToDo, &ud->text_buffer[0], &maxSize);
+      utf8_string_to_wc (&text[charsDone], &charsToDo, &ud->text_buffer[0], &maxSize);
       charsDone += charsToDo;
     }
   return outSize;
@@ -697,7 +745,7 @@ handlePagenum (xmlChar * printPageNumber, int length)
     strcat (setup, LETSIGN);
   strcat (setup, printPageNumber);
   length = strlen (setup);
-  utf8ToWc (setup, &length, &translationBuffer[0], &translationLength);
+  utf8_string_to_wc (setup, &length, &translationBuffer[0], &translationLength);
   if (!lou_translateString (ud->main_braille_table, translationBuffer,
 			    &translationLength, translatedBuffer,
 			    &translatedLength, NULL, NULL, 0))
@@ -1142,7 +1190,7 @@ writePagebuf (void)
 	    case utf8:
 	      for (k = 0; k < ud->pagelen_so_far; k++)
 		{
-		  utf8Str = utfwcto8 (ud->pagebuf[k]);
+		  utf8Str = wcCharToUtf8 (ud->pagebuf[k]);
 		  fwrite (utf8Str, strlen ((char *) utf8Str), 1, ud->outFile);
 		}
 	      break;
@@ -1188,7 +1236,7 @@ writeOutbufDirect (void)
     case utf8:
       for (k = 0; k < ud->outlen_so_far; k++)
 	{
-	  utf8Str = utfwcto8 (ud->outbuf[k]);
+	  utf8Str = wcCharToUtf8 (ud->outbuf[k]);
 	  fwrite (utf8Str, strlen ((char *) utf8Str), 1, ud->outFile);
 	}
       break;
@@ -1402,7 +1450,7 @@ write_outbuf (void)
     case utf8:
       for (k = 0; k < ud->outlen_so_far; k++)
 	{
-	  utf8Str = utfwcto8 (ud->outbuf[k]);
+	  utf8Str = wcCharToUtf8 (ud->outbuf[k]);
 	  fwrite (utf8Str, strlen ((char *) utf8Str), 1, ud->outFile);
 	}
       break;
@@ -3159,8 +3207,8 @@ handleChar (int ch, unsigned char *buf, int *posx)
   int pos = *posx;
   if (ch > 127 && ud->input_encoding == ascii8)
     {
-      buf[pos++] = 0xc1;
-      buf[pos++] = ch;
+      buf[pos++] = 0xc3;
+      buf[pos++] = ch & 0x3f;
     }
   else if (ch == '<' || ch == '&')
     {
@@ -3365,7 +3413,7 @@ backTranslateBlock (xmlNode * curBlock, xmlNode * curBrl)
 	}
       else
 	{
-	  unsigned char *utf8str = utfwcto8 (ch);
+	  unsigned char *utf8str = wcCharToUtf8 (ch);
 	  for (kk = 0; utf8str[kk]; kk++)
 	    utilStringBuf[pos++] = utf8str[kk];
 	}
@@ -3397,24 +3445,17 @@ makeDotsTextNode (xmlNode * node, const widechar * content, int length,
 		  int kind)
 {
   xmlNode *textNode;
-  int k;
-  int kk = 0;
+  int inlen, outlen;
   if (length <= 0)
     return 1;
-  if ((3 * length) >= maxContent)
-    length = maxContent / 3 - 4;
   if (kind)
     lou_charToDots (ud->main_braille_table, content, ud->text_buffer,
 		    length, ud->louis_mode);
   else
     memcpy (ud->text_buffer, content, length * CHARSIZE);
-  for (k = 0; k < length; k++)
-    {
-      xmlChar *utf8Char = utfwcto8 ((ud->text_buffer[k] & 0xff) | 0x2800);
-      memcpy (&brlContent[kk], utf8Char, 3);
-      kk += 3;
-    }
-  brlContent[kk] = 0;
+  inlen = length;
+  outlen = maxContent;
+  wc_string_to_utf8 (ud->text_buffer, &inlen, brlContent, &outlen);
   textNode = xmlNewText (brlContent);
   xmlAddChild (node, textNode);
   return 1;
@@ -3665,7 +3706,7 @@ makePageSeparator (xmlChar * printPageNumber, int length)
   strcat (setup, printPageNumber);
   length = strlen (setup);
   translationLength = MAXNUMLEN;
-  utf8ToWc (setup, &length, separatorLine, &translationLength);
+  utf8_string_to_wc (setup, &length, separatorLine, &translationLength);
   if (!lou_translateString (ud->main_braille_table,
 			    separatorLine,
 			    &translationLength, ud->print_page_number,

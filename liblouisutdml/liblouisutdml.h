@@ -50,7 +50,7 @@ documentation see liblouisutdml.html or type info liblouisutdml. */
 #endif
 
   char *EXPORT_CALL lbu_version (void);
-/* Returns the version of liblouisutdml. */
+/* Returns the version of liblouisutdml and liblouis. */
 
   void *EXPORT_CALL lbu_initialize (const char *configFileName,
 				    const char *logFileName,
@@ -69,8 +69,8 @@ include louisutdml.h */
 * bits,*/
   typedef enum
   {
-    dontInit = 1<<30,
-    htmlDoc = 1<<29
+    dontInit = 1 << 30,
+    htmlDoc = 1 << 29
   } ProcessingModes;
 
   int EXPORT_CALL lbu_translateString
@@ -121,6 +121,33 @@ if a conplete translation could not be done.  */
 					 const char *settingsString,
 					 unsigned int mode);
 
+  void EXPORT_CALL
+    lbu_charToDots (const char *trantab, const unsigned char *inbuf,
+		    unsigned char *outbuf, int length, char *logFile,
+		    unsigned int mode);
+
+/* Convert the utf8 character string in inbuf to Unicode braille dot 
+patterns and place the result as a utf8 string in outbuf. */
+
+  void EXPORT_CALL
+    lbu_dotsToChar (const char *trantab, const unsigned char *inbuf,
+		    unsigned char *outbuf, int length, char *logFile,
+		    unsigned int mode);
+
+/* Convert the utf8 string of dot patterns in inbuf to characters and 
+place the result as a utf8 string in outbuf. */
+
+  void EXPORT_CALL
+    lbu_checkTable (const char *trantab, char *logFile, unsigned int mode);
+
+/* See if the table in trantab exists and is valid. If no errors are 
+found logFile will be empty. */
+
+  int EXPORT_CALL lbu_charSize (void);
+
+/* Return the character size used internally by liblouis and 
+liblouisutdml. */
+
   void EXPORT_CALL lbu_free (void);
 
 /* This function should be called at the end of the application to free
@@ -129,6 +156,4 @@ all memory allocated by liblouisutdml or liblouis. */
 #ifdef __cplusplus
 }
 #endif				/* __cplusplus */
-
-
 #endif				/*__LIBLOUISUTDML_H_ */
