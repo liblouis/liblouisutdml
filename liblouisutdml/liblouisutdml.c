@@ -42,7 +42,11 @@ char *EXPORT_CALL
 lbu_version ()
 {
   static char *version = PACKAGE_VERSION;
-  return version;
+  static char bothVersions[60];
+  strcpy (bothVersions, version);
+  strcat (bothVersions, " ");
+  strcat (bothVersions, lou_version ());
+  return bothVersions;
 }
 
 void
@@ -149,8 +153,11 @@ lbu_translateString (const char *configFileName,
     return 0;
   ud->inbuf = inbuf;
   ud->inlen = inlen;
+  ud->outbuf_utf8 = outbuf;
+  ud->outlen_utf8 = *outlen;
   ud->outbuf = (widechar *) outbuf;
-  ud->outlen = *outlen / CHARSIZE;
+  ud->outlen = ud->outlen_utf8 / CHARSIZE;
+  ud->inFile = ud->outFile = NULL;
   for (k = 0; k < inlen; k++)
     if (inbuf[k] > ' ')
       break;
@@ -281,8 +288,10 @@ lbu_backTranslateString (const char *configFileName,
     return 0;
   ud->inbuf = inbuf;
   ud->inlen = inlen;
+  ud->outbuf_utf8 = outbuf;
+  ud->outlen_utf8 = *outlen;
   ud->outbuf = (widechar *) outbuf;
-  ud->outlen = *outlen / CHARSIZE;
+  ud->outlen = ud->outlen_utf8 / CHARSIZE;
   ud->inFile = ud->outFile = NULL;
   back_translate_braille_string ();
   *outlen = ud->outlen_so_far;
@@ -336,6 +345,60 @@ int
     fclose (ud->outFile);
   lou_logEnd ();
   return 1;
+}
+
+void EXPORT_CALL
+lbu_charToDots (const char *trantab, const unsigned char *inbuf,
+		unsigned char *outbuf, int length, char *logFile,
+		unsigned int mode)
+{
+  widechar *interBuf;
+  int wcLength;
+  int utf8Length;
+  lou_logFile (logFile);
+  interBuf = malloc (length * CHARSIZE);
+  utf8Length = length;
+  wcLength = length;
+  utf8_string_to_wc (inbuf, &utf8Length, interBuf, &wcLength);
+  lou_charToDots (trantab, interBuf, interBuf, wcLength, mode | ucBrl);
+  utf8Length = length;
+  wc_string_to_utf8 (interBuf, &wcLength, outbuf, &utf8Length);
+  lou_logEnd ();
+  free (interBuf);
+}
+
+void EXPORT_CALL
+lbu_dotsToChar (const char *trantab, const unsigned char *inbuf,
+		unsigned char *outbuf, int length, char *logFile,
+		unsigned int mode)
+{
+  widechar *interBuf;
+  int wcLength;
+  int utf8Length;
+  lou_logFile (logFile);
+  interBuf = malloc (length * CHARSIZE);
+  utf8Length = length;
+  wcLength = length;
+  utf8_string_to_wc (inbuf, &utf8Length, interBuf, &wcLength);
+  lou_dotsToChar (trantab, interBuf, interBuf, wcLength, mode);
+  utf8Length = length;
+  wc_string_to_utf8 (interBuf, &wcLength, outbuf, &utf8Length);
+  lou_logEnd ();
+  free (interBuf);
+}
+
+void EXPORT_CALL
+lbu_checkTable (const char *trantab, char *logFile, unsigned int mode)
+{
+  lou_logFile (logFile);
+  lou_getTable (trantab);
+  lou_logEnd ();
+}
+
+int EXPORT_CALL
+lbu_charSize (void)
+{
+  return CHARSIZE;
 }
 
 void EXPORT_CALL
