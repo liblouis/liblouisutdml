@@ -26,7 +26,7 @@
   * Maintained by John J. Boyer john.boyer@abilitiessoft.com
 */
 
-package org.brailleblaster.jlouislibs;
+package org.liblouis.jlouislibs;
 
 public class Jliblouisutdml
 {
