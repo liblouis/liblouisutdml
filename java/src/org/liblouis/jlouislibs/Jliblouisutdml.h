@@ -16,6 +16,10 @@ JNIEXPORT jboolean JNICALL Java_org_brailleblaster_jlouislibs_Jliblouisutdml_lbu
 JNIEXPORT jboolean JNICALL Java_org_brailleblaster_jlouislibs_Jliblouisutdml_lbu_1translateFile (JNIEnv *env, jobject, jstring, jstring, jstring, jstring, jstring, jint);
 JNIEXPORT jboolean JNICALL Java_org_brailleblaster_jlouislibs_Jliblouisutdml_lbu_1translateTextFile (JNIEnv *env, jobject, jstring, jstring, jstring, jstring, jstring, jint);
 JNIEXPORT jboolean JNICALL Java_org_brailleblaster_jlouislibs_Jliblouisutdml_lbu_1backTranslateFile (JNIEnv *env, jobject, jstring, jstring, jstring, jstring, jstring, jint);
+JNIEXPORT void JNICALL Java_org_brailleblaster_jlouislibs_Jliblouisutdml_lbu_1charToDots (JNIEnv *env, jobject, jstring, jbyteArray, jbyteArray, jstring, jint);
+JNIEXPORT void JNICALL Java_org_brailleblaster_jlouislibs_Jliblouisutdml_lbu_1dotsToChar (JNIEnv *env, jobject, jstring, jbyteArray, jbyteArray, jstring, jint);
+JNIEXPORT void JNICALL Java_org_brailleblaster_jlouislibs_Jliblouisutdml_lbu_1checkTable (JNIEnv *env, jobject, jstring, jstring, jint);
+JNIEXPORT jint JNICALL Java_org_brailleblaster_jlouislibs_Jliblouisutdml_lbu_1charSize (JNIEnv *env, jobject);
 JNIEXPORT void JNICALL Java_org_brailleblaster_jlouislibs_Jliblouisutdml_lbu_1free (JNIEnv *env, jobject);
 #undef org_brailleblaster_jlouislibs_Jliblouisutdml_dontInit
 #define org_brailleblaster_jlouislibs_Jliblouisutdml_dontInit 1L
