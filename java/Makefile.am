@@ -1,4 +1,7 @@
 EXTRA_DIST = \
 	Jliblouisutdml.c \
-	Jliblouisutdml.h
+	Jliblouisutdml.h \
+	build.xml \
+	src/org/liblouis/jliouslibs/Jliblouisutdml.java
+
 
