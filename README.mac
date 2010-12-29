@@ -1,0 +1,48 @@
+Following the below steps will install the latest liblouisxml tar ball
+from http://code.google.com/p/liblouisxml/downloads/list
+
+NOTE: I am assuming that you already have liblouis installed in /usr
+or /usr/local. 
+
+1. Download pkg-config from
+
+  http://pkg-config.freedesktop.org/releases/
+
+Uncompress it and switch to the newly created directory. Install it
+with
+
+  ./configure; make; sudo make install. 
+
+This will install it in /usr/local by default.
+
+2. Add the following line to your ~/.profile (you can change the
+system profile if you prefer):
+
+export PKG_CONFIG_PATH="/usr/local/lib/pkgconfig:/usr/lib/pkgconfig"
+
+This line tells configure where to look for the *.pc files for
+installed libraries. You should check to make sure that both of these
+directories exist. Both of these directories will be needed because
+libxml2 comes installed in /usr/lib, and the liblouis library will by
+default install in /usr/local/lib.
+
+3. Download the latest liblouisxml tarball from
+
+  http://code.google.com/p/liblouisxml/downloads/list
+
+or svn; decompress it; switch to the liblouisxml directory and run
+
+  ./configure; make; sudo make install
+
+This works on my mac, and so hopefully should work for you. Although I
+am still running 10.5 on a PPC, the standard installation shouldn't
+have changed that much.
+
+
+If you run into linking problems it might be that there are multiple
+versions of libxml2 installed. In that case uninstall all of the
+libxml2 versions except for the one in /usr/ and try again.
+
+If libraries have been installed in nonstandard locations, then those
+pkgconfig paths should be added to the PKG_CONFIG_PATH variable in
+~/.profile.
