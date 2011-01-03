@@ -1,2 +1,2 @@
-subdirs = jlouislibs
+EXTRA_DIST = Jliblouisutdml.java
 
