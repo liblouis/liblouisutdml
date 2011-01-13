@@ -4,7 +4,7 @@ package org.liblouis;
 * Bindings for liblouisutdml
 */
 
-public class Jliblouisutdml
+public final class Jliblouisutdml
 {
 /** 
 * These bindings include enough functionality so that it should never 
@@ -13,6 +13,39 @@ with two sets of bindings. liblouisutdml can produce a variety of output
 types according to the value of the formatFor configuration setting. To 
 get UTDML formatFor is set to utd.
 */
+
+/**
+* This class is a singleton.
+*/
+
+private static Jliblouisutdml singleInstance = new Jliblouisutdml();
+private static boolean libraryLoaded = false;
+
+private Jliblouisutdml () {
+}
+
+public static Jliblouisutdml getInstance()
+{
+return singleInstance;
+}
+
+/**
+* The libary name must be a complete path.
+*/
+
+public void loadLibrary (String libraryName)
+throws Exception
+{
+if (!libraryLoaded)
+{
+System.load (libraryName);
+libraryLoaded = true;
+}
+else
+{
+throw new Exception ("Attempt to reload library.");
+}
+}
 
 /** Definitions of mode bits */
 
@@ -36,7 +69,7 @@ public static final int ucBrl = 1<<7;
 
 /** Return a string giving the versions of both liblouisutdml and 
 * liblouis */
-  public native String lbu_version ();
+  public native String version ();
 
 /** Make a braille translation of the UTF-8 characters in inbuf 
 according to configuration settings to UTF-8 characters in outbuf. The 
@@ -47,7 +80,7 @@ errors even if the return value is true. If there are none, the log file
 will be empty. settingsstring may be used to pass in configuration 
 settings. */
 
-  public native boolean lbu_translateString (String configFileList,
+  public native boolean translateString (String configFileList,
 					     byte[]inbuf,
 					     byte[]outbuf, int[]outlen,
 					     String logFilename,
@@ -58,7 +91,7 @@ outbuf according to the settings in the configuration files and
 setingsStrring. The translation will be in UTF-8.
 */
 
-  public native boolean lbu_backTranslateString (String configFileList,
+  public native boolean backTranslateString (String configFileList,
 						 byte[]inbuf,
 						 byte[]outbuf, int[]outlen,
 						 String logFilename,
@@ -70,7 +103,7 @@ translation is placed
 in outputFile. The return value and log file are as described above.
 */
 
-  public native boolean lbu_translateFile (String configFileList, String
+  public native boolean translateFile (String configFileList, String
 					   inputFileName,
 					   String outputFileName,
 					   String logFileName,
@@ -81,7 +114,7 @@ translation placed in outputFile as described for the previous method.
 If the text contains blank lines they are treated as paragraph breaks.
 */
 
-  public native boolean lbu_translateTextFile (String configFileList,
+  public native boolean translateTextFile (String configFileList,
 					       String
 					       inputFileName,
 					       String outputFileName,
@@ -93,7 +126,7 @@ If the text contains blank lines they are treated as paragraph breaks.
 according to configuration specifications.
 */
 
-  public native boolean lbu_backTranslateFile (String configFileList,
+  public native boolean backTranslateFile (String configFileList,
 					       String
 					       inputFileName,
 					       String outputFileName,
@@ -105,7 +138,7 @@ according to configuration specifications.
 patterns and place the result as a utf8 string in outbuf. */
 
 public native void
-lbu_charToDots (String trantab, byte[]inbuf,
+charToDots (String tableList, byte[]inbuf,
 		byte[]outbuf, String logFile,
 		int mode);
 
@@ -113,23 +146,34 @@ lbu_charToDots (String trantab, byte[]inbuf,
 place the result as a utf8 string in outbuf. */
 
 public native void
-lbu_dotsToChar (String trantab, byte[]inbuf,
+dotsToChar (String tableList, byte[]inbuf,
 		byte[]outbuf, String logFile,
 		int mode);
 
-/** See if the table in trantab exists and is valid. If no errors are 
+/** See if the table in tableList exists and is valid. If no errors are 
 found logFile will be empty. */
 
 public native void
-lbu_checkTable (String trantab, String logFile, int mode);
+checkTable (String tableList, String logFile, int mode);
 
+/**
+* Add a new entrry to a table.
+*/
+public native boolean compileString (String tableList, String newEntry, 
+String logFile);
+
+/**
+* Path on which liblouis tables and liblouisutdml files can be found. 
+*/
+
+public native void setDataPath(String path);
 
 /** Return the character size used internally by liblouis and 
 liblouisutdml. */
 
-public native int lbu_charSize ();
+public native int charSize ();
 
-/** You must call lbu_free at the end of your application to free all 
+/** You must call free at the end of your application to free all 
 memory used by liblouisutdml and liblouis. Do NOT call it after every 
 call to a liblouisutdml method. This will result in great 
 inefficiency. The memory used by liblouisutdml for each document is 
@@ -138,19 +182,6 @@ settings is held. The memory used by liblouis is freed only when the
 free method is called.
 */
 
-  public native void lbu_free ();
+  public native void free ();
 
-/** Default donstructor. We may want it to do something in the future.
-*/
-
-  public Jliblouisutdml ()
-  {
-  }
-
-// This is an initializer which loads the liblouisutdml library.
-
-  static
-  {
-    System.loadLibrary ("louisutdml");
-  }
 }
