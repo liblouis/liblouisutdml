@@ -122,7 +122,7 @@ main (int argc, char **argv)
         exit (EXIT_SUCCESS);
         break;
       case 'l':
-	logFileName = "xml2brl.log";
+	logFileName = "file2brl.log";
 	break;
       case 't':
 	mode |= htmlDoc;
@@ -195,7 +195,7 @@ main (int argc, char **argv)
     inputFile = stdin;
   /*Create somewhat edited temporary file to facilitate use of stdin. */
   strcpy (tempFileName, ud->writeable_path);
-  strcat (tempFileName, "xml2brl.temp");
+  strcat (tempFileName, "file2brl.temp");
   if (!(tempFile = fopen (tempFileName, "w")))
     {
       lou_logPrint ("Can't open temporary file.\n");
@@ -287,7 +287,7 @@ main (int argc, char **argv)
 	{
 	  char temp2FileName[MAXNAMELEN];
 	  strcpy (temp2FileName, ud->writeable_path);
-	  strcat (temp2FileName, "xml2brl2.temp");
+	  strcat (temp2FileName, "file2brl2.temp");
 	  if ((lbu_backTranslateFile (configFileName, tempFileName,
 				      temp2FileName, NULL, NULL, mode)) != 1)
 	    exit (1);

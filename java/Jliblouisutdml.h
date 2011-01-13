@@ -29,90 +29,106 @@ extern "C" {
 #define org_liblouis_Jliblouisutdml_htmlDoc 536870912L
 /*
  * Class:     org_liblouis_Jliblouisutdml
- * Method:    lbu_version
+ * Method:    version
  * Signature: ()Ljava/lang/String;
  */
-JNIEXPORT jstring JNICALL Java_org_liblouis_Jliblouisutdml_lbu_1version
+JNIEXPORT jstring JNICALL Java_org_liblouis_Jliblouisutdml_version
   (JNIEnv *, jobject);
 
 /*
  * Class:     org_liblouis_Jliblouisutdml
- * Method:    lbu_translateString
+ * Method:    translateString
  * Signature: (Ljava/lang/String;[B[B[ILjava/lang/String;Ljava/lang/String;I)Z
  */
-JNIEXPORT jboolean JNICALL Java_org_liblouis_Jliblouisutdml_lbu_1translateString
+JNIEXPORT jboolean JNICALL Java_org_liblouis_Jliblouisutdml_translateString
   (JNIEnv *, jobject, jstring, jbyteArray, jbyteArray, jintArray, jstring, jstring, jint);
 
 /*
  * Class:     org_liblouis_Jliblouisutdml
- * Method:    lbu_backTranslateString
+ * Method:    backTranslateString
  * Signature: (Ljava/lang/String;[B[B[ILjava/lang/String;Ljava/lang/String;I)Z
  */
-JNIEXPORT jboolean JNICALL Java_org_liblouis_Jliblouisutdml_lbu_1backTranslateString
+JNIEXPORT jboolean JNICALL Java_org_liblouis_Jliblouisutdml_backTranslateString
   (JNIEnv *, jobject, jstring, jbyteArray, jbyteArray, jintArray, jstring, jstring, jint);
 
 /*
  * Class:     org_liblouis_Jliblouisutdml
- * Method:    lbu_translateFile
+ * Method:    translateFile
  * Signature: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;I)Z
  */
-JNIEXPORT jboolean JNICALL Java_org_liblouis_Jliblouisutdml_lbu_1translateFile
+JNIEXPORT jboolean JNICALL Java_org_liblouis_Jliblouisutdml_translateFile
   (JNIEnv *, jobject, jstring, jstring, jstring, jstring, jstring, jint);
 
 /*
  * Class:     org_liblouis_Jliblouisutdml
- * Method:    lbu_translateTextFile
+ * Method:    translateTextFile
  * Signature: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;I)Z
  */
-JNIEXPORT jboolean JNICALL Java_org_liblouis_Jliblouisutdml_lbu_1translateTextFile
+JNIEXPORT jboolean JNICALL Java_org_liblouis_Jliblouisutdml_translateTextFile
   (JNIEnv *, jobject, jstring, jstring, jstring, jstring, jstring, jint);
 
 /*
  * Class:     org_liblouis_Jliblouisutdml
- * Method:    lbu_backTranslateFile
+ * Method:    backTranslateFile
  * Signature: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;I)Z
  */
-JNIEXPORT jboolean JNICALL Java_org_liblouis_Jliblouisutdml_lbu_1backTranslateFile
+JNIEXPORT jboolean JNICALL Java_org_liblouis_Jliblouisutdml_backTranslateFile
   (JNIEnv *, jobject, jstring, jstring, jstring, jstring, jstring, jint);
 
 /*
  * Class:     org_liblouis_Jliblouisutdml
- * Method:    lbu_charToDots
+ * Method:    charToDots
  * Signature: (Ljava/lang/String;[B[BLjava/lang/String;I)V
  */
-JNIEXPORT void JNICALL Java_org_liblouis_Jliblouisutdml_lbu_1charToDots
+JNIEXPORT void JNICALL Java_org_liblouis_Jliblouisutdml_charToDots
   (JNIEnv *, jobject, jstring, jbyteArray, jbyteArray, jstring, jint);
 
 /*
  * Class:     org_liblouis_Jliblouisutdml
- * Method:    lbu_dotsToChar
+ * Method:    dotsToChar
  * Signature: (Ljava/lang/String;[B[BLjava/lang/String;I)V
  */
-JNIEXPORT void JNICALL Java_org_liblouis_Jliblouisutdml_lbu_1dotsToChar
+JNIEXPORT void JNICALL Java_org_liblouis_Jliblouisutdml_dotsToChar
   (JNIEnv *, jobject, jstring, jbyteArray, jbyteArray, jstring, jint);
 
 /*
  * Class:     org_liblouis_Jliblouisutdml
- * Method:    lbu_checkTable
+ * Method:    checkTable
  * Signature: (Ljava/lang/String;Ljava/lang/String;I)V
  */
-JNIEXPORT void JNICALL Java_org_liblouis_Jliblouisutdml_lbu_1checkTable
+JNIEXPORT void JNICALL Java_org_liblouis_Jliblouisutdml_checkTable
   (JNIEnv *, jobject, jstring, jstring, jint);
 
 /*
  * Class:     org_liblouis_Jliblouisutdml
- * Method:    lbu_charSize
+ * Method:    compileString
+ * Signature: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Z
+ */
+JNIEXPORT jboolean JNICALL Java_org_liblouis_Jliblouisutdml_compileString
+  (JNIEnv *, jobject, jstring, jstring, jstring);
+
+/*
+ * Class:     org_liblouis_Jliblouisutdml
+ * Method:    setDataPath
+ * Signature: (Ljava/lang/String;)V
+ */
+JNIEXPORT void JNICALL Java_org_liblouis_Jliblouisutdml_setDataPath
+  (JNIEnv *, jobject, jstring);
+
+/*
+ * Class:     org_liblouis_Jliblouisutdml
+ * Method:    charSize
  * Signature: ()I
  */
-JNIEXPORT jint JNICALL Java_org_liblouis_Jliblouisutdml_lbu_1charSize
+JNIEXPORT jint JNICALL Java_org_liblouis_Jliblouisutdml_charSize
   (JNIEnv *, jobject);
 
 /*
  * Class:     org_liblouis_Jliblouisutdml
- * Method:    lbu_free
+ * Method:    free
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_org_liblouis_Jliblouisutdml_lbu_1free
+JNIEXPORT void JNICALL Java_org_liblouis_Jliblouisutdml_free
   (JNIEnv *, jobject);
 
 #ifdef __cplusplus
