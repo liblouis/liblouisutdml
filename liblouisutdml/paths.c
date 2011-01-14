@@ -83,47 +83,54 @@ set_paths (const char *configPath)
 #ifdef _Win32
       strcpy (currentPath, dataPath);
       strcat (currentPaath, "\\liblouis\\tables\\");
-      if (!addPath (currentPath)
-	  return 0;
-	  strcpy (currentPath, dataPath);
-	  strccat (currentPath, "\\liblouisutdml\\lbu_files\\");
-	  if (!addPath (currentPath) return 0;
+      if (!addPath (currentPath))
+	return 0;
+      strcpy (currentPath, dataPath);
+      strccat (currentPath, "\\liblouisutdml\\lbu_files\\");
+      if (!addPath (currentPath))
+	return 0;
 #else
-      strcpy
-	(currentPath, dataPath);
+      strcpy (currentPath, dataPath);
       strcat (currentPath, "/liblouis/tables/");
-      if (!addPath (currentPath)
-	  return 0;
-	  strcpy (currentPath, dataPath);
-	  strcat (currentPath, "/liblouisutdml/lbu_files/");
-	  if (!addPath (currentPath) return 0;
+      if (!addPath (currentPath))
+	return 0;
+      strcpy (currentPath, dataPath);
+      strcat (currentPath, "/liblouisutdml/lbu_files/");
+      if (!addPath (currentPath))
+	return 0;
 #endif
-	      }
-	      else
-	      {
+    }
+  else
+    {
 #ifdef _WIN32
 /* Set Windows Paths */
-	      {
-	      char louisPath[MAXNAMELEN];
-	      char lbuPath[MAXNAMELEN];
-	      strcpy (currentPath, lou_getProgramPath ());
-	      strcat (currentPath, "..\\");
-	      if (!addPath (currentPath))
-	      return 0;
-	      strcpy (lbuPath, currentPath);
-	      strcat (lbuPath, "share\\liblouisutdml\\lbu_files\\");
-	      strcpy (louisPath, currentPath);
-	      strcat (louisPath, "share\\liblouis\\tables\\");
-	      addPath (louisPath); addPath (lbuPath);}
+      {
+	char louisPath[MAXNAMELEN];
+	char lbuPath[MAXNAMELEN];
+	strcpy (currentPath, lou_getProgramPath ());
+	strcat (currentPath, "..\\");
+	if (!addPath (currentPath))
+	  return 0;
+	strcpy (lbuPath, currentPath);
+	strcat (lbuPath, "share\\liblouisutdml\\lbu_files\\");
+	strcpy (louisPath, currentPath);
+	strcat (louisPath, "share\\liblouis\\tables\\");
+	addPath (louisPath);
+	addPath (lbuPath);
+      }
 #else
 /* Set Unix paths (Linux, Mac OS X, etc.) */
-	      addPath (LIBLOUIS_TABLES_PATH); addPath (LBU_PATH);
+      addPath (LIBLOUIS_TABLES_PATH);
+      addPath (LBU_PATH);
 #endif /*WWIN32 */
-	      }
+    }
 
 /* set current directory last*/
-	      currentPath[0] = '.';
-	      currentPath[1] = ud->file_separator;
-	      currentPath[2] = 0;
-	      if (!addPath (currentPath))
-	      return 0; ud->writeable_path = lastPath; return 1;}
+  currentPath[0] = '.';
+  currentPath[1] = ud->file_separator;
+  currentPath[2] = 0;
+  if (!addPath (currentPath))
+    return 0;
+  ud->writeable_path = lastPath;
+  return 1;
+}
