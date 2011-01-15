@@ -168,7 +168,7 @@ lbu_translateString (const char *configFileName,
       return 1;
     }
   if (inbuf[k + 1] == '?')
-   xmlInbuf = (char *)inbuf;
+    xmlInbuf = (char *) inbuf;
   else
     {
       inlen += strlen (ud->xml_header);
@@ -347,58 +347,66 @@ int
   return 1;
 }
 
-void EXPORT_CALL
-lbu_charToDots (const char *trantab, const unsigned char *inbuf,
+int EXPORT_CALL
+lbu_charToDots (const char *tableList, const unsigned char *inbuf,
 		unsigned char *outbuf, int length, char *logFile,
 		unsigned int mode)
 {
   widechar *interBuf;
   int wcLength;
   int utf8Length;
+  int result = 0;
   lou_logFile (logFile);
   interBuf = malloc (length * CHARSIZE);
   utf8Length = length;
   wcLength = length;
   utf8_string_to_wc (inbuf, &utf8Length, interBuf, &wcLength);
-  lou_charToDots (trantab, interBuf, interBuf, wcLength, mode | ucBrl);
-  utf8Length = length;
-  wc_string_to_utf8 (interBuf, &wcLength, outbuf, &utf8Length);
+  result = lou_charToDots (tableList, interBuf, interBuf, wcLength, mode
+			   | ucBrl);
+  if (result)
+    {
+      utf8Length = length;
+      wc_string_to_utf8 (interBuf, &wcLength, outbuf, &utf8Length);
+    }
   lou_logEnd ();
   free (interBuf);
-}
-
-void EXPORT_CALL
-lbu_dotsToChar (const char *trantab, const unsigned char *inbuf,
-		unsigned char *outbuf, int length, char *logFile,
-		unsigned int mode)
-{
-  widechar *interBuf;
-  int wcLength;
-  int utf8Length;
-  lou_logFile (logFile);
-  interBuf = malloc (length * CHARSIZE);
-  utf8Length = length;
-  wcLength = length;
-  utf8_string_to_wc (inbuf, &utf8Length, interBuf, &wcLength);
-  lou_dotsToChar (trantab, interBuf, interBuf, wcLength, mode);
-  utf8Length = length;
-  wc_string_to_utf8 (interBuf, &wcLength, outbuf, &utf8Length);
-  lou_logEnd ();
-  free (interBuf);
-}
-
-void EXPORT_CALL
-lbu_checkTable (const char *trantab, char *logFile, unsigned int mode)
-{
-  lou_logFile (logFile);
-  lou_getTable (trantab);
-  lou_logEnd ();
+  return result;
 }
 
 int EXPORT_CALL
-lbu_charSize (void)
+lbu_dotsToChar (const char *tableList, const unsigned char *inbuf,
+		unsigned char *outbuf, int length, char *logFile,
+		unsigned int mode)
 {
-  return CHARSIZE;
+  widechar *interBuf;
+  int wcLength;
+  int utf8Length;
+  int result = 0;
+  lou_logFile (logFile);
+  interBuf = malloc (length * CHARSIZE);
+  utf8Length = length;
+  wcLength = length;
+  utf8_string_to_wc (inbuf, &utf8Length, interBuf, &wcLength);
+  result = lou_dotsToChar (tableList, interBuf, interBuf, wcLength, mode);
+  if (result)
+    {
+      utf8Length = length;
+      wc_string_to_utf8 (interBuf, &wcLength, outbuf, &utf8Length);
+    }
+  lou_logEnd ();
+  free (interBuf);
+  return result;
+}
+
+int EXPORT_CALL
+lbu_checkTable (const char *tableList, char *logFile, unsigned int mode)
+{
+  int result = 1;
+  lou_logFile (logFile);
+  if (!lou_getTable (tableList))
+    result = 0;
+  lou_logEnd ();
+  return result;
 }
 
 void EXPORT_CALL
