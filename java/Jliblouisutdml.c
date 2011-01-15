@@ -307,7 +307,7 @@ release:
  * Method:    charToDots
  * Signature: (Ljava/lang/String;[B[BLjava/lang/String;I)V
  */
-JNIEXPORT void JNICALL Java_org_liblouis_Jliblouisutdml_charToDots
+JNIEXPORT jboolean JNICALL Java_org_liblouis_Jliblouisutdml_charToDots
   (JNIEnv * env, jobject obj, jstring trantab, jbyteArray inbuf,
    jbyteArray outbuf, jstring logFile, jint mode)
 {
@@ -318,7 +318,7 @@ JNIEXPORT void JNICALL Java_org_liblouis_Jliblouisutdml_charToDots
  * Method:    dotsToChar
  * Signature: (Ljava/lang/String;[B[BLjava/lang/String;I)V
  */
-JNIEXPORT void JNICALL Java_org_liblouis_Jliblouisutdml_dotsToChar
+JNIEXPORT jboolean JNICALL Java_org_liblouis_Jliblouisutdml_dotsToChar
   (JNIEnv * env, jobject obj, jstring trantab, jbyteArray inbuf,
    jbyteArray outbuf, jstring logFile, jint mode)
 {
@@ -329,7 +329,7 @@ JNIEXPORT void JNICALL Java_org_liblouis_Jliblouisutdml_dotsToChar
  * Method:    checkTable
  * Signature: (Ljava/lang/String;Ljava/lang/String;I)V
  */
-JNIEXPORT void JNICALL Java_org_liblouis_Jliblouisutdml_checkTable
+JNIEXPORT jboolean JNICALL Java_org_liblouis_Jliblouisutdml_checkTable
   (JNIEnv * env, jobject obj, jstring trantab, jstring logFile, jint mode)
 {
 }

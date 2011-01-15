@@ -137,7 +137,7 @@ according to configuration specifications.
 /** Convert the utf8 character string in inbuf to Unicode braille dot 
 patterns and place the result as a utf8 string in outbuf. */
 
-public native void
+public native booleean
 charToDots (String tableList, byte[]inbuf,
 		byte[]outbuf, String logFile,
 		int mode);
@@ -145,7 +145,7 @@ charToDots (String tableList, byte[]inbuf,
 /** Convert the utf8 string of dot patterns in inbuf to characters and 
 place the result as a utf8 string in outbuf. */
 
-public native void
+public native booleean
 dotsToChar (String tableList, byte[]inbuf,
 		byte[]outbuf, String logFile,
 		int mode);
@@ -153,7 +153,7 @@ dotsToChar (String tableList, byte[]inbuf,
 /** See if the table in tableList exists and is valid. If no errors are 
 found logFile will be empty. */
 
-public native void
+public native booleean
 checkTable (String tableList, String logFile, int mode);
 
 /**
