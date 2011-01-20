@@ -330,9 +330,39 @@ release:
  * Signature: (Ljava/lang/String;[B[BLjava/lang/String;I)V
  */
 JNIEXPORT jboolean JNICALL Java_org_liblouis_Jliblouisutdml_charToDots
-  (JNIEnv * env, jobject this, jstring trantab, jbyteArray inbuf,
+  (JNIEnv * env, jobject this, jstring tableList, jbyteArray inbuf,
    jbyteArray outbuf, jstring logFile, jint mode)
 {
+  const jbyte *tableListX = NULL;
+  jbyte *inbufx = NULL;
+  jbyte *outbufx = NULL;
+  jint *outlenx = NULL;
+  const jbyte *logf = NULL;
+  jboolean result = JNI_FALSE;
+  tableListX = (*env)->GetStringUTFChars (env, tableList, NULL);
+  if (tableListX == NULL)
+    goto release;
+  inbufx = (*env)->GetByteArrayElements (env, inbuf, NULL);
+  if (inbufx == NULL)
+    goto release;
+  outbufx = (*env)->GetByteArrayElements (env, outbuf, NULL);
+  if (outbufx == NULL)
+    goto release;
+  outlen = (*env)->GetArrayLength (env, outbuf);
+  logf = (*env)->GetStringUTFChars (env, logFile, NULL);
+  if (logf == NULL)
+    goto release;
+  result = lbu_charToDots (tableListX, inbufx, outbufx, outlenx, logf, mode);
+release:
+  if (tableListX != NULL)
+    (*env)->ReleaseStringUTFChars (env, tableList, tableListX);
+  if (inbufx != NULL)
+    (*env)->ReleaseByteArrayElements (env, inbufx, inbuf, 0);
+  if (outbufx != NULL)
+    (*env)->ReleaseByteArrayElements (env, outbufx, outbuf, 0);
+  if (logf != NULL)
+    (*env)->ReleaseStringUTFChars (env, logFile, logf);
+  return result;
 }
 
 /*
@@ -341,9 +371,39 @@ JNIEXPORT jboolean JNICALL Java_org_liblouis_Jliblouisutdml_charToDots
  * Signature: (Ljava/lang/String;[B[BLjava/lang/String;I)V
  */
 JNIEXPORT jboolean JNICALL Java_org_liblouis_Jliblouisutdml_dotsToChar
-  (JNIEnv * env, jobject this, jstring trantab, jbyteArray inbuf,
+  (JNIEnv * env, jobject this, jstring tableList, jbyteArray inbuf,
    jbyteArray outbuf, jstring logFile, jint mode)
 {
+  const jbyte *tableListX = NULL;
+  jbyte *inbufx = NULL;
+  jbyte *outbufx = NULL;
+  jint *outlenx = NULL;
+  const jbyte *logf = NULL;
+  jboolean result = JNI_FALSE;
+  tableListX = (*env)->GetStringUTFChars (env, tableList, NULL);
+  if (tableListX == NULL)
+    goto release;
+  inbufx = (*env)->GetByteArrayElements (env, inbuf, NULL);
+  if (inbufx == NULL)
+    goto release;
+  outbufx = (*env)->GetByteArrayElements (env, outbuf, NULL);
+  if (outbufx == NULL)
+    goto release;
+  outlen = (*env)->GetArrayLength (env, outbuf);
+  logf = (*env)->GetStringUTFChars (env, logFile, NULL);
+  if (logf == NULL)
+    goto release;
+  result = lbu_dotsToChar (tableListX, inbufx, outbufx, outlenx, logf, mode);
+release:
+  if (tableListX != NULL)
+    (*env)->ReleaseStringUTFChars (env, tableList, tableListX);
+  if (inbufx != NULL)
+    (*env)->ReleaseByteArrayElements (env, inbufx, inbuf, 0);
+  if (outbufx != NULL)
+    (*env)->ReleaseByteArrayElements (env, outbufx, outbuf, 0);
+  if (logf != NULL)
+    (*env)->ReleaseStringUTFChars (env, logFile, logf);
+  return result;
 }
 
 /*
@@ -352,8 +412,24 @@ JNIEXPORT jboolean JNICALL Java_org_liblouis_Jliblouisutdml_dotsToChar
  * Signature: (Ljava/lang/String;Ljava/lang/String;I)V
  */
 JNIEXPORT jboolean JNICALL Java_org_liblouis_Jliblouisutdml_checkTable
-  (JNIEnv * env, jobject this, jstring trantab, jstring logFile, jint mode)
+  (JNIEnv * env, jobject this, jstring tableList, jstring logFile, jint mode)
 {
+  const jbyte *tableListX = NULL;
+  const jbyte *logf = NULL;
+  jboolean result = JNI_FALSE;
+  tableListX = (*env)->GetStringUTFChars (env, tableList, NULL);
+  if (tableListX == NULL)
+    goto release;
+  logf = (*env)->GetStringUTFChars (env, logFile, NULL);
+  if (logf == NULL)
+    goto release;
+  result = lbu_checkTable (tableListX, logf, mode);
+release:
+  if (tableListX != NULL)
+    (*env)->ReleaseStringUTFChars (env, tableList, tableListX);
+  if (logf != NULL)
+    (*env)->ReleaseStringUTFChars (env, logFile, logf);
+  return result;
 }
 
 /*
@@ -364,7 +440,7 @@ JNIEXPORT jboolean JNICALL Java_org_liblouis_Jliblouisutdml_checkTable
 JNIEXPORT jint JNICALL Java_org_liblouis_Jliblouisutdml_charSize
   (JNIEnv * env, jobject this)
 {
-  return lou_charSize ();
+  return CHARSIZE;
 }
 
 /*
@@ -386,11 +462,25 @@ JNIEXPORT void JNICALL Java_org_liblouis_Jliblouisutdml_free
  */
 
 /* Helper function for this method */
-JNIEXPORT char *JNICALL
+JNIEXPORT jbyte *JNICALL
 getArg (JNIEnv * env, jobject this, jobjectArray args, jint index)
 {
-//    curArg = (*env)->GetObjectArrayElement(env, args, k);
-
+  static jobject curObj = NULL;
+  static jbyte *curArg = NULL;
+  static jint oldIndex = 0;
+  if (curObj != NULL || index == -1)
+    {
+      if (curArg != NULL)
+	(*env)->ReleaseStringUTFChars (env, curObj, curArg);
+      curArg = NULL;
+      if (curObj != NULL)
+	(*env)->ReleaseObjectArrayElement (env, curOBJ, args[oldIndex], 0);
+      curObj = NULL;
+    }
+  curObj = (*env)->GetObjectArrayElement (env, args, index);
+  curArg = (*env)->GetStringUTFChars (env, curObj, NULL);
+  oldIndex = index;
+  return curArg;
 }
 
 JNIEXPORT jboolean JNICALL Java_org_liblouis_Jliblouisutdml_file2brl
@@ -398,7 +488,7 @@ JNIEXPORT jboolean JNICALL Java_org_liblouis_Jliblouisutdml_file2brl
 {
   jint numArgs = (*env)->GetArrayLength (env, args);
   int mode = dontInit;
-  char *configFileName = "default.cfg";
+  char *configFileList = "default.cfg";
   char *inputFileName = "stdin";
   char *outputFileName = "stdout";
   char tempFileName[MAXNAMELEN];
@@ -414,44 +504,48 @@ JNIEXPORT jboolean JNICALL Java_org_liblouis_Jliblouisutdml_file2brl
   int k;
   char *curArg = NULL;
   UserData *ud;
+  getArg (env, this, args, -1);
   k = 0;
   while (k < numArgs)
     {
       curarg = getArg (env, this, args, k);
       if (curArg[0] == '-')
-	switch (curArg[1])
-	  {
-	  case 'l':
-	    strcpy (logFileName, getArg (env, this, args k = 1));
-	    k += 2;
-	    break;
-	  case 't':
-	    mode |= htmlDoc;
-	    break;
-	  case 'f':
-	    strcpy (configFileName, getArg (env, this, args, k + 1));
-	    k += 2;
-	    break;
-	  case 'b':
-	  case 'p':
-	  case 'r':
-	  case 'x':
-	    whichProc = curArg[1];
-	    break;
-	  case 'C':
-	    if (configSettings == NULL)
-	      {
-		configSettings = malloc (BUFSIZE);
-		configSettings[0] = 0;
-	      }
-	    strcat (configSettings, getArg (env, this, args, k + 1));
-	    k += 2;
-	    strcat (configSettings, "\n");
-	    break;
-	  default:
-	    return JNI_FALSE;
-	    break;
-	  }
+	{
+	  switch (curArg[1])
+	    {
+	    case 'l':
+	      strcpy (logFileName, getArg (env, this, args k = 1));
+	      k += 2;
+	      break;
+	    case 't':
+	      mode |= htmlDoc;
+	      break;
+	    case 'f':
+	      strcpy (configFileList, getArg (env, this, args, k + 1));
+	      k += 2;
+	      break;
+	    case 'b':
+	    case 'p':
+	    case 'r':
+	    case 'x':
+	      whichProc = curArg[1];
+	      break;
+	    case 'C':
+	      if (configSettings == NULL)
+		{
+		  configSettings = malloc (BUFSIZE);
+		  configSettings[0] = 0;
+		}
+	      strcat (configSettings, getArg (env, this, args, k + 1));
+	      k += 2;
+	      strcat (configSettings, "\n");
+	      break;
+	    default:
+	      lou_logPrint ("invalid argument%s", curarg);
+	      return JNI_FALSE;
+	    }
+	  continuue;
+	}
       if (k < numArgs)
 	{
 	  if (k == numArgs - 1)
@@ -473,7 +567,8 @@ JNIEXPORT jboolean JNICALL Java_org_liblouis_Jliblouisutdml_file2brl
 	}
       k++;
     }
-
+  getArg (env, this, args, -1);
+  lou_logFile (lobFileName);
   if (whichProc == 0)
     whichProc = 'x';
   if (configSettings != NULL)
@@ -481,13 +576,17 @@ JNIEXPORT jboolean JNICALL Java_org_liblouis_Jliblouisutdml_file2brl
       if (configSettings[k] == '=' && configSettings[k - 1] != ' ')
 	configSettings[k] = ' ';
   if ((ud =
-       lbu_initialize (configFileName, logFileName, configSettings)) == NULL)
-    return JNI - fALSE;
+       lbu_initialize (configFileList, logFileName, configSettings)) == NULL)
+    {
+      lou_logEnd ();
+      return JNI_FALSE;
+    }
   if (strcmp (inputFileName, "stdin") != 0)
     {
       if (!(inputFile = fopen (inputFileName, "r")))
 	{
 	  lou_logPrint ("Can't open file %s.\n", inputFileName);
+	  lou_logEnd ();
 	  return JNI_FALSE;
 	}
     }
@@ -499,6 +598,7 @@ JNIEXPORT jboolean JNICALL Java_org_liblouis_Jliblouisutdml_file2brl
   if (!(tempFile = fopen (tempFileName, "w")))
     {
       lou_logPrint ("Can't open temporary file.\n");
+      lou_logEnd ();
       return JNI_FALSE;
     }
   if (whichProc == 'p')
@@ -580,7 +680,7 @@ JNIEXPORT jboolean JNICALL Java_org_liblouis_Jliblouisutdml_file2brl
     switch (whichProc)
       {
       case 'b':
-	lbu_backTranslateFile (configFileName, tempFileName, outputFileName,
+	lbu_backTranslateFile (configFileList, tempFileName, outputFileName,
 			       NULL, NULL, mode);
 	break;
       case 'r':
@@ -589,33 +689,36 @@ JNIEXPORT jboolean JNICALL Java_org_liblouis_Jliblouisutdml_file2brl
 	  strcpy (temp2FileName, ud->writeable_path);
 	  strcat (temp2FileName, "file2brl2.temp");
 	  if ((lbu_backTranslateFile
-	       (configFileName, tempFileName, temp2FileName, NULL,
+	       (configFileList, tempFileName, temp2FileName, NULL,
 		NULL, mode)) != 1)
-	    return JNI_FALSE;
+	    {
+	      lou_logEnd ();
+	      return JNI_FALSE;
+	    }
 	  if (ud->back_text == html)
-	    lbu_translateFile (configFileName,
+	    lbu_translateFile (configFileList,
 			       temp2FileName,
 			       outputFileName, NULL, NULL, mode);
 	  else
-	    lbu_translateTextFile (configFileName, temp2FileName,
+	    lbu_translateTextFile (configFileList, temp2FileName,
 				   outputFileName, NULL, NULL, mode);
 	}
 	break;
       case 't':
       case 'p':
-	lbu_translateTextFile (configFileName, tempFileName, outputFileName,
+	lbu_translateTextFile (configFileList, tempFileName, outputFileName,
 			       NULL, NULL, mode);
 	break;
       case 'x':
-	lbu_translateFile (configFileName, tempFileName, outputFileName, NULL,
+	lbu_translateFile (configFileList, tempFileName, outputFileName, NULL,
 			   NULL, mode);
 	break;
       default:
 	lou_logPrint ("Program bug %c\n", whichProc);
 	break;
       }
-  lbu_free ();
   if (configSettings != NULL)
     free (configSettings);
+  lou_logEnd ();
   return JNI_TRUE;
 }

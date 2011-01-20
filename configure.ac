@@ -79,6 +79,9 @@ AC_CONFIG_FILES([Makefile
 	 gnulib/Makefile
        doc/Makefile
 	java/Makefile
+	java/src/Makefile
+	java/src/org/Makefile
+	java/src/org/liblouis/Makefile
 	 man/Makefile
        lbu_files/Makefile
       liblouisutdml/Makefile
