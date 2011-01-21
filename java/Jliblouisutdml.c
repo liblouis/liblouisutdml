@@ -336,7 +336,7 @@ JNIEXPORT jboolean JNICALL Java_org_liblouis_Jliblouisutdml_charToDots
   const jbyte *tableListX = NULL;
   jbyte *inbufx = NULL;
   jbyte *outbufx = NULL;
-  jint *outlenx = NULL;
+  jint outlen = 0;
   const jbyte *logf = NULL;
   jboolean result = JNI_FALSE;
   tableListX = (*env)->GetStringUTFChars (env, tableList, NULL);
@@ -352,7 +352,7 @@ JNIEXPORT jboolean JNICALL Java_org_liblouis_Jliblouisutdml_charToDots
   logf = (*env)->GetStringUTFChars (env, logFile, NULL);
   if (logf == NULL)
     goto release;
-  result = lbu_charToDots (tableListX, inbufx, outbufx, outlenx, logf, mode);
+  result = lbu_charToDots (tableListX, inbufx, outbufx, outlen, logf, mode);
 release:
   if (tableListX != NULL)
     (*env)->ReleaseStringUTFChars (env, tableList, tableListX);
@@ -377,7 +377,7 @@ JNIEXPORT jboolean JNICALL Java_org_liblouis_Jliblouisutdml_dotsToChar
   const jbyte *tableListX = NULL;
   jbyte *inbufx = NULL;
   jbyte *outbufx = NULL;
-  jint *outlenx = NULL;
+  jint outlen = 0;
   const jbyte *logf = NULL;
   jboolean result = JNI_FALSE;
   tableListX = (*env)->GetStringUTFChars (env, tableList, NULL);
@@ -393,7 +393,7 @@ JNIEXPORT jboolean JNICALL Java_org_liblouis_Jliblouisutdml_dotsToChar
   logf = (*env)->GetStringUTFChars (env, logFile, NULL);
   if (logf == NULL)
     goto release;
-  result = lbu_dotsToChar (tableListX, inbufx, outbufx, outlenx, logf, mode);
+  result = lbu_dotsToChar (tableListX, inbufx, outbufx, outlen, logf, mode);
 release:
   if (tableListX != NULL)
     (*env)->ReleaseStringUTFChars (env, tableList, tableListX);
@@ -462,19 +462,17 @@ JNIEXPORT void JNICALL Java_org_liblouis_Jliblouisutdml_free
  */
 
 /* Helper function for this method */
-JNIEXPORT jbyte *JNICALL
+JNIEXPORT const jbyte *JNICALL
 getArg (JNIEnv * env, jobject this, jobjectArray args, jint index)
 {
   static jobject curObj = NULL;
-  static jbyte *curArg = NULL;
+  static const jbyte *curArg = NULL;
   static jint oldIndex = 0;
   if (curObj != NULL || index == -1)
     {
       if (curArg != NULL)
 	(*env)->ReleaseStringUTFChars (env, curObj, curArg);
       curArg = NULL;
-      if (curObj != NULL)
-	(*env)->ReleaseObjectArrayElement (env, curOBJ, args[oldIndex], 0);
       curObj = NULL;
     }
   curObj = (*env)->GetObjectArrayElement (env, args, index);
@@ -488,11 +486,11 @@ JNIEXPORT jboolean JNICALL Java_org_liblouis_Jliblouisutdml_file2brl
 {
   jint numArgs = (*env)->GetArrayLength (env, args);
   int mode = dontInit;
-  char *configFileList = "default.cfg";
-  char *inputFileName = "stdin";
-  char *outputFileName = "stdout";
+  char configFileList[MAXNAMELEN];
+  char inputFileName[MAXNAMELEN];
+  char outputFileName[MAXNAMELEN];
   char tempFileName[MAXNAMELEN];
-  char logFileName = "file2brl.log";
+  char logFileName[MAXNAMELEN];
   char whichProc = 0;
   char *configSettings = NULL;
   FILE *inputFile = NULL;
@@ -502,23 +500,29 @@ JNIEXPORT jboolean JNICALL Java_org_liblouis_Jliblouisutdml_file2brl
   int nch = 0;
   int charsRead = 0;
   int k;
-  char *curArg = NULL;
+  const char *curArg = NULL;
+  strcpy (configFileList, "default.cfg");
+  strcpy (inputFileName, "stdin");
+  strcpy (outputFileName, "stdout");
+  strcpy (tempFileName, "file2brl.temp");
+  strcpy (logFileName, "file2brl.log");
   UserData *ud;
   getArg (env, this, args, -1);
   k = 0;
   while (k < numArgs)
     {
-      curarg = getArg (env, this, args, k);
+      curArg = getArg (env, this, args, k);
       if (curArg[0] == '-')
 	{
 	  switch (curArg[1])
 	    {
 	    case 'l':
-	      strcpy (logFileName, getArg (env, this, args k = 1));
+	      strcpy (logFileName, getArg (env, this, args, k + 1));
 	      k += 2;
 	      break;
 	    case 't':
 	      mode |= htmlDoc;
+k++;
 	      break;
 	    case 'f':
 	      strcpy (configFileList, getArg (env, this, args, k + 1));
@@ -529,6 +533,7 @@ JNIEXPORT jboolean JNICALL Java_org_liblouis_Jliblouisutdml_file2brl
 	    case 'r':
 	    case 'x':
 	      whichProc = curArg[1];
+k++;
 	      break;
 	    case 'C':
 	      if (configSettings == NULL)
@@ -540,24 +545,27 @@ JNIEXPORT jboolean JNICALL Java_org_liblouis_Jliblouisutdml_file2brl
 	      k += 2;
 	      strcat (configSettings, "\n");
 	      break;
+case '-':
+	/* Input file is stdin but output file is not stdout.*/
+k++;
+ break;
 	    default:
-	      lou_logPrint ("invalid argument%s", curarg);
+	      lou_logPrint ("invalid argument%s", curArg);
 	      return JNI_FALSE;
 	    }
-	  continuue;
+	  continue;
 	}
       if (k < numArgs)
 	{
 	  if (k == numArgs - 1)
 	    {
-	      strcpy (inputFileName, getArg (env, this, args, k));
+	      strcpy (inputFileName, curArg);
 	    }
 	  else if (k == numArgs - 2)
 	    {
-	      if (strcmp (curArg, "-") != 0)
 		strcpy (inputFileName, curArg);
 	      strcpy (outputFileName, getArg (env, this, args, k + 1));
-	    }
+k += 2;	    }
 	  else
 	    {
 	      lou_logPrint ("extra operand: %s\n",
@@ -568,7 +576,7 @@ JNIEXPORT jboolean JNICALL Java_org_liblouis_Jliblouisutdml_file2brl
       k++;
     }
   getArg (env, this, args, -1);
-  lou_logFile (lobFileName);
+  lou_logFile (logFileName);
   if (whichProc == 0)
     whichProc = 'x';
   if (configSettings != NULL)
