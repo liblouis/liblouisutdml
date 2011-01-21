@@ -123,7 +123,8 @@ if a conplete translation could not be done.  */
 
   int EXPORT_CALL
     lbu_charToDots (const char *tableList, const unsigned char *inbuf,
-		    unsigned char *outbuf, int length, char *logFile,
+		    unsigned char *outbuf, int length, const char 
+*logFile,
 		    unsigned int mode);
 
 /* Convert the utf8 character string in inbuf to Unicode braille dot 
@@ -131,14 +132,16 @@ patterns and place the result as a utf8 string in outbuf. */
 
   int EXPORT_CALL
     lbu_dotsToChar (const char *tableList, const unsigned char *inbuf,
-		    unsigned char *outbuf, int length, char *logFile,
+		    unsigned char *outbuf, int length, const char 
+*logFile,
 		    unsigned int mode);
 
 /* Convert the utf8 string of dot patterns in inbuf to characters and 
 place the result as a utf8 string in outbuf. */
 
   int EXPORT_CALL
-    lbu_checkTable (const char *tableList, char *logFile, unsigned int 
+    lbu_checkTable (const char *tableList, const char *logFile, unsigned 
+int 
 mode);
 
 /* See if the table in tableList exists and is valid. If no errors are 

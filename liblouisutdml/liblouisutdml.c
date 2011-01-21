@@ -349,7 +349,7 @@ int
 
 int EXPORT_CALL
 lbu_charToDots (const char *tableList, const unsigned char *inbuf,
-		unsigned char *outbuf, int length, char *logFile,
+		unsigned char *outbuf, int length, const char *logFile,
 		unsigned int mode)
 {
   widechar *interBuf;
@@ -375,7 +375,7 @@ lbu_charToDots (const char *tableList, const unsigned char *inbuf,
 
 int EXPORT_CALL
 lbu_dotsToChar (const char *tableList, const unsigned char *inbuf,
-		unsigned char *outbuf, int length, char *logFile,
+		unsigned char *outbuf, int length, const char *logFile,
 		unsigned int mode)
 {
   widechar *interBuf;
@@ -399,7 +399,8 @@ lbu_dotsToChar (const char *tableList, const unsigned char *inbuf,
 }
 
 int EXPORT_CALL
-lbu_checkTable (const char *tableList, char *logFile, unsigned int mode)
+lbu_checkTable (const char *tableList, const char *logFile, unsigned int 
+mode)
 {
   int result = 1;
   lou_logFile (logFile);
