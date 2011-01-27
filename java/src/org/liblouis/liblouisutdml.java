@@ -4,7 +4,7 @@ package org.liblouis;
 * Bindings for liblouisutdml
 */
 
-public final class Jliblouisutdml
+public final class liblouisutdml
 {
 /** 
 * These bindings include enough functionality so that it should never 
@@ -18,13 +18,13 @@ get UTDML formatFor is set to utd.
 * This class is a singleton.
 */
 
-private static Jliblouisutdml singleInstance = new Jliblouisutdml();
+private static liblouisutdml singleInstance = new liblouisutdml();
 private static boolean libraryLoaded = false;
 
-private Jliblouisutdml () {
+private liblouisutdml () {
 }
 
-public static Jliblouisutdml getInstance()
+public static liblouisutdml getInstance()
 {
 return singleInstance;
 }

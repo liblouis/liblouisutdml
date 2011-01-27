@@ -76,6 +76,9 @@ main (int argc, char **argv)
   widechar *outbufx;
   int outlenx;
   int k;
+JNIEnv *env;
+jobject this;
+Java_org_liblouis_liblouisutdml_version (env, this);
   strcpy (configurationFileName, "default.cfg");
   strcpy (inputFileName, "stdin");
   outputFileName = "stdout";
