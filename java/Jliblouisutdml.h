@@ -78,7 +78,7 @@ JNIEXPORT jboolean JNICALL Java_org_liblouis_liblouisutdml_backTranslateFile
 /*
  * Class:     org_liblouis_liblouisutdml
  * Method:    charToDots
- * Signature: (Ljava/lang/String;[B[BLjava/lang/String;I)V
+ * Signature: (Ljava/lang/String;[B[BLjava/lang/String;I)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_liblouis_liblouisutdml_charToDots
   (JNIEnv *, jobject, jstring, jbyteArray, jbyteArray, jstring, jint);
@@ -86,7 +86,7 @@ JNIEXPORT jboolean JNICALL Java_org_liblouis_liblouisutdml_charToDots
 /*
  * Class:     org_liblouis_liblouisutdml
  * Method:    dotsToChar
- * Signature: (Ljava/lang/String;[B[BLjava/lang/String;I)V
+ * Signature: (Ljava/lang/String;[B[BLjava/lang/String;I)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_liblouis_liblouisutdml_dotsToChar
   (JNIEnv *, jobject, jstring, jbyteArray, jbyteArray, jstring, jint);
@@ -94,7 +94,7 @@ JNIEXPORT jboolean JNICALL Java_org_liblouis_liblouisutdml_dotsToChar
 /*
  * Class:     org_liblouis_liblouisutdml
  * Method:    checkTable
- * Signature: (Ljava/lang/String;Ljava/lang/String;I)V
+ * Signature: (Ljava/lang/String;Ljava/lang/String;I)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_liblouis_liblouisutdml_checkTable
   (JNIEnv *, jobject, jstring, jstring, jint);
@@ -122,6 +122,14 @@ JNIEXPORT void JNICALL Java_org_liblouis_liblouisutdml_setDataPath
  */
 JNIEXPORT jint JNICALL Java_org_liblouis_liblouisutdml_charSize
   (JNIEnv *, jobject);
+
+/*
+ * Class:     org_liblouis_liblouisutdml
+ * Method:    file2brl
+ * Signature: ([Ljava/lang/String;)Z
+ */
+JNIEXPORT jboolean JNICALL Java_org_liblouis_liblouisutdml_file2brl
+  (JNIEnv *, jobject, jobjectArray);
 
 /*
  * Class:     org_liblouis_liblouisutdml
