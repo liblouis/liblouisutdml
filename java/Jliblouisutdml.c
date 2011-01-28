@@ -47,17 +47,17 @@ JNIEXPORT jstring JNICALL Java_org_liblouis_liblouisutdml_version
  */
 JNIEXPORT jboolean JNICALL
 Java_org_liblouis_liblouisutdml_translateString (JNIEnv * env,
-						  jobject this,
-						  jstring
-						  configFileList,
-						  jbyteArray inbuf,
-						  jbyteArray
-						  outbuf,
-						  jintArray outlen,
-						  jstring
-						  logFile,
-						  jstring
-						  settingsString, jint mode)
+						 jobject this,
+						 jstring
+						 configFileList,
+						 jbyteArray inbuf,
+						 jbyteArray
+						 outbuf,
+						 jintArray outlen,
+						 jstring
+						 logFile,
+						 jstring
+						 settingsString, jint mode)
 {
   const jbyte *cfl = NULL;
   jbyte *inbufx = NULL;
@@ -111,20 +111,20 @@ release:
  */
 JNIEXPORT jboolean JNICALL
 Java_org_liblouis_liblouisutdml_backTranslateString (JNIEnv * env,
-						      jobject this,
-						      jstring
-						      configFileList,
-						      jbyteArray
-						      inbuf,
-						      jbyteArray
-						      outbuf,
-						      jintArray
-						      outlen,
-						      jstring
-						      logFile,
-						      jstring
-						      settingsString,
-						      jint mode)
+						     jobject this,
+						     jstring
+						     configFileList,
+						     jbyteArray
+						     inbuf,
+						     jbyteArray
+						     outbuf,
+						     jintArray
+						     outlen,
+						     jstring
+						     logFile,
+						     jstring
+						     settingsString,
+						     jint mode)
 {
   const jbyte *cfl = NULL;
   jbyte *inbufx = NULL;
@@ -223,16 +223,16 @@ release:
  */
 JNIEXPORT jboolean JNICALL
 Java_org_liblouis_liblouisutdml_translateTextFile (JNIEnv * env,
-						    jobject this,
-						    jstring
-						    configFileList,
-						    jstring inputFileName,
-						    jstring
-						    outputFileName,
-						    jstring
-						    logFile,
-						    jstring
-						    settingsString, jint mode)
+						   jobject this,
+						   jstring
+						   configFileList,
+						   jstring inputFileName,
+						   jstring
+						   outputFileName,
+						   jstring
+						   logFile,
+						   jstring
+						   settingsString, jint mode)
 {
   const jbyte *cfl = NULL;
   const jbyte *inFile = NULL;
@@ -277,16 +277,16 @@ release:
  */
 JNIEXPORT jboolean JNICALL
 Java_org_liblouis_liblouisutdml_backTranslateFile (JNIEnv * env,
-						    jobject this,
-						    jstring
-						    configFileList,
-						    jstring inputFileName,
-						    jstring
-						    outputFileName,
-						    jstring
-						    logFile,
-						    jstring
-						    settingsString, jint mode)
+						   jobject this,
+						   jstring
+						   configFileList,
+						   jstring inputFileName,
+						   jstring
+						   outputFileName,
+						   jstring
+						   logFile,
+						   jstring
+						   settingsString, jint mode)
 {
   const jbyte *cfl = NULL;
   const jbyte *inFile = NULL;
@@ -430,6 +430,59 @@ release:
   if (logf != NULL)
     (*env)->ReleaseStringUTFChars (env, logFile, logf);
   return result;
+}
+
+/*
+ * Class:     org_liblouis_liblouisutdml
+ * Method:    compileString
+ * Signature: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Z
+ */
+JNIEXPORT jboolean JNICALL Java_org_liblouis_liblouisutdml_compileString
+  (JNIEnv * env, jobject this, jstring tableList, jstring newEntry,
+   jstring logFile)
+{
+  const jbyte *tableListX = NULL;
+  const jbyte *newEntryX = NULL;
+  const jbyte *logf = NULL;
+  jboolean result = JNI_FALSE;
+  tableListX = (*env)->GetStringUTFChars (env, tableList, NULL);
+  if (tableListX == NULL)
+    goto release;
+  newEntryX = (*env)->GetStringUTFChars (env, newEntry, NULL);
+  if (newEntryX == NULL)
+    goto release;
+  logf = (*env)->GetStringUTFChars (env, logFile, NULL);
+  if (logf == NULL)
+    goto release;
+  lou_logFile (logf);
+  result = lou_compileString (tableListX, newEntryX);
+  lou_logEnd ();
+release:
+  if (tableListX != NULL)
+    (*env)->ReleaseStringUTFChars (env, tableList, tableListX);
+  if (newEntryX != NULL)
+    (*env)->ReleaseStringUTFChars (env, newEntry, newEntryX);
+  if (logf != NULL)
+    (*env)->ReleaseStringUTFChars (env, logFile, logf);
+  return result;
+}
+
+/*
+ * Class:     org_liblouis_liblouisutdml
+ * Method:    setDataPath
+ * Signature: (Ljava/lang/String;)V
+ */
+JNIEXPORT void JNICALL Java_org_liblouis_liblouisutdml_setDataPath
+  (JNIEnv * env, jobject this, jstring path)
+{
+  const jbyte *pathX = NULL;
+  pathX = (*env)->GetStringUTFChars (env, path, NULL);
+  if (pathX == NULL)
+    goto release;
+  lou_setDataPath ((char *)pathX);
+release:
+  if (pathX != NULL)
+    (*env)->ReleaseStringUTFChars (env, path, pathX);
 }
 
 /*
