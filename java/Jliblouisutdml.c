@@ -479,7 +479,7 @@ JNIEXPORT void JNICALL Java_org_liblouis_liblouisutdml_setDataPath
   pathX = (*env)->GetStringUTFChars (env, path, NULL);
   if (pathX == NULL)
     goto release;
-  lou_setDataPath ((char *)pathX);
+  lou_setDataPath ((char *) pathX);
 release:
   if (pathX != NULL)
     (*env)->ReleaseStringUTFChars (env, path, pathX);
@@ -515,12 +515,13 @@ JNIEXPORT void JNICALL Java_org_liblouis_liblouisutdml_free
  */
 
 /* Helper function for this method */
-JNIEXPORT const jbyte *JNICALL
+static const jbyte *JNICALL
 getArg (JNIEnv * env, jobject this, jobjectArray args, jint index)
 {
   static jobject curObj = NULL;
   static const jbyte *curArg = NULL;
-  static jint oldIndex = 0;
+  if (args == NULL)
+    return NULL;
   if (curObj != NULL || index == -1)
     {
       if (curArg != NULL)
@@ -528,9 +529,13 @@ getArg (JNIEnv * env, jobject this, jobjectArray args, jint index)
       curArg = NULL;
       curObj = NULL;
     }
+if (index >= 0)
+{
   curObj = (*env)->GetObjectArrayElement (env, args, index);
+  if (curObj == NULL)
+    return NULL;
   curArg = (*env)->GetStringUTFChars (env, curObj, NULL);
-  oldIndex = index;
+}
   return curArg;
 }
 
@@ -560,77 +565,82 @@ JNIEXPORT jboolean JNICALL Java_org_liblouis_liblouisutdml_file2brl
   strcpy (tempFileName, "file2brl.temp");
   strcpy (logFileName, "file2brl.log");
   UserData *ud;
-  getArg (env, this, args, -1);
-  k = 0;
-  while (k < numArgs)
+  if (numArgs != 0)
     {
-      curArg = getArg (env, this, args, k);
-      if (curArg[0] == '-')
+      getArg (env, this, args, -1);
+      k = 0;
+      while (k < numArgs)
 	{
-	  switch (curArg[1])
+	  curArg = getArg (env, this, args, k);
+	  if (curArg == NULL)
+	    break;
+	  if (curArg[0] == '-')
 	    {
-	    case 'l':
-	      strcpy (logFileName, getArg (env, this, args, k + 1));
-	      k += 2;
-	      break;
-	    case 't':
-	      mode |= htmlDoc;
-	      k++;
-	      break;
-	    case 'f':
-	      strcpy (configFileList, getArg (env, this, args, k + 1));
-	      k += 2;
-	      break;
-	    case 'b':
-	    case 'p':
-	    case 'r':
-	    case 'x':
-	      whichProc = curArg[1];
-	      k++;
-	      break;
-	    case 'C':
-	      if (configSettings == NULL)
+	      switch (curArg[1])
 		{
-		  configSettings = malloc (BUFSIZE);
-		  configSettings[0] = 0;
+		case 'l':
+		  strcpy (logFileName, getArg (env, this, args, k + 1));
+		  k += 2;
+		  break;
+		case 't':
+		  mode |= htmlDoc;
+		  k++;
+		  break;
+		case 'f':
+		  strcpy (configFileList, getArg (env, this, args, k + 1));
+		  k += 2;
+		  break;
+		case 'b':
+		case 'p':
+		case 'r':
+		case 'x':
+		  whichProc = curArg[1];
+		  k++;
+		  break;
+		case 'C':
+		  if (configSettings == NULL)
+		    {
+		      configSettings = malloc (BUFSIZE);
+		      configSettings[0] = 0;
+		    }
+		  strcat (configSettings, getArg (env, this, args, k + 1));
+		  k += 2;
+		  strcat (configSettings, "\n");
+		  break;
+		case '-':
+		  /* Input file is stdin but output file is not stdout. */
+		  k++;
+		  break;
+		default:
+		  lou_logPrint ("invalid argument%s", curArg);
+		  return JNI_FALSE;
 		}
-	      strcat (configSettings, getArg (env, this, args, k + 1));
-	      k += 2;
-	      strcat (configSettings, "\n");
-	      break;
-	    case '-':
-	      /* Input file is stdin but output file is not stdout. */
-	      k++;
-	      break;
-	    default:
-	      lou_logPrint ("invalid argument%s", curArg);
-	      return JNI_FALSE;
+	      continue;
 	    }
-	  continue;
+	  if (k < numArgs)
+	    {
+	      if (k == numArgs - 1)
+		{
+		  strcpy (inputFileName, curArg);
+		  k++;
+		}
+	      else if (k == numArgs - 2)
+		{
+		  strcpy (inputFileName, curArg);
+		  strcpy (outputFileName, getArg (env, this, args, k + 1));
+		  k += 2;
+		}
+	      else
+		{
+		  lou_logPrint ("extra operand: %s\n",
+				getArg (env, this, args, k + 2));
+		  return JNI_FALSE;
+		}
+	    }
+	  k++;
 	}
-      if (k < numArgs)
-	{
-	  if (k == numArgs - 1)
-	    {
-	      strcpy (outputFileName, curArg);
-	      k++;
-	    }
-	  else if (k == numArgs - 2)
-	    {
-	      strcpy (inputFileName, curArg);
-	      strcpy (outputFileName, getArg (env, this, args, k + 1));
-	      k += 2;
-	    }
-	  else
-	    {
-	      lou_logPrint ("extra operand: %s\n",
-			    getArg (env, this, args, k + 2));
-	      return JNI_FALSE;
-	    }
-	}
-      k++;
+      getArg (env, this, args, -1);
     }
-  getArg (env, this, args, -1);
   lou_logFile (logFileName);
   if (whichProc == 0)
     whichProc = 'x';
