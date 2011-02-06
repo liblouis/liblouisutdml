@@ -1,5 +1,5 @@
-Following the below steps will install the latest liblouisxml tar ball
-from http://code.google.com/p/liblouisxml/downloads/list
+Following the below steps will install the latest liblouisutdml tar ball
+from http://code.google.com/p/liblouisutdml/downloads/list
 
 NOTE: I am assuming that you already have liblouis installed in /usr
 or /usr/local. 
@@ -26,11 +26,11 @@ directories exist. Both of these directories will be needed because
 libxml2 comes installed in /usr/lib, and the liblouis library will by
 default install in /usr/local/lib.
 
-3. Download the latest liblouisxml tarball from
+3. Download the latest liblouisutdml tarball from
 
-  http://code.google.com/p/liblouisxml/downloads/list
+  http://code.google.com/p/liblouisutdml/downloads/list
 
-or svn; decompress it; switch to the liblouisxml directory and run
+or svn; decompress it; switch to the liblouisutdml directory and run
 
   ./configure; make; sudo make install
 
