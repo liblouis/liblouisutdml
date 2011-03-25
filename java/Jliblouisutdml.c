@@ -508,7 +508,7 @@ JNIEXPORT void JNICALL Java_org_liblouis_liblouisutdml_setWriteablePath
   pathX = (*env)->GetStringUTFChars (env, path, NULL);
   if (pathX == NULL)
     goto release;
-  lou_setWriteablePath ((char *) pathX);
+  lbu_setWriteablePath ((char *) pathX);
 release:
   if (pathX != NULL)
     (*env)->ReleaseStringUTFChars (env, path, pathX);
