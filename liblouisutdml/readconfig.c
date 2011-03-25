@@ -89,6 +89,12 @@ alloc_string (const char *inString)
   return newString;
 }
 
+void EXPORT_CALL
+lbu_setWriteablePath (const char *path)
+{
+  ud->writeablePath = alloc_string (path);
+}
+
 int
 file_exists (const char *completePath)
 {

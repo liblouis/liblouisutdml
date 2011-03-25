@@ -498,6 +498,24 @@ JNIEXPORT jint JNICALL Java_org_liblouis_liblouisutdml_charSize
 
 /*
  * Class:     org_liblouis_liblouisutdml
+ * Method:    setWriteablePath
+ * Signature: (Ljava/lang/String;)V
+ */
+JNIEXPORT void JNICALL Java_org_liblouis_liblouisutdml_setWriteablePath
+  (JNIEnv *env, jobject this, jstring path)
+{
+  const jbyte *pathX = NULL;
+  pathX = (*env)->GetStringUTFChars (env, path, NULL);
+  if (pathX == NULL)
+    goto release;
+  lou_setWriteablePath ((char *) pathX);
+release:
+  if (pathX != NULL)
+    (*env)->ReleaseStringUTFChars (env, path, pathX);
+}
+
+/*
+ * Class:     org_liblouis_liblouisutdml
  * Method:    free
  * Signature: ()V
  */

@@ -133,6 +133,14 @@ JNIEXPORT jboolean JNICALL Java_org_liblouis_liblouisutdml_file2brl
 
 /*
  * Class:     org_liblouis_liblouisutdml
+ * Method:    setWriteablePath
+ * Signature: (Ljava/lang/String;)V
+ */
+JNIEXPORT void JNICALL Java_org_liblouis_liblouisutdml_setWriteablePath
+  (JNIEnv *, jobject, jstring);
+
+/*
+ * Class:     org_liblouis_liblouisutdml
  * Method:    free
  * Signature: ()V
  */

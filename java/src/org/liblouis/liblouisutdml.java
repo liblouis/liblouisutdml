@@ -180,6 +180,11 @@ public native int charSize ();
 
 public native boolean file2brl (String[] args);
 
+/**
+* Set the path to which temporary files will be written.
+*/
+public native void setWriteablePath (String path);
+
 /** You must call free at the end of your application to free all 
 memory used by liblouisutdml and liblouis. Do NOT call it after every 
 call to a liblouisutdml method. This will result in great 

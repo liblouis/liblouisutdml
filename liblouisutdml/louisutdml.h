@@ -322,7 +322,8 @@ int link_brl_node (xmlNode * node);
 void clean_semantic_table (void);
 int back_translate_braille_string (void);
 int utf8_string_to_wc (const unsigned char *instr, int *inSize, widechar
-		       * outstr, int *outSize);
+		       * outstr, 
+int *outSize);
 int wc_string_to_utf8 (const widechar * instr, int *inSize, unsigned
 		       char *outstr, int *outSize);
 #endif /*louisutdml_h */
