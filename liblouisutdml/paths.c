@@ -131,7 +131,7 @@ set_paths (const char *configPath)
   currentPath[2] = 0;
   if (!addPath (currentPath))
     return 0;
-  if (ud->writeablePath == NULL)
+  if (ud->writeable_path == NULL)
     ud->writeable_path = lastPath;
   return 1;
 }

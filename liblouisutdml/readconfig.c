@@ -92,7 +92,7 @@ alloc_string (const char *inString)
 void EXPORT_CALL
 lbu_setWriteablePath (const char *path)
 {
-  ud->writeablePath = alloc_string (path);
+  ud->writeable_path = alloc_string (path);
 }
 
 int
