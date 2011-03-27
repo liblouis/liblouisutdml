@@ -86,7 +86,7 @@ set_paths (const char *configPath)
       if (!addPath (currentPath))
 	return 0;
       strcpy (currentPath, dataPath);
-      strccat (currentPath, "\\liblouisutdml\\lbu_files\\");
+      strcat (currentPath, "\\liblouisutdml\\lbu_files\\");
       if (!addPath (currentPath))
 	return 0;
 #else
