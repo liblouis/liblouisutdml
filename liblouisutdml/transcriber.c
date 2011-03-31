@@ -801,21 +801,32 @@ getPageNumber (void)
   pageNumberLength = 0;
   if (ud->lines_on_page == 1)
     {
+
       if (ud->print_pages && ud->print_page_number_at
 	  && ud->print_page_number_first[0] != '_')
-	printPageNumber = 1;
+	{
+	  printPageNumber = 1;
+	}
       if (ud->braille_pages && !ud->braille_page_number_at
 	  && currentBraillePageNumFormat != blank)
-	braillePageNumber = 1;
+	{
+	  braillePageNumber = 1;
+	}
+
     }
   else if (ud->lines_on_page == ud->lines_per_page)
     {
+
       if (ud->print_pages && !ud->print_page_number_at
 	  && ud->print_page_number_first[0] != '_')
-	printPageNumber = 1;
+	{
+	  printPageNumber = 1;
+	}
       if (ud->braille_pages && ud->braille_page_number_at
 	  && currentBraillePageNumFormat != blank)
-	braillePageNumber = 1;
+	{
+	  braillePageNumber = 1;
+	}
     }
   if (printPageNumber || braillePageNumber)
     {
@@ -832,6 +843,7 @@ getPageNumber (void)
 	  getBraillePageString ();
 	}
     }
+
   return 1;
 }
 
@@ -3058,7 +3070,7 @@ end_style ()
   return 1;
 }
 
-/* Routines for Unified Tactile Ducument Markup Language */
+/* Routines for Unified Tactile Ducument Markup Language (UTDML) */
 
 #define SPACE B16
 /* Dot patterns must include B16 and be enclosed in parentheses.*/
