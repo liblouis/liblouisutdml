@@ -461,7 +461,7 @@ if (child != NULL)
     switch (ud->stack[ud->top])
       {
       case runninghead:
-	insert_translation (ud->mainBrailleTable);
+	insert_translation (ud->main_braille_table);
 	if (ud->translated_length > (ud->cells_per_line - 9))
 	  ud->running_head_length = ud->cells_per_line - 9;
 	else
@@ -470,7 +470,7 @@ if (child != NULL)
 		ud->running_head_length * CHARSIZE);
 	break;
       case footer:
-	insert_translation (ud->mainBrailleTable);
+	insert_translation (ud->main_braille_table);
 	if (ud->translated_length > (ud->cells_per_line - 9))
 	  ud->footer_length = ud->cells_per_line - 9;
 	else
@@ -485,8 +485,8 @@ if (child != NULL)
     pop_sem_stack ();
   else
     {
-      insert_translation (ud->mainBrailleTable);
-      write_paragraph (para);
+      insert_translation (ud->main_braille_table);
+      write_paragraph (para, NULL);
     }
   return 1;
 }

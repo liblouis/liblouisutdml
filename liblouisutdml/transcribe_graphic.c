@@ -1,4 +1,3 @@
-
 /* liblouisutdml Braille Transcription Library
 
    This file may contain code borrowed from the Linux screenreader
@@ -98,7 +97,7 @@ transcribe_graphic (xmlNode * node, int action)
   switch (ud->stack[ud->top])
     {
     case para:
-      write_paragraph (para);
+      write_paragraph (para, NULL);
       break;
     default:
       break;

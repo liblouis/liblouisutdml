@@ -154,7 +154,7 @@ lbu_translateString (const char *configFileName,
   ud->inbuf = inbuf;
   ud->inlen = inlen;
   ud->outbuf1 = outbuf;
-  ud->outlen1 = *outlen;
+  ud->outbuf1_len = *outlen;
   ud->inFile = ud->outFile = NULL;
   for (k = 0; k < inlen; k++)
     if (inbuf[k] > ' ')
@@ -239,14 +239,11 @@ int
 * the specifications in configFileName. If there are errors, print 
 * an error message and return 0.*/
   widechar outbuf[2 * BUFSIZE];
-  widechar pagebuf[2 * BUFSIZE];
   if (!read_configuration_file
       (configFileName, logFileName, settingsString, mode))
     return 0;
   ud->outbuf = outbuf;
   ud->outlen = (sizeof (outbuf) / CHARSIZE) - 4;
-  ud->pagebuf = pagebuf;
-  ud->pagelen = (sizeof (pagebuf) / CHARSIZE) - 4;
   if (strcmp (inFileName, "stdin"))
     {
       if (!(ud->inFile = fopen (inFileName, "r")))
@@ -289,10 +286,10 @@ lbu_backTranslateString (const char *configFileName,
     return 0;
   ud->inbuf = inbuf;
   ud->inlen = inlen;
-  ud->outbuf_utf8 = outbuf;
-  ud->outlen_utf8 = *outlen;
+  ud->outbuf1 = outbuf;
+  ud->outbuf1_len = *outlen;
   ud->outbuf = (widechar *) outbuf;
-  ud->outlen = ud->outlen_utf8 / CHARSIZE;
+  ud->outlen = ud->outlen / CHARSIZE;
   ud->inFile = ud->outFile = NULL;
   back_translate_braille_string ();
   *outlen = ud->outlen_so_far;
@@ -311,14 +308,11 @@ int
 * the specifications in configFileName. If there are errors, print an 
 * error message and return 0.*/
   widechar outbuf[2 * BUFSIZE];
-  widechar pagebuf[2 * BUFSIZE];
   if (!read_configuration_file
       (configFileName, logFileName, settingsString, mode))
     return 0;
   ud->outbuf = outbuf;
   ud->outlen = (sizeof (outbuf) / CHARSIZE) - 4;
-  ud->pagebuf = pagebuf;
-  ud->pagelen = (sizeof (pagebuf) / CHARSIZE) - 4;
   if (strcmp (inFileName, "stdin"))
     {
       if (!(ud->inFile = fopen (inFileName, "r")))

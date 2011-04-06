@@ -193,8 +193,6 @@ typedef struct
   int inlen;
   widechar *outbuf;
   int outlen;
-  unsigned char *outbuf_utf8;
-  int outlen_utf8;
   int outlen_so_far;
   widechar *outbuf1;
   widechar *outbuf2;
@@ -215,6 +213,8 @@ typedef struct
   int braille_page_numbers_in_contents;
   int lines_pagenum[MAXLINES+1];
   int lines_newpage[MAXLINES+1];
+  int lines_length;
+  BrlPageNumFormat cur_brl_page_num_format;
   int lines_on_page;
   int braille_page_number;
   int prelim_pages;
@@ -253,20 +253,6 @@ typedef struct
   const char *semantic_files;
   const char *volume_sem;
   widechar print_page_number[MAXNUMLEN];
-  widechar page_separator_number_first[MAXNUMLEN];
-  widechar page_separator_number_last[MAXNUMLEN];
-  widechar print_page_number_first[MAXNUMLEN];
-  widechar print_page_number_last[MAXNUMLEN];
-  int page_separator;
-  int page_separator_number;
-  int ignore_empty_pages;
-  int continue_pages;
-  int merge_unnumbered_pages;
-  int print_page_number_range;
-  int page_number_top_separate_line;
-  int page_number_bottom_separate_line;
-  int fill_pages;
-  int after_contents;
   widechar braille_page_string[MAXNUMLEN];
   char lineEnd[8];
   char pageEnd[8];
