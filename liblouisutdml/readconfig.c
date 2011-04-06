@@ -590,6 +590,16 @@ compileConfig (FileInfo * nested)
     "47",
     "emphasis",
     "48",
+    "mergeUnnumberedPages",
+    "49",
+    "pageNumberTopSeparateLine",
+    "50",
+    "pageNumberBottomSeparateLine",
+    "51",
+    "printPageNumbersInContents",
+    "52",
+    "braillePageNumbersInContents",
+    "53",
     "style",
     "90",
     NULL
@@ -847,6 +857,32 @@ compileConfig (FileInfo * nested)
 	  if ((k = orValues (nested, typeForms)) != NOTFOUND)
 	    ud->emphasis = k;
 	  break;
+	case 49:
+	  if ((k = checkValues (nested, yesNo)) != NOTFOUND)
+	    {
+	      ud->merge_unnumbered_pages = k;
+	    }
+	  break;
+	case 50:
+	  if ((k = checkValues (nested, yesNo)) != NOTFOUND)
+	    {
+	      ud->page_number_top_separate_line = k;
+	    }
+	  break;
+	case 51:
+	  if ((k = checkValues (nested, yesNo)) != NOTFOUND)
+	    {
+	      ud->page_number_bottom_separate_line = k;
+	    }
+	  break;
+    case 52:
+	  if ((k = checkValues (nested, yesNo)) != NOTFOUND)
+		ud->print_page_numbers_in_contents = k;
+	  break;
+    case 53:
+	  if ((k = checkValues (nested, yesNo)) != NOTFOUND)
+		ud->braille_page_numbers_in_contents = k;
+	  break;
 	case 90:
 	  {
 	    static const char *actions[] = {
@@ -869,7 +905,18 @@ compileConfig (FileInfo * nested)
 	      "newPageAfter",
 	      "10",
 	      "rightHandPage",
-	      "11", "braillePageNumberFormat", "12", NULL
+	      "11",
+		  "braillePageNumberFormat",
+		  "12",
+          "centeredMargin",
+          "13",
+          "keepWithNext",
+          "14",
+          "dontSplit",
+          "15",
+          "orphanControl",
+          "16",
+          NULL
 	    };
 	    static const char *formats[] = {
 	      "leftJustified",
@@ -960,6 +1007,20 @@ compileConfig (FileInfo * nested)
 			NOTFOUND)
 		      style->brlNumFormat = k;
 		    break;
+          case 13:
+            style->centered_margin = atoi (nested->value);
+            break;
+          case 14:
+            if ((k = checkValues (nested, yesNo)) != NOTFOUND)
+		      style->keep_with_next = k;
+		    break;
+          case 15:
+            if ((k = checkValues (nested, yesNo)) != NOTFOUND)
+		      style->dont_split = k;
+		    break;
+          case 16:
+            style->orphan_control = atoi (nested->value);
+            break;
 		  default:
 		    configureError (nested, "Program error in readconfig.c");
 		    continue;

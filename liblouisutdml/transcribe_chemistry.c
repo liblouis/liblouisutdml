@@ -7,7 +7,7 @@
    Copyright (C) 2004, 2005, 2006
    ViewPlus Technologies, Inc. www.viewplus.com
    and
-   JJB Software, Inc. www.jjb-software.com
+   abilitiessoft, Inc. www.abilitiessoft.com
    All rights reserved
 
    This file is free software; you can redistribute it and/or modify it
@@ -26,7 +26,7 @@
    the Free Software Foundation, 51 Franklin Street, Fifth Floor,
    Boston, MA 02110-1301, USA.
 
-   Maintained by John J. Boyer john.boyer@jjb-software.com
+   Maintained by John J. Boyer john.boyer@abilitiessoft.com
    */
 
 #include <stdio.h>
@@ -43,7 +43,7 @@ transcribe_chemistry (xmlNode * node, int action)
   xmlNode *child;
   int branchCount = 0;
   if (action != 0)
-    push_sem_stack (node);
+push_sem_stack (node);
   switch (ud->stack[ud->top])
     {
     case no:
@@ -69,8 +69,8 @@ transcribe_chemistry (xmlNode * node, int action)
       switch (child->type)
 	{
 	case XML_ELEMENT_NODE:
-	  insert_code (node, branchCount);
-	  branchCount++;
+insert_code (node, branchCount);
+branchCount++;
 	  if (child->children)
 	    transcribe_paragraph (child, 1);
 	  else
@@ -87,19 +87,45 @@ transcribe_chemistry (xmlNode * node, int action)
 	}
       child = child->next;
     }
-  insert_code (node, branchCount);
+insert_code (node, branchCount);
   insert_code (node, -1);
-  pop_sem_stack ();
   if (action != 0)
-    return 1;
-  write_paragraph (para, node);
+    {
+      pop_sem_stack ();
+      return 1;
+    }
+  switch (ud->stack[ud->top])
+    {
+    case para:
+      write_paragraph (para);
+      break;
+    case heading10:
+    case heading9:
+    case heading8:
+    case heading7:
+    case heading6:
+    case heading5:
+    case heading4:
+    case heading3:
+      write_paragraph (para);
+      break;
+    case heading2:
+      write_paragraph (para);
+      break;
+    case heading1:
+      write_paragraph (para);
+      break;
+    default:
+      break;
+    }
+  pop_sem_stack ();
   return 1;
 }
 
 static int
 chemEmptyElement (xmlNode * node)
 {
-  push_sem_stack (node);
+push_sem_stack (node);
   switch (ud->stack[ud->top])
     {
     case softreturn:
@@ -123,7 +149,7 @@ chemEmptyElement (xmlNode * node)
 static void
 chemText (xmlNode * node, int action)
 {
-  insert_text (node);
+insert_text (node);
 }
 
 static void
