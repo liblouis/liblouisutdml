@@ -7,7 +7,7 @@
    Copyright (C) 2004, 2005, 2006
    ViewPlus Technologies, Inc. www.viewplus.com
    and
-   JJB Software, Inc. www.jjb-software.com
+   abilitiessoft, Inc. www.abilitiessoft.com
    All rights reserved
 
    This file is free software; you can redistribute it and/or modify it
@@ -26,7 +26,7 @@
    the Free Software Foundation, 51 Franklin Street, Fifth Floor,
    Boston, MA 02110-1301, USA.
 
-   Maintained by John J. Boyer john.boyer@jjb-software.com
+   Maintained by John J. Boyer john.boyer@abilitiessoft.com
    */
 
 #include <stdio.h>
@@ -97,7 +97,7 @@ insert_code (node, branchCount);
   switch (ud->stack[ud->top])
     {
     case para:
-      write_paragraph (para, node);
+      write_paragraph (para);
       break;
     default:
       break;

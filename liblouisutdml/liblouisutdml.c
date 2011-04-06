@@ -153,10 +153,8 @@ lbu_translateString (const char *configFileName,
     return 0;
   ud->inbuf = inbuf;
   ud->inlen = inlen;
-  ud->outbuf_utf8 = outbuf;
-  ud->outlen_utf8 = *outlen;
-  ud->outbuf = (widechar *) outbuf;
-  ud->outlen = ud->outlen_utf8 / CHARSIZE;
+  ud->outbuf1 = outbuf;
+  ud->outlen1 = *outlen;
   ud->inFile = ud->outFile = NULL;
   for (k = 0; k < inlen; k++)
     if (inbuf[k] > ' ')
@@ -202,14 +200,17 @@ int
 * expression is not well-formed or there are other errors, 
 * return 0. */
   widechar outbuf[2 * BUFSIZE];
-  widechar pagebuf[2 * BUFSIZE];
+  widechar outbuf2[2 * BUFSIZE];
+  widechar outbuf3[2 * BUFSIZE];
   if (!read_configuration_file
       (configFileName, logFileName, settingsString, mode))
     return 0;
-  ud->outbuf = outbuf;
-  ud->outlen = (sizeof (outbuf) / CHARSIZE) - 4;
-  ud->pagebuf = pagebuf;
-  ud->pagelen = (sizeof (pagebuf) / CHARSIZE) - 4;
+  ud->outbuf1 = outbuf;
+  ud->outbuf2 = outbuf2;
+  ud->outbuf3 = outbuf3;
+  ud->outbuf1_len = (sizeof (outbuf) / CHARSIZE) - 4;
+  ud->outbuf2_len = (sizeof (outbuf2) / CHARSIZE) - 4;
+  ud->outbuf3_len = (sizeof (outbuf3) / CHARSIZE) - 4;
   if (strcmp (outFileName, "stdout"))
     {
       if (!(ud->outFile = fopen (outFileName, "w")))

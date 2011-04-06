@@ -7,7 +7,7 @@
    Copyright (C) 2004, 2005, 2006
    ViewPlus Technologies, Inc. www.viewplus.com
    and
-   JJB Software, Inc. www.jjb-software.com
+   Abilitiessoft, Inc. www.abilitiessoft.com
    All rights reserved
 
    This file is free software; you can redistribute it and/or modify it
@@ -26,7 +26,7 @@
    the Free Software Foundation, 51 Franklin Street, Fifth Floor,
    Boston, MA 02110-1301, USA.
 
-   Maintained by John J. Boyer john.boyer@jjb-software.com
+   Maintained by John J. Boyer john.boyer@abilitiessoft.com
    */
 
 #ifndef liblouisutdml_h
@@ -72,6 +72,10 @@ typedef struct
   int lines_before;
   int lines_after;
   int left_margin;
+  int centered_margin;
+  int keep_with_next;
+  int dont_split;
+  int orphan_control;
   int first_line_indent;	/* At true margin if negative */
   sem_act translate;
   int skip_number_lines;	/*Don't write on lines with page numbers */
@@ -101,6 +105,7 @@ typedef struct
 #define MAXNAMELEN 256
 #define MAXNUMLEN 32
 #define STACKSIZE 100
+#define MAXLINES 512
 
 typedef enum
 {
@@ -191,12 +196,43 @@ typedef struct
   unsigned char *outbuf_utf8;
   int outlen_utf8;
   int outlen_so_far;
+  widechar *outbuf1;
+  widechar *outbuf2;
+  widechar *outbuf3;
+  int outbuf1_len;
+  int outbuf2_len;
+  int outbuf3_len;
+  int outbuf1_len_so_far;
+  int outbuf2_len_so_far;
+  int outbuf3_len_so_far;
+  int outbuf2_enabled;
+  int outbuf3_enabled;
+  int fill_pages;
+  int after_contents;
+  int fill_page_skipped;
+  int blank_lines;
+  int print_page_numbers_in_contents;
+  int braille_page_numbers_in_contents;
+  int lines_pagenum[MAXLINES+1];
+  int lines_newpage[MAXLINES+1];
   int lines_on_page;
   int braille_page_number;
   int prelim_pages;
   int paragraphs;
   int braille_pages;
   int print_pages;
+  widechar page_separator_number_first[MAXNUMLEN];
+  widechar page_separator_number_last[MAXNUMLEN];
+  widechar print_page_number_first[MAXNUMLEN];
+  widechar print_page_number_last[MAXNUMLEN];
+  int page_separator;
+  int page_separator_number;
+  int ignore_empty_pages;
+  int continue_pages;
+  int merge_unnumbered_pages;
+  int print_page_number_range;
+  int page_number_top_separate_line;
+  int page_number_bottom_separate_line;
   char path_list[4 * MAXNAMELEN];
   const char *writeable_path;
   char string_escape;
@@ -231,9 +267,6 @@ typedef struct
   int page_number_bottom_separate_line;
   int fill_pages;
   int after_contents;
-  widechar *pagebuf;
-  int pagelen;
-  int pagelen_so_far;
   widechar braille_page_string[MAXNUMLEN];
   char lineEnd[8];
   char pageEnd[8];
