@@ -97,7 +97,7 @@ insert_code (node, branchCount);
   switch (ud->stack[ud->top])
     {
     case para:
-      write_paragraph (para);
+      write_paragraph (para, NULL);
       break;
     default:
       break;

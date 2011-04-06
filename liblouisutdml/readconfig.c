@@ -1099,7 +1099,6 @@ read_configuration_file (const char *configFileList, const char
       ud->print_page_number_last[0] = 0;
       ud->page_separator_number_first[0] = 0;
       ud->page_separator_number_first[0] = 0;
-      ud->pagelen_so_far = 0;
       ud->fill_pages = 0;
       return 1;
     }

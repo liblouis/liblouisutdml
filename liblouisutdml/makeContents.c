@@ -237,7 +237,7 @@ make_contents (void)
 	      break;
 	    }
 	  style = action_to_style (action);
-	  start_style (style);
+	  start_style (style, NULL);
 	  memcpy (ud->translated_buffer, currentHeading->headingChars,
 		  currentHeading->headingLength * CHARSIZE);
 	  ud->translated_length = currentHeading->headingLength;
