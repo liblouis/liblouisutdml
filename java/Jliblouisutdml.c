@@ -51,7 +51,7 @@ Java_org_liblouis_liblouisutdml_translateString (JNIEnv * env,
 						 jstring
 						 configFileList,
 						 jbyteArray inbuf,
-						 jbyteArray
+						 jcharArray
 						 outbuf,
 						 jintArray outlen,
 						 jstring
@@ -116,7 +116,7 @@ Java_org_liblouis_liblouisutdml_backTranslateString (JNIEnv * env,
 						     configFileList,
 						     jbyteArray
 						     inbuf,
-						     jbyteArray
+						     jcharArray
 						     outbuf,
 						     jintArray
 						     outlen,

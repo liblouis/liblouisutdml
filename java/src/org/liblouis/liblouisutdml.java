@@ -82,7 +82,7 @@ settings. */
 
   public native boolean translateString (String configFileList,
 					     byte[]inbuf,
-					     byte[]outbuf, int[]outlen,
+					     char[]outbuf, int[]outlen,
 					     String logFilename,
 					     String settingsSrting, int mode);
 
@@ -93,7 +93,7 @@ setingsStrring. The translation will be in UTF-8.
 
   public native boolean backTranslateString (String configFileList,
 						 byte[]inbuf,
-						 byte[]outbuf, int[]outlen,
+						 char[]outbuf, int[]outlen,
 						 String logFilename,
 						 String settingsSrting,
 						 int mode);
