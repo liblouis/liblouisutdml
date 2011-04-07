@@ -138,7 +138,7 @@ lbu_initialize (const char *configFileName,
 
 int EXPORT_CALL
 lbu_translateString (const char *configFileName,
-		     const char *inbuf, int inlen, unsigned char *outbuf,
+		     const char *inbuf, int inlen, widechar *outbuf,
 		     int *outlen,
 		     const char *logFileName, const char *settingsString,
 		     unsigned int mode)
@@ -275,7 +275,7 @@ int
 
 int EXPORT_CALL
 lbu_backTranslateString (const char *configFileName,
-			 const char *inbuf, int inlen, unsigned char
+			 const char *inbuf, int inlen, widechar
 			 *outbuf,
 			 int *outlen,
 			 const char *logFileName, const char
@@ -394,8 +394,7 @@ lbu_dotsToChar (const char *tableList, const unsigned char *inbuf,
 }
 
 int EXPORT_CALL
-lbu_checkTable (const char *tableList, const char *logFile, unsigned int 
-mode)
+lbu_checkTable (const char *tableList, const char *logFile, unsigned int mode)
 {
   int result = 1;
   lou_logFile (logFile);
