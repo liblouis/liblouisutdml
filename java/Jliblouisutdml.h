@@ -41,7 +41,7 @@ JNIEXPORT jstring JNICALL Java_org_liblouis_liblouisutdml_version
  * Signature: (Ljava/lang/String;[B[B[ILjava/lang/String;Ljava/lang/String;I)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_liblouis_liblouisutdml_translateString
-  (JNIEnv *, jobject, jstring, jbyteArray, jbyteArray, jintArray, jstring, jstring, jint);
+  (JNIEnv *, jobject, jstring, jbyteArray, jcharArray, jintArray, jstring, jstring, jint);
 
 /*
  * Class:     org_liblouis_liblouisutdml
@@ -49,7 +49,7 @@ JNIEXPORT jboolean JNICALL Java_org_liblouis_liblouisutdml_translateString
  * Signature: (Ljava/lang/String;[B[B[ILjava/lang/String;Ljava/lang/String;I)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_liblouis_liblouisutdml_backTranslateString
-  (JNIEnv *, jobject, jstring, jbyteArray, jbyteArray, jintArray, jstring, jstring, jint);
+  (JNIEnv *, jobject, jstring, jbyteArray, jcharArray, jintArray, jstring, jstring, jint);
 
 /*
  * Class:     org_liblouis_liblouisutdml
