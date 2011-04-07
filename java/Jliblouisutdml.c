@@ -62,7 +62,7 @@ Java_org_liblouis_liblouisutdml_translateString (JNIEnv * env,
   const jbyte *cfl = NULL;
   jbyte *inbufx = NULL;
   jint inlen = 0;
-  jbyte *outbufx = NULL;
+  jchar *outbufx = NULL;
   jint *outlenx = NULL;
   const jbyte *logf = NULL;
   const jbyte *settings = NULL;
@@ -74,7 +74,7 @@ Java_org_liblouis_liblouisutdml_translateString (JNIEnv * env,
   if (inbufx == NULL)
     goto release;
   inlen = (*env)->GetArrayLength (env, inbuf);
-  outbufx = (*env)->GetByteArrayElements (env, outbuf, NULL);
+  outbufx = (*env)->GetCharArrayElements (env, outbuf, NULL);
   if (outbufx == NULL)
     goto release;
   outlenx = (*env)->GetIntArrayElements (env, outlen, NULL);
@@ -129,7 +129,7 @@ Java_org_liblouis_liblouisutdml_backTranslateString (JNIEnv * env,
   const jbyte *cfl = NULL;
   jbyte *inbufx = NULL;
   jint inlen = 0;
-  jbyte *outbufx = NULL;
+  jchar *outbufx = NULL;
   jint *outlenx = NULL;
   const jbyte *logf = NULL;
   const jbyte *settings = NULL;
@@ -141,7 +141,7 @@ Java_org_liblouis_liblouisutdml_backTranslateString (JNIEnv * env,
   if (inbufx == NULL)
     goto release;
   inlen = (*env)->GetArrayLength (env, inbuf);
-  outbufx = (*env)->GetByteArrayElements (env, outbuf, NULL);
+  outbufx = (*env)->GetCharArrayElements (env, outbuf, NULL);
   if (outbufx == NULL)
     goto release;
   outlenx = (*env)->GetIntArrayElements (env, outlen, NULL);
