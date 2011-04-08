@@ -875,13 +875,13 @@ compileConfig (FileInfo * nested)
 	      ud->page_number_bottom_separate_line = k;
 	    }
 	  break;
-    case 52:
+	case 52:
 	  if ((k = checkValues (nested, yesNo)) != NOTFOUND)
-		ud->print_page_numbers_in_contents = k;
+	    ud->print_page_numbers_in_contents = k;
 	  break;
-    case 53:
+	case 53:
 	  if ((k = checkValues (nested, yesNo)) != NOTFOUND)
-		ud->braille_page_numbers_in_contents = k;
+	    ud->braille_page_numbers_in_contents = k;
 	  break;
 	case 90:
 	  {
@@ -906,17 +906,17 @@ compileConfig (FileInfo * nested)
 	      "10",
 	      "rightHandPage",
 	      "11",
-		  "braillePageNumberFormat",
-		  "12",
-          "centeredMargin",
-          "13",
-          "keepWithNext",
-          "14",
-          "dontSplit",
-          "15",
-          "orphanControl",
-          "16",
-          NULL
+	      "braillePageNumberFormat",
+	      "12",
+	      "centeredMargin",
+	      "13",
+	      "keepWithNext",
+	      "14",
+	      "dontSplit",
+	      "15",
+	      "orphanControl",
+	      "16",
+	      NULL
 	    };
 	    static const char *formats[] = {
 	      "leftJustified",
@@ -1007,20 +1007,20 @@ compileConfig (FileInfo * nested)
 			NOTFOUND)
 		      style->brlNumFormat = k;
 		    break;
-          case 13:
-            style->centered_margin = atoi (nested->value);
-            break;
-          case 14:
-            if ((k = checkValues (nested, yesNo)) != NOTFOUND)
+		  case 13:
+		    style->centered_margin = atoi (nested->value);
+		    break;
+		  case 14:
+		    if ((k = checkValues (nested, yesNo)) != NOTFOUND)
 		      style->keep_with_next = k;
 		    break;
-          case 15:
-            if ((k = checkValues (nested, yesNo)) != NOTFOUND)
+		  case 15:
+		    if ((k = checkValues (nested, yesNo)) != NOTFOUND)
 		      style->dont_split = k;
 		    break;
-          case 16:
-            style->orphan_control = atoi (nested->value);
-            break;
+		  case 16:
+		    style->orphan_control = atoi (nested->value);
+		    break;
 		  default:
 		    configureError (nested, "Program error in readconfig.c");
 		    continue;
@@ -1037,8 +1037,8 @@ compileConfig (FileInfo * nested)
 }
 
 static int
-initConfigFiles (const char *firstConfigFile, char *fileName, const 
-char *logFileName)
+initConfigFiles (const char *firstConfigFile, char *fileName, const
+		 char *logFileName)
 {
   char configPath[MAXNAMELEN];
   int k;
