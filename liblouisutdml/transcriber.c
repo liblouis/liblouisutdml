@@ -1093,6 +1093,8 @@ getPageNumber (void)
 	  braillePageNumber = 1;
 	}
     }
+  if (ud->interpoint && !(ud->braille_page_number & 1))
+	braillePageNumber = 0;
   if (printPageNumber || braillePageNumber)
     {
       pageNumberString[pageNumberLength++] = ' ';
@@ -1185,9 +1187,9 @@ nextPrintPage (void)
 	       (ud->lines_on_page == ud->lines_per_page - 2))
 	{
 
-	  ud->lines_on_page++;
 	  insertCharacters (ud->lineEnd, strlen (ud->lineEnd));
-	  ud->lines_on_page++;
+	  ud->lines_on_page = ud->lines_per_page;
+	  cellsWritten = 0;
 	  getPageNumber ();
 	  finishLine ();
 
@@ -1311,7 +1313,9 @@ startLine (void)
   int availableCells = 0;
   int blank_lines = ud->blank_lines;
 
-  while (availableCells == 0 || ud->fill_pages > 0 || blank_lines > 0)
+  while (availableCells == 0 ||
+         (ud->braille_pages && ud->fill_pages > 0) ||
+         blank_lines > 0)
     {
       if (ud->page_separator_number_first[0])
 	{
@@ -1378,14 +1382,16 @@ startLine (void)
       else if (blank_lines == 0)
 	return ud->cells_per_line;
 
-      if (ud->fill_pages > 0 || availableCells == 0)
-	finishLine ();
+      if (ud->braille_pages && ud->fill_pages > 0)
+        finishLine ();
       else if (blank_lines > 0)
-	{
-	  finishLine ();
-	  blank_lines--;
-	  availableCells = 0;
-	}
+		{
+          finishLine ();
+          blank_lines--;
+          availableCells = 0;
+    	}
+      else if (availableCells == 0)
+    	finishLine ();
       else
 	{
 	  ud->blank_lines = 0;
