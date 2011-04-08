@@ -94,7 +94,7 @@ release:
   if (inbufx != NULL)
     (*env)->ReleaseByteArrayElements (env, inbufx, inbuf, 0);
   if (outbufx != NULL)
-    (*env)->ReleaseByteArrayElements (env, outbufx, outbuf, 0);
+    (*env)->ReleaseCharArrayElements (env, outbufx, outbuf, 0);
   if (outlenx != NULL)
     (*env)->ReleaseIntArrayElements (env, outlenx, outlen, 0);
   if (logf != NULL)
@@ -161,7 +161,7 @@ release:
   if (inbufx != NULL)
     (*env)->ReleaseByteArrayElements (env, inbufx, inbuf, 0);
   if (outbufx != NULL)
-    (*env)->ReleaseByteArrayElements (env, outbufx, outbuf, 0);
+    (*env)->ReleaseCharArrayElements (env, outbufx, outbuf, 0);
   if (outlenx != NULL)
     (*env)->ReleaseIntArrayElements (env, outlenx, outlen, 0);
   if (logf != NULL)
