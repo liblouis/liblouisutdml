@@ -15,8 +15,7 @@ AM_LDFLAGS =	\
 	$(BASE_DEPENDENCIES_LDFLAGS)
 
 bin_PROGRAMS = \
-	file2brl \
-	lbu_devonly
+	file2brl
 
 bin_SCRIPTS = \
 	msword2brl \
@@ -27,4 +26,3 @@ CLEANFILES = $(bin_SCRIPTS)
 
 file2brl_SOURCES = file2brl.c
 
-lbu_devonly_SOURCES = lbu_devonly.c
