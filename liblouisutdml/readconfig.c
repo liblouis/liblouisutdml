@@ -700,7 +700,7 @@ compileConfig (FileInfo * nested)
 		k = 0;
 	      else
 		k = 1;
-	      ud->print_page_number_at = k;
+	      ud->braille_page_number_at = k;
 	    }
 	  break;
 	case 13:
