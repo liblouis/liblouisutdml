@@ -893,10 +893,7 @@ insert_text (xmlNode * node)
       ud->text_length = 0;
       return;
     case pagenum:
-      if (!ud->print_pages)
-	return;
-      fineFormat ();
-      makePageSeparator (node->content, length);
+      handlePagenum (node->content, length);
       return;
     default:
       break;
