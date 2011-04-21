@@ -1377,7 +1377,10 @@ startLine (void)
 	    availableCells = ud->cells_per_line - pageNumberLength;
 	}
       else if (blank_lines == 0)
-	return ud->cells_per_line;
+    {
+      ud->blank_lines = 0;
+      return ud->cells_per_line;
+    }
 
       if (ud->braille_pages && ud->fill_pages > 0)
         finishLine ();
@@ -1388,7 +1391,10 @@ startLine (void)
           availableCells = 0;
     	}
       else if (availableCells == 0)
-    	finishLine ();
+        {
+          ud->blank_lines = 0;
+    	  finishLine ();
+        }
       else
 	{
 	  ud->blank_lines = 0;
