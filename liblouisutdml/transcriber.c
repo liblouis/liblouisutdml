@@ -1376,6 +1376,12 @@ startLine (void)
 	  else
 	    availableCells = ud->cells_per_line - pageNumberLength;
 	}
+	  else if (ud->lines_on_page == 0)
+    {
+      ud->lines_on_page++;
+      ud->blank_lines = 0;
+      return ud->cells_per_line;
+    }
       else if (blank_lines == 0)
     {
       ud->blank_lines = 0;
