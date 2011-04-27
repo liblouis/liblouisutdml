@@ -1057,8 +1057,11 @@ initConfigFiles (const char *firstConfigFile, char *fileName, const
       strcat ((char *) ud->typeform, logFileName);
       lou_logFile ((char *) ud->typeform);
     }
-  if (!config_compileSettings ("canonical.cfg"))
-    return 0;
+  if (!config_compileSettings ("liblouisutdml.ini"))
+    {
+      if (!config_compileSettings ("canonical.cfg"))
+        return 0;
+    }
   return 1;
 }
 
