@@ -33,18 +33,17 @@
 #include "progname.h"
 #include "version-etc.h"
 
-static const struct option longopts[] =
-{
-  { "help", no_argument, NULL, 'h' },
-  { "version", no_argument, NULL, 'v' },
-  { "config-file", required_argument, NULL, 'f' },
-  { "backward", no_argument, NULL, 'b' },
-  { "reformat", no_argument, NULL, 'r' },
-  { "poorly-formatted", no_argument, NULL, 'p' },
-  { "html", no_argument, NULL, 't' },
-  { "log-file", no_argument, NULL, 'l' },
-  { "config-setting", required_argument, NULL, 'C' },
-  { NULL, 0, NULL, 0 }
+static const struct option longopts[] = {
+  {"help", no_argument, NULL, 'h'},
+  {"version", no_argument, NULL, 'v'},
+  {"config-file", required_argument, NULL, 'f'},
+  {"backward", no_argument, NULL, 'b'},
+  {"reformat", no_argument, NULL, 'r'},
+  {"poorly-formatted", no_argument, NULL, 'p'},
+  {"html", no_argument, NULL, 't'},
+  {"log-file", no_argument, NULL, 'l'},
+  {"config-setting", required_argument, NULL, 'C'},
+  {NULL, 0, NULL, 0}
 };
 
 const char version_etc_copyright[] =
@@ -57,7 +56,7 @@ print_help (void)
 {
   printf ("\
 Usage: %s [OPTION] [inputFile] [outputFile]\n", program_name);
-  
+
   fputs ("\
 Translate an xml or a text file into an embosser-ready braille file.\n\
 This includes translation into grade two, if desired, mathematical \n\
@@ -90,7 +89,7 @@ int
 main (int argc, char **argv)
 {
   int mode = dontInit;
-  char *configFileName = "default.cfg";
+  char *configFileName = NULL;
   char *inputFileName = "stdin";
   char *outputFileName = "stdout";
   char tempFileName[MAXNAMELEN];
@@ -109,18 +108,20 @@ main (int argc, char **argv)
   int optc;
   set_program_name (argv[0]);
 
-  while ((optc = getopt_long (argc, argv, "hvf:brptlC:", longopts, NULL)) != -1)
+  while ((optc =
+	  getopt_long (argc, argv, "hvf:brptlC:", longopts, NULL)) != -1)
     switch (optc)
       {
-      /* --help and --version exit immediately, per GNU coding standards.  */
+	/* --help and --version exit immediately, per GNU coding standards.  */
       case 'v':
-        version_etc (stdout, program_name, PACKAGE_NAME, VERSION, AUTHORS, (char *) NULL);
-        exit (EXIT_SUCCESS);
-        break;
+	version_etc (stdout, program_name, PACKAGE_NAME, VERSION, AUTHORS,
+		     (char *) NULL);
+	exit (EXIT_SUCCESS);
+	break;
       case 'h':
-        print_help ();
-        exit (EXIT_SUCCESS);
-        break;
+	print_help ();
+	exit (EXIT_SUCCESS);
+	break;
       case 'l':
 	logFileName = "file2brl.log";
 	break;
@@ -135,7 +136,7 @@ main (int argc, char **argv)
       case 'r':
       case 'x':
 	whichProc = optc;
-      break;
+	break;
       case 'C':
 	if (configSettings == NULL)
 	  {
@@ -149,10 +150,10 @@ main (int argc, char **argv)
 	fprintf (stderr, "Try `%s --help' for more information.\n",
 		 program_name);
 	exit (EXIT_FAILURE);
-        break;
+	break;
       }
 
-  if (optind < argc) 
+  if (optind < argc)
     {
       if (optind == argc - 1)
 	{
@@ -164,7 +165,7 @@ main (int argc, char **argv)
 	    inputFileName = argv[optind];
 	  outputFileName = argv[optind + 1];
 	}
-      else 
+      else
 	{
 	  fprintf (stderr, "%s: extra operand: %s\n",
 		   program_name, argv[optind + 2]);
@@ -180,9 +181,22 @@ main (int argc, char **argv)
     for (k = 0; configSettings[k]; k++)
       if (configSettings[k] == '=' && configSettings[k - 1] != ' ')
 	configSettings[k] = ' ';
-  if ((ud = lbu_initialize (configFileName, logFileName,
-			    configSettings)) == NULL)
-    exit (EXIT_FAILURE);
+  if (configFileName != NULL)
+    {
+      if ((ud = lbu_initialize (configFileName, logFileName,
+				configSettings)) == NULL)
+	exit (EXIT_FAILURE);
+    }
+  else
+    {
+      if ((ud = lbu_initialize ("preferences.cfg", logFileName,
+				configSettings)) == NULL)
+	{
+	  if ((ud = lbu_initialize ("default.cfg", logFileName,
+				    configSettings)) == NULL)
+	    exit (EXIT_FAILURE);
+	}
+    }
   if (strcmp (inputFileName, "stdin") != 0)
     {
       if (!(inputFile = fopen (inputFileName, "r")))
