@@ -577,7 +577,7 @@ JNIEXPORT jboolean JNICALL Java_org_liblouis_liblouisutdml_file2brl
   int charsRead = 0;
   int k;
   const char *curArg = NULL;
-  strcpy (configFileList, "default.cfg");
+  strcpy (configFileList, "preferences.cfg");
   strcpy (inputFileName, "stdin");
   strcpy (outputFileName, "stdout");
   strcpy (tempFileName, "file2brl.temp");
