@@ -1,4 +1,5 @@
 LIBRARY liblouisutdml
+
 EXPORTS
 	lbu_version
 	lbu_initialize
@@ -13,36 +14,20 @@ EXPORTS
 	lbu_setWriteablePath
 	lbu_free
 
-IMPORTS
-# From liblouis
-	lou_getProgramPath
-	lou_version
-	lou_charSize
-	lou_translateString
-	lou_translate
-	lou_hyphenate
-	lou_dotsToChar
-	lou_charToDots
-	lou_backTranslateString
-	Lou_backTranslate
-	lou_logPrint
-	lou_logFile
-	lou_logEnd
-	lou_getTable
-	lou_compileString
-	lou_setDataPath
-	lou_getDataPath
-	lou_free
-	getDotsForChar
-	getCharFromDots
-	get_table
-	showString
-	showDots
-	showAttributes
-	findOpcodeNumber
-	findOpcodeName
-	extParseChars
-	extParseDots
-
-# From libxml2
+; Java bindings
+	Java_org_liblouis_liblouisutdml_version
+	Java_org_liblouis_liblouisutdml_translateString
+	Java_org_liblouis_liblouisutdml_backTranslateString
+	Java_org_liblouis_liblouisutdml_translateFile
+	Java_org_liblouis_liblouisutdml_translateTextFile
+	Java_org_liblouis_liblouisutdml_backTranslateFile
+	Java_org_liblouis_liblouisutdml_charToDots
+	Java_org_liblouis_liblouisutdml_dotsToChar
+	Java_org_liblouis_liblouisutdml_checkTable
+	Java_org_liblouis_liblouisutdml_compileString
+	Java_org_liblouis_liblouisutdml_setDataPath
+	Java_org_liblouis_liblouisutdml_charSize
+	Java_org_liblouis_liblouisutdml_file2brl
+	Java_org_liblouis_liblouisutdml_setWriteablePath
+	Java_org_liblouis_liblouisutdml_free
 
