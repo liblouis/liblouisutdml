@@ -1,2 +1,2 @@
-EXTRA_DIST = Jliblouisutdml.java
+EXTRA_DIST = liblouisutdml.java
 
