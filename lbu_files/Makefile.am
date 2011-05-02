@@ -10,9 +10,9 @@ lbu_files_DATA = \
 	marburg.sem \
 	article.sem \
 	book.sem \
-	canonical.cfg \
+	liblouisutdml.ini \
 	chapter.sem \
-	default.cfg \
+	preferences.cfg \
 	document.sem \
 	dtbook.sem \
 	dtbookutd.sem \
