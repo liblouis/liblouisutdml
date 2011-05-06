@@ -1,0 +1,5 @@
+# Change the values of the variables according to your environment and 
+# desires
+
+ARCH=64
+
