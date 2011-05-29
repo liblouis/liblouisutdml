@@ -88,6 +88,7 @@ AC_CONFIG_FILES([Makefile
 	 liblouisutdml.pc
 	tests/Makefile
        tools/Makefile
+    windows/Makefile
 	 m4/Makefile])
 
 AC_CONFIG_FILES([tools/msword2brl], [chmod +x tools/msword2brl])
