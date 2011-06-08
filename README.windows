@@ -1,0 +1,45 @@
+Here are the instructions for making liblouisutdml.dll and liblouisutdml.lib
+
+First, make sure you have Microsoft VisualC++, Mierosoft SDKs or 
+Microsoft Visual Studio, which should contain the C compiler and the 
+nmake program maintenance tool. The environment variables must be set 
+correctly. If you have Windows Vista or 7 and Microsoft SDKs you can 
+press the Windows key, type sdk and enter. A batch file that sets the 
+environment variables will run and a cmd prompt will appear.
+
+You will get either 32-bit or 64-bit liblouisutdml.dll and 
+liblouisutdml.lib according to which version of the compiler you are 
+running.
+
+Download the latest version of liblouis, unpack it and go to the windows
+subdirectory. Edit the file configure.mk If you want 32-bit Unicode,
+change the 2 in the line that reads UCS=2 to a 4. Then run nmake (no
+arguments). liblouis-2.dll and liblouis-2.lib will be in the directory.
+The Makefile that generates liblouisutdml.dll and liblouisutd.lib knows
+where they are.
+
+Next, download the latest tarball of liblouisutdml and unpack it. Note 
+that in the windows subdirectory there is a file called configure.mk. 
+You will be editing this later. Also in the windows subdirectory is 
+another subdirectory called libxml2-changes It contains files that 
+replace some in the win32 directory of libxml2.
+
+Next download the latest tarball of libxml2 from www.xmlsoft.org and 
+unpack it. Go to the win32 directory. Copy the files from the 
+liblouisutdml/windows/libxml2-changes into this directory. Do not run 
+configure.js The configure.mk file contains the results of running it 
+with the proper options. The Makefile.msvc from the libxml2-changes 
+directory has been slightly edited. Among other things, an option that 
+produced a nmake error has been removed. Once the files have been 
+copied, run "nmmake /f Makefile.msvc". Where should be no errrors. Now 
+run "nmake /f Makefile.msvc install". 
+
+
+Going back to the directory obtained by unpacking the liblouisutdml 
+tarball, go to its windows subdirectory. Edit the file configure.mk 
+replacing the sample values with the ones for your machine. Next run 
+"nmake /f Make-makefile". rinally, run just plain "nmake". The directory 
+will now contain liblouisutdml.dll, liblouisutdml.lib and a number of 
+object files. That's it.
+
+
