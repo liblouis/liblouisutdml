@@ -4,5 +4,5 @@
 
 LIBLOUIS_PATH = c:\svnliblouis\trunk
 JAVA_HEADERS_PATH = "c:\Program Files/Java/jdk1.6.0_23/include"
-LIBXML2_DLL_PATH = c:\cygwin\home\public\libxml2-src\libxml2-2.7.2
+LIBXML2_PATH = c:\cygwin\home\public\libxml2-src\libxml2-2.7.2
 

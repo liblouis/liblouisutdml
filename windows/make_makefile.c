@@ -54,7 +54,11 @@ main (void)
     "CFLAGS =  /nologo /O2 /W1 /c I$(LIBXML2_HEADERS)",
     "HEADERS = $(SRCDIR)\\louisutdml.h $(SRCDIR)\\liblouisutdml.h liblouisutdml.def",
     "HEADERS = $(HEADERS) $(SRCDIR)\\sem_enum.h $(SRCDIR)\\sem_names.h",
-    "DLLFLAGS = /dll /nologo /DEF:liblouisutdml.def $(OBJ) /OUT:liblouisutdml.dll",
+"INCLUDES = $(LIBLOUIS_PTH)\\liblouis $(LIBLOUIS_PATH)\\windows\\include"
+"INCLUDES = $(INCLUDES) $(LIBXML2_PATH)\\include\\libxml2\\libxml"
+"LIBLOUIS_DLL = $(LIBLOUIS_PATH)\\windows\\liblouis-2.dll"
+"LIBXML2_DLL = $(LIBXML2_PATH)\\lib\\libxml2.dll"
+    "DLLFLAGS = /dll /nologo /DEF:liblouisutdml.def",
     "OBJ = Jliblouisutdml.obj ",
     "!if \"$(UCS)\" == \"2\"",
     "CFLAGS = $(CFLAGS) /DWIDECHAR_TYPE=\"unsigned short int\"",
@@ -64,10 +68,13 @@ main (void)
     "CFLAGS = $(CFLAGS) /DUNICODEBITS=32",
     "!endif",
     " ",
-    "liblouisutdml.dll: liblouisutdml.lib liblouisutdml.def",
-    "    link  $(DLLFLAGS) $(LIBXML2_DLL)",
+"liblouisutdml.dll: liblouisutdml.lib liblouisutdml.def \",
+"    $(LIBLOUIS_DLL) $(LIBXML2_DLL)",
+    "    link  $(DLLFLAGS) $(OBJ) $(LIBXML2_DLL) \",
+"    /OUT:liblouisutdml.dll",
     "liblouisutdml.lib: $(OBJ)",
     "   lib /nologo $(OBJ) /out:liblouisutdml.lib",
+    " ",
     "Jliblouisutdml.obj: $(HEADERS) ..\\java\\Jliblouis.c",
 "    $(CC) $(CFLAGS) ..\\java\\Jliblouisutdml.c I$(JAVA_HEADERS_PATH)",
     NULL
