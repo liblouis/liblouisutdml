@@ -1,4 +1,0 @@
-Makefile.msvc: ..\liblouisutdml\Makefile.am ..\configure.ac make_makefile.exe
-    make_makefile
-make_makefile.exe: make_makefile.c
-    cl /Ox make_makefile.c
