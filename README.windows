@@ -40,6 +40,8 @@ tarball, go to its windows subdirectory. Edit the file configure.mk
 replacing the sample values with the ones for your machine. Next run 
 "nmake /f Make-makefile". rinally, run just plain "nmake". The directory 
 will now contain liblouisutdml.dll, liblouisutdml.lib and a number of 
-object files. That's it.
-
+object files. You will also find a new directory, nativelib, so-called 
+because the files it contains are intended to be copied into the 
+BrailleBlaster native/lib directory. These files are liblouisutd.dll 
+liblouis.dll and libxml2.dll
 

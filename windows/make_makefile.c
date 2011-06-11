@@ -50,14 +50,13 @@ main (void)
     "!include configure.mk",
     "!include $(LIBLOUIS_PATH)\\windows\\configure.mk",
     "SRCDIR = ..\\liblouisutdml",
-    "CC = cl.exe",
-    "CFLAGS =  /nologo /O2 /W1 /c I$(LIBXML2_HEADERS)",
     "HEADERS = $(SRCDIR)\\louisutdml.h $(SRCDIR)\\liblouisutdml.h liblouisutdml.def",
     "HEADERS = $(HEADERS) $(SRCDIR)\\sem_enum.h $(SRCDIR)\\sem_names.h",
-"INCLUDES = $(LIBLOUIS_PTH)\\liblouis $(LIBLOUIS_PATH)\\windows\\include"
-"INCLUDES = $(INCLUDES) $(LIBXML2_PATH)\\include\\libxml2\\libxml"
-"LIBLOUIS_DLL = $(LIBLOUIS_PATH)\\windows\\liblouis-2.dll"
-"LIBXML2_DLL = $(LIBXML2_PATH)\\lib\\libxml2.dll"
+"INCLUDES = /I$(LIBLOUIS_PTH)\\liblouis /I$(LIBLOUIS_PATH)\\windows\\include",
+"INCLUDES = $(INCLUDES) /I$(LIBXML2_PATH)\\include\\libxml2\\libxml",
+      "LIBLOUIS_DLL = $(LIBLOUIS_PATH)\\windows\\liblouis-2.dll",
+      "LIBXML2_DLL = $(LIBXML2_PATH)\\lib\\libxml2.dll",
+      "CFLAGS =  /nologo /O2 /W1 /c $(INCLUDES)",
     "DLLFLAGS = /dll /nologo /DEF:liblouisutdml.def",
     "OBJ = Jliblouisutdml.obj ",
     "!if \"$(UCS)\" == \"2\"",
@@ -67,23 +66,29 @@ main (void)
     "CFLAGS = $(CFLAGS) /DWIDECHAR_TYPE=\"unsigned int\"",
     "CFLAGS = $(CFLAGS) /DUNICODEBITS=32",
     "!endif",
+    "CC = cl.exe",
     " ",
-"liblouisutdml.dll: liblouisutdml.lib liblouisutdml.def \",
-"    $(LIBLOUIS_DLL) $(LIBXML2_DLL)",
-    "    link  $(DLLFLAGS) $(OBJ) $(LIBXML2_DLL) \",
-"    /OUT:liblouisutdml.dll",
+    "nativelib: liblouisutdml.dll",
+    "    if not exists nativelib mddir nativelib",
+    "    copy liblouisutdml.dll nativelib",
+    "    copy $(LIBLOUIS_DLL) nativelib",
+    "    copy $(LIBXML2_DLL) nativelib",
+    "liblouisutdml.dll: liblouisutdml.lib liblouisutdml.def \\",
+    "    $(LIBLOUIS_DLL) $(LIBXML2_DLL)",
+    "    link  $(DLLFLAGS) $(OBJ) $(LIBXML2_DLL) \\",
+    "    /OUT:liblouisutdml.dll",
     "liblouisutdml.lib: $(OBJ)",
     "   lib /nologo $(OBJ) /out:liblouisutdml.lib",
     " ",
     "Jliblouisutdml.obj: $(HEADERS) ..\\java\\Jliblouis.c",
-"    $(CC) $(CFLAGS) ..\\java\\Jliblouisutdml.c I$(JAVA_HEADERS_PATH)",
+    "    $(CC) $(CFLAGS) ..\\java\\Jliblouisutdml.c /I$(JAVA_HEADERS_PATH)",
     NULL
   };
 
   FILE *makefile_am;
   FILE *configure_ac;
   FILE *Makefile;
-  char inbuf[100];
+  char inbuf[256];
   char version[80];
   char module[50][50];
   int moduleCount = 0;
@@ -93,12 +98,13 @@ main (void)
   char *name;
   int nameLength;
   int k, kk;
-  if ((makefile_am = fopen ("../liblouisutdml/Makefile.am", "r")) == NULL)
+  if ((makefile_am = fopen ("..\liblouisutdml\Makefile.am", "r")) == 
+NULL)
     {
       fprintf (stderr, "Cannot open Makefile.am.\n");
       exit (1);
     }
-  if ((configure_ac = fopen ("../configure.ac", "r")) == NULL)
+  if ((configure_ac = fopen ("..\configure.ac", "r")) == NULL)
     {
       fprintf (stderr, "Cannot open configure.ac.\n");
       exit (1);
@@ -147,6 +153,13 @@ main (void)
       if (strcmp (name, "AC_INIT") == 0)
 	{
 	  strcpy (version, "liblouisutdml-");
+	  while (*curchar++ != ',');
+	  while (*curchar++ == 32);
+	  name = curchar - 1;
+	  while ((ch = *curchar++) > 32 && ch != ',');
+	  nameLength = curchar - name - 1;
+	  name[nameLength] = 0;
+	  strcat (version, name);
 	  break;
 	}
     }
@@ -162,6 +175,9 @@ main (void)
       while ((ch = *curchar++) > 32);
       nameLength = curchar - name - 1;
       name[nameLength] = 0;
+      if (strcmp (name, "CC") == 0)
+	fprintf (Makefile, "$(CCFLAGS) = $(CCFLAGS) -DPACKAGE_VERSION=%s\n",
+		 version);
       if (strcmp (name, "OBJ") == 0)
 	{
 	  fprintf (Makefile, "%s ", makefileStub[k]);
@@ -172,11 +188,13 @@ main (void)
       else
 	fprintf (Makefile, "%s\n", makefileStub[k]);
     }
+
+  // Make the various object files.
   for (kk = 0; kk < moduleCount; kk++)
     {
-      fprintf (Makefile, "%s.obj: $(HEADERS) $(SRCDIR)%s.c\n",
+      fprintf (Makefile, "%s.obj: $(HEADERS) $(SRCDIR)\\%s.c\n",
 	       module[kk], module[kk]);
-      fprintf (Makefile, "    $(CC) $(CCFLAGS) $(SRCDIR)%s.c\n", 
+      fprintf (Makefile, "    $(CC) $(CCFLAGS) $(SRCDIR)\\%s.c\n", 
 module[kk]);
     }
   fclose (Makefile);
