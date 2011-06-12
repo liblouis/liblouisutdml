@@ -31,17 +31,16 @@ configure.js The configure.mk file contains the results of running it
 with the proper options. The Makefile.msvc from the libxml2-changes 
 directory has been slightly edited. Among other things, an option that 
 produced a nmake error has been removed. Once the files have been 
-copied, run "nmmake /f Makefile.msvc". Where should be no errrors. Now 
+copied, run "nmmake /f Makefile.msvc". There should be no errrors. Now 
 run "nmake /f Makefile.msvc install". 
 
 
-Going back to the directory obtained by unpacking the liblouisutdml 
-tarball, go to its windows subdirectory. Edit the file configure.mk 
-replacing the sample values with the ones for your machine. Next run 
-"nmake /f Make-makefile". rinally, run just plain "nmake". The directory 
-will now contain liblouisutdml.dll, liblouisutdml.lib and a number of 
-object files. You will also find a new directory, nativelib, so-called 
-because the files it contains are intended to be copied into the 
-BrailleBlaster native/lib directory. These files are liblouisutd.dll 
-liblouis.dll and libxml2.dll
+Going back to the directory obtained by unpacking the liblouisutdml
+tarball, go to its windows subdirectory. Edit the file configure.mk
+replacing the sample values with the ones for your machine. Next run
+nmake (no arguments). The directory will now contain liblouisutdml.dll,
+liblouisutdml.lib and a number of object files. You will also find a new
+directory, nativelib, so-called because the files it contains are
+intended to be copied into the BrailleBlaster native/lib directory.
+These files are liblouisutd.dll liblouis-2.dll and libxml2.dll
 
