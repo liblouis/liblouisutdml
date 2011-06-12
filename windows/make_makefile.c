@@ -80,14 +80,14 @@ main (void)
     "liblouisutdml.lib: $(OBJ)",
     "   lib /nologo $(OBJ) /out:liblouisutdml.lib",
     " ",
-    "Jliblouisutdml.obj: $(HEADERS) ..\\java\\Jliblouis.c",
+    "Jliblouisutdml.obj: $(HEADERS) ..\\java\\Jliblouisutdml.c",
     "    $(CC) $(CFLAGS) ..\\java\\Jliblouisutdml.c /I$(JAVA_HEADERS_PATH)",
     NULL
   };
 
   FILE *makefile_am;
   FILE *configure_ac;
-  FILE *Makefile;
+  FILE *Makefile_gen;
   char inbuf[256];
   char version[80];
   char module[50][50];
@@ -98,20 +98,20 @@ main (void)
   char *name;
   int nameLength;
   int k, kk;
-  if ((makefile_am = fopen ("..\liblouisutdml\Makefile.am", "r")) == 
+  if ((makefile_am = fopen ("..\\liblouisutdml\\Makefile.am", "r")) == 
 NULL)
     {
       fprintf (stderr, "Cannot open Makefile.am.\n");
       exit (1);
     }
-  if ((configure_ac = fopen ("..\configure.ac", "r")) == NULL)
+  if ((configure_ac = fopen ("..\\configure.ac", "r")) == NULL)
     {
       fprintf (stderr, "Cannot open configure.ac.\n");
       exit (1);
     }
-  if ((Makefile = fopen ("Makefile", "w")) == NULL)
+  if ((Makefile_gen = fopen ("Makefile.gen", "w")) == NULL)
     {
-      fprintf (stderr, "Cannot open Makefile.msvc.\n");
+      fprintf (stderr, "Cannot open Makefile.gen.\n");
       exit (1);
     }
 
@@ -165,7 +165,7 @@ NULL)
     }
   fclose (configure_ac);
 
-  // Generate Makefile
+  // Generate Makefile.gen
   for (k = 0; makefileStub[k] != NULL; k++)
     {
       strcpy (inbuf, makefileStub[k]);
@@ -176,27 +176,27 @@ NULL)
       nameLength = curchar - name - 1;
       name[nameLength] = 0;
       if (strcmp (name, "CC") == 0)
-	fprintf (Makefile, "$(CCFLAGS) = $(CCFLAGS) -DPACKAGE_VERSION=%s\n",
+	fprintf (Makefile_gen, "CCFLAGS = $(CCFLAGS) /DPACKAGE_VERSION=%s\n",
 		 version);
       if (strcmp (name, "OBJ") == 0)
 	{
-	  fprintf (Makefile, "%s ", makefileStub[k]);
+	  fprintf (Makefile_gen, "%s ", makefileStub[k]);
 	  for (kk = 0; kk < moduleCount; kk++)
-	    fprintf (Makefile, "%s.obj ", module[kk]);
-	  fprintf (Makefile, "\n");
+	    fprintf (Makefile_gen, "%s.obj ", module[kk]);
+	  fprintf (Makefile_gen, "\n");
 	}
       else
-	fprintf (Makefile, "%s\n", makefileStub[k]);
+	fprintf (Makefile_gen, "%s\n", makefileStub[k]);
     }
 
   // Make the various object files.
   for (kk = 0; kk < moduleCount; kk++)
     {
-      fprintf (Makefile, "%s.obj: $(HEADERS) $(SRCDIR)\\%s.c\n",
+      fprintf (Makefile_gen, "%s.obj: $(HEADERS) $(SRCDIR)\\%s.c\n",
 	       module[kk], module[kk]);
-      fprintf (Makefile, "    $(CC) $(CCFLAGS) $(SRCDIR)\\%s.c\n", 
+      fprintf (Makefile_gen, "    $(CC) $(CCFLAGS) $(SRCDIR)\\%s.c\n", 
 module[kk]);
     }
-  fclose (Makefile);
+  fclose (Makefile_gen);
   return 0;
 }
