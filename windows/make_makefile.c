@@ -52,8 +52,8 @@ main (void)
     "SRCDIR = ..\\liblouisutdml",
     "HEADERS = $(SRCDIR)\\louisutdml.h $(SRCDIR)\\liblouisutdml.h liblouisutdml.def",
     "HEADERS = $(HEADERS) $(SRCDIR)\\sem_enum.h $(SRCDIR)\\sem_names.h",
-    "INCLUDES = /I$(LIBLOUIS_PTH)\\liblouis /I$(LIBLOUIS_PATH)\\windows\\include",
-    "INCLUDES = $(INCLUDES) /I$(LIBXML2_PATH)\\include\\libxml2\\libxml",
+    "INCLUDES = /FI$(LIBLOUIS_PTH)\\liblouis /FI$(LIBLOUIS_PATH)\\windows\\include",
+    "INCLUDES = $(INCLUDES) /FI$(LIBXML2_PATH)\\include\\libxml2\\libxml",
     "LIBLOUIS_DLL = $(LIBLOUIS_PATH)\\windows\\liblouis-2.dll",
     "LIBXML2_DLL = $(LIBXML2_PATH)\\lib\\libxml2.dll",
     "CFLAGS =  /nologo /O2 /W1 /c $(INCLUDES)",
@@ -82,7 +82,7 @@ main (void)
     " ",
     "Jliblouisutdml.obj: $(HEADERS) ..\\java\\Jliblouisutdml.c \\",
     "    $(JNI_H) $(JNI_MD_H)",
-    "    $(CC) $(CFLAGS) ..\\java\\Jliblouisutdml.c /i$(JNI_H) /i$(JNI_MD_H)",
+    "    $(CC) $(CFLAGS) ..\\java\\Jliblouisutdml.c /FI$(JNI_H) /FI$(JNI_MD_H)",
     NULL
   };
 
