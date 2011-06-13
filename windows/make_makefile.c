@@ -52,11 +52,11 @@ main (void)
     "SRCDIR = ..\\liblouisutdml",
     "HEADERS = $(SRCDIR)\\louisutdml.h $(SRCDIR)\\liblouisutdml.h liblouisutdml.def",
     "HEADERS = $(HEADERS) $(SRCDIR)\\sem_enum.h $(SRCDIR)\\sem_names.h",
-"INCLUDES = /I$(LIBLOUIS_PTH)\\liblouis /I$(LIBLOUIS_PATH)\\windows\\include",
-"INCLUDES = $(INCLUDES) /I$(LIBXML2_PATH)\\include\\libxml2\\libxml",
-      "LIBLOUIS_DLL = $(LIBLOUIS_PATH)\\windows\\liblouis-2.dll",
-      "LIBXML2_DLL = $(LIBXML2_PATH)\\lib\\libxml2.dll",
-      "CFLAGS =  /nologo /O2 /W1 /c $(INCLUDES)",
+    "INCLUDES = /I$(LIBLOUIS_PTH)\\liblouis /I$(LIBLOUIS_PATH)\\windows\\include",
+    "INCLUDES = $(INCLUDES) /I$(LIBXML2_PATH)\\include\\libxml2\\libxml",
+    "LIBLOUIS_DLL = $(LIBLOUIS_PATH)\\windows\\liblouis-2.dll",
+    "LIBXML2_DLL = $(LIBXML2_PATH)\\lib\\libxml2.dll",
+    "CFLAGS =  /nologo /O2 /W1 /c $(INCLUDES)",
     "DLLFLAGS = /dll /nologo /DEF:liblouisutdml.def",
     "OBJ = Jliblouisutdml.obj ",
     "!if \"$(UCS)\" == \"2\"",
@@ -80,7 +80,9 @@ main (void)
     "liblouisutdml.lib: $(OBJ)",
     "   lib /nologo $(OBJ) /out:liblouisutdml.lib",
     " ",
-"Jliblouisutdml.obj: $(HEADERS) ..\\java\\Jliblouisutdml.c $(JNI_H) $(JNI_MD_H)",    $(CC)       "    $(CC) $(CFLAGS) ..\\java\\Jliblouisutdml.c /i$(JNI_H) /i$(JNI_MD_H)",
+    "Jliblouisutdml.obj: $(HEADERS) ..\\java\\Jliblouisutdml.c \\",
+    "    $(JNI_H) $(JNI_MD_H)",
+    "    $(CC) $(CFLAGS) ..\\java\\Jliblouisutdml.c /i$(JNI_H) /i$(JNI_MD_H)",
     NULL
   };
 
@@ -97,8 +99,7 @@ main (void)
   char *name;
   int nameLength;
   int k, kk;
-  if ((makefile_am = fopen ("..\\liblouisutdml\\Makefile.am", "r")) == 
-NULL)
+  if ((makefile_am = fopen ("..\\liblouisutdml\\Makefile.am", "r")) == NULL)
     {
       fprintf (stderr, "Cannot open Makefile.am.\n");
       exit (1);
@@ -193,8 +194,8 @@ NULL)
     {
       fprintf (Makefile_gen, "%s.obj: $(HEADERS) $(SRCDIR)\\%s.c\n",
 	       module[kk], module[kk]);
-      fprintf (Makefile_gen, "    $(CC) $(CCFLAGS) $(SRCDIR)\\%s.c\n", 
-module[kk]);
+      fprintf (Makefile_gen, "    $(CC) $(CCFLAGS) $(SRCDIR)\\%s.c\n",
+	       module[kk]);
     }
   fclose (Makefile_gen);
   return 0;
