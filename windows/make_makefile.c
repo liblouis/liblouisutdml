@@ -80,8 +80,7 @@ main (void)
     "liblouisutdml.lib: $(OBJ)",
     "   lib /nologo $(OBJ) /out:liblouisutdml.lib",
     " ",
-    "Jliblouisutdml.obj: $(HEADERS) ..\\java\\Jliblouisutdml.c",
-    "    $(CC) $(CFLAGS) ..\\java\\Jliblouisutdml.c /I$(JAVA_HEADERS_PATH)",
+"Jliblouisutdml.obj: $(HEADERS) ..\\java\\Jliblouisutdml.c $(JNI_H) $(JNI_MD_H)",    $(CC)       "    $(CC) $(CFLAGS) ..\\java\\Jliblouisutdml.c /i$(JNI_H) /i$(JNI_MD_H)",
     NULL
   };
 
