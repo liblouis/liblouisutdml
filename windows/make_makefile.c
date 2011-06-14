@@ -29,6 +29,7 @@
    Maintained by John J. Boyer john.boyer@abilitiessoft.com
    */
 
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -52,19 +53,17 @@ main (void)
     "SRCDIR = ..\\liblouisutdml",
     "HEADERS = $(SRCDIR)\\louisutdml.h $(SRCDIR)\\liblouisutdml.h liblouisutdml.def",
     "HEADERS = $(HEADERS) $(SRCDIR)\\sem_enum.h $(SRCDIR)\\sem_names.h",
-    "INCLUDES = /FI$(LIBLOUIS_PTH)\\liblouis /FI$(LIBLOUIS_PATH)\\windows\\include",
-    "INCLUDES = $(INCLUDES) /FI$(LIBXML2_PATH)\\include\\libxml2\\libxml",
+    "INCLUDES = /I$(LIBLOUIS_PATH)\\liblouis /I$(LIBLOUIS_PATH)\\windows\\include",
+    "INCLUDES = $(INCLUDES) /I$(LIBXML2_PATH)\\win32\\include",
     "LIBLOUIS_DLL = $(LIBLOUIS_PATH)\\windows\\liblouis-2.dll",
-    "LIBXML2_DLL = $(LIBXML2_PATH)\\lib\\libxml2.dll",
+    "LIBXML2_DLL = $(LIBXML2_PATH)\\win32\\lib\\libxml2.dll",
     "CFLAGS =  /nologo /O2 /W1 /c $(INCLUDES)",
     "DLLFLAGS = /dll /nologo /DEF:liblouisutdml.def",
     "OBJ = Jliblouisutdml.obj ",
     "!if \"$(UCS)\" == \"2\"",
     "CFLAGS = $(CFLAGS) /DWIDECHAR_TYPE=\"unsigned short int\"",
-    "CFLAGS = $(CFLAGS) /DUNICODEBITS=16",
     "!else",
     "CFLAGS = $(CFLAGS) /DWIDECHAR_TYPE=\"unsigned int\"",
-    "CFLAGS = $(CFLAGS) /DUNICODEBITS=32",
     "!endif",
     "CC = cl.exe",
     " ",
@@ -80,9 +79,9 @@ main (void)
     "liblouisutdml.lib: $(OBJ)",
     "   lib /nologo $(OBJ) /out:liblouisutdml.lib",
     " ",
-    "Jliblouisutdml.obj: $(HEADERS) ..\\java\\Jliblouisutdml.c \\",
-    "    $(JNI_H) $(JNI_MD_H)",
-    "    $(CC) $(CFLAGS) ..\\java\\Jliblouisutdml.c /FI$(JNI_H) /FI$(JNI_MD_H)",
+    "Jliblouisutdml.obj: $(HEADERS) ..\\java\\Jliblouisutdml.c",
+    "    $(CC) $(CFLAGS) /I$(JAVA_HEADERS_PATH) /I$(JAVA_HEADERS_PATH)\\win32 \\",
+    "    /I..\\liblouisutdml ..\\java\\Jliblouisutdml.c",
     NULL
   };
 
@@ -174,10 +173,6 @@ main (void)
       name = curchar - 1;
       while ((ch = *curchar++) > 32);
       nameLength = curchar - name - 1;
-      name[nameLength] = 0;
-      if (strcmp (name, "CC") == 0)
-	fprintf (Makefile_gen, "CCFLAGS = $(CCFLAGS) /DPACKAGE_VERSION=%s\n",
-		 version);
       if (strcmp (name, "OBJ") == 0)
 	{
 	  fprintf (Makefile_gen, "%s ", makefileStub[k]);
@@ -194,6 +189,11 @@ main (void)
     {
       fprintf (Makefile_gen, "%s.obj: $(HEADERS) $(SRCDIR)\\%s.c\n",
 	       module[kk], module[kk]);
+if (strcmp (module[k], "loblouisutdml") == 0)
+      fprintf (Makefile_gen, 
+"    $(CC) $(CCFLAGS) /DPACKAGE_VERSION=%s $(SRCDIR)\\%s.c\n",
+	       version, module[kk]);
+else
       fprintf (Makefile_gen, "    $(CC) $(CCFLAGS) $(SRCDIR)\\%s.c\n",
 	       module[kk]);
     }
