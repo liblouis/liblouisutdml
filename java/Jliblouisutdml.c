@@ -577,12 +577,12 @@ JNIEXPORT jboolean JNICALL Java_org_liblouis_liblouisutdml_file2brl
   int charsRead = 0;
   int k;
   const char *curArg = NULL;
+  UserData *ud;
   strcpy (configFileList, "preferences.cfg");
   strcpy (inputFileName, "stdin");
   strcpy (outputFileName, "stdout");
   strcpy (tempFileName, "file2brl.temp");
   strcpy (logFileName, "file2brl.log");
-  UserData *ud;
   if (numArgs != 0)
     {
       getArg (env, this, args, -1);
