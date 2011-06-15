@@ -375,11 +375,12 @@ transcribe_paragraph (xmlNode * node, int action)
 		}
 	      if (orphan_control)
 		{
+		  int i;
 		  if (orphan_control_this)
 		    orphan_control_status = 1;
 		  else
 		    orphan_control_status = 0;
-		  int i = 1;
+		  i = 1;
 		  while (i < orphan_control
 			 && orphan_control_pos + i < ud->lines_length)
 		    {
