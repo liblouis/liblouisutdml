@@ -35,7 +35,6 @@
 #include <louis.h>
 #include "liblouisutdml.h"
 #include "sem_enum.h"
-#include "../java/Jliblouisutdml.h"
 
 typedef enum
 {
