@@ -161,6 +161,7 @@ transcribe_paragraph (xmlNode * node, int action)
   StyleType *style;
   xmlNode *child;
   int branchCount = 0;
+  int i;
   if (node == NULL)
     return 0;
   if (ud->top == 0)
@@ -362,7 +363,6 @@ transcribe_paragraph (xmlNode * node, int action)
 	      if (dont_split_this)
 		{
 		  dont_split_status = 1;
-		  int i;
 		  for (i = 1; i < ud->lines_length; i++)
 		    {
 		      if (ud->lines_pagenum[i] > ud->lines_pagenum[i - 1])
@@ -375,7 +375,6 @@ transcribe_paragraph (xmlNode * node, int action)
 		}
 	      if (orphan_control)
 		{
-		  int i;
 		  if (orphan_control_this)
 		    orphan_control_status = 1;
 		  else
