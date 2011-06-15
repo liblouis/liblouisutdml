@@ -2423,13 +2423,13 @@ doCenterRight (void)
   int cellsToWrite = 0;
   int availableCells = 0;
   int margin = 0;
+  int k;
   if (style->format == centered)
     {
       margin = style->centered_margin;
       if (margin < 0)
 	margin = 0;
     }
-  int k;
   while (charactersWritten < translatedLength)
     {
       int wordTooLong = 0;
