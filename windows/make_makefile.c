@@ -69,15 +69,19 @@ main (void)
     "# Now start the actual build.",
     "# The lists of object files in the LIBLOUISUTDML_OBJ and LIBXML2_OBJ",
     "#     macros are generated here.",
-    "nativelib: liblouisutdml.dll",
-    "    if not exist nativelib mddir nativelib",
-    "    copy liblouisutdml.dll nativelib",
-    "    copy $(LIBLOUIS_DLL) nativelib",
-    "liblouisutdml.dll: liblouisutdml.lib liblouisutdml.def \\",
-    "    $(LIBLOUIS_DLL) $(LIBXML2_DLL)",
-    "    link  $(DLLFLAGS) liblouisutdml.lib $(LIBLOUIS_DLL) \\",
+    "collect_results: liblouisutdml.dll configure.mk",
+    "    if not exist brailleblasterlib mkdir brailleblasterlib",
+    "    copy liblouisutdml.dll brailleblasterlib",
+    "    copy $(LIBLOUIS_PATH)\\windows\\liblouis-2.dll brailleblasterlib",
+    "    if not exist libslib mkdir libslib",
+    "    copy liblouisutdml.lib libslib",
+    "    copy $(LIBLOUIS_PATH)\\windows\\liblouis-2.lib",
+    "liblouisutdml.dll:  liblouisutdml.def \\",
+    "    $(LIBLOUISURDML_OBJ) $(LIBXML1_OBJ) \\",
+"    liblouisutdml.lib $(LIBLOUIS_PATH)\\windows\\liblouis-2.dll",
+"    link $(DLLFLAGS) $(LIBXML2_OBJ) $(OBJ) $(LIBLOUIS_PATH)\\windows\\liblouis-2.lib\\",
     "    /OUT:liblouisutdml.dll",
-    "liblouisutdml.lib: $(OBJ) $(LIBLXML2._OBJ)",
+    "liblouisutdml.lib: $(LIBXML2_OBJ) $(OBJ)",
     "   lib /nologo $(OBJ) $(LIBXML2_OBJ) /out:liblouisutdml.lib",
     "Jliblouisutdml.obj: $(HEADERS) ..\\java\\Jliblouisutdml.c",
 "    $(CC) $(CCFLAGS) /I$(JAVA_HEADERS_PATH) /I$(JAVA_HEADERS_PATH)\\win32 \\",
@@ -144,7 +148,6 @@ NULL
   char *name;
   int nameLength;
   int k, kk;
-  int objMade = 0;
   if ((makefile_am = fopen ("..\\liblouisutdml\\Makefile.am", "r")) == NULL)
     {
       fprintf (stderr, "Cannot open Makefile.am.\n");
@@ -215,17 +218,20 @@ NULL
   for (k = 0; makefileStub[k] != NULL; k++)
     {
       strcpy (inbuf, makefileStub[k]);
-      if (inbuf[0] == 'n' && !objMade)
+      if (strncmp (inbuf, "collect_results", 15) == 0)
 	{
-objMade = 1;
-	  fprintf (Makefile_gen, "OBJ = Jliblouisutdml.obj \\\n");
+  fprintf (Makefile_gen, "OBJ = Jliblouisutdml.obj \\\n");
 	  for (kk = 0; kk < moduleCount; kk++)
+if (kk != (moduleCount - 1))
 	    fprintf (Makefile_gen, "    %s.obj \\\n", module[kk]);
-	  fprintf (Makefile_gen, "    \n");
+else
+	    fprintf (Makefile_gen, "    %s.obj \n", module[kk]);
   fprintf (Makefile_gen, "LIBXML2_OBJ = \\\n");
 for (kk = 0; libxml2Module[kk]; kk++)
+if (libxml2Module[kk + 1] != NULL)
 fprintf (Makefile_gen, "    %s.obj \\\n", libxml2Module[kk]);
-fprintf (Makefile_gen, "    \n");
+else
+fprintf (Makefile_gen, "    %s.obj \n", libxml2Module[kk]);
 	}
 	fprintf (Makefile_gen, "%s\n", makefileStub[k]);
     }
@@ -248,8 +254,13 @@ for (kk = 0; libxml2Module[kk]; kk++)
 {
 fprintf (Makefile_gen, "%s.obj: $(LXSRCDIR)\\%s.c\n",
 libxml2Module[kk], libxml2Module[kk]);
+if (strcmp (libxml2Module[kk], "dict") == 0)
+  fprintf (Makefile_gen,
+"    $(CC) $(LXCCFLAGS) /Duint32_t=\"unsigned int\" $(LXSRCDIR)\\%s.c\n",
+libxml2Module[kk]);
+else
 fprintf (Makefile_gen, 
-"    $(CC) $(XLCCFLAGS) $(LXSRCDIR)\\%s.c\n",
+"    $(CC) $(LXCCFLAGS) $(LXSRCDIR)\\%s.c\n",
 libxml2Module[kk]);
 }
   fclose (Makefile_gen);
