@@ -33,12 +33,11 @@ return singleInstance;
 * The libary name must be a complete path.
 */
 
-public static void loadLibrary (String libraryName)
-throws Exception
-{
+public static void loadLibrary ()
+throws Exception {
 if (!libraryLoaded)
 {
-System.load (libraryName);
+System.loadLibrary ("louisutdml");
 libraryLoaded = true;
 }
 else
