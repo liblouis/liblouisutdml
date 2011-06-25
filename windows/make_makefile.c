@@ -77,15 +77,17 @@ main (void)
     "    copy liblouisutdml.lib libslib",
     "    copy $(LIBLOUIS_PATH)\\windows\\liblouis-2.lib",
     "liblouisutdml.dll:  liblouisutdml.def \\",
-    "    $(LIBLOUISURDML_OBJ) $(LIBXML1_OBJ) \\",
-"    liblouisutdml.lib $(LIBLOUIS_PATH)\\windows\\liblouis-2.dll",
+    "     $(LIBXML1_OBJ) $(OBJ) \\",
+"    $(LIBLOUIS_PATH)\\windows\\liblouis-2.exp",
 "    link $(DLLFLAGS) $(LIBXML2_OBJ) $(OBJ) $(LIBLOUIS_PATH)\\windows\\liblouis-2.lib\\",
-    "    /OUT:liblouisutdml.dll",
+    "   wsock32.lib ws2_32.lib kernel32.lib \\",
+    "    /DEF:liblouisutdml.def /OUT:liblouisutdml.dll",
     "liblouisutdml.lib: $(LIBXML2_OBJ) $(OBJ)",
     "   lib /nologo $(OBJ) $(LIBXML2_OBJ) /out:liblouisutdml.lib",
     "Jliblouisutdml.obj: $(HEADERS) ..\\java\\Jliblouisutdml.c",
 "    $(CC) $(CCFLAGS) /I$(JAVA_HEADERS_PATH) /I$(JAVA_HEADERS_PATH)\\win32 \\",
     "    /I..\\liblouisutdml ..\\java\\Jliblouisutdml.c",
+    "# Description blocks for the other object files are generated here.",
     NULL
   };
 static char *libxml2Module[] = {
