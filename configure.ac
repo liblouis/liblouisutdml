@@ -89,7 +89,6 @@ AC_CONFIG_FILES([Makefile
 	tests/Makefile
        tools/Makefile
     windows/Makefile
-    Windows/libxml2-changes/Makefile
 	 m4/Makefile])
 
 AC_CONFIG_FILES([tools/msword2brl], [chmod +x tools/msword2brl])

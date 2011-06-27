@@ -195,4 +195,10 @@ free method is called.
 
   public native void free ();
 
+public native void setLogFile (String fileName);
+
+public native void logMessage (String message);
+
+Public native void logEnd ();
+
 }
