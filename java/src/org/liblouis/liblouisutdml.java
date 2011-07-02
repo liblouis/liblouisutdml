@@ -80,8 +80,8 @@ will be empty. settingsstring may be used to pass in configuration
 settings. */
 
   public native boolean translateString (String configFileList,
-					     byte[]inbuf,
-					     char[]outbuf, int[]outlen,
+     byte[]inbuf,
+     byte[]outbuf, int[]outlen,
 					     String logFilename,
 					     String settingsSrting, int mode);
 
@@ -91,8 +91,9 @@ setingsStrring. The translation will be in UTF-8.
 */
 
   public native boolean backTranslateString (String configFileList,
-						 byte[]inbuf,
-						 char[]outbuf, int[]outlen,
+ byte[]inbuf,
+ byte[]outbuf, 
+int[]outlen,
 						 String logFilename,
 						 String settingsSrting,
 						 int mode);
@@ -195,10 +196,38 @@ free method is called.
 
   public native void free ();
 
+public native boolean louisTranslateString
+  (String tableList,
+   byte[]inbuf,
+   int[]inlen,
+   byte[] outbuf,
+   int[]outlen, byte[]typeform, String logFileName, int mode);
+
+ public native boolean louisTranslate (String tableList, byte[]inbuf,
+   int[]inlen, byte[] outbuf, int[]outlen,
+   byte[]typeform, int[]outputPos, int[]inputPos, 
+int[]cursorPos, String logFileName, int mode);
+
+public native boolean hyphenate (String tableList, byte[]inbuf,
+   int inlen, byte[]hyphens, String logFileName, int mode);
+
+  public native boolean louisBackTranslateString (String tableList,
+    byte[]inbuf,
+   int[]inlen,
+    byte[] outbuf,
+    int[]outlen, byte[]typeform,
+ String logFileName, int mode);
+
+ public native boolean louisBackTranslate (String tableList, 
+byte[]inbuf,
+ int[]inlen, byte[] outbuf, int[]outlen, 
+byte[]typeform, int[]outputPos, int[]inputPos, int[]cursorPos, String 
+logFileName, int mode);
+
 public native void setLogFile (String fileName);
 
 public native void logMessage (String message);
 
-Public native void logEnd ();
+public native void logEnd();
 
 }
