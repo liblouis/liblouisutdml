@@ -41,7 +41,7 @@ JNIEXPORT jstring JNICALL Java_org_liblouis_liblouisutdml_version
  * Signature: (Ljava/lang/String;[B[B[ILjava/lang/String;Ljava/lang/String;I)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_liblouis_liblouisutdml_translateString
-  (JNIEnv *, jobject, jstring, jbyteArray, jcharArray, jintArray, jstring, jstring, jint);
+  (JNIEnv *, jobject, jstring, jbyteArray, jbyteArray, jintArray, jstring, jstring, jint);
 
 /*
  * Class:     org_liblouis_liblouisutdml
@@ -49,7 +49,7 @@ JNIEXPORT jboolean JNICALL Java_org_liblouis_liblouisutdml_translateString
  * Signature: (Ljava/lang/String;[B[B[ILjava/lang/String;Ljava/lang/String;I)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_liblouis_liblouisutdml_backTranslateString
-  (JNIEnv *, jobject, jstring, jbyteArray, jcharArray, jintArray, jstring, jstring, jint);
+  (JNIEnv *, jobject, jstring, jbyteArray, jbyteArray, jintArray, jstring, jstring, jint);
 
 /*
  * Class:     org_liblouis_liblouisutdml
@@ -145,6 +145,70 @@ JNIEXPORT void JNICALL Java_org_liblouis_liblouisutdml_setWriteablePath
  * Signature: ()V
  */
 JNIEXPORT void JNICALL Java_org_liblouis_liblouisutdml_free
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     org_liblouis_liblouisutdml
+ * Method:    louisTranslateString
+ * Signature: (Ljava/lang/String;[B[I[B[I[BLjava/lang/String;I)Z
+ */
+JNIEXPORT jboolean JNICALL Java_org_liblouis_liblouisutdml_louisTranslateString
+  (JNIEnv *, jobject, jstring, jbyteArray, jintArray, jbyteArray, jintArray, jbyteArray, jstring, jint);
+
+/*
+ * Class:     org_liblouis_liblouisutdml
+ * Method:    louisTranslate
+ * Signature: (Ljava/lang/String;[B[I[B[I[B[I[I[ILjava/lang/String;I)Z
+ */
+JNIEXPORT jboolean JNICALL Java_org_liblouis_liblouisutdml_louisTranslate
+  (JNIEnv *, jobject, jstring, jbyteArray, jintArray, jbyteArray, jintArray, jbyteArray, jintArray, jintArray, jintArray, jstring, jint);
+
+/*
+ * Class:     org_liblouis_liblouisutdml
+ * Method:    hyphenate
+ * Signature: (Ljava/lang/String;[BI[BLjava/lang/String;I)Z
+ */
+JNIEXPORT jboolean JNICALL Java_org_liblouis_liblouisutdml_hyphenate
+  (JNIEnv *, jobject, jstring, jbyteArray, jint, jbyteArray, jstring, jint);
+
+/*
+ * Class:     org_liblouis_liblouisutdml
+ * Method:    louisBackTranslateString
+ * Signature: (Ljava/lang/String;[B[I[B[I[BLjava/lang/String;I)Z
+ */
+JNIEXPORT jboolean JNICALL Java_org_liblouis_liblouisutdml_louisBackTranslateString
+  (JNIEnv *, jobject, jstring, jbyteArray, jintArray, jbyteArray, jintArray, jbyteArray, jstring, jint);
+
+/*
+ * Class:     org_liblouis_liblouisutdml
+ * Method:    louisBackTranslate
+ * Signature: (Ljava/lang/String;[B[I[B[I[B[I[I[ILjava/lang/String;I)Z
+ */
+JNIEXPORT jboolean JNICALL Java_org_liblouis_liblouisutdml_louisBackTranslate
+  (JNIEnv *, jobject, jstring, jbyteArray, jintArray, jbyteArray, jintArray, jbyteArray, jintArray, jintArray, jintArray, jstring, jint);
+
+/*
+ * Class:     org_liblouis_liblouisutdml
+ * Method:    setLogFile
+ * Signature: (Ljava/lang/String;)V
+ */
+JNIEXPORT void JNICALL Java_org_liblouis_liblouisutdml_setLogFile
+  (JNIEnv *, jobject, jstring);
+
+/*
+ * Class:     org_liblouis_liblouisutdml
+ * Method:    logMessage
+ * Signature: (Ljava/lang/String;)V
+ */
+JNIEXPORT void JNICALL Java_org_liblouis_liblouisutdml_logMessage
+  (JNIEnv *, jobject, jstring);
+
+/*
+ * Class:     org_liblouis_liblouisutdml
+ * Method:    logEnd
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_org_liblouis_liblouisutdml_logEnd
   (JNIEnv *, jobject);
 
 #ifdef __cplusplus
