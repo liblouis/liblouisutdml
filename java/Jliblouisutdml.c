@@ -35,7 +35,7 @@
  * Signature: ()Ljava/lang/String;
  */
 JNIEXPORT jstring JNICALL Java_org_liblouis_liblouisutdml_version
-  (JNIEnv * env, jobject this)
+  (JNIEnv *env, jobject this)
 {
   return (*env)->NewStringUTF (env, lbu_version ());
 }
@@ -46,12 +46,12 @@ JNIEXPORT jstring JNICALL Java_org_liblouis_liblouisutdml_version
  * Signature: (Ljava/lang/String;[B[B[ILjava/lang/String;Ljava/lang/String;I)Z
  */
 JNIEXPORT jboolean JNICALL
-Java_org_liblouis_liblouisutdml_translateString (JNIEnv * env,
+Java_org_liblouis_liblouisutdml_translateString (JNIEnv *env,
 						 jobject this,
 						 jstring
 						 configFileList,
 						 jbyteArray inbuf,
-						 jcharArray
+						 jbyteArray
 						 outbuf,
 						 jintArray outlen,
 						 jstring
@@ -62,7 +62,7 @@ Java_org_liblouis_liblouisutdml_translateString (JNIEnv * env,
   const jbyte *cfl = NULL;
   jbyte *inbufx = NULL;
   jint inlen = 0;
-  jchar *outbufx = NULL;
+  jbyte *outbufx = NULL;
   jint *outlenx = NULL;
   const jbyte *logf = NULL;
   const jbyte *settings = NULL;
@@ -74,7 +74,7 @@ Java_org_liblouis_liblouisutdml_translateString (JNIEnv * env,
   if (inbufx == NULL)
     goto release;
   inlen = (*env)->GetArrayLength (env, inbuf);
-  outbufx = (*env)->GetCharArrayElements (env, outbuf, NULL);
+  outbufx = (*env)->GetByteArrayElements (env, outbuf, NULL);
   if (outbufx == NULL)
     goto release;
   outlenx = (*env)->GetIntArrayElements (env, outlen, NULL);
@@ -94,7 +94,7 @@ release:
   if (inbufx != NULL)
     (*env)->ReleaseByteArrayElements (env, inbufx, inbuf, 0);
   if (outbufx != NULL)
-    (*env)->ReleaseCharArrayElements (env, outbufx, outbuf, 0);
+    (*env)->ReleaseByteArrayElements (env, outbufx, outbuf, 0);
   if (outlenx != NULL)
     (*env)->ReleaseIntArrayElements (env, outlenx, outlen, 0);
   if (logf != NULL)
@@ -110,13 +110,13 @@ release:
  * Signature: (Ljava/lang/String;[B[B[ILjava/lang/String;Ljava/lang/String;I)Z
  */
 JNIEXPORT jboolean JNICALL
-Java_org_liblouis_liblouisutdml_backTranslateString (JNIEnv * env,
+Java_org_liblouis_liblouisutdml_backTranslateString (JNIEnv *env,
 						     jobject this,
 						     jstring
 						     configFileList,
 						     jbyteArray
 						     inbuf,
-						     jcharArray
+						     jbyteArray
 						     outbuf,
 						     jintArray
 						     outlen,
@@ -129,7 +129,7 @@ Java_org_liblouis_liblouisutdml_backTranslateString (JNIEnv * env,
   const jbyte *cfl = NULL;
   jbyte *inbufx = NULL;
   jint inlen = 0;
-  jchar *outbufx = NULL;
+  jbyte *outbufx = NULL;
   jint *outlenx = NULL;
   const jbyte *logf = NULL;
   const jbyte *settings = NULL;
@@ -141,7 +141,7 @@ Java_org_liblouis_liblouisutdml_backTranslateString (JNIEnv * env,
   if (inbufx == NULL)
     goto release;
   inlen = (*env)->GetArrayLength (env, inbuf);
-  outbufx = (*env)->GetCharArrayElements (env, outbuf, NULL);
+  outbufx = (*env)->GetByteArrayElements (env, outbuf, NULL);
   if (outbufx == NULL)
     goto release;
   outlenx = (*env)->GetIntArrayElements (env, outlen, NULL);
@@ -161,7 +161,7 @@ release:
   if (inbufx != NULL)
     (*env)->ReleaseByteArrayElements (env, inbufx, inbuf, 0);
   if (outbufx != NULL)
-    (*env)->ReleaseCharArrayElements (env, outbufx, outbuf, 0);
+    (*env)->ReleaseByteArrayElements (env, outbufx, outbuf, 0);
   if (outlenx != NULL)
     (*env)->ReleaseIntArrayElements (env, outlenx, outlen, 0);
   if (logf != NULL)
@@ -177,7 +177,7 @@ release:
  * Signature: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;I)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_liblouis_liblouisutdml_translateFile
-  (JNIEnv * env, jobject this, jstring configFileList, jstring inputFileName,
+  (JNIEnv *env, jobject this, jstring configFileList, jstring inputFileName,
    jstring outputFileName, jstring logFile, jstring settingsString, jint mode)
 {
   const jbyte *cfl = NULL;
@@ -222,7 +222,7 @@ release:
  * Signature: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;I)Z
  */
 JNIEXPORT jboolean JNICALL
-Java_org_liblouis_liblouisutdml_translateTextFile (JNIEnv * env,
+Java_org_liblouis_liblouisutdml_translateTextFile (JNIEnv *env,
 						   jobject this,
 						   jstring
 						   configFileList,
@@ -276,7 +276,7 @@ release:
  * Signature: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;I)Z
  */
 JNIEXPORT jboolean JNICALL
-Java_org_liblouis_liblouisutdml_backTranslateFile (JNIEnv * env,
+Java_org_liblouis_liblouisutdml_backTranslateFile (JNIEnv *env,
 						   jobject this,
 						   jstring
 						   configFileList,
@@ -330,7 +330,7 @@ release:
  * Signature: (Ljava/lang/String;[B[BLjava/lang/String;I)V
  */
 JNIEXPORT jboolean JNICALL Java_org_liblouis_liblouisutdml_charToDots
-  (JNIEnv * env, jobject this, jstring tableList, jbyteArray inbuf,
+  (JNIEnv *env, jobject this, jstring tableList, jbyteArray inbuf,
    jbyteArray outbuf, jstring logFile, jint mode)
 {
   const jbyte *tableListX = NULL;
@@ -371,7 +371,7 @@ release:
  * Signature: (Ljava/lang/String;[B[BLjava/lang/String;I)V
  */
 JNIEXPORT jboolean JNICALL Java_org_liblouis_liblouisutdml_dotsToChar
-  (JNIEnv * env, jobject this, jstring tableList, jbyteArray inbuf,
+  (JNIEnv *env, jobject this, jstring tableList, jbyteArray inbuf,
    jbyteArray outbuf, jstring logFile, jint mode)
 {
   const jbyte *tableListX = NULL;
@@ -412,7 +412,7 @@ release:
  * Signature: (Ljava/lang/String;Ljava/lang/String;I)V
  */
 JNIEXPORT jboolean JNICALL Java_org_liblouis_liblouisutdml_checkTable
-  (JNIEnv * env, jobject this, jstring tableList, jstring logFile, jint mode)
+  (JNIEnv *env, jobject this, jstring tableList, jstring logFile, jint mode)
 {
   const jbyte *tableListX = NULL;
   const jbyte *logf = NULL;
@@ -438,7 +438,7 @@ release:
  * Signature: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_liblouis_liblouisutdml_compileString
-  (JNIEnv * env, jobject this, jstring tableList, jstring newEntry,
+  (JNIEnv *env, jobject this, jstring tableList, jstring newEntry,
    jstring logFile)
 {
   const jbyte *tableListX = NULL;
@@ -473,7 +473,7 @@ release:
  * Signature: (Ljava/lang/String;)V
  */
 JNIEXPORT void JNICALL Java_org_liblouis_liblouisutdml_setDataPath
-  (JNIEnv * env, jobject this, jstring path)
+  (JNIEnv *env, jobject this, jstring path)
 {
   const jbyte *pathX = NULL;
   pathX = (*env)->GetStringUTFChars (env, path, NULL);
@@ -491,7 +491,7 @@ release:
  * Signature: ()I
  */
 JNIEXPORT jint JNICALL Java_org_liblouis_liblouisutdml_charSize
-  (JNIEnv * env, jobject this)
+  (JNIEnv *env, jobject this)
 {
   return CHARSIZE;
 }
@@ -520,7 +520,7 @@ release:
  * Signature: ()V
  */
 JNIEXPORT void JNICALL Java_org_liblouis_liblouisutdml_free
-  (JNIEnv * env, jobject this)
+  (JNIEnv *env, jobject this)
 {
   lbu_free ();
   return;
@@ -534,7 +534,7 @@ JNIEXPORT void JNICALL Java_org_liblouis_liblouisutdml_free
 
 /* Helper function for this method */
 static const jbyte *JNICALL
-getArg (JNIEnv * env, jobject this, jobjectArray args, jint index)
+getArg (JNIEnv *env, jobject this, jobjectArray args, jint index)
 {
   static jobject curObj = NULL;
   static const jbyte *curArg = NULL;
@@ -558,7 +558,7 @@ if (index >= 0)
 }
 
 JNIEXPORT jboolean JNICALL Java_org_liblouis_liblouisutdml_file2brl
-  (JNIEnv * env, jobject this, jobjectArray args)
+  (JNIEnv *env, jobject this, jobjectArray args)
 {
   jint numArgs = (*env)->GetArrayLength (env, args);
   int mode = dontInit;
