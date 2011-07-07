@@ -37,7 +37,7 @@ public static void loadLibrary ()
 throws Exception {
 if (!libraryLoaded)
 {
-System.loadLibrary ("louisutdml");
+System.loadLibrary ("liblouisutdml");
 libraryLoaded = true;
 }
 else
