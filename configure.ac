@@ -91,9 +91,5 @@ AC_CONFIG_FILES([Makefile
     windows/Makefile
 	 m4/Makefile])
 
-AC_CONFIG_FILES([tools/msword2brl], [chmod +x tools/msword2brl])
-AC_CONFIG_FILES([tools/rtf2brl], [chmod +x tools/rtf2brl])
-AC_CONFIG_FILES([tools/pdf2brl], [chmod +x tools/pdf2brl])
-
 AC_OUTPUT
 

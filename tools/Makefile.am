@@ -17,12 +17,5 @@ AM_LDFLAGS =	\
 bin_PROGRAMS = \
 	file2brl
 
-bin_SCRIPTS = \
-	msword2brl \
-	rtf2brl \
-	pdf2brl
-
-CLEANFILES = $(bin_SCRIPTS)
-
 file2brl_SOURCES = file2brl.c
 
