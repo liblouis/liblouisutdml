@@ -6,7 +6,7 @@ START-INFO-DIR-ENTRY
 * Liblouisutdml: (liblouisutdml). An xml to Braille Translation Library.
 END-INFO-DIR-ENTRY
 
-   This manual is for liblouisutdml (version 1.9.0, 8 April 2011), an
+   This manual is for liblouisutdml (version 1.9.0, 30 June 2011), an
 xml to Braille Translation Library.
 
    This file may contain code borrowed from the Linux screenreader
@@ -36,7 +36,7 @@ File: liblouisutdml.info,  Node: Top,  Next: Introduction,  Prev: (dir),  Up: (d
 Liblouisutdml User's and Programmer's Manual
 ********************************************
 
-This manual is for liblouisutdml (version 1.9.0, 8 April 2011), an xml
+This manual is for liblouisutdml (version 1.9.0, 30 June 2011), an xml
 to Braille Translation Library.
 
    This file may contain code borrowed from the Linux screenreader
