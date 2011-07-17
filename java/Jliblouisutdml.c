@@ -94,15 +94,35 @@ Java_org_liblouis_liblouisutdml_translateString (JNIEnv * env,
       if (settings == NULL)
 	goto release;
     }
+  outbufX = malloc ((outlenX + 4) * CHARSIZE);
   result = lbu_translateString (cfl, inbufX, inlen, outbufX, &outlenX,
 				logf, settings, mode);
+  if (result)
+    {
+      int wcLength;
+      int utf8Length;
+      if (ud->format_for == utd)
+	{
+	  (*env)->SetByteArrayRegion (env, outbuf, 0, outlenX,
+				      (jbyte *) outbufX);
+	  utf8Length = outlenX;
+	}
+      else
+	{
+	  wcLength = outlenX;
+	  utf8Length = outlenX * CHARSIZE;
+	  wc_string_to_utf8 (outbufX, &wcLength, outbufY, &utf8Length);
+	  (*env)->SetByteArrayRegion (env, outbuf, 0, utf8Length, outbufY);
+	}
+      (*env)->SetIntArrayRegion (env, outlen, 0, 1, &utf8Length);
+    }
 release:
   if (cfl != NULL)
     (*env)->ReleaseStringUTFChars (env, configFileList, cfl);
   if (inbufX != NULL)
     (*env)->ReleaseByteArrayElements (env, inbufX, inbuf, 0);
   if (outbufX != NULL)
-    (*env)->ReleaseByteArrayElements (env, outbufX, outbuf, 0);
+    free (outbufX);
   if (logf != NULL)
     (*env)->ReleaseStringUTFChars (env, logFile, logf);
   if (settings != NULL)
@@ -165,15 +185,35 @@ Java_org_liblouis_liblouisutdml_backTranslateString (JNIEnv * env,
       if (settings == NULL)
 	goto release;
     }
+  outbufX = malloc ((outlenX + 4) * CHARSIZE);
   result = lbu_backTranslateString (cfl, inbufX, inlen, outbufX,
 				    &outlenX, logf, settings, mode);
+  if (result)
+    {
+      int wcLength;
+      int utf8Length;
+      if (ud->format_for == utd)
+	{
+	  (*env)->SetByteArrayRegion (env, outbuf, 0, outlenX,
+				      (jbyte *) outbufX);
+	  utf8Length = outlenX;
+	}
+      else
+	{
+	  wcLength = outlenX;
+	  utf8Length = outlenX;
+	  wc_string_to_utf8 (outbufX, &wcLength, outbufY, &utf8Length);
+	  (*env)->SetByteArrayRegion (env, outbuf, 0, utf8Length, outbufY);
+	}
+      (*env)->SetIntArrayRegion (env, outlen, 0, 1, &utf8Length);
+    }
 release:
   if (cfl != NULL)
     (*env)->ReleaseStringUTFChars (env, configFileList, cfl);
   if (inbufX != NULL)
     (*env)->ReleaseByteArrayElements (env, inbufX, inbuf, 0);
   if (outbufX != NULL)
-    (*env)->ReleaseByteArrayElements (env, outbufX, outbuf, 0);
+    free (inbufX);
   if (logf != NULL)
     (*env)->ReleaseStringUTFChars (env, logFile, logf);
   if (settings != NULL)
@@ -364,7 +404,7 @@ JNIEXPORT jboolean JNICALL Java_org_liblouis_liblouisutdml_charToDots
   const jbyte *tableListX = NULL;
   jbyte *inbufX = NULL;
   jbyte *outbufX = NULL;
-  jint outlen = 0;
+  jint outlenX = 0;
   const jbyte *logf = NULL;
   jboolean result = JNI_FALSE;
   tableListX = (*env)->GetStringUTFChars (env, tableList, NULL);
@@ -373,24 +413,27 @@ JNIEXPORT jboolean JNICALL Java_org_liblouis_liblouisutdml_charToDots
   inbufX = (*env)->GetByteArrayElements (env, inbuf, NULL);
   if (inbufX == NULL)
     goto release;
-  outbufX = (*env)->GetByteArrayElements (env, outbuf, NULL);
-  if (outbufX == NULL)
+  if (outbuf == NULL)
     goto release;
-  outlen = (*env)->GetArrayLength (env, outbuf);
+  outlenX = (*env)->GetArrayLength (env, outbuf);
   if (logFile != NULL)
     {
       logf = (*env)->GetStringUTFChars (env, logFile, NULL);
       if (logf == NULL)
 	goto release;
     }
-  result = lbu_charToDots (tableListX, inbufX, outbufX, outlen, logf, mode);
+  outbufX = malloc (outlenX);
+  result = lbu_charToDots (tableListX, inbufX, outbufX, outlenX, logf, 
+mode);
+  if (result)
+    (*env)->SetByteArrayRegion (env, outbuf, 0, outlenX, outbufX);
 release:
   if (tableListX != NULL)
     (*env)->ReleaseStringUTFChars (env, tableList, tableListX);
   if (inbufX != NULL)
     (*env)->ReleaseByteArrayElements (env, inbufX, inbuf, 0);
   if (outbufX != NULL)
-    (*env)->ReleaseByteArrayElements (env, outbufX, outbuf, 0);
+    free (outbufX);
   if (logf != NULL)
     (*env)->ReleaseStringUTFChars (env, logFile, logf);
   return result;
@@ -408,7 +451,7 @@ JNIEXPORT jboolean JNICALL Java_org_liblouis_liblouisutdml_dotsToChar
   const jbyte *tableListX = NULL;
   jbyte *inbufX = NULL;
   jbyte *outbufX = NULL;
-  jint outlen = 0;
+  jint outlenX = 0;
   const jbyte *logf = NULL;
   jboolean result = JNI_FALSE;
   tableListX = (*env)->GetStringUTFChars (env, tableList, NULL);
@@ -417,24 +460,26 @@ JNIEXPORT jboolean JNICALL Java_org_liblouis_liblouisutdml_dotsToChar
   inbufX = (*env)->GetByteArrayElements (env, inbuf, NULL);
   if (inbufX == NULL)
     goto release;
-  outbufX = (*env)->GetByteArrayElements (env, outbuf, NULL);
-  if (outbufX == NULL)
+  if (outbuf == NULL)
     goto release;
-  outlen = (*env)->GetArrayLength (env, outbuf);
+  outlenX = (*env)->GetArrayLength (env, outbuf);
   if (logFile != NULL)
     {
       logf = (*env)->GetStringUTFChars (env, logFile, NULL);
       if (logf == NULL)
 	goto release;
     }
-  result = lbu_dotsToChar (tableListX, inbufX, outbufX, outlen, logf, mode);
+  outbufX = malloc (outlenX);
+  result = lbu_dotsToChar (tableListX, inbufX, outbufX, outlenX, logf, mode);
+  if (result)
+    (*env)->SetByteArrayRegion (env, outbuf, 0, outlenX, outbufX);
 release:
   if (tableListX != NULL)
     (*env)->ReleaseStringUTFChars (env, tableList, tableListX);
   if (inbufX != NULL)
     (*env)->ReleaseByteArrayElements (env, inbufX, inbuf, 0);
   if (outbufX != NULL)
-    (*env)->ReleaseByteArrayElements (env, outbufX, outbuf, 0);
+    free (outbufX);
   if (logf != NULL)
     (*env)->ReleaseStringUTFChars (env, logFile, logf);
   return result;
@@ -951,10 +996,9 @@ jboolean JNICALL
       if (typeformX != NULL)
 	(*env)->SetByteArrayRegion (env, typeform, 0, inlenY, typeformX);
       if (outputpos != NULL)
-	(*env)->SetIntArrayRegion (env, outputpos, 0, inlenY, 
-outputposX);
+	(*env)->SetIntArrayRegion (env, outputpos, 0, inlenY, outputposX);
       if (inputpos != NULL)
-	(*env)->SetIntArrayRegion (env, inputpos, 0, outlen, inputposX);
+	(*env)->SetIntArrayRegion (env, inputpos, 0, outlenX, inputposX);
       if (cursorpos != NULL)
 	(*env)->SetIntArrayRegion (env, cursorpos, 0, 1, &cursorposX);
     }
@@ -1011,8 +1055,7 @@ JNIEXPORT jboolean JNICALL Java_org_liblouis_liblouisutdml_louisTranslate
 {
   return louisForBack (env, obj, tableList, inbuf, inlen, outbuf, outlen,
 		       typeform,
-		       outputpos, inputpos, cursorpos, logFile, mode, 
-0);
+		       outputpos, inputpos, cursorpos, logFile, mode, 0);
 }
 
 /*
@@ -1024,6 +1067,50 @@ JNIEXPORT jboolean JNICALL Java_org_liblouis_liblouisutdml_hyphenate
   (JNIEnv * env, jobject obj, jstring tableList, jbyteArray inbuf, jint
    inlen, jbyteArray hyphens, jstring logFile, jint mode)
 {
+  const jbyte *tableListX = NULL;
+  widechar *inbufX = NULL;
+  jbyte *inbufY = NULL;
+  jint inlenX = 0;
+  const jbyte *logf = NULL;
+  jbyte hyphensX[128];
+  jint wcLength = 0;
+  jint utf8Length = 0;
+  jboolean result = JNI_FALSE;
+  tableListX = (*env)->GetStringUTFChars (env, tableList, NULL);
+  if (tableListX == NULL)
+    goto release;
+  inbufY = (*env)->GetByteArrayElements (env, inbuf, NULL);
+  if (inbufY == NULL)
+    goto release;
+  if (hyphens == NULL)
+    goto release;
+  inlen = (*env)->GetArrayLength (env, inbuf);
+  if (logFile != NULL)
+    {
+      logf = (*env)->GetStringUTFChars (env, logFile, NULL);
+      if (logf == NULL)
+	goto release;
+      lou_logFile (logf);
+    }
+  inbufX = malloc (inlenX);
+  wcLength = inlenX;
+  utf8Length = inlenX;
+  utf8_string_to_wc (inbufY, &utf8Length, inbufX, &wcLength);
+  result = lou_hyphenate (tableListX, inbufX, inlenX, hyphensX, mode);
+  if (result)
+    (*env)->SetByteArrayRegion (env, hyphens, 0, strlen (hyphensX), hyphensX);
+  if (logFile != NULL)
+    lou_logEnd ();
+release:
+  if (tableListX != NULL)
+    (*env)->ReleaseStringUTFChars (env, tableList, tableListX);
+  if (inbufY != NULL)
+    (*env)->ReleaseByteArrayElements (env, inbufY, inbuf, 0);
+  if (inbufX != NULL)
+    free (inbufX);
+  if (logf != NULL)
+    (*env)->ReleaseStringUTFChars (env, logFile, logf);
+  return result;
 }
 
 /*
@@ -1060,8 +1147,7 @@ JNIEXPORT jboolean JNICALL Java_org_liblouis_liblouisutdml_louisBackTranslate
 {
   return louisForBack (env, obj, tableList, inbuf, inlen, outbuf, outlen,
 		       typeform,
-		       outputpos, inputpos, cursorpos, logFile, mode, 
-1);
+		       outputpos, inputpos, cursorpos, logFile, mode, 1);
 }
 
 /*
@@ -1077,7 +1163,7 @@ JNIEXPORT void JNICALL Java_org_liblouis_liblouisutdml_setLogFile
   if (logf == NULL)
     return;
   lou_logFile (logf);
-    (*env)->ReleaseStringUTFChars (env, logFile, logf);
+  (*env)->ReleaseStringUTFChars (env, logFile, logf);
 }
 
 /*
@@ -1088,12 +1174,12 @@ JNIEXPORT void JNICALL Java_org_liblouis_liblouisutdml_setLogFile
 JNIEXPORT void JNICALL Java_org_liblouis_liblouisutdml_logMessage
   (JNIEnv * env, jobject obj, jstring message)
 {
-  jbyte *messagex = NULL;
+  const jbyte *messagex = NULL;
   messagex = (*env)->GetStringUTFChars (env, message, NULL);
   if (messagex == NULL)
     return;
   lou_logPrint (messagex);
-    (*env)->ReleaseStringUTFChars (env, message, messagex);
+  (*env)->ReleaseStringUTFChars (env, message, messagex);
 }
 
 /*
