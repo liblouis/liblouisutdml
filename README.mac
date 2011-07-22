@@ -6,7 +6,8 @@ or /usr/local.
 
 1. Download pkg-config from
 
-  http://pkg-config.freedesktop.org/releases/
+  http://pkg-config.freedesktop.org/releases/ Release 0.22 seems to work 
+best.
 
 Uncompress it and switch to the newly created directory. Install it
 with
