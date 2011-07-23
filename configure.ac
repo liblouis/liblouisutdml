@@ -14,12 +14,12 @@ AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION)
 LIBLOUISUTDML_CURRENT=5
 
 # increment any time the source changes; set to
-#  0 if you increment CURRENT
+# 0 if you increment CURRENT
 LIBLOUISUTDML_REVISION=0
 
 # increment if any interfaces have been added; set to 0
-#  if any interfaces have been changed or removed. removal has
-#  precedence over adding, so set to 0 if both happened.
+# if any interfaces have been changed or removed. removal has
+# precedence over adding, so set to 0 if both happened.
 LIBLOUISUTDML_AGE=0
 
 AC_SUBST(LIBLOUISUTDML_CURRENT)
@@ -69,26 +69,27 @@ AC_FUNC_STAT
 AC_CHECK_FUNCS([memset])
 
 case $host in
-  *mingw* | *cygwin*)
-    LDFLAGS="$LDFLAGS -avoid-version"
-    CFLAGS="$CFLAGS -Wl,--add-stdcall-alias"
-  ;;
+ *mingw* | *cygwin*)
+ LDFLAGS="$LDFLAGS -avoid-version"
+ CFLAGS="$CFLAGS -Wl,--add-stdcall-alias"
+ ;;
 esac
 
 AC_CONFIG_FILES([Makefile
 	 gnulib/Makefile
-       doc/Makefile
+	doc/Makefile
 	java/Makefile
 	java/src/Makefile
 	java/src/org/Makefile
 	java/src/org/liblouis/Makefile
-	 man/Makefile
-       lbu_files/Makefile
-      liblouisutdml/Makefile
+	man/Makefile
+	lbu_files/Makefile
+	liblouisutdml/Makefile
 	 liblouisutdml.pc
 	tests/Makefile
-       tools/Makefile
-    windows/Makefile
+	tools/Makefile
+	windows/Makefile
+	windows/include/Makefile
 	 m4/Makefile])
 
 AC_OUTPUT
