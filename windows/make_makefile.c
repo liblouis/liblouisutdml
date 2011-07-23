@@ -61,10 +61,11 @@ main (void)
     "!endif",
     "CC = cl.exe",
     "# Macros for building libxml2 object files.",
+    "LXHEADERS = include\\config.h include\\xmlversion.h",
     "LXCCFLAGS = /nologo /O2 /W1 /c",
     "LXCCFLAGS = $(LXCCFLAGS) /DVERSION=\"libxml2-1.2.7.2\"",
     "LXSRCDIR = $(LIBXML2_PATH)",
-    "LXINCLUDES = /I$(LXSRCDIR) /I$(LXSRCDIR)\\include",
+    "LXINCLUDES = /Iinclude /I$(LXSRCDIR) /I$(LXSRCDIR)\\include",
     "LXCCFLAGS = $(LXCCFLAGS) $(LXINCLUDES)",
     "# Now start the actual build.",
     "# The lists of object files in the LIBLOUISUTDML_OBJ and LIBXML2_OBJ",
@@ -254,7 +255,7 @@ fprintf (Makefile_gen, "    %s.obj \n", libxml2Module[kk]);
  // Make the libxml2 object files.
 for (kk = 0; libxml2Module[kk]; kk++)
 {
-fprintf (Makefile_gen, "%s.obj: $(LXSRCDIR)\\%s.c\n",
+fprintf (Makefile_gen, "%s.obj: $(LXHEADERS) $(LXSRCDIR)\\%s.c\n",
 libxml2Module[kk], libxml2Module[kk]);
 if (strcmp (libxml2Module[kk], "dict") == 0)
   fprintf (Makefile_gen,
