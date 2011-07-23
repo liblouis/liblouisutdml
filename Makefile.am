@@ -1,5 +1,5 @@
 SUBDIRS = gnulib doc lbu_files liblouisutdml tests tools man m4 \
-java java/src java/src/org java/src/org/liblouis
+java java/src java/src/org java/src/org/liblouis windows windows/include
 
 ACLOCAL_AMFLAGS = -I m4 -I gnulib/m4
 

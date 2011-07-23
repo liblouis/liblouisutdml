@@ -1,4 +1,4 @@
-EXTRA_DIST \
+EXTRA_DIST = \
 	config.h \
 	xmlversion.h
 
