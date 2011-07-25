@@ -120,7 +120,7 @@ release:
   if (cfl != NULL)
     (*env)->ReleaseStringUTFChars (env, configFileList, cfl);
   if (inbufX != NULL)
-    (*env)->ReleaseByteArrayElements (env, inbufX, inbuf, 0);
+    (*env)->ReleaseByteArrayElements (env, inbuf, inbufX, 0);
   if (outbufX != NULL)
     free (outbufX);
   if (logf != NULL)
@@ -211,7 +211,7 @@ release:
   if (cfl != NULL)
     (*env)->ReleaseStringUTFChars (env, configFileList, cfl);
   if (inbufX != NULL)
-    (*env)->ReleaseByteArrayElements (env, inbufX, inbuf, 0);
+    (*env)->ReleaseByteArrayElements (env, inbuf, inbufX, 0);
   if (outbufX != NULL)
     free (inbufX);
   if (logf != NULL)
@@ -431,7 +431,7 @@ release:
   if (tableListX != NULL)
     (*env)->ReleaseStringUTFChars (env, tableList, tableListX);
   if (inbufX != NULL)
-    (*env)->ReleaseByteArrayElements (env, inbufX, inbuf, 0);
+    (*env)->ReleaseByteArrayElements (env, inbuf, inbufX, 0);
   if (outbufX != NULL)
     free (outbufX);
   if (logf != NULL)
@@ -477,7 +477,7 @@ release:
   if (tableListX != NULL)
     (*env)->ReleaseStringUTFChars (env, tableList, tableListX);
   if (inbufX != NULL)
-    (*env)->ReleaseByteArrayElements (env, inbufX, inbuf, 0);
+    (*env)->ReleaseByteArrayElements (env, inbuf, inbufX, 0);
   if (outbufX != NULL)
     free (outbufX);
   if (logf != NULL)
@@ -1008,7 +1008,7 @@ release:
   if (tableListX != NULL)
     (*env)->ReleaseStringUTFChars (env, tableList, tableListX);
   if (inbufY != NULL)
-    (*env)->ReleaseByteArrayElements (env, inbufY, inbuf, 0);
+    (*env)->ReleaseByteArrayElements (env, inbuf, inbufY, 0);
   if (typeformX != NULL)
     free (typeformX);
   if (outputposX != NULL)
@@ -1105,7 +1105,7 @@ release:
   if (tableListX != NULL)
     (*env)->ReleaseStringUTFChars (env, tableList, tableListX);
   if (inbufY != NULL)
-    (*env)->ReleaseByteArrayElements (env, inbufY, inbuf, 0);
+    (*env)->ReleaseByteArrayElements (env, inbuf, inbufY, 0);
   if (inbufX != NULL)
     free (inbufX);
   if (logf != NULL)
