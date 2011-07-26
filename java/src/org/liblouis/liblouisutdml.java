@@ -29,15 +29,24 @@ public static liblouisutdml getInstance()
 return singleInstance;
 }
 
-/**
-* The libary name must be a complete path.
-*/
-
 public static void loadLibrary ()
 throws Exception {
 if (!libraryLoaded)
 {
 System.loadLibrary ("liblouisutdml");
+libraryLoaded = true;
+}
+else
+{
+throw new Exception ("Attempt to reload library.");
+}
+}
+
+public static void load (String filename)
+throws Exception {
+if (!libraryLoaded)
+{
+System.load (filename);
 libraryLoaded = true;
 }
 else
