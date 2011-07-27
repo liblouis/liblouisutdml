@@ -342,6 +342,12 @@ int
   return 1;
 }
 
+void EXPORT_CALL
+lbu_setWriteablePath (const char *path)
+{
+  ud->writeable_path = alloc_string (path);
+}
+
 int EXPORT_CALL
 lbu_charToDots (const char *tableList, const unsigned char *inbuf,
 		unsigned char *outbuf, int length, const char *logFile,
