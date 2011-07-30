@@ -50,6 +50,7 @@ no tertiary,sortas,division
 no indexterm,id,xmlnut3-PREFACE-2-ITERM-3463
 no secondary,sortas,element
 italicx span,class,italic \s,\*\s
+boldx b
 no dtbook,version,2005-3
 no w
 notranslate acronym

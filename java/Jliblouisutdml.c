@@ -33,6 +33,17 @@
 
 /*
  * Class:     org_liblouis_liblouisutdml
+ * Method:    initialize
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_org_liblouis_liblouisutdml_initialize
+  (JNIEnv *env, jclass obj)
+{
+  read_configuration_file  (NULL, NULL, NULL, 0);
+}
+
+/*
+ * Class:     org_liblouis_liblouisutdml
  * Method:    version
  * Signature: ()Ljava/lang/String;
  */
@@ -559,7 +570,7 @@ release:
  * Signature: (Ljava/lang/String;)V
  */
 JNIEXPORT void JNICALL Java_org_liblouis_liblouisutdml_setDataPath
-  (JNIEnv * env, jobject obj, jstring path)
+  (JNIEnv * env, jclass obj, jstring path)
 {
   const jbyte *pathX = NULL;
   pathX = (*env)->GetStringUTFChars (env, path, NULL);
@@ -588,7 +599,7 @@ JNIEXPORT jint JNICALL Java_org_liblouis_liblouisutdml_charSize
  * Signature: (Ljava/lang/String;)V
  */
 JNIEXPORT void JNICALL Java_org_liblouis_liblouisutdml_setWriteablePath
-  (JNIEnv * env, jobject obj, jstring path)
+  (JNIEnv * env, jclass obj, jstring path)
 {
   const jbyte *pathX = NULL;
   pathX = (*env)->GetStringUTFChars (env, path, NULL);
@@ -663,7 +674,6 @@ JNIEXPORT jboolean JNICALL Java_org_liblouis_liblouisutdml_file2brl
   int charsRead = 0;
   int k;
   const char *curArg = NULL;
-  UserData *ud;
   strcpy (configFileList, "preferences.cfg");
   strcpy (inputFileName, "stdin");
   strcpy (outputFileName, "stdout");
@@ -752,8 +762,8 @@ JNIEXPORT jboolean JNICALL Java_org_liblouis_liblouisutdml_file2brl
     for (k = 0; configSettings[k]; k++)
       if (configSettings[k] == '=' && configSettings[k - 1] != ' ')
 	configSettings[k] = ' ';
-  if ((ud =
-       lbu_initialize (configFileList, logFileName, configSettings)) == NULL)
+  if (!read_configuration_file  (configFileList, logFileName, 
+configSettings, 0))
     {
       lou_logEnd ();
       return JNI_FALSE;

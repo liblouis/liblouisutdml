@@ -1125,7 +1125,9 @@ read_configuration_file (const char *configFileList, const char
 /*Process file list*/
   if (configFileList == NULL)
     {
-      if (!config_compileSettings ("canonical.cfg"))
+      set_paths (NULL);
+      if (!(config_compileSettings ("liblouisutdml.ini") || 
+config_compileSettings ("canonical.cfg")))
 	return 0;
     }
   else

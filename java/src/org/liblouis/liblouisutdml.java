@@ -4,8 +4,7 @@ package org.liblouis;
 * Bindings for liblouisutdml
 */
 
-public final class liblouisutdml
-{
+public final class liblouisutdml {
 /** 
 * These bindings include enough functionality so that it should never 
 be necessary to call liblouis directly. This saves the hassle of dealing 
@@ -28,6 +27,8 @@ public static liblouisutdml getInstance()
 {
 return singleInstance;
 }
+
+public static native void initialize();
 
 public static void loadLibrary ()
 throws Exception {
@@ -175,7 +176,7 @@ String logFile);
 * Path on which liblouis tables and liblouisutdml files can be found. 
 */
 
-public native void setDataPath(String path);
+public static native void setDataPath(String path);
 
 /** Return the character size used internally by liblouis and 
 liblouisutdml. */
@@ -192,7 +193,7 @@ public native boolean file2brl (String[] args);
 /**
 * Set the path to which temporary files will be written.
 */
-public native void setWriteablePath (String path);
+public static native void setWriteablePath (String path);
 
 /** You must call free at the end of your application to free all 
 memory used by liblouisutdml and liblouis. Do NOT call it after every 

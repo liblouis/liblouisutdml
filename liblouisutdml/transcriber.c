@@ -898,6 +898,7 @@ insert_text (xmlNode * node)
     default:
       break;
     }
+  ud->old_text_length = ud->text_length;
   wcLength = insert_utf8 (node->content);
   switch (ud->stack[ud->top])
     {
@@ -917,8 +918,7 @@ insert_text (xmlNode * node)
       memset (&ud->typeform[ud->old_text_length], bold, wcLength);
       break;
     case compbrl:
-
-      if (!(ud->emphasis & computer_braille))
+     if (!(ud->emphasis & computer_braille))
 	break;
       memset (&ud->typeform[ud->old_text_length], computer_braille, wcLength);
       break;
