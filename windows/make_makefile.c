@@ -1,3 +1,4 @@
+
 /* liblouisutdml Braille Transcription Library
 
    This file may contain code borrowed from the Linux screenreader
@@ -50,7 +51,7 @@ main (void)
     "HEADERS = $(SRCDIR)\\louisutdml.h $(SRCDIR)\\liblouisutdml.h liblouisutdml.def",
     "HEADERS = $(HEADERS) $(SRCDIR)\\sem_enum.h $(SRCDIR)\\sem_names.h",
     "INCLUDES = /I$(LIBLOUIS_PATH)\\liblouis /I$(LIBLOUIS_PATH)\\windows\\include",
-    "INCLUDES = $(INCLUDES) /I$(LIBXML2_PATH)\\include",
+    "INCLUDES = $(INCLUDES) /Iinclude /I$(LIBXML2_PATH)\\include",
     "LIBLOUIS_DLL = $(LIBLOUIS_PATH)\\windows\\liblouis-2.dll",
     "CCFLAGS =  /nologo /O2 /W1 /c $(INCLUDES)",
     "DLLFLAGS = /dll /nologo /DEF:liblouisutdml.def",
