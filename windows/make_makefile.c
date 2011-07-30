@@ -1,4 +1,3 @@
-
 /* liblouisutdml Braille Transcription Library
 
    This file may contain code borrowed from the Linux screenreader
@@ -71,20 +70,18 @@ main (void)
     "# Now start the actual build.",
     "# The lists of object files in the LIBLOUISUTDML_OBJ and LIBXML2_OBJ",
     "#     macros are generated here.",
-    "collect_results: liblouisutdml.dll configure.mk",
+    "collect_results: liblouisutdml.dll",
     "    if not exist brailleblasterlib mkdir brailleblasterlib",
     "    copy liblouisutdml.dll brailleblasterlib",
-    "    copy $(LIBLOUIS_PATH)\\windows\\liblouis-2.dll brailleblasterlib",
+    "    copy $(LIBLOUIS_PATH)\\windows\\liblouis-2.dll brailleblasterlib\\liblouis.dll",
     "    if not exist libslib mkdir libslib",
     "    copy liblouisutdml.lib libslib",
     "    copy $(LIBLOUIS_PATH)\\windows\\liblouis-2.lib libslib",
-    "liblouisutdml.dll:  liblouisutdml.def \\",
-    "     $(LIBXML1_OBJ) $(OBJ) \\",
-"    $(LIBLOUIS_PATH)\\windows\\liblouis-2.lib",
-"    link $(DLLFLAGS) $(LIBXML2_OBJ) $(OBJ) $(LIBLOUIS_PATH)\\windows\\liblouis-2.lib\\",
+    "liblouisutdml.dll:  liblouisutdml.def liblouisutdml.lib",
+"    link $(DLLFLAGS) $(LIBXML2_OBJ) $(OBJ) \\",
     "   wsock32.lib ws2_32.lib kernel32.lib \\",
     "    /DEF:liblouisutdml.def /OUT:liblouisutdml.dll",
-    "liblouisutdml.lib: $(LIBXML2_OBJ) $(OBJ)",
+    "liblouisutdml.lib: $(LIBXML2_OBJ) $(OBJ) configure.mk",
     "   lib /nologo $(OBJ) $(LIBXML2_OBJ) /out:liblouisutdml.lib",
     "Jliblouisutdml.obj: $(HEADERS) ..\\java\\Jliblouisutdml.c",
 "    $(CC) $(CCFLAGS) /I$(JAVA_HEADERS_PATH) /I$(JAVA_HEADERS_PATH)\\win32 \\",
