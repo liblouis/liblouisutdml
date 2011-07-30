@@ -68,7 +68,7 @@ set_paths (const char *configPath)
   char *dataPath = NULL;
 
 /*Set configuration path first*/
-  if (configPath[0] != 0)
+  if (configPath != NULL && configPath[0] != 0)
     {
       if (!addPath (configPath))
 	return 0;
