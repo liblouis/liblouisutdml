@@ -1047,7 +1047,7 @@ initConfigFiles (const char *firstConfigFile, char *fileName, const
   set_paths (configPath);
   if (logFileName)
     {
-      strcpy ((char *) ud->typeform, ud->writeable_path);
+      strcpy ((char *) ud->typeform, lbu_getWriteablePath ());
       strcat ((char *) ud->typeform, logFileName);
       lou_logFile ((char *) ud->typeform);
     }
@@ -1071,7 +1071,7 @@ read_configuration_file (const char *configFileList, const char
   int listLength;
   int currentListPos = 0;
   errorCount = 0;
-  /*Process logFileName later, after writeable_path is set */
+  /*Process logFileName later, after writeablePath is set */
   if (mode & dontInit)
     {
       ud->has_comp_code = 0;

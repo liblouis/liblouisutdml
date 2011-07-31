@@ -74,7 +74,7 @@ initialize_contents (void)
   firstHeading = NULL;
   lastHeading = &heading;
   saved_outFile = ud->outFile;
-  strcpy (tempFileName, ud->writeable_path);
+  strcpy (tempFileName, lbu_getWriteablePath ());
   strcat (tempFileName, "lbx_body.temp");
   if (!(tempFile = fopen (tempFileName, "w")))
     {

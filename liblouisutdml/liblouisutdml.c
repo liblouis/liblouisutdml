@@ -342,10 +342,21 @@ int
   return 1;
 }
 
-void EXPORT_CALL
+static char writeablePath[MAXNAMELEN];
+static char *writeablePathPtr = NULL;
+
+char *EXPORT_CALL
 lbu_setWriteablePath (const char *path)
 {
-  ud->writeable_path = alloc_string (path);
+  strcpy (writeablePath, path);
+  writeablePathPtr = writeablePath;
+  return writeablePathPtr;
+}
+
+char *EXPORT_CALL
+lbu_getWriteablePath ()
+{
+  return writeablePathPtr;
 }
 
 int EXPORT_CALL

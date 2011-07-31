@@ -843,7 +843,7 @@ sem_compileFile (const char *fileName)
     return 1;			/*Probably run with defaults */
   if (strncmp (fileName, "appended_", 9) == 0)
     {
-      strcpy (completePath, ud->writeable_path);
+      strcpy (completePath, lbu_getWriteablePath ());
       strcat (completePath, fileName);
       if (file_exists (completePath))
 	haveAppended = 1;
@@ -1307,7 +1307,7 @@ append_new_entries (void)
       strcpy (fileMode, "w");
       strcpy (filePrefix, "new_");
     }
-  strcpy (outFileName, ud->writeable_path);
+  strcpy (outFileName, lbu_getWriteablePath ());
   strcat (outFileName, filePrefix);
   strcat (outFileName, firstFileName);
   semOut = fopen ((char *) outFileName, fileMode);

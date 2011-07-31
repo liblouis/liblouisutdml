@@ -208,7 +208,7 @@ main (int argc, char **argv)
   else
     inputFile = stdin;
   /*Create somewhat edited temporary file to facilitate use of stdin. */
-  strcpy (tempFileName, ud->writeable_path);
+  strcpy (tempFileName, lbu_getWriteablePath ());
   strcat (tempFileName, "file2brl.temp");
   if (!(tempFile = fopen (tempFileName, "w")))
     {
@@ -300,7 +300,7 @@ main (int argc, char **argv)
       case 'r':
 	{
 	  char temp2FileName[MAXNAMELEN];
-	  strcpy (temp2FileName, ud->writeable_path);
+	  strcpy (temp2FileName, lbu_getWriteablePath ());
 	  strcat (temp2FileName, "file2brl2.temp");
 	  if ((lbu_backTranslateFile (configFileName, tempFileName,
 				      temp2FileName, NULL, NULL, mode)) != 1)

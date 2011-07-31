@@ -34,12 +34,28 @@
 /*
  * Class:     org_liblouis_liblouisutdml
  * Method:    initialize
- * Signature: ()V
+ * Signature: (Ljava/lang/String;Ljava/lang/String;)V
  */
 JNIEXPORT void JNICALL Java_org_liblouis_liblouisutdml_initialize
-  (JNIEnv *env, jclass obj)
+  (JNIEnv *env, jclass class, jstring dataPath, jstring
+writeablePath)
 {
-  read_configuration_file  (NULL, NULL, NULL, 0);
+  const jbyte *dataPathX = NULL;
+  const jbyte *writeablePathX = NULL;
+  dataPathX = (*env)->GetStringUTFChars (env, dataPath, NULL);
+  if (dataPathX == NULL)
+    goto release;
+  writeablePathX = (*env)->GetStringUTFChars (env, writeablePath, NULL);
+  if (writeablePathX == NULL)
+    goto release;
+  lou_setDataPath (dataPathX);
+  lbu_setWriteablePath (writeablePathX);
+  read_configuration_file (NULL, NULL, NULL, 0);
+release:
+  if (dataPathX != NULL)
+    (*env)->ReleaseStringUTFChars (env, dataPath, dataPathX);
+  if (writeablePathX != NULL)
+    (*env)->ReleaseStringUTFChars (env, writeablePath, writeablePathX);
 }
 
 /*
@@ -780,7 +796,7 @@ configSettings, 0))
   else
     inputFile = stdin;
   /*Create somewhat edited temporary file to facilitate use of stdin. */
-  strcpy (tempFileName, ud->writeable_path);
+  strcpy (tempFileName, lbu_getWriteablePath ());
   strcat (tempFileName, "file2brl.temp");
   if (!(tempFile = fopen (tempFileName, "w")))
     {
@@ -873,7 +889,7 @@ configSettings, 0))
       case 'r':
 	{
 	  char temp2FileName[MAXNAMELEN];
-	  strcpy (temp2FileName, ud->writeable_path);
+	  strcpy (temp2FileName, lbu_getWriteablePath ());
 	  strcat (temp2FileName, "file2brl2.temp");
 	  if ((lbu_backTranslateFile
 	       (configFileList, tempFileName, temp2FileName, NULL,

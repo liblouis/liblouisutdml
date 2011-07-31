@@ -233,7 +233,6 @@ typedef struct
   int page_number_top_separate_line;
   int page_number_bottom_separate_line;
   char path_list[4 * MAXNAMELEN];
-  const char *writeable_path;
   char string_escape;
   char file_separator;
   char line_fill;

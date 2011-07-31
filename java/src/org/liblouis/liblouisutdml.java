@@ -28,7 +28,8 @@ public static liblouisutdml getInstance()
 return singleInstance;
 }
 
-public static native void initialize();
+public static native void initialize (String dataPath, String 
+writeablePath);
 
 public static void loadLibrary ()
 throws Exception {
