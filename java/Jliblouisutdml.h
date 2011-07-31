@@ -29,6 +29,14 @@ extern "C" {
 #define org_liblouis_liblouisutdml_htmlDoc 536870912L
 /*
  * Class:     org_liblouis_liblouisutdml
+ * Method:    initialize
+ * Signature: (Ljava/lang/String;Ljava/lang/String;)V
+ */
+JNIEXPORT void JNICALL Java_org_liblouis_liblouisutdml_initialize
+  (JNIEnv *, jclass, jstring, jstring);
+
+/*
+ * Class:     org_liblouis_liblouisutdml
  * Method:    version
  * Signature: ()Ljava/lang/String;
  */
@@ -113,7 +121,7 @@ JNIEXPORT jboolean JNICALL Java_org_liblouis_liblouisutdml_compileString
  * Signature: (Ljava/lang/String;)V
  */
 JNIEXPORT void JNICALL Java_org_liblouis_liblouisutdml_setDataPath
-  (JNIEnv *, jobject, jstring);
+  (JNIEnv *, jclass, jstring);
 
 /*
  * Class:     org_liblouis_liblouisutdml
@@ -137,7 +145,7 @@ JNIEXPORT jboolean JNICALL Java_org_liblouis_liblouisutdml_file2brl
  * Signature: (Ljava/lang/String;)V
  */
 JNIEXPORT void JNICALL Java_org_liblouis_liblouisutdml_setWriteablePath
-  (JNIEnv *, jobject, jstring);
+  (JNIEnv *, jclass, jstring);
 
 /*
  * Class:     org_liblouis_liblouisutdml

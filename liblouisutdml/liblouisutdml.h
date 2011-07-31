@@ -147,9 +147,9 @@ mode);
 /* See if the table in tableList exists and is valid. If no errors are 
 found logFile will be empty. */
 
-/* Set the path to which temporary files will be written */
-void EXPORT_CALL lbu_setWriteablePath (const char *path);
-
+/* Set/get  the path to which temporary files will be written */
+char *EXPORT_CALL lbu_setWriteablePath (const char *path);
+char *EXPORT_CALL lbu_getWriteablePath ();
 /* This function should be called at the end of the application to free
 all memory allocated by liblouisutdml or liblouis. */
 void EXPORT_CALL lbu_free (void);

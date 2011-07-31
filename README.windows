@@ -9,38 +9,44 @@ environment variables will run and a cmd prompt will appear.
 
 You will get either 32-bit or 64-bit liblouisutdml.dll and 
 liblouisutdml.lib according to which version of the compiler you are 
-running.
+running. However, liblouisutdml.dll depends on Windows libraries which 
+are either 32 or 64 bits, dependikng on what your Windows is.
 
 Download the latest version of liblouis, unpack it and go to the windows
 subdirectory. Edit the file configure.mk If you want 32-bit Unicode,
-change the 2 in the line that reads UCS=2 to a 4. Then run nmake (no
-arguments). liblouis-2.dll and liblouis-2.lib will be in the directory.
-The Makefile that generates liblouisutdml.dll and liblouisutd.lib knows
-where they are.
+change the 2 in the line that reads UCS=2 to a 4. Then run the 
+following command:
+
+nmake /f Makefile.nmake
+
+liblouis-2.dll and liblouis-2.lib will be in the directory. The Makefile 
+that generates liblouisutdml.dll and liblouisutd.lib knows where they 
+are.
 
 Next, download the latest tarball of liblouisutdml and unpack it. Note 
 that in the windows subdirectory there is a file called configure.mk. 
 You will be editing this later. Also in the windows subdirectory is 
-another subdirectory called libxml2-changes It contains files that 
-replace some in the win32 directory of libxml2.
+another subdirectory called include It contains files that 
+replace some in the source directory of libxml2.
 
 Next download the latest tarball of libxml2 from www.xmlsoft.org and 
-unpack it. Go to the win32 directory. Copy the files from the 
-liblouisutdml/windows/libxml2-changes into this directory. Do not run 
-configure.js The configure.mk file contains the results of running it 
-with the proper options. The Makefile.msvc from the libxml2-changes 
-directory has been slightly edited. Among other things, an option that 
-produced a nmake error has been removed. Once the files have been 
-copied, run "nmmake /f Makefile.msvc". There should be no errrors. Now 
-run "nmake /f Makefile.msvc install". 
-
+unpack it. You will need to copy the file xmlversion.h from the 
+liblouisutdml windows/include directory into the include/libxml 
+directory of the libxml2 directory. Note that it replaces the file of 
+the same name that is already there.
 
 Going back to the directory obtained by unpacking the liblouisutdml
 tarball, go to its windows subdirectory. Edit the file configure.mk
 replacing the sample values with the ones for your machine. Next run
-nmake (no arguments). The directory will now contain liblouisutdml.dll,
-liblouisutdml.lib and a number of object files. You will also find a new
-directory, nativelib, so-called because the files it contains are
-intended to be copied into the BrailleBlaster native/lib directory.
-These files are liblouisutd.dll liblouis-2.dll and libxml2.dll
+
+nmake /f Makefile.nmake
+
+The directory will now contain liblouisutdml.dll, liblouisutdml.lib and 
+a number of object files. You will also find a new directory, 
+brailleblasterlib, so-called because the files it contains are intended 
+to be copied into the BrailleBlaster native/lib directory. They should 
+actualy be copied into the brailleblaster/dist directory. This is a 
+requirement of Windows only. The files are liblouis.dll and 
+liblouisutdml.dll You will also find the directory libslib which 
+contains liblouis-2.dll and liblouisutdml.dll
 
