@@ -10,7 +10,7 @@ environment variables will run and a cmd prompt will appear.
 You will get either 32-bit or 64-bit liblouisutdml.dll and 
 liblouisutdml.lib according to which version of the compiler you are 
 running. However, liblouisutdml.dll depends on Windows libraries which 
-are either 32 or 64 bits, dependikng on what your Windows is.
+are either 32 or 64 bits, depending on what your Windows is.
 
 Download the latest version of liblouis, unpack it and go to the windows
 subdirectory. Edit the file configure.mk If you want 32-bit Unicode,
@@ -48,5 +48,5 @@ to be copied into the BrailleBlaster native/lib directory. They should
 actualy be copied into the brailleblaster/dist directory. This is a 
 requirement of Windows only. The files are liblouis.dll and 
 liblouisutdml.dll You will also find the directory libslib which 
-contains liblouis-2.dll and liblouisutdml.dll
+contains liblouis-2.lib and liblouisutdml.lib
 
