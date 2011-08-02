@@ -1665,7 +1665,7 @@ static widechar *saved_translatedBuffer;
 static int saved_translationLength;
 static int saved_translatedLength;
 
-int
+void
 savePointers (void)
 {
   saved_translatedBuffer = translatedBuffer;
@@ -1673,7 +1673,7 @@ savePointers (void)
   saved_translatedLength = translatedLength;
 }
 
-int
+void
 restorePointers (void)
 {
   translatedBuffer = saved_translatedBuffer;
