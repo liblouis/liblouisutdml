@@ -86,7 +86,6 @@ typedef struct
 } StyleType;
 
 #ifdef _WIN32
-#define strcasecmp _strnicmp
 #define snprintf _snprintf
 #define vsnprintf _vsnprintf
 #endif

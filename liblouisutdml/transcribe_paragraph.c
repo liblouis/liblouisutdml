@@ -71,7 +71,7 @@ static widechar saved_running_head[MAXNAMELEN / 2];
 static widechar saved_footer[MAXNAMELEN / 2];
 static unsigned char saved_typeform[2 * BUFSIZE];
 
-static int
+static void
 saveState (void)
 {
   saved_text_length = ud->text_length;
@@ -109,7 +109,7 @@ saveState (void)
   savePointers ();
 }
 
-static int
+static void
 restoreState (void)
 {
   ud->text_length = saved_text_length;
@@ -217,7 +217,7 @@ transcribe_paragraph (xmlNode * node, int action)
 	pop_sem_stack ();
       return 1;
     case linespacing:
-      do_linespacing;
+      do_linespacing (node);
       if (action != 0)
 	pop_sem_stack ();
       return 1;

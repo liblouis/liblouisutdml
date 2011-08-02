@@ -326,7 +326,7 @@ destroy_semantic_table (void)
 }
 
 static widechar
-hexValue (FileInfo * nested, const xmlChar const *digits, int length)
+hexValue (FileInfo * nested, const xmlChar *digits, int length)
 {
   int k;
   unsigned int binaryValue = 0;
