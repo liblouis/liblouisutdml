@@ -49,7 +49,7 @@ compbrl code,class,inline
 no tertiary,sortas,division
 no indexterm,id,xmlnut3-PREFACE-2-ITERM-3463
 no secondary,sortas,element
-italicx span,class,italic \s,\*\s
+italicx span,class,italic
 boldx b
 no dtbook,version,2005-3
 no w
@@ -70,7 +70,7 @@ no level4
 no td
 para th
 para tr
-italicx strong \s,\*\s
+italicx strong 
 no span,smilref
 no tr,smilref
 no pagenum,page
@@ -134,8 +134,8 @@ heading3 h3
 heading4 h4
 heading4 h5
 heading4 h6
-italicx em \s,\*\s
-italicx strong \s,\*\s
+italicx em
+italicx strong
 no em,class
 no em,class,italic
 note note
