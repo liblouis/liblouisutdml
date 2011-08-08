@@ -1,17 +1,35 @@
 package org.liblouis;
 
-/**
-* Bindings for liblouisutdml
-*/
-
 public final class liblouisutdml {
 /** 
+* Bindings for the liblouisutdml and liblouis C libraries.
 * These bindings include enough functionality so that it should never 
-be necessary to call liblouis directly. This saves the hassle of dealing 
-with two sets of bindings. liblouisutdml can produce a variety of output 
-types according to the value of the formatFor configuration setting. To 
-get UTDML formatFor is set to utd.
+* be necessary to call liblouis directly. This saves the hassle of 
+* dealing with two sets of bindings. liblouisutdml can produce a variety 
+* of output types according to the value of the formatFor configuration 
+* setting. To get UTDML formatFor is set to utd.
 */
+
+/** 
+* Definitions of mode bits 
+*
+* The bits for liblouis are included because it is sometimes necessary 
+* to pass a liblouis mode to a liblouisutdml function. The liblouis bits 
+* take up the low-order bits of the mode integer, while the 
+* liblouisutdml bits take up the high-order bits, except that the 
+* sign bit is skipped.
+*/
+
+public static final int noContractions = 1;
+public static final int compbrlAtCursor = 1<<1;
+public static final int dotsIO = 1<<2;
+public static final int comp8Dots = 1<<3;
+public static final int pass1Only = 1<<4;
+public static final int compbrlLeftCursor = 1<<5;
+public static final int otherTrans = 1<<6;
+public static final int ucBrl = 1<<7;
+  public static final int dontInit = 1<<30;
+  public static final int htmlDoc = 1<<29;
 
 /**
 * This class is a singleton.
@@ -56,26 +74,6 @@ else
 throw new Exception ("Attempt to reload library.");
 }
 }
-
-/** Definitions of mode bits */
-
-/** The bits for liblouis are included because it is sometimes necessary 
-to pass a liblouis mode to a liblouisutdml function. The liblouis bits 
-take up the low-order bits of the mode integer, while the liblouisutdml 
-bits take up the high-order bits, except that the sign bit is skipped.
-*/
-
-public static final int noContractions = 1;
-public static final int compbrlAtCursor = 1<<1;
-public static final int dotsIO = 1<<2;
-public static final int comp8Dots = 1<<3;
-public static final int pass1Only = 1<<4;
-public static final int compbrlLeftCursor = 1<<5;
-public static final int otherTrans = 1<<6;
-public static final int ucBrl = 1<<7;
-/** liblouisutdml mode bits*/
-  public static final int dontInit = 1<<30;
-  public static final int htmlDoc = 1<<29;
 
 /** Return a string giving the versions of both liblouisutdml and 
 * liblouis */
@@ -177,7 +175,7 @@ String logFile);
 * Path on which liblouis tables and liblouisutdml files can be found. 
 */
 
-public static native void setDataPath(String path);
+public native void setDataPath(String path);
 
 /** Return the character size used internally by liblouis and 
 liblouisutdml. */
@@ -194,7 +192,7 @@ public native boolean file2brl (String[] args);
 /**
 * Set the path to which temporary files will be written.
 */
-public static native void setWriteablePath (String path);
+public native void setWriteablePath (String path);
 
 /** You must call free at the end of your application to free all 
 memory used by liblouisutdml and liblouis. Do NOT call it after every 
