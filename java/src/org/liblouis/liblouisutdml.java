@@ -19,17 +19,16 @@ public final class liblouisutdml {
 * liblouisutdml bits take up the high-order bits, except that the 
 * sign bit is skipped.
 */
-
-public static final int noContractions = 1;
-public static final int compbrlAtCursor = 1<<1;
-public static final int dotsIO = 1<<2;
-public static final int comp8Dots = 1<<3;
-public static final int pass1Only = 1<<4;
-public static final int compbrlLeftCursor = 1<<5;
-public static final int otherTrans = 1<<6;
-public static final int ucBrl = 1<<7;
-  public static final int dontInit = 1<<30;
-  public static final int htmlDoc = 1<<29;
+public static final int NoContractions = 1;
+public static final int CompbrlAtCursor = 1<<1;
+public static final int DotsIO = 1<<2;
+public static final int Comp8Dots = 1<<3;
+public static final int Pass1Only = 1<<4;
+public static final int CompbrlLeftCursor = 1<<5;
+public static final int OtherTrans = 1<<6;
+public static final int UcBrl = 1<<7;
+public static final int DontInit = 1<<30;
+public static final int HtmlDoc = 1<<29;
 
 /**
 * This class is a singleton.
