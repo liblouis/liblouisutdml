@@ -204,13 +204,13 @@ controlCharValue (FileInfo * nested)
 	  switch (nested->value[k] | 32)
 	    {
 	    case 'f':
-	      decoded[decodedLength++] = '\f';
+	      decoded[decodedLength++] = 12;
 	      break;
 	    case 'n':
-	      decoded[decodedLength++] = '\n';
+	      decoded[decodedLength++] = 10;
 	      break;
 	    case 'r':
-	      decoded[decodedLength++] = '\r';
+	      decoded[decodedLength++] = 13;
 	      break;
 	    default:
 	      configureError (nested, "invalid value %s", nested->value);
