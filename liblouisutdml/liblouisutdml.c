@@ -213,7 +213,7 @@ int
   ud->outbuf3_len = (sizeof (outbuf3) / CHARSIZE) - 4;
   if (strcmp (outFileName, "stdout"))
     {
-      if (!(ud->outFile = fopen (outFileName, "w")))
+      if (!(ud->outFile = fopen (outFileName, "wb")))
 	{
 	  lou_logPrint ("Can't open file %s.", outFileName);
 	  return 0;
@@ -246,7 +246,7 @@ int
   ud->outlen = (sizeof (outbuf) / CHARSIZE) - 4;
   if (strcmp (inFileName, "stdin"))
     {
-      if (!(ud->inFile = fopen (inFileName, "r")))
+      if (!(ud->inFile = fopen (inFileName, "rb")))
 	{
 	  lou_logPrint ("Can't open file %s.\n", inFileName);
 	  return 0;
@@ -256,7 +256,7 @@ int
     ud->inFile = stdin;
   if (strcmp (outFileName, "stdout"))
     {
-      if (!(ud->outFile = fopen (outFileName, "w")))
+      if (!(ud->outFile = fopen (outFileName, "wb")))
 	{
 	  lou_logPrint ("Can't open file %s.\n", outFileName);
 	  return 0;
@@ -315,7 +315,7 @@ int
   ud->outlen = (sizeof (outbuf) / CHARSIZE) - 4;
   if (strcmp (inFileName, "stdin"))
     {
-      if (!(ud->inFile = fopen (inFileName, "r")))
+      if (!(ud->inFile = fopen (inFileName, "rb")))
 	{
 	  lou_logPrint ("Can't open file %s.\n", inFileName);
 	  return 0;
@@ -325,7 +325,7 @@ int
     ud->inFile = stdin;
   if (strcmp (outFileName, "stdout"))
     {
-      if (!(ud->outFile = fopen (outFileName, "w")))
+      if (!(ud->outFile = fopen (outFileName, "wb")))
 	{
 	  lou_logPrint ("Can't open file %s.\n", outFileName);
 	  return 0;
