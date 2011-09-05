@@ -860,7 +860,7 @@ sem_compileFile (const char *fileName)
   memset (&nested, 0, sizeof (nested));
   nested.fileName = fileName;
   nested.unedited = 1;
-  if ((nested.in = fopen ((char *) completePath, "r")))
+  if ((nested.in = fopen ((char *) completePath, "rb")))
     {
       while (getALine (&nested))
 	{
@@ -1299,12 +1299,12 @@ append_new_entries (void)
     return;
   if (haveSemanticFile)
     {
-      strcpy (fileMode, "a");
+      strcpy (fileMode, "ab");
       strcpy (filePrefix, "appended_");
     }
   else
     {
-      strcpy (fileMode, "w");
+      strcpy (fileMode, "wb");
       strcpy (filePrefix, "new_");
     }
   strcpy (outFileName, lbu_getWriteablePath ());
