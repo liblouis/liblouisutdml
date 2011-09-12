@@ -428,7 +428,7 @@ orValues (FileInfo * nested, const char **values)
   int result = 0;
   int k;
   int word = 0;
-  int wordLength = 0;
+  int wordLength = 0;printf ("orValues: %s\n", nested->value);
   while (word < nested->valueLength)
     {
       for (; word < nested->valueLength && nested->value[word] <= ' ';
@@ -1107,6 +1107,7 @@ read_configuration_file (const char *configFileList, const char
   ud->mode = mode;
   ud->top = -1;
   ud->style_top = -1;
+  ud->emphasis = 15;
   for (k = document; k < notranslate; k++)
     {
       StyleType *style = new_style ((xmlChar *) semNames[k]);
