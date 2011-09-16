@@ -428,7 +428,7 @@ orValues (FileInfo * nested, const char **values)
   int result = 0;
   int k;
   int word = 0;
-  int wordLength = 0;printf ("orValues: %s\n", nested->value);
+  int wordLength = 0;
   while (word < nested->valueLength)
     {
       for (; word < nested->valueLength && nested->value[word] <= ' ';
