@@ -66,6 +66,7 @@ set_paths (const char *configPath)
 {
   char currentPath[MAXNAMELEN];
   char *dataPath = NULL;
+  char *writePath = NULL;
 
 /*Set configuration path first*/
   if (configPath != NULL && configPath[0] != 0)
@@ -131,7 +132,13 @@ set_paths (const char *configPath)
   currentPath[2] = 0;
   if (!addPath (currentPath))
     return 0;
-  if (lbu_getWriteablePath () == NULL)
+  if ((writePath = lbu_getWriteablePath ()) == NULL)
     lbu_setWriteablePath (lastPath);
+  else
+    {
+      currentPath[0] = ud->file_separator;
+      currentPath[1] = 0;
+      strcat (writePath, currentPath);
+    }
   return 1;
 }

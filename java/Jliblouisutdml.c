@@ -693,7 +693,6 @@ JNIEXPORT jboolean JNICALL Java_org_liblouis_liblouisutdml_file2brl
   strcpy (configFileList, "preferences.cfg");
   strcpy (inputFileName, "stdin");
   strcpy (outputFileName, "stdout");
-  strcpy (tempFileName, "file2brl.temp");
   strcpy (logFileName, "file2brl.log");
   if (numArgs != 0)
     {
@@ -786,7 +785,7 @@ configSettings, 0))
     }
   if (strcmp (inputFileName, "stdin") != 0)
     {
-      if (!(inputFile = fopen (inputFileName, "r")))
+      if (!(inputFile = fopen (inputFileName, "rb")))
 	{
 	  lou_logPrint ("Can't open file %s.\n", inputFileName);
 	  lou_logEnd ();
