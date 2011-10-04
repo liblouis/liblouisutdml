@@ -1,16 +1,27 @@
-Here are the instructions for making liblouisutdml.dll and liblouisutdml.lib
+Here are the instructions for making liblouisutdml.dll and liblouis.dll, 
+which liblouisutdml uses for actual translation.
 
-First, make sure you have Microsoft VisualC++, Mierosoft SDKs or 
+First, make sure you have Microsoft VisualC++, Microsoft SDKs or 
 Microsoft Visual Studio, which should contain the C compiler and the 
 nmake program maintenance tool. The environment variables must be set 
 correctly. If you have Windows Vista or 7 and Microsoft SDKs you can 
 press the Windows key, type sdk and enter. A batch file that sets the 
-environment variables will run and a cmd prompt will appear.
+environment variables will run and a cmd prompt will appear. The exact 
+procedure for starting the command-line C tool environment may vary with 
+the Microsoft package you are using.
+
+You must also have a Java Development Kit (JDK) for Java 1.6 or later. 
+the JRE does not containt the necessary files.
 
 You will get either 32-bit or 64-bit liblouisutdml.dll and 
 liblouisutdml.lib according to which version of the compiler you are 
 running. However, liblouisutdml.dll depends on Windows libraries which 
 are either 32 or 64 bits, depending on what your Windows is.
+
+ the "For Developers" page of http://www.braliblaster.org contains links 
+ for liblouis, liblouisutdml, 
+the recommended version of libxml2 and the swt.jar files for various 
+platforms and architectures.
 
 Download the latest version of liblouis, unpack it and go to the windows
 subdirectory. Edit the file configure.mk If you want 32-bit Unicode,
@@ -29,7 +40,7 @@ You will be editing this later. Also in the windows subdirectory is
 another subdirectory called include It contains files that 
 replace some in the source directory of libxml2.
 
-Next download the latest tarball of libxml2 from www.xmlsoft.org and 
+Next download the latest tarball of libxml2 and 
 unpack it. You will need to copy the file xmlversion.h from the 
 liblouisutdml windows/include directory into the include/libxml 
 directory of the libxml2 directory. Note that it replaces the file of 
@@ -44,9 +55,11 @@ nmake /f Makefile.nmake
 The directory will now contain liblouisutdml.dll, liblouisutdml.lib and 
 a number of object files. You will also find a new directory, 
 brailleblasterlib, so-called because the files it contains are intended 
-to be copied into the BrailleBlaster native/lib directory. They should 
-actualy be copied into the brailleblaster/dist directory. This is a 
-requirement of Windows only. The files are liblouis.dll and 
-liblouisutdml.dll You will also find the directory libslib which 
-contains liblouis-2.lib and liblouisutdml.lib
+to be copied into the BrailleBlaster native/lib directory. for Windows, 
+they should be copied into the same folder as brailleblaster.jar. You 
+will also find the directory libslib which contains liblouis-2.lib and 
+liblouisutdml.lib. These files are not needed for BrailleBlaster. They 
+are provided in case someone wants to link liblouis and/or liblouisutdml 
+with something else.
+
 
