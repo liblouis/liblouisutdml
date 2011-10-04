@@ -1,6 +1,6 @@
 EXTRA_DIST = \
 	configure.mk \
 	liblouisutdml.def \
-	Makefile.nmake
+	Makefile.nmake \
 	make_makefile.c
 	
