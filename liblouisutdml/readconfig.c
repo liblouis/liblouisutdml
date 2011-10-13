@@ -247,7 +247,7 @@ config_compileSettings (const char *fileName)
       configureError (NULL, "Can't find configuration file %s", fileName);
       return 0;
     }
-  if ((nested.in = fopen ((char *) completePath, "r")))
+  if ((nested.in = fopen ((char *) completePath, "rb")))
     {
       compileConfig (&nested);
       fclose (nested.in);
@@ -773,7 +773,8 @@ compileConfig (FileInfo * nested)
 	      configureError (nested, "a file name in column 2 is required");
 	    else
 	      config_compileSettings (nested->value);
-	    parseLine (nested);
+	    if (!parseLine (nested))
+	      break;
 	    checkSubActions (nested, mainActions, actions);
 	    if (mainActionNumber != NOTFOUND)
 	      goto choseMainAction;

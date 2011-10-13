@@ -78,7 +78,8 @@ is not specified the output is sent to stdout.\n\n", stdout);
   -C, --config-setting    specify particular configuration settings\n\
                           They override any settings that are specified in a\n\
                           config file\n\
-  -l, --log-file          write errors to log file instead of stderr\n", stdout);
+  -l, --log-file          write errors to file2brl.log instead of stderr\n",
+   stdout);
 
   printf ("\n");
   printf ("\
