@@ -13,7 +13,6 @@ lbu_files_DATA = \
 	liblouisutdml.ini \
 	chapter.sem \
 	preferences.cfg \
-	document.sem \
 	dtbook.sem \
 	dtbookutd.sem \
 	utd.sem \
