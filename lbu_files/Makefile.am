@@ -16,6 +16,7 @@ lbu_files_DATA = \
 	dtbook.sem \
 	dtbookutd.sem \
 	utd.sem \
+	document.sem \
 	dtbook3.sem \
 	gutbook.sem \
 	html.sem \

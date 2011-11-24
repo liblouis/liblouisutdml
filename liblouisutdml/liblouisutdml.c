@@ -215,7 +215,7 @@ int
     {
       if (!(ud->outFile = fopen (outFileName, "wb")))
 	{
-	  lou_logPrint ("Can't open file %s.", outFileName);
+	  lou_logPrint ("Can't open output file %s.", outFileName);
 	  return 0;
 	}
     }
@@ -248,7 +248,7 @@ int
     {
       if (!(ud->inFile = fopen (inFileName, "rb")))
 	{
-	  lou_logPrint ("Can't open file %s.\n", inFileName);
+	  lou_logPrint ("Can't open input file %s.\n", inFileName);
 	  return 0;
 	}
     }
@@ -258,7 +258,7 @@ int
     {
       if (!(ud->outFile = fopen (outFileName, "wb")))
 	{
-	  lou_logPrint ("Can't open file %s.\n", outFileName);
+	  lou_logPrint ("Can't open output file %s.\n", outFileName);
 	  return 0;
 	}
     }
@@ -317,7 +317,7 @@ int
     {
       if (!(ud->inFile = fopen (inFileName, "rb")))
 	{
-	  lou_logPrint ("Can't open file %s.\n", inFileName);
+	  lou_logPrint ("Can't open input file %s.\n", inFileName);
 	  return 0;
 	}
     }
@@ -327,7 +327,7 @@ int
     {
       if (!(ud->outFile = fopen (outFileName, "wb")))
 	{
-	  lou_logPrint ("Can't open file %s.\n", outFileName);
+	  lou_logPrint ("Can't open output file %s.\n", outFileName);
 	  return 0;
 	}
     }
