@@ -408,7 +408,6 @@ wc_string_to_utf8 (const widechar * instr, int *inSize, unsigned char *outstr,
 {
   int in = 0;
   int out = 0;
-  unsigned int ch = 0;
   unsigned char utf8Str[10];
   unsigned int utf8Bytes[MAXBYTES] = { 0, 0, 0, 0, 0, 0, 0 };
   int utf8Length;
@@ -418,11 +417,13 @@ wc_string_to_utf8 (const widechar * instr, int *inSize, unsigned char *outstr,
   while (in < *inSize)
     {
       utf32 = instr[in++];
-      if (ch < 128)
+      if (utf32 < 128)
 	{
 	  utf8Str[0] = utf32;
 	  utf8Length = 1;
 	}
+	else
+	{
       for (numBytes = 0; numBytes < MAXBYTES - 1; numBytes++)
 	{
 	  utf8Bytes[numBytes] = utf32 & 0x3f;
@@ -441,8 +442,9 @@ wc_string_to_utf8 (const widechar * instr, int *inSize, unsigned char *outstr,
 	  *outSize = out;
 	  return 1;
 	}
+	}
       for (k = 0; k < utf8Length; k++)
-	outstr[in++] = utf8Str[k];
+	outstr[out++] = utf8Str[k];
     }
   outstr[out++] = 0;
   *inSize = in;
@@ -3340,9 +3342,9 @@ static int cellsToWrite;
 static int
 utd_start ()
 {
-  brlContent = (xmlChar *) ud->outbuf;
-  maxContent = ud->outlen * CHARSIZE;
-  utilStringBuf = (char *) ud->text_buffer;
+  brlContent = (xmlChar *) ud->outbuf1;
+  maxContent = ud->outbuf1_len * CHARSIZE;
+  utilStringBuf = (char *) ud->outbuf2;
   brlNode = firstBrlNode = prevBrlNode = NULL;
   maxVertLinePos = ud->top_margin + NORMALLINE * ud->lines_per_page;
   ud->louis_mode = dotsIO;
@@ -3695,10 +3697,11 @@ makeDotsTextNode (xmlNode * node, const widechar * content, int length,
     return 1;
   if (kind)
     lou_charToDots (ud->main_braille_table, content, ud->text_buffer,
-		    length, ud->louis_mode);
+		    length, dotsIO);
   else
     memcpy (ud->text_buffer, content, length * CHARSIZE);
-  inlen = length;
+  for (inlen = 0; inlen < length; inlen++)
+    ud->text_buffer[inlen] = (ud->text_buffer[inlen] & 0x00ff) | 0x2800;
   outlen = maxContent;
   wc_string_to_utf8 (ud->text_buffer, &inlen, brlContent, &outlen);
   textNode = xmlNewText (brlContent);
