@@ -55,6 +55,13 @@ typedef struct
   int value2Length;
 }
 FileInfo;
+
+static double paperWidth;
+static double paperHeight;
+static double leftMargin;
+static double rightMargin;
+static double topMargin;
+static double bottomMargin;
 static int errorCount = 0;
 
 static void
@@ -1101,9 +1108,18 @@ read_configuration_file (const char *configFileList, const char
       return 1;
     }
   lbu_free ();
+  paperWidth = 0;
+  paperHeight = 0;
+  leftMargin = 0;
+  rightMargin = 0;
+  topMargin = 0;
+  bottomMargin = 0;
   if (!(ud = malloc (sizeof (UserData))))
     return 0;
   memset (ud, 0, sizeof (UserData));
+  ud->outbuf1_len = (sizeof (ud->outbuf1) / CHARSIZE) - 4;
+  ud->outbuf2_len = (sizeof (ud->outbuf2) / CHARSIZE) - 4;
+  ud->outbuf3_len = (sizeof (ud->outbuf3) / CHARSIZE) - 4;
   entities = 0;
   ud->mode = mode;
   ud->top = -1;
@@ -1182,5 +1198,19 @@ config_compileSettings ("canonical.cfg")))
   ud->braille_page_number = ud->beginning_braille_page_number;
   if (entities)
     strcat (ud->xml_header, "]>\n");
+  if (ud->format_for == utd)
+    {
+      const double dpi = 20.0;
+      ud->paper_width = (int)(paperWidth * dpi);
+      ud->paper_height = (int)(paperHeight * dpi);
+      ud->left_margin = (int)(leftMargin * dpi);
+      ud->right_margin = (int)(rightMargin * dpi);
+      ud->top_margin = (int)(topMargin * dpi);
+      ud->bottom_margin = (int)(bottomMargin * dpi);
+    }
+  else
+    {
+      ud->left_margin = (int)leftMargin;
+    }
   return 1;
 }

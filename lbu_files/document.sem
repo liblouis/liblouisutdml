@@ -1,6 +1,6 @@
-document document
-skip head
-no body
+no document
+markhead head
+document body
 no section
 para p
 

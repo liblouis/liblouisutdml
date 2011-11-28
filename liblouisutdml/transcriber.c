@@ -303,7 +303,7 @@ transcribe_text_file ()
   if (!start_document ())
     return 0;
   start_style (docStyle, NULL);
-  ud->outbuf1 = outbufx;
+  ud->outbuf = outbufx;
   ud->outbuf1_len = outlenx;
   ud->input_encoding = ud->input_text_encoding;
   while (1)
@@ -3014,7 +3014,7 @@ back_translate_file ()
   char *htmlEnd = "</body></html>";
   if (!start_document ())
     return 0;
-  ud->outbuf1 = outbufx;
+  ud->outbuf = outbufx;
   ud->outbuf1_len = MAX_LENGTH;
   if (ud->back_text == html)
     {
@@ -3344,7 +3344,7 @@ utd_start ()
 {
   brlContent = (xmlChar *) ud->outbuf1;
   maxContent = ud->outbuf1_len * CHARSIZE;
-  utilStringBuf = (char *) ud->outbuf2;
+  utilStringBuf = (char *) ud->text_buffer;
   brlNode = firstBrlNode = prevBrlNode = NULL;
   maxVertLinePos = ud->top_margin + NORMALLINE * ud->lines_per_page;
   ud->louis_mode = dotsIO;

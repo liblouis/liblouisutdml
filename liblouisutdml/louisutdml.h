@@ -183,6 +183,7 @@ typedef struct
   int cells_per_line;
   int lines_per_page;
   int beginning_braille_page_number;
+  int number_braille_pages;
   int interpoint;
   int print_page_number_at;
   int braille_page_number_at;
@@ -196,9 +197,9 @@ typedef struct
   widechar *outbuf;
   int outlen;
   int outlen_so_far;
-  widechar *outbuf1;
-  widechar *outbuf2;
-  widechar *outbuf3;
+  widechar outbuf1[2 * BUFSIZE];
+  widechar outbuf2[2 * BUFSIZE];
+  widechar outbuf3[2 * BUFSIZE];
   int outbuf1_len;
   int outbuf2_len;
   int outbuf3_len;
