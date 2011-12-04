@@ -175,6 +175,10 @@ typedef struct
   int debug;
   int paper_width;
   int paper_height;
+  int page_left;
+  int page_top;
+  int page_right;
+  int page_bottom;
   int top_margin;
   int bottom_margin;
   int left_margin;
@@ -338,6 +342,7 @@ int end_style ();
 int find_action (const char **actions, const char *action);
 int find_group_length (const char groupSym[2], const char *groupStart);
 char *alloc_string (const char *inString);
+char *alloc_string_if_not (const char *inString);
 int write_outbuf ();
 int link_brl_node (xmlNode * node);
 void clean_semantic_table ();
