@@ -29,6 +29,7 @@ public static final int OtherTrans = 1<<6;
 public static final int UcBrl = 1<<7;
 public static final int DontInit = 1<<30;
 public static final int HtmlDoc = 1<<29;
+public static final int notUC = 1<<28;
 
 /**
 * This class is a singleton.

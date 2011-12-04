@@ -41,6 +41,7 @@ static const struct option longopts[] = {
   {"reformat", no_argument, NULL, 'r'},
   {"poorly-formatted", no_argument, NULL, 'p'},
   {"html", no_argument, NULL, 't'},
+  {"text", no_argument, NULL, 'T'},
   {"log-file", no_argument, NULL, 'l'},
   {"config-setting", required_argument, NULL, 'C'},
   {NULL, 0, NULL, 0}
@@ -73,6 +74,7 @@ is not specified the output is sent to stdout.\n\n", stdout);
                           how to do the translation\n\
   -b, --backward      	  backward translation\n\
   -r, --reformat      	  reformat a braille file\n\
+  -T, --text		  Treat as text even if xml\n\
   -p, --poorly-formatted  translate a poorly formatted file\n\
   -t, --html              html document, not xhtml\n\
   -C, --config-setting    specify particular configuration settings\n\
@@ -135,7 +137,8 @@ main (int argc, char **argv)
       case 'b':
       case 'p':
       case 'r':
-      case 'x':
+      case 'T':
+      case '0':
 	whichProc = optc;
 	break;
       case 'C':
@@ -177,7 +180,7 @@ main (int argc, char **argv)
     }
 
   if (whichProc == 0)
-    whichProc = 'x';
+    whichProc = '0';
   if (configSettings != NULL)
     for (k = 0; configSettings[k]; k++)
       if (configSettings[k] == '=' && configSettings[k - 1] != ' ')
@@ -271,10 +274,10 @@ main (int argc, char **argv)
 	  continue;
 	if (charsRead == 0)
 	  {
-	    if (ch != '<' && whichProc == 'x')
+	    if (ch != '<' && whichProc == '0')
 	      whichProc = 't';
 	    nch = fgetc (inputFile);
-	    if (!(mode & htmlDoc) && whichProc == 'x' && nch != '?')
+	    if (!(mode & htmlDoc) && whichProc == '0' && nch != '?')
 	      fprintf (tempFile, "%s\n", ud->xml_header);
 	  }
 	if (pch == '>' && ch == '<')
@@ -319,7 +322,12 @@ main (int argc, char **argv)
 	lbu_translateTextFile (configFileName, tempFileName,
 			       outputFileName, NULL, NULL, mode);
 	break;
-      case 'x':
+      case 'T':
+	lbu_translateTextFile (configFileName, tempFileName, 
+	outputFileName,
+			   NULL, NULL, mode);
+    break;
+      case '0':
 	lbu_translateFile (configFileName, tempFileName, outputFileName,
 			   NULL, NULL, mode);
 	break;

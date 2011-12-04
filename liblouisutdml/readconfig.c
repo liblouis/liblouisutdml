@@ -56,6 +56,7 @@ typedef struct
 }
 FileInfo;
 
+static char lastConfigFileList[MAXNAMELEN];
 static double paperWidth;
 static double paperHeight;
 static double leftMargin;
@@ -94,6 +95,15 @@ alloc_string (const char *inString)
   strcpy (newString, inString);
   ud->string_buf_len += length + 1;
   return newString;
+}
+
+char *
+alloc_string_if_not (const char *inString)
+{
+  int alreadyStored = inString - ud->string_buffer;
+  if (alreadyStored >= 0 && alreadyStored < ud->string_buf_len)
+    return inString;
+  return alloc_string (inString);
 }
 
 int
@@ -591,16 +601,20 @@ compileConfig (FileInfo * nested)
     "47",
     "emphasis",
     "48",
-    "mergeUnnumberedPages",
+    "paperWidth",
     "49",
-    "pageNumberTopSeparateLine",
+    "paperHeight",
     "50",
-    "pageNumberBottomSeparateLine",
+    "numberBraillePages",
     "51",
     "printPageNumbersInContents",
     "52",
     "braillePageNumbersInContents",
     "53",
+    "rightMargin",
+    "54",
+    "bottomMargin",
+    "55",
     "style",
     "90",
     NULL
@@ -738,7 +752,7 @@ compileConfig (FileInfo * nested)
 	  ud->mathexpr_table_name = findTable (nested);
 	  break;
 	case 24:
-	  ud->top_margin = atoi (nested->value);
+	  topMargin = atof (nested->value);
 	  break;
 	case 25:
 	  if (entities)
@@ -810,7 +824,7 @@ compileConfig (FileInfo * nested)
 	    ud->debug = k;
 	  break;
 	case 36:
-	  ud->left_margin = atoi (nested->value);
+	  leftMargin = atof (nested->value);
 	  break;
 	case 37:
 	  if ((k = checkValues (nested, yesNo)) != NOTFOUND)
@@ -860,21 +874,15 @@ compileConfig (FileInfo * nested)
 	    ud->emphasis = k;
 	  break;
 	case 49:
-	  if ((k = checkValues (nested, yesNo)) != NOTFOUND)
-	    {
-	      ud->merge_unnumbered_pages = k;
-	    }
+	  paperWidth = atof (nested->value);
 	  break;
 	case 50:
-	  if ((k = checkValues (nested, yesNo)) != NOTFOUND)
-	    {
-	      ud->page_number_top_separate_line = k;
-	    }
+	  paperHeight = atof (nested->value);
 	  break;
 	case 51:
 	  if ((k = checkValues (nested, yesNo)) != NOTFOUND)
 	    {
-	      ud->page_number_bottom_separate_line = k;
+	      ud->number_braille_pages = k;
 	    }
 	  break;
 	case 52:
@@ -884,6 +892,12 @@ compileConfig (FileInfo * nested)
 	case 53:
 	  if ((k = checkValues (nested, yesNo)) != NOTFOUND)
 	    ud->braille_page_numbers_in_contents = k;
+	  break;
+	case 54:
+	  rightMargin = atof (nested->value);
+	  break;
+	case 55:
+	  bottomMargin = atof (nested->value);
 	  break;
 	case 90:
 	  {
@@ -1062,7 +1076,7 @@ initConfigFiles (const char *firstConfigFile, char *fileName, const
   if (!config_compileSettings ("liblouisutdml.ini"))
     {
       if (!config_compileSettings ("canonical.cfg"))
-        return 0;
+	return 0;
     }
   return 1;
 }
@@ -1080,7 +1094,9 @@ read_configuration_file (const char *configFileList, const char
   int currentListPos = 0;
   errorCount = 0;
   /*Process logFileName later, after writeablePath is set */
-  if (mode & dontInit)
+  if ((configFileList != NULL && strcmp (configFileList,
+					 lastConfigFileList) == 0)
+      || mode & dontInit)
     {
       ud->has_comp_code = 0;
       ud->has_math = 0;
@@ -1115,7 +1131,11 @@ read_configuration_file (const char *configFileList, const char
   topMargin = 0;
   bottomMargin = 0;
   if (!(ud = malloc (sizeof (UserData))))
-    return 0;
+    {
+      lou_logPrint ("liblouisutdml: not enough memory for buffers");
+      lou_logEnd ();
+      return 0;
+    }
   memset (ud, 0, sizeof (UserData));
   ud->outbuf1_len = (sizeof (ud->outbuf1) / CHARSIZE) - 4;
   ud->outbuf2_len = (sizeof (ud->outbuf2) / CHARSIZE) - 4;
@@ -1144,12 +1164,13 @@ read_configuration_file (const char *configFileList, const char
   if (configFileList == NULL)
     {
       set_paths (NULL);
-      if (!(config_compileSettings ("liblouisutdml.ini") || 
-config_compileSettings ("canonical.cfg")))
+      if (!(config_compileSettings ("liblouisutdml.ini") ||
+	    config_compileSettings ("canonical.cfg")))
 	return 0;
     }
   else
     {
+      strcpy (lastConfigFileList, configFileList);
       listLength = strlen (configFileList);
       for (k = 0; k < listLength; k++)
 	if (configFileList[k] == ',')
@@ -1201,16 +1222,31 @@ config_compileSettings ("canonical.cfg")))
   if (ud->format_for == utd)
     {
       const double dpi = 20.0;
-      ud->paper_width = (int)(paperWidth * dpi);
-      ud->paper_height = (int)(paperHeight * dpi);
-      ud->left_margin = (int)(leftMargin * dpi);
-      ud->right_margin = (int)(rightMargin * dpi);
-      ud->top_margin = (int)(topMargin * dpi);
-      ud->bottom_margin = (int)(bottomMargin * dpi);
+      ud->paper_width = (int) (paperWidth * dpi);
+      ud->paper_height = (int) (paperHeight * dpi);
+      ud->left_margin = (int) (leftMargin * dpi);
+      ud->right_margin = (int) (rightMargin * dpi);
+      ud->top_margin = (int) (topMargin * dpi);
+      ud->bottom_margin = (int) (bottomMargin * dpi);
     }
   else
     {
-      ud->left_margin = (int)leftMargin;
+      ud->left_margin = (int) leftMargin;
+    }
+  ud->page_left = ud->left_margin;
+  ud->page_right = ud->paper_width - ud->right_margin;
+  ud->page_top = ud->top_margin;
+  ud->page_bottom = ud->paper_height - ud->bottom_margin;
+  if (ud->format_for == utd)
+    {
+      if (ud->page_right <= 0 || ud->page_bottom <= 0)
+	{
+	  lou_logPrint
+	    ("For UTDML paper witdth and paper height must be specified.");
+	  lbu_free ();
+	  return 0;
+	}
+      ud->cells_per_line = (ud->page_right - ud->page_left) / CELLWIDTH;
     }
   return 1;
 }

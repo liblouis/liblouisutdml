@@ -70,7 +70,8 @@ include louisutdml.h */
   typedef enum
   {
     dontInit = 1 << 30,
-    htmlDoc = 1 << 29
+    htmlDoc = 1 << 29,
+    notUC = 1 << 28
   } ProcessingModes;
 
   int EXPORT_CALL lbu_translateString
