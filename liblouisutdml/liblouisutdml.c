@@ -62,7 +62,7 @@ libxml_errors (void *ctx ATTRIBUTE_UNUSED, const char *msg, ...)
 }
 
 static int
-processXmlDocument (const char *inputDoc, int length, int mode)
+processXmlDocument (const char *inputDoc, int length)
 {
   /*This function does all processing of xml documents as such.
    * If length is 0 the document is assumed to be a file.
@@ -86,7 +86,7 @@ processXmlDocument (const char *inputDoc, int length, int mode)
   xmlSetGenericErrorFunc (ctxt, libxml_errors);
   if (length == 0)
     {
-      if ((mode & htmlDoc))
+      if ((ud->mode & htmlDoc))
 	ud->doc = htmlParseFile (inputDoc, NULL);
       else
 	{
@@ -180,7 +180,7 @@ lbu_translateString (const char *configFileName,
       strcat (xmlInbuf, inbuf);
     }
   ud->inFile = ud->outFile = NULL;
-  if (!processXmlDocument (xmlInbuf, inlen, mode))
+  if (!processXmlDocument (xmlInbuf, inlen))
     return 0;
   *outlen = ud->outlen_so_far;
   if (xmlInbuf != inbuf)
@@ -212,7 +212,7 @@ int
     }
   else
     ud->outFile = stdout;
-  if (!processXmlDocument (inFileName, 0, mode))
+  if (!processXmlDocument (inFileName, 0))
     return 0;
   if (ud->outFile != stdout)
     fclose (ud->outFile);

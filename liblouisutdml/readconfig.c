@@ -102,8 +102,8 @@ alloc_string_if_not (const char *inString)
 {
   int alreadyStored = inString - ud->string_buffer;
   if (alreadyStored >= 0 && alreadyStored < ud->string_buf_len)
-    return inString;
-  return alloc_string (inString);
+    return (char *)inString;
+  return (char *)alloc_string (inString);
 }
 
 int
@@ -448,8 +448,8 @@ orValues (FileInfo * nested, const char **values)
   int wordLength = 0;
   while (word < nested->valueLength)
     {
-      for (; word < nested->valueLength && nested->value[word] <= ' ';
-	   word++);
+      for (; word < nested->valueLength && nested->value[word] <= ' '
+	   && nested->value[word] != ','; word++);
       for (wordLength = 0; (word + wordLength) < nested->valueLength &&
 	   nested->value[word + wordLength] > ' '; wordLength++);
       for (k = 0; values[k]; k += 2)
@@ -615,6 +615,8 @@ compileConfig (FileInfo * nested)
     "54",
     "bottomMargin",
     "55",
+    "mode",
+    "56",
     "style",
     "90",
     NULL
@@ -646,6 +648,22 @@ compileConfig (FileInfo * nested)
     "bold", "4",
     "computer_braille", "8",
     "all", "15",
+    NULL
+  };
+  static const char *configModes[] = {
+    /*liblouis modes */
+    "noContractions", "1",
+    "compbrlAtCursor", "2",
+    "dotsIO", "4",
+    "comp8Dots", "8",
+    "pass1Only", "16",
+    "compbrlLeftCursor", "32",
+    "otherTrans", "64",
+    "ucBrl", "128",
+    /*liblouisutdml modes */
+    "dontInit", "1073741824",
+    "htmlDoc", "536870912",
+    "notUC", "286435456",
     NULL
   };
 
@@ -899,6 +917,10 @@ compileConfig (FileInfo * nested)
 	case 55:
 	  bottomMargin = atof (nested->value);
 	  break;
+	case 56:
+	  if ((k = orValues (nested, configModes)) != NOTFOUND)
+	    ud->config_mode = k;
+	  break;
 	case 90:
 	  {
 	    static const char *actions[] = {
@@ -1121,6 +1143,7 @@ read_configuration_file (const char *configFileList, const char
       ud->page_separator_number_first[0] = 0;
       ud->page_separator_number_first[0] = 0;
       ud->fill_pages = 0;
+      ud->mode = mode | ud->config_mode;
       return 1;
     }
   lbu_free ();
@@ -1219,6 +1242,7 @@ read_configuration_file (const char *configFileList, const char
   ud->braille_page_number = ud->beginning_braille_page_number;
   if (entities)
     strcat (ud->xml_header, "]>\n");
+  ud->mode = mode | ud->config_mode;
   if (ud->format_for == utd)
     {
       const double dpi = 20.0;

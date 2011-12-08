@@ -91,7 +91,7 @@ Report bugs to <%s>.\n", PACKAGE_BUGREPORT);
 int
 main (int argc, char **argv)
 {
-  int mode = dontInit;
+  int mode = 0;
   char *configFileName = NULL;
   char *inputFileName = "stdin";
   char *outputFileName = "stdout";
