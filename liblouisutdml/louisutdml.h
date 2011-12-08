@@ -170,6 +170,7 @@ typedef struct
   int contents;
   int has_contentsheader;
   unsigned int mode;
+  unsigned int config_mode;
   translationModes louis_mode;
   int emphasis;
   int debug;

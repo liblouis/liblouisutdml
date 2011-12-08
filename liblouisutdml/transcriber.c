@@ -3691,7 +3691,8 @@ makeDotsTextNode (xmlNode * node, const widechar * content, int length,
       if (kind)
 	memcpy (ud->text_buffer, content, length * CHARSIZE);
       else
-	lou_dotsToChar (currentTable, content, ud->text_buffer, length, 0);
+	lou_dotsToChar (currentTable, (char *)content, ud->text_buffer, 
+	length, 0);
       inlen = length;
     }
   else
@@ -4432,7 +4433,7 @@ utd_fillPage ()
   if (!ud->braille_pages)
     return 1;
   ud->lines_on_page = ud->lines_per_page - 1;
-  vertLinePos = ud->top_margin + NORMALLINE * ud->lines_per_page;
+  vertLinePos = ud->page_top + NORMALLINE * ud->lines_per_page;
   utd_startLine ();
   utd_finishLine (0, 0);
   return 1;
@@ -4849,7 +4850,7 @@ utd_startStyle ()
       if (style->action == document)
 	{
 	  documentNode = styleSpec->node;
-	  vertLinePos = ud->top_margin;
+	  vertLinePos = ud->page_top;
 	  makeNewpage (brlNode);
 	  return 1;
 	}
