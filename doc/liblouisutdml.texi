@@ -342,6 +342,10 @@ goes directly to the html parser. See also the @code{formatFor}
 configuration (@pxref{formatFor setting}) file setting, which enables
 you to format the braille output for viewing in a browser.
 
+@item -T
+@item  --text
+Consider the document to be a text file, even if it is xml or html.
+
 @item infile
 This is the name of the input file containing the material to be
 transcribed. The file may be either an xml file or a text file. The

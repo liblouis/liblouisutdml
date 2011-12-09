@@ -912,8 +912,6 @@ compile_semantic_table (xmlNode * rootElement)
   moreEntries = 0;
   numEntries = 0;
   rootName = rootElement->name;
-  if (ud->mode & dontInit)
-    return 1;
   xpathCtx = xmlXPathNewContext (rootElement->doc);
   if (*ud->semantic_files)
     {
