@@ -80,8 +80,7 @@ is not specified the output is sent to stdout.\n\n", stdout);
   -C, --config-setting    specify particular configuration settings\n\
                           They override any settings that are specified in a\n\
                           config file\n\
-  -l, --log-file          write errors to file2brl.log instead of stderr\n",
-   stdout);
+  -l, --log-file          write errors to file2brl.log instead of stderr\n", stdout);
 
   printf ("\n");
   printf ("\
@@ -112,7 +111,8 @@ main (int argc, char **argv)
   set_program_name (argv[0]);
 
   while ((optc =
-	  getopt_long (argc, argv, "hvf:brptlC:", longopts, NULL)) != -1)
+	  getopt_long (argc, argv, "hvf:brptlTC:", longopts, NULL)) != 
+	  -1)
     switch (optc)
       {
 	/* --help and --version exit immediately, per GNU coding standards.  */
@@ -185,22 +185,9 @@ main (int argc, char **argv)
     for (k = 0; configSettings[k]; k++)
       if (configSettings[k] == '=' && configSettings[k - 1] != ' ')
 	configSettings[k] = ' ';
-  if (configFileName != NULL)
-    {
-      if ((ud = lbu_initialize (configFileName, logFileName,
-				configSettings)) == NULL)
-	exit (EXIT_FAILURE);
-    }
-  else
-    {
-      if ((ud = lbu_initialize ("preferences.cfg", logFileName,
-				configSettings)) == NULL)
-	{
-	  if ((ud = lbu_initialize ("default.cfg", logFileName,
-				    configSettings)) == NULL)
-	    exit (EXIT_FAILURE);
-	}
-    }
+  if (configFileName == NULL)
+    configFileName = "preferences.cfg";
+  ud = lbu_initialize (configFileName, logFileName, configSettings);
   if (strcmp (inputFileName, "stdin") != 0)
     {
       if (!(inputFile = fopen (inputFileName, "r")))
@@ -299,7 +286,8 @@ main (int argc, char **argv)
       {
       case 'b':
 	lbu_backTranslateFile (configFileName, tempFileName,
-			       outputFileName, NULL, NULL, mode);
+			       outputFileName, logFileName, configSettings,
+			       mode);
 	break;
       case 'r':
 	{
@@ -307,29 +295,33 @@ main (int argc, char **argv)
 	  strcpy (temp2FileName, lbu_getWriteablePath ());
 	  strcat (temp2FileName, "file2brl2.temp");
 	  if ((lbu_backTranslateFile (configFileName, tempFileName,
-				      temp2FileName, NULL, NULL, mode)) != 1)
+				      temp2FileName, logFileName,
+				      configSettings, mode)) != 1)
 	    exit (1);
 	  if (ud->back_text == html)
 	    lbu_translateFile (configFileName, temp2FileName,
-			       outputFileName, NULL, NULL, mode);
+			       outputFileName, logFileName, configSettings,
+			       mode);
 	  else
 	    lbu_translateTextFile (configFileName, temp2FileName,
-				   outputFileName, NULL, NULL, mode);
+				   outputFileName, logFileName,
+				   configSettings, mode);
 	}
 	break;
       case 't':
       case 'p':
 	lbu_translateTextFile (configFileName, tempFileName,
-			       outputFileName, NULL, NULL, mode);
+			       outputFileName, logFileName, configSettings,
+			       mode);
 	break;
       case 'T':
-	lbu_translateTextFile (configFileName, tempFileName, 
-	outputFileName,
-			   NULL, NULL, mode);
-    break;
+	lbu_translateTextFile (configFileName, tempFileName,
+			       outputFileName,
+			       logFileName, configSettings, mode);
+	break;
       case '0':
 	lbu_translateFile (configFileName, tempFileName, outputFileName,
-			   NULL, NULL, mode);
+			   logFileName, configSettings, mode);
 	break;
       default:
 	lou_logPrint ("Program bug %c\n", whichProc);
