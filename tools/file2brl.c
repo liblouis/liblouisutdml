@@ -187,7 +187,9 @@ main (int argc, char **argv)
 	configSettings[k] = ' ';
   if (configFileName == NULL)
     configFileName = "preferences.cfg";
-  ud = lbu_initialize (configFileName, logFileName, configSettings);
+  if ((ud = lbu_initialize (configFileName, logFileName, 
+  configSettings)) == NULL)
+    exit (EXIT_FAILURE);
   if (strcmp (inputFileName, "stdin") != 0)
     {
       if (!(inputFile = fopen (inputFileName, "r")))
@@ -204,7 +206,7 @@ main (int argc, char **argv)
   if (!(tempFile = fopen (tempFileName, "w")))
     {
       lou_logPrint ("Can't open temporary file.\n");
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   if (whichProc == 'p')
     {
@@ -297,7 +299,7 @@ main (int argc, char **argv)
 	  if ((lbu_backTranslateFile (configFileName, tempFileName,
 				      temp2FileName, logFileName,
 				      configSettings, mode)) != 1)
-	    exit (1);
+	    exit (EXIT_FAILURE);
 	  if (ud->back_text == html)
 	    lbu_translateFile (configFileName, temp2FileName,
 			       outputFileName, logFileName, configSettings,

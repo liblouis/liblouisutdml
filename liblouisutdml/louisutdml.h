@@ -180,6 +180,7 @@ typedef struct
   int page_top;
   int page_right;
   int page_bottom;
+  int vert_line_pos;
   int top_margin;
   int bottom_margin;
   int left_margin;

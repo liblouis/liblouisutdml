@@ -6,8 +6,8 @@ START-INFO-DIR-ENTRY
 * Liblouisutdml: (liblouisutdml). An xml to Braille Translation Library.
 END-INFO-DIR-ENTRY
 
-   This manual is for liblouisutdml (version 2.0.2, 30 June 2011), an
-xml to Braille Translation Library.
+   This manual is for liblouisutdml (version 2.0.2, 9 December 2011),
+an xml to Braille Translation Library.
 
    This file may contain code borrowed from the Linux screenreader
 BRLTTY, Copyright (C) 1999-2009 by the BRLTTY Team.
@@ -36,8 +36,8 @@ File: liblouisutdml.info,  Node: Top,  Next: Introduction,  Prev: (dir),  Up: (d
 Liblouisutdml User's and Programmer's Manual
 ********************************************
 
-This manual is for liblouisutdml (version 2.0.2, 30 June 2011), an xml
-to Braille Translation Library.
+This manual is for liblouisutdml (version 2.0.2, 9 December 2011), an
+xml to Braille Translation Library.
 
    This file may contain code borrowed from the Linux screenreader
 BRLTTY, Copyright (C) 1999-2009 by the BRLTTY Team.
@@ -309,6 +309,11 @@ various optional parts control how the program will behave, as follows:
      also the `formatFor' configuration (*note formatFor setting::)
      file setting, which enables you to format the braille output for
      viewing in a browser.
+
+`-T'
+
+`--text'
+     Consider the document to be a text file, even if it is xml or html.
 
 `infile'
      This is the name of the input file containing the material to be
@@ -4294,147 +4299,147 @@ Program Index
 
 
 Tag Table:
-Node: Top1432
-Node: Introduction4559
-Node: Transcribing Documents6579
-Node: Transcribing XML files with file2brl7061
-Node: Transcribing Text Documents13670
-Node: Transcribing Poorly Formatted Documents14203
-Node: Transcribing html Documents15036
-Node: Transcribing Microsoft Word files with msword2brl15554
-Node: Transcribing RTF files with rtf2brl16244
-Node: Transcribing PDF files with pdf2brl17140
-Node: Customization Configuring liblouisutdml18062
-Node: outputFormat22500
-Ref: continuePages setting25593
-Ref: pageSeparator setting25750
-Ref: printPageNumberRange setting26856
-Ref: formatFor setting28949
-Ref: lineFill setting30649
-Node: translation30852
-Node: xml32652
-Node: style34930
-Ref: contentsheader style40295
-Node: Connecting with the xml Document41822
-Node: Semantic Actions Overview42211
-Node: Semantic Actions in detail56104
-Ref: contenss1 semantic57287
-Ref: contenss2 semantic57542
-Ref: contenss3 semantic57571
-Ref: contenss4 semantic57601
-Ref: contentsheader semantic57631
-Ref: document semantic57796
-Ref: heading1 semantic57824
-Ref: heading2 semantic57853
-Ref: heading3 semantic57882
-Ref: heading4 semantic57911
-Ref: para semantic57940
-Ref: blankline semantic58229
-Ref: boldx semantic58583
-Ref: boxline semantic58910
-Ref: chemistry semantic59300
-Ref: changetable semantic59507
-Ref: compbrl semantic60115
-Ref: configfile semantic60396
-Ref: configstring semantic61334
-Ref: configtweak semantic61794
-Ref: contracted semantic62330
-Ref: footer semantic62360
-Ref: generic semantic62560
-Ref: graphic semantic63126
-Ref: htmllink semantic63254
-Ref: htmltarget semantic63434
-Ref: italicx semantic63615
-Ref: linespacing semantic63949
-Ref: maction semantic64379
-Ref: maligngroup semantic64824
-Ref: malignmark semantic64855
-Ref: math semantic64886
-Ref: menclose semantic65518
-Ref: merror semantic65546
-Ref: mfenced semantic65573
-Ref: mfrac semantic65601
-Ref: mglyph semantic65627
-Ref: mi semantic65654
-Ref: mlabeledtr semantic65677
-Ref: mmultiscripts semantic65708
-Ref: mn semantic65742
-Ref: mo semantic65765
-Ref: mover semantic65788
-Ref: mpadded semantic65814
-Ref: mphantom semantic65842
-Ref: mprescripts semantic65871
-Ref: mroot semantic65903
-Ref: mrow semantic66016
-Ref: ms semantic66193
-Ref: mspace semantic66215
-Ref: msqrt semantic66325
-Ref: mstyle semantic66350
-Ref: msub semantic66451
-Ref: msubsup semantic66475
-Ref: msup semantic66503
-Ref: mtable semantic66528
-Ref: mtd semantic66874
-Ref: mtext semantic67202
-Ref: mtr semantic67227
-Ref: munder semantic67689
-Ref: munderover semantic67715
-Ref: music semantic67746
-Ref: newpage semantic67906
-Ref: no semantic68166
-Ref: none semantic68486
-Ref: notranslate semantic68542
-Ref: pagenum semantic68869
-Ref: reverse semantic69473
-Ref: righthandpage semantic69769
-Ref: runninghead semantic70102
-Ref: semantics semantic70384
-Ref: skip semantic70501
-Ref: softreturn semantic70664
-Ref: uncontracted semantic70846
-Node: Pseudo-actions70966
-Node: Using XPath Expressions72244
-Node: Special Features73328
-Node: Table of contents73628
-Node: Back-translation76993
-Node: Reformatting78049
-Node: Interlining78724
-Node: Browser-Friendly Output79266
-Node: CDATA Sections80228
-Node: Special Formats80731
-Node: Tables81104
-Node: Reserving Space for Graphics81876
-Node: Displayed Text82611
-Node: Displayed Mathematics82928
-Node: Spatial Layouts in Mathematics83257
-Node: Arithmetic Examples83650
-Node: Poetry83932
-Node: Dividing a Book Into Volumes84746
-Node: Implementing Braille Mathematics Codes85858
-Node: Programming with liblouisutdml94716
-Node: License95130
-Node: Overview96202
-Node: Files and Paths99157
-Node: lbx_version101174
-Node: lbx_initialize101560
-Node: lbx_translateString102806
-Node: lbx_translateFile104844
-Node: lbx_translateTextFile106024
-Node: lbx_backTranslateFile107033
-Node: lbx_free108075
-Node: Example files108579
-Node: canonical.cfg109120
-Node: default.cfg113578
-Node: html.sem114233
-Node: nemeth.sem130894
-Node: Files for BAUK Maths (ukmaths)134383
-Node: ukmaths.cfg134639
-Node: ukmaths.sem134999
-Node: ukmaths.ctb138209
-Node: ukmaths_edit.ctb143449
-Node: Configuration Settings Index145379
-Node: Semantic Action Index149383
-Node: Function Index160086
-Node: Program Index160763
+Node: Top1435
+Node: Introduction4565
+Node: Transcribing Documents6585
+Node: Transcribing XML files with file2brl7067
+Node: Transcribing Text Documents13765
+Node: Transcribing Poorly Formatted Documents14298
+Node: Transcribing html Documents15131
+Node: Transcribing Microsoft Word files with msword2brl15649
+Node: Transcribing RTF files with rtf2brl16339
+Node: Transcribing PDF files with pdf2brl17235
+Node: Customization Configuring liblouisutdml18157
+Node: outputFormat22595
+Ref: continuePages setting25688
+Ref: pageSeparator setting25845
+Ref: printPageNumberRange setting26951
+Ref: formatFor setting29044
+Ref: lineFill setting30744
+Node: translation30947
+Node: xml32747
+Node: style35025
+Ref: contentsheader style40390
+Node: Connecting with the xml Document41917
+Node: Semantic Actions Overview42306
+Node: Semantic Actions in detail56199
+Ref: contenss1 semantic57382
+Ref: contenss2 semantic57637
+Ref: contenss3 semantic57666
+Ref: contenss4 semantic57696
+Ref: contentsheader semantic57726
+Ref: document semantic57891
+Ref: heading1 semantic57919
+Ref: heading2 semantic57948
+Ref: heading3 semantic57977
+Ref: heading4 semantic58006
+Ref: para semantic58035
+Ref: blankline semantic58324
+Ref: boldx semantic58678
+Ref: boxline semantic59005
+Ref: chemistry semantic59395
+Ref: changetable semantic59602
+Ref: compbrl semantic60210
+Ref: configfile semantic60491
+Ref: configstring semantic61429
+Ref: configtweak semantic61889
+Ref: contracted semantic62425
+Ref: footer semantic62455
+Ref: generic semantic62655
+Ref: graphic semantic63221
+Ref: htmllink semantic63349
+Ref: htmltarget semantic63529
+Ref: italicx semantic63710
+Ref: linespacing semantic64044
+Ref: maction semantic64474
+Ref: maligngroup semantic64919
+Ref: malignmark semantic64950
+Ref: math semantic64981
+Ref: menclose semantic65613
+Ref: merror semantic65641
+Ref: mfenced semantic65668
+Ref: mfrac semantic65696
+Ref: mglyph semantic65722
+Ref: mi semantic65749
+Ref: mlabeledtr semantic65772
+Ref: mmultiscripts semantic65803
+Ref: mn semantic65837
+Ref: mo semantic65860
+Ref: mover semantic65883
+Ref: mpadded semantic65909
+Ref: mphantom semantic65937
+Ref: mprescripts semantic65966
+Ref: mroot semantic65998
+Ref: mrow semantic66111
+Ref: ms semantic66288
+Ref: mspace semantic66310
+Ref: msqrt semantic66420
+Ref: mstyle semantic66445
+Ref: msub semantic66546
+Ref: msubsup semantic66570
+Ref: msup semantic66598
+Ref: mtable semantic66623
+Ref: mtd semantic66969
+Ref: mtext semantic67297
+Ref: mtr semantic67322
+Ref: munder semantic67784
+Ref: munderover semantic67810
+Ref: music semantic67841
+Ref: newpage semantic68001
+Ref: no semantic68261
+Ref: none semantic68581
+Ref: notranslate semantic68637
+Ref: pagenum semantic68964
+Ref: reverse semantic69568
+Ref: righthandpage semantic69864
+Ref: runninghead semantic70197
+Ref: semantics semantic70479
+Ref: skip semantic70596
+Ref: softreturn semantic70759
+Ref: uncontracted semantic70941
+Node: Pseudo-actions71061
+Node: Using XPath Expressions72339
+Node: Special Features73423
+Node: Table of contents73723
+Node: Back-translation77088
+Node: Reformatting78144
+Node: Interlining78819
+Node: Browser-Friendly Output79361
+Node: CDATA Sections80323
+Node: Special Formats80826
+Node: Tables81199
+Node: Reserving Space for Graphics81971
+Node: Displayed Text82706
+Node: Displayed Mathematics83023
+Node: Spatial Layouts in Mathematics83352
+Node: Arithmetic Examples83745
+Node: Poetry84027
+Node: Dividing a Book Into Volumes84841
+Node: Implementing Braille Mathematics Codes85953
+Node: Programming with liblouisutdml94811
+Node: License95225
+Node: Overview96297
+Node: Files and Paths99252
+Node: lbx_version101269
+Node: lbx_initialize101655
+Node: lbx_translateString102901
+Node: lbx_translateFile104939
+Node: lbx_translateTextFile106119
+Node: lbx_backTranslateFile107128
+Node: lbx_free108170
+Node: Example files108674
+Node: canonical.cfg109215
+Node: default.cfg113673
+Node: html.sem114328
+Node: nemeth.sem130989
+Node: Files for BAUK Maths (ukmaths)134478
+Node: ukmaths.cfg134734
+Node: ukmaths.sem135094
+Node: ukmaths.ctb138304
+Node: ukmaths_edit.ctb143544
+Node: Configuration Settings Index145474
+Node: Semantic Action Index149478
+Node: Function Index160181
+Node: Program Index160858
 
 End Tag Table
