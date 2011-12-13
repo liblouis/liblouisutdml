@@ -1271,6 +1271,11 @@ read_configuration_file (const char *configFileList, const char
 	  return 0;
 	}
       ud->cells_per_line = (ud->page_right - ud->page_left) / CELLWIDTH;
+      ud->lines_on_page = (ud->page_bottom -ud->page_top) / NORMALLINE;
+      ud->braille_pages = 1;
+      ud->paragraphs = 1;
+      ud->back_text = textDevice;
+      ud->back_line_length = 70;
     }
   return 1;
 }

@@ -3318,6 +3318,7 @@ end_style ()
 #define RDOTS (B16 | B1 | B2 | B3 | B5)
 
 static char *currentTable;
+static char currentTableName[MAXNAMELEN];
 static int *indices;
 static int *backIndices;
 static widechar *backBuf;
@@ -3334,7 +3335,6 @@ static xmlNode *newlineNode;
 static xmlChar *brlContent;
 static int maxContent;
 static char *utilStringBuf;
-static int vertLinePos;
 static int lineWidth;
 static int cellsToWrite;
 
@@ -4024,10 +4024,10 @@ makeNewline (xmlNode * parent, int start)
   char position[MAXNUMLEN];
   xmlNode *newNode = xmlNewNode (NULL, (xmlChar *) "newline");
   sprintf (position, "%d,%d", (CELLWIDTH * start +
-			       ud->page_left), vertLinePos);
+			       ud->page_left), ud->vert_line_pos);
   xmlNewProp (newNode, (xmlChar *) "xy", (xmlChar *) position);
   xmlAddChild (parent, newNode);
-  vertLinePos += lineWidth;
+  ud->vert_line_pos += lineWidth;
   lineWidth = NORMALLINE;
   return 1;
 }
@@ -4046,10 +4046,11 @@ utd_insert_translation (const char *table)
       for (k = strlen (table); k >= 0; k--)
 	if (table[k] == ud->file_separator)
 	  break;
+	strcpy (currentTableName, &table[k + 1];
       xmlNewProp (brlNode, (xmlChar *) "changetable", (xmlChar
-						       *) & table[k + 1]);
+						       *)currentTableName);
       currentTable = table;
-    }
+ }
   translatedLength = MAX_TRANS_LENGTH - ud->translated_length;
   translationLength = ud->text_length;
   k = lou_translate (table,
@@ -4153,9 +4154,9 @@ setNewlineProp (int horizLinePos)
 {
   char position[MAXNUMLEN];
   sprintf (position, "%d,%d", (CELLWIDTH * horizLinePos +
-			       ud->page_left), vertLinePos);
+			       ud->page_left), ud->vert_line_pos);
   xmlNewProp (newlineNode, (xmlChar *) "xy", (xmlChar *) position);
-  vertLinePos += lineWidth;
+  ud->vert_line_pos += lineWidth;
   return 1;
 }
 
@@ -4166,8 +4167,6 @@ utd_startLine ()
   while (availableCells == 0)
     {
       setNewlineNode ();
-      if (!ud->braille_pages)
-	return ud->cells_per_line;
       ud->lines_on_page++;
       getPageNumber ();
       if (ud->lines_on_page == 1)
@@ -4214,8 +4213,6 @@ utd_finishLine (int leadingBlanks, int length)
 	  utd_startLine ();
 	  setNewlineProp (0);
 	}
-      if (ud->braille_pages)
-	{
 	  if (cellsOnLine > 0 && pageNumberLength > 0)
 	    {
 	      cellsToWrite =
@@ -4286,10 +4283,9 @@ utd_finishLine (int leadingBlanks, int length)
 	  ud->lines_on_page = 0;
 	  ud->braille_page_number++;
 	  lineWidth = NORMALLINE;
-	  vertLinePos = ud->page_top;
+	  ud->vert_line_pos = ud->page_top;
 	  makeNewpage (brlNode);
 	}
-    }
   return 1;
 }
 
@@ -4401,8 +4397,6 @@ utd_makeBlankLines (int number, int beforeAfter)
   int k;
   if (number == 0)
     return 1;
-  if (ud->braille_pages)
-    {
       if (beforeAfter == 0 && (ud->lines_on_page == 0 ||
 			       prevStyle->lines_after > 0
 			       || prevStyle->action == document))
@@ -4411,13 +4405,6 @@ utd_makeBlankLines (int number, int beforeAfter)
 	if (beforeAfter == 1
 	    && (ud->lines_per_page - ud->lines_on_page - number) < 2)
 	return 1;
-    }
-  else
-    {
-      if (beforeAfter == 0
-	  && (prevStyle->lines_after || prevStyle->action == document))
-	return 1;
-    }
   for (k = 0; k < number; k++)
     {
       availableCells = utd_startLine ();
@@ -4430,10 +4417,8 @@ utd_makeBlankLines (int number, int beforeAfter)
 static int
 utd_fillPage ()
 {
-  if (!ud->braille_pages)
-    return 1;
   ud->lines_on_page = ud->lines_per_page - 1;
-  vertLinePos = ud->page_top + NORMALLINE * ud->lines_per_page;
+  ud->vert_line_pos = ud->page_top + NORMALLINE * ud->lines_per_page;
   utd_startLine ();
   utd_finishLine (0, 0);
   return 1;
@@ -4850,12 +4835,12 @@ utd_startStyle ()
       if (style->action == document)
 	{
 	  documentNode = styleSpec->node;
-	  vertLinePos = ud->page_top;
+	  ud->vert_line_pos = ud->page_top;
 	  makeNewpage (brlNode);
 	  return 1;
 	}
     }
-  if (ud->braille_pages && prevStyle->action != document)
+  if (prevStyle->action != document)
     {
       if (style->righthand_page)
 	{
@@ -4867,7 +4852,8 @@ utd_startStyle ()
 	utd_fillPage ();
       else
 	if (style->lines_before > 0
-	    && prevStyle->lines_after == 0 && ud->lines_on_page > 0)
+	    && prevStyle->lines_after == 0 && ud->vert_line_pos == 
+	    ud->page_top)
 	{
 	  if ((ud->lines_per_page - ud->lines_on_page) < 2)
 	    utd_fillPage ();
@@ -4933,7 +4919,7 @@ utd_styleBody ()
     }
   if (ud->contents == 1)
     {
-      if (ud->braille_pages && ud->braille_page_number_at
+      if (ud->braille_page_number_at
 	  && (action == heading1 || action == heading2
 	      || action == heading3 || action == heading4))
 	getBraillePageString ();
@@ -4972,8 +4958,6 @@ utd_styleBody ()
 static int
 utd_finishStyle ()
 {
-  if (ud->braille_pages)
-    {
       if (style->newpage_after)
 	utd_fillPage ();
       else if (style->lines_after > 0)
@@ -4986,20 +4970,12 @@ utd_finishStyle ()
 		return 0;
 	    }
 	}
-    }
-  else
-    {
-      if (style->lines_after)
-	{
-	  if (!utd_makeBlankLines (style->lines_after, 1))
-	    return 0;
-	}
-    }
   brlNode = firstBrlNode = NULL;
   return 1;
 }
 
 static int makeVolumes ();
+
 static int
 utd_finish ()
 {
@@ -5014,7 +4990,6 @@ utd_finish ()
 	insert_translation (ud->main_braille_table);
       if (ud->translated_length != 0)
 	write_paragraph (para, NULL);
-      if (ud->braille_pages)
 	utd_fillPage ();
       if (ud->contents)
 	{
@@ -5029,11 +5004,16 @@ utd_finish ()
     {
       newNode = xmlNewNode (NULL, (xmlChar *) "meta");
       xmlNewProp (newNode, (xmlChar *) "name", (xmlChar *) "utd");
-      sprintf (utilStringBuf, "braillePageNumber=%d,\
-topMargin=%d,\
-leftMargin=%d,\
-cellsPerLine=%d,\
-linesPerPage=%d", ud->braille_page_number, ud->top_margin, ud->left_margin, ud->cells_per_line, ud->lines_per_page);
+      sprintf (utilStringBuf,
+"braillePageNumber=%d \
+paperWidth=%d \
+paperHeight=%d \
+leftMargin=%d \
+rightMargin=%d \
+topMargin=%d \
+bottomMargin=%d",
+ ud->braille_page_number, ud->paper_width, ud->paper_height, 
+ ud->left_margin, ud->right_margin, ud->top_margin, ud->bottom_margin);
       xmlNewProp (newNode, (xmlChar *) "content", (xmlChar *) utilStringBuf);
       xmlAddChild (ud->head_node, newNode);
     }
