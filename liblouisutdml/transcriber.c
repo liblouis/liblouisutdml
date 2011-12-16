@@ -1528,10 +1528,8 @@ writeBuffer (int from, int skip)
   int buffer_to_len;
   int *buffer_from_len_so_far;
   int *buffer_to_len_so_far;
-
   int k;
   unsigned char *utf8Str;
-
   switch (from)
     {
     case 1:
@@ -1562,7 +1560,6 @@ writeBuffer (int from, int skip)
     default:
       return 0;
     }
-
   switch (to)
     {
     case 0:
@@ -1616,7 +1613,6 @@ writeBuffer (int from, int skip)
     default:
       return 0;
     }
-
   if (*buffer_from_len_so_far == 0)
     return 1;
   if ((*buffer_to_len_so_far + *buffer_from_len_so_far) >= buffer_to_len)
@@ -1624,9 +1620,7 @@ writeBuffer (int from, int skip)
   for (k = 0; k < *buffer_from_len_so_far; k++)
     buffer_to[(*buffer_to_len_so_far)++] = buffer_from[k];
   *buffer_from_len_so_far = 0;
-
   return 1;
-
 }
 
 static widechar *translatedBuffer;
@@ -3688,12 +3682,34 @@ makeDotsTextNode (xmlNode * node, const widechar * content, int length,
     return 1;
   if (ud->mode & notUC)
     {
+      int k;
       if (kind)
-	memcpy (ud->text_buffer, content, length * CHARSIZE);
+	memcpy (ud->outbuf1, content, length * CHARSIZE);
       else
-	lou_dotsToChar (currentTable, (char *)content, ud->text_buffer, 
-	length, 0);
-      inlen = length;
+	lou_dotsToChar (currentTable, (char *) content, ud->outbuf1,
+			length, 0);
+      inlen = 0;
+      for (k = 0; k < length; k++)
+	{
+	  if (ud->outbuf1[k] == '<' || ud->outbuf1[k] == '&')
+	    {
+	      ud->text_buffer[inlen++] = '&';
+	      if (ud->outbuf1[k] == '<')
+		{
+		  ud->text_buffer[inlen++] = 'l';
+		  ud->text_buffer[inlen++] = 't';
+		}
+	      else
+		{
+		  ud->text_buffer[inlen++] = 'a';
+		  ud->text_buffer[inlen++] = 'm';
+		  ud->text_buffer[inlen++] = 'p';
+		}
+	      ud->text_buffer[inlen++] = ';';
+	    }
+	  else
+	    ud->text_buffer[inlen++] = ud->outbuf1[k];
+	}
     }
   else
     {
@@ -3905,6 +3921,8 @@ assignIndices ()
   int prevSegment = 0;
   int curPos = 0;
   xmlNode *curBrlNode;
+  if (indices == NULL)
+    return 1;
   if (firstBrlNode == NULL)
     return 0;
   curBrlNode = firstBrlNode;
@@ -4038,21 +4056,25 @@ utd_insert_translation (const char *table)
   int translationLength;
   int translatedLength;
   int k;
-  char newTable[MAXNAMELEN];
-  if (indices == NULL)
+  int *setIndices;
+  if (!(ud->mode & notSync) && indices == NULL)
     indices = malloc (MAX_TRANS_LENGTH * sizeof (int));
   if (table != currentTable)
     {
       for (k = strlen (table); k >= 0; k--)
 	if (table[k] == ud->file_separator)
 	  break;
-	strcpy (currentTableName, &table[k + 1];
+      strcpy (currentTableName, &table[k + 1]);
       xmlNewProp (brlNode, (xmlChar *) "changetable", (xmlChar
-						       *)currentTableName);
+						       *) currentTableName);
       currentTable = table;
- }
+    }
   translatedLength = MAX_TRANS_LENGTH - ud->translated_length;
   translationLength = ud->text_length;
+  if (indices != NULL)
+  setIndices = &indices[ud->translated_length];
+  else
+  setIndices = NULL;
   k = lou_translate (table,
 		     ud->text_buffer,
 		     &translationLength,
@@ -4060,7 +4082,9 @@ utd_insert_translation (const char *table)
 		     translated_buffer[ud->translated_length],
 		     &translatedLength,
 		     (char *) ud->typeform, NULL, NULL,
-		     &indices[ud->translated_length], NULL, dotsIO);
+		     setIndices,
+		      NULL, 
+		     dotsIO);
   memset (ud->typeform, 0, sizeof (ud->typeform));
   ud->text_length = 0;
   if (!k)
@@ -4204,7 +4228,7 @@ utd_finishLine (int leadingBlanks, int length)
   int cellsToWrite = 0;
   int k;
   int leaveBlank;
-  int horizLinePos = leadingBlanks;
+  int horizLinePos = ud->page_left + leadingBlanks * CELLWIDTH;
   cellsOnLine = leadingBlanks + length;
   for (leaveBlank = -1; leaveBlank < ud->line_spacing; leaveBlank++)
     {
@@ -4213,79 +4237,76 @@ utd_finishLine (int leadingBlanks, int length)
 	  utd_startLine ();
 	  setNewlineProp (0);
 	}
-	  if (cellsOnLine > 0 && pageNumberLength > 0)
+      if (cellsOnLine > 0 && pageNumberLength > 0)
+	{
+	  cellsToWrite = ud->cells_per_line - pageNumberLength - cellsOnLine;
+	  if (!spaceOut (cellsToWrite, pageNumberString, pageNumberLength))
+	    return 0;
+	}
+      else if (ud->vert_line_pos == ud->page_top)
+	{
+	  if (ud->running_head_length > 0)
 	    {
 	      cellsToWrite =
-		ud->cells_per_line - pageNumberLength - cellsOnLine;
-	      if (!spaceOut
-		  (cellsToWrite, pageNumberString, pageNumberLength))
+		minimum (ud->running_head_length,
+			 ud->cells_per_line - pageNumberLength);
+	      if (!shortBrlOnly (ud->running_head, cellsToWrite, 1))
 		return 0;
-	    }
-	  else if (ud->lines_on_page == 1)
-	    {
-	      if (ud->running_head_length > 0)
+	      if (pageNumberLength)
 		{
 		  cellsToWrite =
-		    minimum (ud->running_head_length,
-			     ud->cells_per_line - pageNumberLength);
-		  if (!shortBrlOnly (ud->running_head, cellsToWrite, 1))
+		    ud->cells_per_line - pageNumberLength - cellsOnLine;
+		  if (!spaceOut
+		      (cellsToWrite, pageNumberString, pageNumberLength))
 		    return 0;
-		  if (pageNumberLength)
-		    {
-		      cellsToWrite =
-			ud->cells_per_line - pageNumberLength - cellsOnLine;
-		      if (!spaceOut
-			  (cellsToWrite, pageNumberString, pageNumberLength))
-			return 0;
-		    }
-		}
-	      else
-		{
-		  if (pageNumberLength)
-		    {
-		      cellsToWrite = ud->cells_per_line - pageNumberLength;
-		      if (!spaceOut
-			  (cellsToWrite, pageNumberString, pageNumberLength))
-			return 0;
-		    }
 		}
 	    }
-	  else if (ud->lines_on_page == ud->lines_per_page)
+	  else
 	    {
-	      if (ud->footer_length > 0)
+	      if (pageNumberLength)
 		{
-		  cellsToWrite =
-		    minimum (ud->footer_length,
-			     ud->cells_per_line - pageNumberLength);
-		  if (!shortBrlOnly (ud->footer, cellsToWrite, 1))
+		  cellsToWrite = ud->cells_per_line - pageNumberLength;
+		  if (!spaceOut
+		      (cellsToWrite, pageNumberString, pageNumberLength))
 		    return 0;
-		  if (pageNumberLength)
-		    {
-		      cellsToWrite =
-			ud->cells_per_line - pageNumberLength - cellsOnLine;
-		    }
-		}
-	      else
-		{
-		  if (pageNumberLength)
-		    {
-		      horizLinePos = ud->cells_per_line - pageNumberLength;
-		      if (!spaceOut
-			  (horizLinePos, pageNumberString, pageNumberLength))
-			return 0;
-		    }
 		}
 	    }
 	}
-      setNewlineProp (horizLinePos);
-      if (ud->braille_pages && ud->lines_on_page == ud->lines_per_page)
+      else if (ud->vert_line_pos == ud->page_bottom)
 	{
-	  ud->lines_on_page = 0;
-	  ud->braille_page_number++;
-	  lineWidth = NORMALLINE;
-	  ud->vert_line_pos = ud->page_top;
-	  makeNewpage (brlNode);
+	  if (ud->footer_length > 0)
+	    {
+	      cellsToWrite =
+		minimum (ud->footer_length,
+			 ud->cells_per_line - pageNumberLength);
+	      if (!shortBrlOnly (ud->footer, cellsToWrite, 1))
+		return 0;
+	      if (pageNumberLength)
+		{
+		  cellsToWrite =
+		    ud->cells_per_line - pageNumberLength - cellsOnLine;
+		}
+	    }
+	  else
+	    {
+	      if (pageNumberLength)
+		{
+		  horizLinePos = ud->cells_per_line - pageNumberLength;
+		  if (!spaceOut
+		      (horizLinePos, pageNumberString, pageNumberLength))
+		    return 0;
+		}
+	    }
 	}
+    }
+  setNewlineProp (horizLinePos);
+  if (ud->vert_line_pos >= ud->page_bottom)
+    {
+      ud->braille_page_number++;
+      lineWidth = NORMALLINE;
+      ud->vert_line_pos = ud->page_top;
+      makeNewpage (brlNode);
+    }
   return 1;
 }
 
@@ -4397,14 +4418,14 @@ utd_makeBlankLines (int number, int beforeAfter)
   int k;
   if (number == 0)
     return 1;
-      if (beforeAfter == 0 && (ud->lines_on_page == 0 ||
-			       prevStyle->lines_after > 0
-			       || prevStyle->action == document))
-	return 1;
-      else
-	if (beforeAfter == 1
-	    && (ud->lines_per_page - ud->lines_on_page - number) < 2)
-	return 1;
+  if (beforeAfter == 0 && (ud->lines_on_page == 0 ||
+			   prevStyle->lines_after > 0
+			   || prevStyle->action == document))
+    return 1;
+  else
+    if (beforeAfter == 1
+	&& (ud->lines_per_page - ud->lines_on_page - number) < 2)
+    return 1;
   for (k = 0; k < number; k++)
     {
       availableCells = utd_startLine ();
@@ -4852,7 +4873,7 @@ utd_startStyle ()
 	utd_fillPage ();
       else
 	if (style->lines_before > 0
-	    && prevStyle->lines_after == 0 && ud->vert_line_pos == 
+	    && prevStyle->lines_after == 0 && ud->vert_line_pos ==
 	    ud->page_top)
 	{
 	  if ((ud->lines_per_page - ud->lines_on_page) < 2)
@@ -4958,18 +4979,18 @@ utd_styleBody ()
 static int
 utd_finishStyle ()
 {
-      if (style->newpage_after)
+  if (style->newpage_after)
+    utd_fillPage ();
+  else if (style->lines_after > 0)
+    {
+      if ((ud->lines_per_page - ud->lines_on_page) < 2)
 	utd_fillPage ();
-      else if (style->lines_after > 0)
+      else
 	{
-	  if ((ud->lines_per_page - ud->lines_on_page) < 2)
-	    utd_fillPage ();
-	  else
-	    {
-	      if (!utd_makeBlankLines (style->lines_after, 1))
-		return 0;
-	    }
+	  if (!utd_makeBlankLines (style->lines_after, 1))
+	    return 0;
 	}
+    }
   brlNode = firstBrlNode = NULL;
   return 1;
 }
@@ -4990,7 +5011,7 @@ utd_finish ()
 	insert_translation (ud->main_braille_table);
       if (ud->translated_length != 0)
 	write_paragraph (para, NULL);
-	utd_fillPage ();
+      utd_fillPage ();
       if (ud->contents)
 	{
 	  containsContents = xmlNewNode (NULL, (xmlChar *) "brl");
@@ -5004,16 +5025,13 @@ utd_finish ()
     {
       newNode = xmlNewNode (NULL, (xmlChar *) "meta");
       xmlNewProp (newNode, (xmlChar *) "name", (xmlChar *) "utd");
-      sprintf (utilStringBuf,
-"braillePageNumber=%d \
+      sprintf (utilStringBuf, "braillePageNumber=%d \
 paperWidth=%d \
 paperHeight=%d \
 leftMargin=%d \
 rightMargin=%d \
 topMargin=%d \
-bottomMargin=%d",
- ud->braille_page_number, ud->paper_width, ud->paper_height, 
- ud->left_margin, ud->right_margin, ud->top_margin, ud->bottom_margin);
+bottomMargin=%d", ud->braille_page_number, ud->paper_width, ud->paper_height, ud->left_margin, ud->right_margin, ud->top_margin, ud->bottom_margin);
       xmlNewProp (newNode, (xmlChar *) "content", (xmlChar *) utilStringBuf);
       xmlAddChild (ud->head_node, newNode);
     }

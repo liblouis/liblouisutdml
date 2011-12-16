@@ -2,7 +2,7 @@ lbu_filesdir = $(datadir)/liblouisutdml/lbu_files
 
 lbu_files_DATA = \
 	doc.sem \
-	makeutd.cfg \
+	sample-utd.cfg \
 	viewutd.cfg \
 	viewutd.ctb \
 	volumes.cfg \
@@ -10,7 +10,6 @@ lbu_files_DATA = \
 	marburg.sem \
 	article.sem \
 	book.sem \
-	liblouisutdml.ini \
 	chapter.sem \
 	preferences.cfg \
 	dtbook.sem \
