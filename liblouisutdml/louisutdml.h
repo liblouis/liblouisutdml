@@ -124,7 +124,9 @@ typedef enum
   textDevice = 0,
   browser,
   utd,
-  pef
+  pef,
+  transInXml,
+  volumes
 } FormatFor;
 
 typedef enum

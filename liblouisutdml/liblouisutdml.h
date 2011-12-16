@@ -69,9 +69,10 @@ include louisutdml.h */
 * bits,*/
   typedef enum
   {
-    dontInit = 1 << 30,
+    doInit = 1 << 30,
     htmlDoc = 1 << 29,
-    notUC = 1 << 28
+    notUC = 1 << 28,
+    notSync = 1<<27
   } ProcessingModes;
 
   int EXPORT_CALL lbu_translateString

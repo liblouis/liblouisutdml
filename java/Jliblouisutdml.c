@@ -674,7 +674,7 @@ JNIEXPORT jboolean JNICALL Java_org_liblouis_liblouisutdml_file2brl
   (JNIEnv * env, jobject obj, jobjectArray args)
 {
   jint numArgs = (*env)->GetArrayLength (env, args);
-  int mode = dontInit;
+  int mode = 0;
   char configFileList[MAXNAMELEN];
   char inputFileName[MAXNAMELEN];
   char outputFileName[MAXNAMELEN];

@@ -639,6 +639,8 @@ compileConfig (FileInfo * nested)
     "browser", "1",
     "utd", "2",
     "pef", "3",
+    "transInXml", "4",
+    "volumes", "5",
     NULL
   };
 
@@ -661,9 +663,10 @@ compileConfig (FileInfo * nested)
     "otherTrans", "64",
     "ucBrl", "128",
     /*liblouisutdml modes */
-    "dontInit", "1073741824",
+    "doInit", "1073741824",
     "htmlDoc", "536870912",
     "notUC", "286435456",
+    "notSync", "134217728",
     NULL
   };
 
@@ -1118,7 +1121,7 @@ read_configuration_file (const char *configFileList, const char
   /*Process logFileName later, after writeablePath is set */
   if ((configFileList != NULL && strcmp (configFileList,
 					 lastConfigFileList) == 0)
-      || mode & dontInit)
+      && !(mode & doInit))
     {
       ud->has_comp_code = 0;
       ud->has_math = 0;
