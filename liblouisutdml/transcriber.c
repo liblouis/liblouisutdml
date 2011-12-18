@@ -3915,6 +3915,83 @@ insertTextFragment (widechar * content, int length)
   return 1;
 }
 
+typedef enum {
+topOfPage,
+lastLine,
+bottomOfPage,
+nearBottom
+} PageStatus;
+
+static PageStatus
+checkPageStatus ()
+{
+int remaining;
+if (ud->vert_line_pos = 0)
+return topOfPage;
+remaining = ud->page_bottom - ud->vert_line_pos;
+if (remaining < NORMALLINE)
+return bottomOfPage;
+if (remaining > NORMALLINE && remaining < (3 * NORMALLINE / 2))
+return lastLine;
+if (remaining > (2 * NORMALLINE) && remaining < (3 * NORMALLINE))
+return nearBottom;
+}
+
+static int
+utd_getPageNumber ()
+{
+  int k;
+  PageStatus pageStatus;
+  int braillePageNumber = 0;
+  int printPageNumber = 0;
+  pageNumberLength = 0;
+  pageStatus = checkPageStatus ();
+  if (pageStatus == topOfPage)
+   {
+      if (ud->print_pages && ud->print_page_number_at
+	  && ud->print_page_number_first[0] != '_')
+	{
+	  printPageNumber = 1;
+	}
+      if (!ud->braille_page_number_at
+	  && ud->cur_brl_page_num_format != blank)
+	{
+	  braillePageNumber = 1;
+	}
+    }
+  else if (pageStatus == bottomOfPage)
+    {
+      if (ud->print_pages && !ud->print_page_number_at
+	  && ud->print_page_number_first[0] != '_')
+	{
+	  printPageNumber = 1;
+	}
+      if (ud->braille_page_number_at
+	  && ud->cur_brl_page_num_format != blank)
+	{
+	  braillePageNumber = 1;
+	}
+    }
+  if (ud->interpoint && !(ud->braille_page_number & 1))
+    braillePageNumber = 0;
+  if (printPageNumber || braillePageNumber)
+    {
+      pageNumberString[pageNumberLength++] = ' ';
+      pageNumberString[pageNumberLength++] = ' ';
+      if (printPageNumber)
+	{
+	  pageNumberString[pageNumberLength++] = ' ';
+	  getPrintPageString ();
+	}
+      if (braillePageNumber)
+	{
+	  pageNumberString[pageNumberLength++] = ' ';
+	  getBraillePageString ();
+	}
+    }
+  return 1;
+}
+
 static int
 assignIndices ()
 {
@@ -4057,7 +4134,13 @@ utd_insert_translation (const char *table)
   int translatedLength;
   int k;
   int *setIndices;
-  if (!(ud->mode & notSync) && indices == NULL)
+  if (ud->mode & notSync)
+  {
+  if (indices!= NULL)
+  free (indices);
+  indices = NULL;
+  }
+  else if (indices == NULL)
     indices = malloc (MAX_TRANS_LENGTH * sizeof (int));
   if (table != currentTable)
     {
@@ -4188,12 +4271,14 @@ static int
 utd_startLine ()
 {
   int availableCells = 0;
+  PageStatus pageStatus;
   while (availableCells == 0)
     {
+      ud->vert_line_pos += lineWidth;
       setNewlineNode ();
-      ud->lines_on_page++;
-      getPageNumber ();
-      if (ud->lines_on_page == 1)
+      utd_getPageNumber ();
+      pageStatus = checkPageStatus ();
+      if (pageStatus == topOfPage)
 	{
 	  if (ud->running_head_length > 0
 	      || (style->skip_number_lines && pageNumberLength > 0))
@@ -4204,7 +4289,7 @@ utd_startLine ()
 	    }
 	  availableCells = ud->cells_per_line - pageNumberLength;
 	}
-      else if (ud->lines_on_page == ud->lines_per_page)
+      else if (pageStatus == bottomOfPage)
 	{
 	  if (ud->footer_length > 0 ||
 	      (style->skip_number_lines && pageNumberLength > 0))
@@ -4230,8 +4315,10 @@ utd_finishLine (int leadingBlanks, int length)
   int leaveBlank;
   int horizLinePos = ud->page_left + leadingBlanks * CELLWIDTH;
   cellsOnLine = leadingBlanks + length;
+  PageStatus pageStatus;
   for (leaveBlank = -1; leaveBlank < ud->line_spacing; leaveBlank++)
     {
+      pageStatus = checkPageStatus ();
       if (leaveBlank != -1)
 	{
 	  utd_startLine ();
@@ -4243,7 +4330,7 @@ utd_finishLine (int leadingBlanks, int length)
 	  if (!spaceOut (cellsToWrite, pageNumberString, pageNumberLength))
 	    return 0;
 	}
-      else if (ud->vert_line_pos == ud->page_top)
+      else if (pageStatus == topOfPage)
 	{
 	  if (ud->running_head_length > 0)
 	    {
@@ -4272,7 +4359,7 @@ utd_finishLine (int leadingBlanks, int length)
 		}
 	    }
 	}
-      else if (ud->vert_line_pos == ud->page_bottom)
+      else if (pageStatus == bottomOfPage)
 	{
 	  if (ud->footer_length > 0)
 	    {
@@ -4291,7 +4378,8 @@ utd_finishLine (int leadingBlanks, int length)
 	    {
 	      if (pageNumberLength)
 		{
-		  horizLinePos = ud->cells_per_line - pageNumberLength;
+		  horizLinePos = (ud->cells_per_line - 
+		  pageNumberLength) * CELLWIDTH;
 		  if (!spaceOut
 		      (horizLinePos, pageNumberString, pageNumberLength))
 		    return 0;
@@ -4300,7 +4388,8 @@ utd_finishLine (int leadingBlanks, int length)
 	}
     }
   setNewlineProp (horizLinePos);
-  if (ud->vert_line_pos >= ud->page_bottom)
+  pageStatus = checkPageStatus ();
+  if (pageStatus == bottomOfPage)
     {
       ud->braille_page_number++;
       lineWidth = NORMALLINE;
@@ -4311,18 +4400,18 @@ utd_finishLine (int leadingBlanks, int length)
 }
 
 static int
-hasIndex (xmlNode * node)
+hasText (xmlNode * node)
 {
-  xmlAttr *attributes = node->properties;
-  if (attributes == NULL)
-    return 0;
-  while (attributes)
-    {
-      if (strcmp ((char *) attributes->name, "index") == 0)
-	return 1;
-      attributes = attributes->next;
-    }
-  return 0;
+  int k;
+  xmlChar classAttrValue = xmlGetProp (node, (xmlChar *) "class");
+  if (classAttrValue == NULL)
+    return 1;
+  if (strcmp (classAttrValue, "notext") != 0)
+  k = 1;
+  else
+  k = 0;
+  xmlFree (classAttrValue);
+  return k;
 }
 
 static int
@@ -4339,7 +4428,7 @@ utd_doOrdinaryText ()
   brlNode = firstBrlNode;
   while (brlNode)
     {
-      if (!hasIndex (brlNode))
+      if (!hasText (brlNode))
 	{
 	  brlNode = brlNode->_private;
 	  if (brlNode == NULL)
@@ -4852,6 +4941,7 @@ utd_startStyle ()
       && styleSpec->node != NULL)
     {
       xmlNode *newNode = xmlNewNode (NULL, (xmlChar *) "brl");
+      xmlNewProp (newNode, (xmlChar *) "class", (xmlChar *) "notexxt");
       link_brl_node (xmlAddPrevSibling (styleSpec->node->children, newNode));
       if (style->action == document)
 	{
@@ -4863,6 +4953,7 @@ utd_startStyle ()
     }
   if (prevStyle->action != document)
     {
+      PageStatus pageStatus = checkPageStatus ();
       if (style->righthand_page)
 	{
 	  utd_fillPage ();
@@ -4873,10 +4964,10 @@ utd_startStyle ()
 	utd_fillPage ();
       else
 	if (style->lines_before > 0
-	    && prevStyle->lines_after == 0 && ud->vert_line_pos ==
-	    ud->page_top)
+	    && prevStyle->lines_after == 0 && 
+	    pageStatus == topOfPage)
 	{
-	  if ((ud->lines_per_page - ud->lines_on_page) < 2)
+	  if (pageStatus == nearBottom)
 	    utd_fillPage ();
 	  else if (!utd_makeBlankLines (style->lines_before, 0))
 	    return 0;
@@ -4979,11 +5070,12 @@ utd_styleBody ()
 static int
 utd_finishStyle ()
 {
+  PageStatus pageStatus = checkPageStatus ();
   if (style->newpage_after)
     utd_fillPage ();
   else if (style->lines_after > 0)
     {
-      if ((ud->lines_per_page - ud->lines_on_page) < 2)
+      if (pageStatus == nearBottom)
 	utd_fillPage ();
       else
 	{
@@ -4995,7 +5087,7 @@ utd_finishStyle ()
   return 1;
 }
 
-static int makeVolumes ();
+static int convert_utd ();
 
 static int
 utd_finish ()
@@ -5041,8 +5133,8 @@ bottomMargin=%d", ud->braille_page_number, ud->paper_width, ud->paper_height, ud
     free (backIndices);
   if (backBuf != NULL)
     free (backBuf);
-  if (ud->volume_sem)
-    makeVolumes ();
+  if (ud->orig_format_for != utd)
+    convert_utd ();
   else
     {
       if (ud->outFile)
@@ -5065,8 +5157,6 @@ bottomMargin=%d", ud->braille_page_number, ud->paper_width, ud->paper_height, ud
   return 1;
 }
 
-/* Functions for dividing a book into volumes */
-
 static int
 nullPrivate (xmlNode * node)
 {
@@ -5085,7 +5175,7 @@ nullPrivate (xmlNode * node)
 }
 
 static int
-makeVolumes ()
+convert_utd ()
 {
   xmlNode *rootElement = xmlDocGetRootElement (ud->doc);
   int haveSemanticFile;
@@ -5095,7 +5185,7 @@ makeVolumes ()
       return 0;
     }
   clean_semantic_table ();
-  ud->format_for = textDevice;
+  ud->format_for = ud->orig_format_for;
   ud->contains_utd = 1;
   ud->semantic_files = ud->volume_sem;
   haveSemanticFile = compile_semantic_table (rootElement);

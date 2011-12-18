@@ -169,9 +169,11 @@ typedef struct
   TextFormat back_text;
   int back_line_length;
   FormatFor format_for;
+  FormatFor orig_format_for;
   int contents;
   int has_contentsheader;
   unsigned int mode;
+  unsigned int orig_mode;
   unsigned int config_mode;
   translationModes louis_mode;
   int emphasis;
