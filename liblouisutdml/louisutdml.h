@@ -264,6 +264,9 @@ typedef struct
   const char *edit_table_name;
   const char *semantic_files;
   const char *volume_sem;
+  const char *pef_sem;
+  const char *brf_sem;
+  const char *transinxml_sem;
   widechar print_page_number[MAXNUMLEN];
   widechar braille_page_string[MAXNUMLEN];
   char lineEnd[8];

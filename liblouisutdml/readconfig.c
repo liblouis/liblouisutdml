@@ -102,8 +102,8 @@ alloc_string_if_not (const char *inString)
 {
   int alreadyStored = inString - ud->string_buffer;
   if (alreadyStored >= 0 && alreadyStored < ud->string_buf_len)
-    return (char *)inString;
-  return (char *)alloc_string (inString);
+    return (char *) inString;
+  return (char *) alloc_string (inString);
 }
 
 int
@@ -439,27 +439,67 @@ checkValues (FileInfo * nested, const char **values)
   return atoi (values[k + 1]);
 }
 
+static unsigned int
+hexValue (FileInfo * nested, const char *digits)
+{
+  int length = strlen (digits);
+  int k;
+  unsigned int binaryValue = 0;
+  for (k = 0; k < length; k++)
+    {
+      unsigned int hexDigit = 0;
+      if (digits[k] >= '0' && digits[k] <= '9')
+	hexDigit = digits[k] - '0';
+      else if (digits[k] >= 'a' && digits[k] <= 'f')
+	hexDigit = digits[k] - 'a' + 10;
+      else if (digits[k] >= 'A' && digits[k] <= 'F')
+	hexDigit = digits[k] - 'A' + 10;
+      else
+	{
+	  configureError (nested, "invalid %d-digit hexadecimal number",
+			  length);
+	  return 0xffffffff;
+	}
+      binaryValue |= hexDigit << (4 * (length - 1 - k));
+    }
+  return binaryValue;
+}
+
+static unsigned int
+convertValue (FileInfo *nested, const char *number)
+{
+  if (number[0] == '0' && number[1] == 'x')
+    return hexValue (nested, &number[2]);
+  else if (number[0] == '1' && number[1] == '<')
+    {
+      int shift = atoi (&number[3]);
+      return 1 << shift;
+    }
+  else
+    return atoi (number);
+}
+
 static int
 orValues (FileInfo * nested, const char **values)
 {
   int result = 0;
   int k;
   int word = 0;
-  int wordLength = 0;
+  int wordLength;
   while (word < nested->valueLength)
     {
-      for (; word < nested->valueLength && nested->value[word] <= ' '
-	   && nested->value[word] != ','; word++);
-      for (wordLength = 0; (word + wordLength) < nested->valueLength &&
-	   nested->value[word + wordLength] > ' '; wordLength++);
+      for (wordLength = 0; (word + wordLength) < nested->valueLength && 
+      nested->value[word + wordLength] 
+      > ' '
+	   && nested->value[word + wordLength] != ','; wordLength++);
       for (k = 0; values[k]; k += 2)
 	if (wordLength == strlen (values[k]) &&
 	    ignoreCaseComp (values[k], &nested->value[word], wordLength) == 0)
 	  {
-	    result |= atoi (values[k + 1]);
+	    result |= convertValue (nested, values[k + 1]);
 	    break;
 	  }
-      word += wordLength;
+      word += wordLength + 1;
     }
   if (result == 0)
     {
@@ -617,6 +657,12 @@ compileConfig (FileInfo * nested)
     "55",
     "mode",
     "56",
+    "pefSem",
+    "57",
+    "transinxmlSem",
+    "58",
+    "brfSem",
+    "59",
     "style",
     "90",
     NULL
@@ -663,10 +709,10 @@ compileConfig (FileInfo * nested)
     "otherTrans", "64",
     "ucBrl", "128",
     /*liblouisutdml modes */
-    "doInit", "1073741824",
-    "htmlDoc", "536870912",
-    "notUC", "286435456",
-    "notSync", "134217728",
+    "doInit", "1<<30",
+    "htmlDoc", "1<<29",
+    "notUC", "1<<28",
+    "notSync", "1<<27",
     NULL
   };
 
@@ -853,7 +899,6 @@ compileConfig (FileInfo * nested)
 	  break;
 	case 38:
 	  ud->volume_sem = alloc_string (nested->value);
-	  ud->format_for = utd;
 	  break;
 	case 39:
 	  ud->braille_page_number = atoi (nested->value);
@@ -923,6 +968,15 @@ compileConfig (FileInfo * nested)
 	case 56:
 	  if ((k = orValues (nested, configModes)) != NOTFOUND)
 	    ud->config_mode = k;
+	  break;
+	case 57:
+	  ud->pef_sem = alloc_string (nested->value);
+	  break;
+	case 58:
+	  ud->transinxml_sem = alloc_string (nested->value);
+	  break;
+	case 59:
+	  ud->brf_sem = alloc_string (nested->value);
 	  break;
 	case 90:
 	  {
@@ -1246,6 +1300,7 @@ read_configuration_file (const char *configFileList, const char
   if (entities)
     strcat (ud->xml_header, "]>\n");
   ud->mode = mode | ud->config_mode;
+  ud->orig_format_for = ud->format_for;
   if (ud->format_for == utd)
     {
       const double dpi = 20.0;
@@ -1274,9 +1329,7 @@ read_configuration_file (const char *configFileList, const char
 	  return 0;
 	}
       ud->cells_per_line = (ud->page_right - ud->page_left) / CELLWIDTH;
-      ud->lines_on_page = (ud->page_bottom -ud->page_top) / NORMALLINE;
-      ud->braille_pages = 1;
-      ud->paragraphs = 1;
+      ud->lines_on_page = (ud->page_bottom - ud->page_top) / NORMALLINE;
       ud->back_text = textDevice;
       ud->back_line_length = 70;
     }
