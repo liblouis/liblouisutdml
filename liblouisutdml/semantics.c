@@ -913,7 +913,7 @@ compile_semantic_table (xmlNode * rootElement)
   numEntries = 0;
   rootName = rootElement->name;
   xpathCtx = xmlXPathNewContext (rootElement->doc);
-  if (*ud->semantic_files)
+  if (ud->semantic_files != NULL)
     {
       /*Process file list */
       int listLength;

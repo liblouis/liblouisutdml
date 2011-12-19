@@ -4403,7 +4403,7 @@ static int
 hasText (xmlNode * node)
 {
   int k;
-  xmlChar classAttrValue = xmlGetProp (node, (xmlChar *) "class");
+  xmlChar *classAttrValue = xmlGetProp (node, (xmlChar *) "class");
   if (classAttrValue == NULL)
     return 1;
   if (strcmp (classAttrValue, "notext") != 0)
@@ -5097,8 +5097,6 @@ utd_finish ()
   brlNode = xmlAddChild (documentNode, newNode);
   if (ud->style_top < 0)
     ud->style_top = 0;
-  if (indices != NULL)
-    {
       if (ud->text_length != 0)
 	insert_translation (ud->main_braille_table);
       if (ud->translated_length != 0)
@@ -5112,7 +5110,6 @@ utd_finish ()
 	  addContentsBlock = xmlAddChild (containsContents, newNode);
 	  make_contents ();
 	}
-    }
   if (ud->head_node)
     {
       newNode = xmlNewNode (NULL, (xmlChar *) "meta");
@@ -5145,7 +5142,10 @@ bottomMargin=%d", ud->braille_page_number, ud->paper_width, ud->paper_height, ud
 	  int dumpSize;
 	  xmlDocDumpMemory (ud->doc, &dumpLoc, &dumpSize);
 	  if (dumpSize > (CHARSIZE * ud->outlen))
+	  {
+	    lou_logPrint ("output buffer too small");
 	    ud->outlen_so_far = 0;
+	    }
 	  else
 	    {
 	      memcpy (ud->outbuf, dumpLoc, dumpSize);
