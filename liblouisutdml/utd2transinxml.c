@@ -50,7 +50,7 @@ doDotsText (xmlNode * node)
   ud->text_length = 0;
   insert_utf8 (node->content);
   if (!lou_dotsToChar (ud->main_braille_table, ud->text_buffer,
-		       ud->&outbuf1[ud->uotbuf1_len_so_far], 
+		       &ud->outbuf1[ud->outbuf1_len_so_far], 
 		       ud->text_length, ud->louis_mode))
     return 0;
   ud->outbuf1_len_so_far += ud->text_length;
@@ -60,7 +60,7 @@ doDotsText (xmlNode * node)
 static int
 doUtdbrlonly (xmlNode * node)
 {
-  utd2transInXml (node, skipChoicesBefore);
+  utd2transinxml (node, skipChoicesBefore);
   return 1;
 }
 
@@ -125,7 +125,7 @@ doUtdnewline (xmlNode * node)
 }
 
 int
-utd2transInXml (xmlNode * node, NodeAction action)
+utd2transinxml (xmlNode * node, NodeAction action)
 {
   xmlNode *child;
   if (node == NULL || ud->format_for == utd)
@@ -177,7 +177,7 @@ utd2transInXml (xmlNode * node, NodeAction action)
        switch (child->type)
 	{
 	case XML_ELEMENT_NODE:
-	  utd2transInXml (child, 1);
+	  utd2transinxml (child, 1);
 	  break;
 	case XML_TEXT_NODE:
 	  doDotsText (child);
