@@ -687,6 +687,7 @@ compileConfig (FileInfo * nested)
     "pef", "3",
     "transInXml", "4",
     "volumes", "5",
+    "brf", "6",
     NULL
   };
 

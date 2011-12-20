@@ -126,7 +126,8 @@ typedef enum
   utd,
   pef,
   transInXml,
-  volumes
+  volumes,
+  brf
 } FormatFor;
 
 typedef enum
@@ -361,4 +362,6 @@ int utf8_string_to_wc (const unsigned char *instr, int *inSize, widechar
 int *outSize);
 int wc_string_to_utf8 (const widechar * instr, int *inSize, unsigned
 		       char *outstr, int *outSize);
+void output_xml (xmlDoc *doc);
+int convert_utd ();
 #endif /*louisutdml_h */

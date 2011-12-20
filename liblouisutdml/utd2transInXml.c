@@ -35,78 +35,12 @@
 
 static char *blanks =
   "                                                            ";
-
-static int
-nullPrivate (xmlNode * node)
-{
-  xmlNode *child;
-  if (node == NULL)
-    return 0;
-  node->_private = NULL;
-  child = node->children;
-  while (child)
-    {
-      child->_private = NULL;
-      nullPrivate (child);
-      child = child->next;
-    }
-  return 1;
-}
-
-int
-convert_utd ()
-{
-  xmlNode *rootElement = xmlDocGetRootElement (ud->doc);
-  int haveSemanticFile;
-  if (rootElement == NULL)
-    {
-      lou_logPrint ("Document is empty");
-      return 0;
-    }
-  clean_semantic_table ();
-  ud->format_for = ud->orig_format_for;
-  ud->contains_utd = 1;
-  switch (ud->format_for)
-  {
-  case pef:
-  ud->semantic_files = ud->pef_sem;
-  break;
-  case transInXml:
-  ud->semantic_files = ud->transinxml_sem;
-  break;
-  case volumes:
-  ud->semantic_files = ud->volume_sem;
-  break;
-  case brf:
-  ud->semantic_files = brf_sem;
-  break;
-  default:
-  break;
-  }
-  if (ud->semantic_files == NULL)
-  {
-  lou_logPrint ("Missing semantic file");
-  return 0;
-  }
-  haveSemanticFile = compile_semantic_table (rootElement);
-  nullPrivate (rootElement);
-  do_xpath_expr ();
-  examine_document (rootElement);
-  append_new_entries ();
-  if (!haveSemanticFile)
-    return 0;
-  transcribe_document (rootElement);
-  return 1;
-}
-
 static int
 writeCharacters (const char *text, int length)
 {
   int k;
   for (k = 0; k < length; k++)
-    ud->outbuf[k] = text[k];
-  ud->outlen_so_far = length;
-  write_outbuf ();
+    ud->outbuf1[ud->outbuf1_len_so_far++] = text[k];
   return 1;
 }
 
@@ -116,17 +50,17 @@ doDotsText (xmlNode * node)
   ud->text_length = 0;
   insert_utf8 (node->content);
   if (!lou_dotsToChar (ud->main_braille_table, ud->text_buffer,
-		       ud->outbuf, ud->text_length, ud->louis_mode))
+		       ud->&outbuf1[ud->uotbuf1_len_so_far], 
+		       ud->text_length, ud->louis_mode))
     return 0;
-  ud->outlen_so_far = ud->text_length;
-  write_outbuf ();
+  ud->outbuf1_len_so_far += ud->text_length;
   return 1;
 }
 
 static int
 doUtdbrlonly (xmlNode * node)
 {
-  interpret_utd (node, skipChoicesBefore);
+  utd2transInXml (node, skipChoicesBefore);
   return 1;
 }
 
@@ -145,11 +79,12 @@ doUtdmeta (xmlNode * node)
     {
       if (attrValue[k] == '=')
 	configString[kk++] = ' ';
-      else if (attrValue[k] == ',')
+      else if (attrValue[k] == ' ')
 	configString[kk++] = '\n';
       else
 	configString[kk++] = (xmlChar) attrValue[k];
     }
+  xmlFree (attrValue);
   configString[kk] = 0;
   if (!config_compileSettings ((char *) configString))
     return 0;
@@ -190,7 +125,7 @@ doUtdnewline (xmlNode * node)
 }
 
 int
-interpret_utd (xmlNode * node, NodeAction action)
+utd2transInXml (xmlNode * node, NodeAction action)
 {
   xmlNode *child;
   if (node == NULL || ud->format_for == utd)
@@ -239,10 +174,10 @@ interpret_utd (xmlNode * node, NodeAction action)
   child = node->children;
   while (child)
     {
-      switch (child->type)
+       switch (child->type)
 	{
 	case XML_ELEMENT_NODE:
-	  interpret_utd (child, 1);
+	  utd2transInXml (child, 1);
 	  break;
 	case XML_TEXT_NODE:
 	  doDotsText (child);
