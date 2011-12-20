@@ -33,9 +33,6 @@
 #include <string.h>
 #include "louisutdml.h"
 
-static char *blanks =
-  "                                                            ";
-
 static int
 nullPrivate (xmlNode * node)
 {
@@ -67,27 +64,27 @@ convert_utd ()
   ud->format_for = ud->orig_format_for;
   ud->contains_utd = 1;
   switch (ud->format_for)
-  {
-  case pef:
-  ud->semantic_files = ud->pef_sem;
-  break;
-  case transInXml:
-  ud->semantic_files = ud->transinxml_sem;
-  break;
-  case volumes:
-  ud->semantic_files = ud->volume_sem;
-  break;
-  case brf:
-  ud->semantic_files = brf_sem;
-  break;
-  default:
-  break;
-  }
+    {
+    case pef:
+      ud->semantic_files = ud->pef_sem;
+      break;
+    case transinxml:
+      ud->semantic_files = ud->transinxml_sem;
+      break;
+    case volumes:
+      ud->semantic_files = ud->volume_sem;
+      break;
+    case brf:
+      ud->semantic_files = ud->brf_sem;
+      break;
+    default:
+      break;
+    }
   if (ud->semantic_files == NULL)
-  {
-  lou_logPrint ("Missing semantic file");
-  return 0;
-  }
+    {
+      lou_logPrint ("Missing semantic file");
+      return 0;
+    }
   haveSemanticFile = compile_semantic_table (rootElement);
   nullPrivate (rootElement);
   do_xpath_expr ();
@@ -99,159 +96,24 @@ convert_utd ()
   return 1;
 }
 
-static int
-writeCharacters (const char *text, int length)
-{
-  int k;
-  for (k = 0; k < length; k++)
-    ud->outbuf[k] = text[k];
-  ud->outlen_so_far = length;
-  write_outbuf ();
-  return 1;
-}
-
-static int
-doDotsText (xmlNode * node)
-{
-  ud->text_length = 0;
-  insert_utf8 (node->content);
-  if (!lou_dotsToChar (ud->main_braille_table, ud->text_buffer,
-		       ud->outbuf, ud->text_length, ud->louis_mode))
-    return 0;
-  ud->outlen_so_far = ud->text_length;
-  write_outbuf ();
-  return 1;
-}
-
-static int
-doUtdbrlonly (xmlNode * node)
-{
-  interpret_utd (node, skipChoicesBefore);
-  return 1;
-}
-
-static int skipFirstNew = 0;
-
-static int
-doUtdmeta (xmlNode * node)
-{
-  xmlChar *attrValue = xmlGetProp (node, (xmlChar *) "content");
-  int k;
-  int kk = 0;
-  xmlChar configString[2 * MAXNAMELEN];
-  skipFirstNew = 1;
-  configString[kk++] = ud->string_escape;
-  for (k = 0; attrValue[k] != 0; k++)
-    {
-      if (attrValue[k] == '=')
-	configString[kk++] = ' ';
-      else if (attrValue[k] == ',')
-	configString[kk++] = '\n';
-      else
-	configString[kk++] = (xmlChar) attrValue[k];
-    }
-  configString[kk] = 0;
-  if (!config_compileSettings ((char *) configString))
-    return 0;
-  return 1;
-}
-
-static int newpagePending = 0;
-
-static int
-doUtdnewpage (xmlNode * node)
-{
-  if (skipFirstNew)
-    return 1;
-  newpagePending = 1;
-  return 1;
-}
-
-static int
-doUtdnewline (xmlNode * node)
-{
-  char *xy;
-  int k;
-  int leadingBlanks;
-  if (skipFirstNew)
-    skipFirstNew = newpagePending = 0;
-  else
-    writeCharacters (ud->lineEnd, strlen (ud->lineEnd));
-  if (newpagePending)
-    {
-      writeCharacters (ud->pageEnd, strlen (ud->pageEnd));
-      newpagePending = 0;
-    }
-  xy = (char *) xmlGetProp (node, (xmlChar *) "xy");
-  for (k = 0; xy[k] != ','; k++);
-  leadingBlanks = (atoi (&xy[k + 1]) - ud->left_margin) / CELLWIDTH;
-  writeCharacters (blanks, leadingBlanks);
-  return 1;
-}
-
 int
 interpret_utd (xmlNode * node, NodeAction action)
 {
-  xmlNode *child;
-  if (node == NULL || ud->format_for == utd)
-    return 0;
-  if (!(action == skipChoicesBefore))
+  switch (ud->format_for)
     {
-      if (ud->top == 0)
-	action = otherCall;
-      if (action != firstCall)
-	push_sem_stack (node);
-      switch (ud->stack[ud->top])
-	{
-	case markhead:
-	  ud->head_node = node;
-	  pop_sem_stack ();
-	  break;
-	case utdmeta:
-	  doUtdmeta (node);
-	  if (action != firstCall)
-	    pop_sem_stack ();
-	  return 1;
-	case utdbrlonly:
-	  doUtdbrlonly (node);
-	  if (action != firstCall)
-	    pop_sem_stack ();
-	  return 1;
-	case utdnewpage:
-	  doUtdnewpage (node);
-	  if (action != firstCall)
-	    pop_sem_stack ();
-	  return 1;
-	case utdnewline:
-	  doUtdnewline (node);
-	  if (action != firstCall)
-	    pop_sem_stack ();
-	  return 1;
-	case utdgraphic:
-	  transcribe_graphic (node, firstCall);
-	  if (action != firstCall)
-	    pop_sem_stack ();
-	  return 1;
-	default:
-	  break;
-	}
+    case transinxml:
+      utd2transinxml (node, action);
+      break;
+    case brf:
+      utd2brf (node, action);
+      break;
+    case volumes:
+      utd2volumes (node, action);
+      break;
+    case pef:
+      utd2pef (node, action);
+      break;
+    default:
+      break;
     }
-  child = node->children;
-  while (child)
-    {
-      switch (child->type)
-	{
-	case XML_ELEMENT_NODE:
-	  interpret_utd (child, 1);
-	  break;
-	case XML_TEXT_NODE:
-	  doDotsText (child);
-	default:
-	  break;
-	}
-      child = child->next;
-    }
-  if (action != firstCall)
-    pop_sem_stack ();
-  return 1;
 }
