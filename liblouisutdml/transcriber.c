@@ -5087,7 +5087,30 @@ utd_finishStyle ()
   return 1;
 }
 
-static int convert_utd ();
+void
+output_xml (xmlDoc * doc)
+{
+  if (ud->outFile)
+    xmlDocDump (ud->outFile, doc);
+  else
+    {
+      xmlChar *dumpLoc;
+      int dumpSize;
+      xmlDocDumpMemory (doc, &dumpLoc, &dumpSize);
+      if (dumpSize > (CHARSIZE * ud->outlen))
+	{
+	  lou_logPrint ("output buffer too small");
+	  ud->outlen_so_far = 0;
+	}
+      else
+	{
+	  memcpy (ud->outbuf, dumpLoc, dumpSize);
+	  ud->outlen_so_far = dumpSize;
+	}
+      xmlFree (dumpLoc);
+    }
+  return;
+}
 
 static int
 utd_finish ()
@@ -5133,68 +5156,6 @@ bottomMargin=%d", ud->braille_page_number, ud->paper_width, ud->paper_height, ud
   if (ud->orig_format_for != utd)
     convert_utd ();
   else
-    {
-      if (ud->outFile)
-	xmlDocDump (ud->outFile, ud->doc);
-      else
-	{
-	  xmlChar *dumpLoc;
-	  int dumpSize;
-	  xmlDocDumpMemory (ud->doc, &dumpLoc, &dumpSize);
-	  if (dumpSize > (CHARSIZE * ud->outlen))
-	  {
-	    lou_logPrint ("output buffer too small");
-	    ud->outlen_so_far = 0;
-	    }
-	  else
-	    {
-	      memcpy (ud->outbuf, dumpLoc, dumpSize);
-	      ud->outlen_so_far = dumpSize;
-	    }
-	  xmlFree (dumpLoc);
-	}
-    }
-  return 1;
-}
-
-static int
-nullPrivate (xmlNode * node)
-{
-  xmlNode *child;
-  if (node == NULL)
-    return 0;
-  node->_private = NULL;
-  child = node->children;
-  while (child)
-    {
-      child->_private = NULL;
-      nullPrivate (child);
-      child = child->next;
-    }
-  return 1;
-}
-
-static int
-convert_utd ()
-{
-  xmlNode *rootElement = xmlDocGetRootElement (ud->doc);
-  int haveSemanticFile;
-  if (rootElement == NULL)
-    {
-      lou_logPrint ("Document is empty");
-      return 0;
-    }
-  clean_semantic_table ();
-  ud->format_for = ud->orig_format_for;
-  ud->contains_utd = 1;
-  ud->semantic_files = ud->volume_sem;
-  haveSemanticFile = compile_semantic_table (rootElement);
-  nullPrivate (rootElement);
-  do_xpath_expr ();
-  examine_document (rootElement);
-  append_new_entries ();
-  if (!haveSemanticFile)
-    return 0;
-  transcribe_document (rootElement);
+    output_xml (ud->doc);
   return 1;
 }

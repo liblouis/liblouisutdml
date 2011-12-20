@@ -42,6 +42,7 @@ liblouisutdml_la_SOURCES =			\
 	transcribe_music.c \
 	transcribe_paragraph.c \
 	interpret_utd.c \
+	utd2transInXml.c \
 	transcriber.c
 
 EXTRA_DIST = \
