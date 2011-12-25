@@ -93,6 +93,20 @@ convert_utd ()
   if (!haveSemanticFile)
     return 0;
   transcribe_document (rootElement);
+  switch (ud->format_for)
+    {
+    case brf:
+      break;
+    case transinxml:
+      output_xml (ud->doc);
+      break;
+    case pef:
+      break;
+    case volumes:
+      break;
+    default:
+      break;
+    }
   return 1;
 }
 
@@ -116,4 +130,5 @@ interpret_utd (xmlNode * node, NodeAction action)
     default:
       break;
     }
+  return 1;
 }
