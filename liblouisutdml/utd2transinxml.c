@@ -50,7 +50,7 @@ doDotsText (xmlNode * node)
   ud->text_length = 0;
   insert_utf8 (node->content);
   if (!lou_dotsToChar (ud->main_braille_table, ud->text_buffer,
-		       &ud->outbuf1[ud->outbuf1_len_so_far], 
+		       &ud->outbuf1[ud->outbuf1_len_so_far],
 		       ud->text_length, ud->louis_mode))
     return 0;
   ud->outbuf1_len_so_far += ud->text_length;
@@ -65,32 +65,6 @@ doUtdbrlonly (xmlNode * node)
 }
 
 static int skipFirstNew = 0;
-
-static int
-doUtdmeta (xmlNode * node)
-{
-  xmlChar *attrValue = xmlGetProp (node, (xmlChar *) "content");
-  int k;
-  int kk = 0;
-  xmlChar configString[2 * MAXNAMELEN];
-  skipFirstNew = 1;
-  configString[kk++] = ud->string_escape;
-  for (k = 0; attrValue[k] != 0; k++)
-    {
-      if (attrValue[k] == '=')
-	configString[kk++] = ' ';
-      else if (attrValue[k] == ' ')
-	configString[kk++] = '\n';
-      else
-	configString[kk++] = (xmlChar) attrValue[k];
-    }
-  xmlFree (attrValue);
-  configString[kk] = 0;
-  if (!config_compileSettings ((char *) configString))
-    return 0;
-  return 1;
-}
-
 static int newpagePending = 0;
 
 static int
@@ -128,7 +102,12 @@ int
 utd2transinxml (xmlNode * node, NodeAction action)
 {
   xmlNode *child;
-  if (node == NULL || ud->format_for == utd)
+  xmlNode *transNode;
+  xmlNode *oldText;
+  unsigned char *transText;
+  int wcLength;
+  int utf8Length;
+  if (node == NULL)
     return 0;
   if (!(action == skipChoicesBefore))
     {
@@ -138,14 +117,7 @@ utd2transinxml (xmlNode * node, NodeAction action)
 	push_sem_stack (node);
       switch (ud->stack[ud->top])
 	{
-	case markhead:
-	  ud->head_node = node;
-	  pop_sem_stack ();
-	  break;
 	case utdmeta:
-	  doUtdmeta (node);
-	  if (action != firstCall)
-	    pop_sem_stack ();
 	  return 1;
 	case utdbrlonly:
 	  doUtdbrlonly (node);
@@ -174,10 +146,10 @@ utd2transinxml (xmlNode * node, NodeAction action)
   child = node->children;
   while (child)
     {
-       switch (child->type)
+      switch (child->type)
 	{
 	case XML_ELEMENT_NODE:
-	  utd2transinxml (child, 1);
+	  utd2transinxml (child, otherCall);
 	  break;
 	case XML_TEXT_NODE:
 	  doDotsText (child);
@@ -187,6 +159,21 @@ utd2transinxml (xmlNode * node, NodeAction action)
       child = child->next;
     }
   if (action != firstCall)
-    pop_sem_stack ();
+    {
+      pop_sem_stack ();
+      return 1;
+    }
+  transText = (unsigned char *) ud->outbuf2;
+  wcLength = ud->outbuf1_len_so_far;
+  utf8Length = ud->outbuf2_len;
+  wc_string_to_utf8 (ud->outbuf1, &wcLength, transText, &utf8Length);
+  transText[utf8Length] = 0;
+  transNode = xmlNewText (transText);
+  oldText = node->prev;
+  xmlUnlinkNode (oldText);
+  xmlFree (oldText);
+  xmlAddPrevSibling (node, transNode);
+  xmlUnlinkNode (node);
+  xmlFree (node);
   return 1;
 }

@@ -3,6 +3,7 @@ lbu_filesdir = $(datadir)/liblouisutdml/lbu_files
 lbu_files_DATA = \
 	doc.sem \
 	sample-utd.cfg \
+	transinxml.cfg \
 	viewutd.cfg \
 	viewutd.ctb \
 	volumes.cfg \

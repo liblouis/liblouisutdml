@@ -1302,6 +1302,8 @@ read_configuration_file (const char *configFileList, const char
     strcat (ud->xml_header, "]>\n");
   ud->mode = mode | ud->config_mode;
   ud->orig_format_for = ud->format_for;
+  if (ud->format_for > browser)
+    ud->format_for = utd;
   if (ud->format_for == utd)
     {
       const double dpi = 20.0;
