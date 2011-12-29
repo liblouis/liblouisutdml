@@ -306,7 +306,6 @@ int transcribe_paragraph (xmlNode * node, int action);
 int transcribe_chemistry (xmlNode * node, int action);
 int transcribe_graphic (xmlNode * node, int action);
 int transcribe_music (xmlNode * node, int action);
-int interpret_utd (xmlNode * node, NodeAction action);
 int compile_semantic_table (xmlNode * rootElement);
 sem_act set_sem_attr (xmlNode * node);
 sem_act get_sem_attr (xmlNode * node);

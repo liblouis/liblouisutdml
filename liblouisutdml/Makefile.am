@@ -41,7 +41,7 @@ liblouisutdml_la_SOURCES =			\
 	transcribe_math.c \
 	transcribe_music.c \
 	transcribe_paragraph.c \
-	interpret_utd.c \
+	convert_utd.c \
 	utd2transinxml.c \
 	utd2brf.c \
 	utd2pef.c \

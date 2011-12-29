@@ -183,12 +183,6 @@ transcribe_paragraph (xmlNode * node, int action)
       ud->head_node = node;
       pop_sem_stack ();
       break;
-    case utdbrl:
-    case utdmeta:
-      interpret_utd (node, 0);
-      if (action != 0)
-	pop_sem_stack ();
-      return 1;
     case configtweak:
       do_configstring (node);
       break;
