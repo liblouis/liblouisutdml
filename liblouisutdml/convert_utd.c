@@ -92,40 +92,19 @@ convert_utd ()
   append_new_entries ();
   if (!haveSemanticFile)
     return 0;
-  transcribe_document (rootElement);
   switch (ud->format_for)
     {
     case brf:
+      utd2brf (rootElement);
       break;
     case transinxml:
-      output_xml (ud->doc);
+      utd2transinxml (rootElement);
       break;
     case pef:
+    utd2pef (rootElement);
       break;
     case volumes:
-      break;
-    default:
-      break;
-    }
-  return 1;
-}
-
-int
-interpret_utd (xmlNode * node, NodeAction action)
-{
-  switch (ud->format_for)
-    {
-    case transinxml:
-      utd2transinxml (node, action);
-      break;
-    case brf:
-      utd2brf (node, action);
-      break;
-    case volumes:
-      utd2volumes (node, action);
-      break;
-    case pef:
-      utd2pef (node, action);
+      utd2volumes (rootElement);
       break;
     default:
       break;
