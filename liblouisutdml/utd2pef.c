@@ -33,6 +33,68 @@
 #include <string.h>
 #include "louisutdml.h"
 
+static int walkTree (xmlNode *node);
+static int walkSubTree (xmlNode *node, int action);
+static int beginDocument ();
+static int endSubTree ();
+static int finishDocument ();
+
+int
+utd2pef (xmlNode * node)
+{
+  ud->top = -1;
+  ud->style_top = -1;
+  beginDocument ();
+  walkTree (node);
+  finishDocument ();
+  return 1;
+}
+
+static int
+beginDocument ()
+{
+}
+
+static int
+finishDocument ()
+{
+}
+
+static int
+walkTree (xmlNode *node)
+{
+xmlNode *child;
+if (node == NULL)
+return 0;
+  push_sem_stack (node);
+  switch (ud->stack[ud->top])
+    {
+    case utdbrl:
+    case utdmeta:
+      walkSubTree (node, 0);
+      return 1;
+    default:
+      break;
+    }
+      child = node->children;
+      while (child)
+	{
+	  switch (child->type)
+	    {
+	    case XML_ELEMENT_NODE:
+	      walkTree (child);
+	      break;
+	    case XML_TEXT_NODE:
+	      break;
+	    default:
+	      break;
+	    }
+	  child = child->next;
+	}
+pop_sem_stack ();
+return 1;
+}
+
 static char *blanks =
   "                                                            ";
 static int
@@ -40,9 +102,7 @@ writeCharacters (const char *text, int length)
 {
   int k;
   for (k = 0; k < length; k++)
-    ud->outbuf1[k] = text[k];
-  ud->outbuf1_len_so_far = length;
-  write_outbuf ();
+    ud->outbuf1[ud->outbuf1_len_so_far++] = text[k];
   return 1;
 }
 
@@ -52,46 +112,21 @@ doDotsText (xmlNode * node)
   ud->text_length = 0;
   insert_utf8 (node->content);
   if (!lou_dotsToChar (ud->main_braille_table, ud->text_buffer,
-		       ud->outbuf1, ud->text_length, ud->louis_mode))
+		       &ud->outbuf1[ud->outbuf1_len_so_far],
+		       ud->text_length, ud->louis_mode))
     return 0;
-  ud->outbuf1_len_so_far = ud->text_length;
-  write_outbuf ();
+  ud->outbuf1_len_so_far += ud->text_length;
   return 1;
 }
 
 static int
 doUtdbrlonly (xmlNode * node)
 {
-  utd2pef (node, skipChoicesBefore);
+  utd2transinxml (node);
   return 1;
 }
 
 static int skipFirstNew = 0;
-
-static int
-doUtdmeta (xmlNode * node)
-{
-  xmlChar *attrValue = xmlGetProp (node, (xmlChar *) "content");
-  int k;
-  int kk = 0;
-  xmlChar configString[2 * MAXNAMELEN];
-  skipFirstNew = 1;
-  configString[kk++] = ud->string_escape;
-  for (k = 0; attrValue[k] != 0; k++)
-    {
-      if (attrValue[k] == '=')
-	configString[kk++] = ' ';
-      else if (attrValue[k] == ',')
-	configString[kk++] = '\n';
-      else
-	configString[kk++] = (xmlChar) attrValue[k];
-    }
-  configString[kk] = 0;
-  if (!config_compileSettings ((char *) configString))
-    return 0;
-  return 1;
-}
-
 static int newpagePending = 0;
 
 static int
@@ -126,28 +161,28 @@ doUtdnewline (xmlNode * node)
 }
 
 int
-utd2pef (xmlNode * node, NodeAction action)
+walkSubTree (xmlNode * node, int action)
 {
   xmlNode *child;
-  if (node == NULL || ud->format_for == utd)
+  if (node == NULL)
     return 0;
-  if (!(action == skipChoicesBefore))
+  if (ud->top == 0)
+    action = 1;
+  if (action != 0)
+    push_sem_stack (node);
+  switch (ud->stack[ud->top])
     {
-      if (ud->top == 0)
-	action = otherCall;
-      if (action != firstCall)
-	push_sem_stack (node);
-      switch (ud->stack[ud->top])
-	{
-	case markhead:
-	  ud->head_node = node;
-	  pop_sem_stack ();
-	  break;
-	case utdmeta:
-	  doUtdmeta (node);
-	  if (action != firstCall)
-	    pop_sem_stack ();
-	  return 1;
+    case markhead:
+      if (ud->head_node == NULL)
+        ud->head_node = node;
+      pop_sem_stack ();
+      break;
+    case utdbrl:
+    case utdmeta:
+      walkSubTree (node, 0);
+      if (action != 0)
+	pop_sem_stack ();
+      return 1;
 	case utdbrlonly:
 	  doUtdbrlonly (node);
 	  if (action != firstCall)
@@ -168,9 +203,11 @@ utd2pef (xmlNode * node, NodeAction action)
 	  if (action != firstCall)
 	    pop_sem_stack ();
 	  return 1;
-	default:
-	  break;
-	}
+    case changetable:
+      change_table (node);
+      return 1;
+    default:
+      break;
     }
   child = node->children;
   while (child)
@@ -178,16 +215,25 @@ utd2pef (xmlNode * node, NodeAction action)
       switch (child->type)
 	{
 	case XML_ELEMENT_NODE:
-	  utd2pef (child, 1);
+	  walkSubTree (child, 1);
 	  break;
 	case XML_TEXT_NODE:
-	  doDotsText (child);
+	  break;
 	default:
 	  break;
 	}
-      child = child->next;
+	child = child->next;
     }
-  if (action != firstCall)
+  if (action != 0)
+{
     pop_sem_stack ();
   return 1;
+  }
+  endSubTree ();
+  return 1;
 }
+static int
+endSubTree ()
+{
+}
+

@@ -363,8 +363,8 @@ int wc_string_to_utf8 (const widechar * instr, int *inSize, unsigned
 		       char *outstr, int *outSize);
 void output_xml (xmlDoc *doc);
 int convert_utd ();
-int utd2brf (xmlNode * node, NodeAction action);
-int utd2pef (xmlNode * node, NodeAction action);
-int utd2transinxml (xmlNode * node, NodeAction action);
-int utd2volumes (xmlNode * node, NodeAction action);
+int utd2brf (xmlNode * node);
+int utd2pef (xmlNode * node);
+int utd2transinxml (xmlNode * node);
+int utd2volumes (xmlNode * node);
 #endif /*louisutdml_h */
