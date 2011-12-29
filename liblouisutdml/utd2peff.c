@@ -33,39 +33,18 @@
 #include <string.h>
 #include "louisutdml.h"
 
-static int walkTree (xmlNode *node);
 static int walkSubTree (xmlNode *node, int action);
-static int beginDocument ();
+static int startDocument ();
 static int endSubTree ();
-static int finishDocument ();
+static int endDocument ();
 
 int
-utd2transinxml (xmlNode * node)
+walkTree (xmlNode * node)
 {
+  xmlNode *child;
   ud->top = -1;
   ud->style_top = -1;
-  beginDocument ();
-  walkTree (node);
-  finishDocument ();
-  return 1;
-}
-
-static int
-beginDocument ()
-{
-}
-
-static int
-finishDocument ()
-{
-}
-
-static int
-walkTree (xmlNode *node)
-{
-xmlNode *child;
-if (node == NULL)
-return 0;
+  startDdocument ();
   push_sem_stack (node);
   switch (ud->stack[ud->top])
     {
@@ -82,7 +61,7 @@ return 0;
 	  switch (child->type)
 	    {
 	    case XML_ELEMENT_NODE:
-	      walkTree (child);
+	      walkSubtree (child, 0);
 	      break;
 	    case XML_TEXT_NODE:
 	      break;
@@ -91,8 +70,19 @@ return 0;
 	    }
 	  child = child->next;
 	}
-pop_sem_stack ();
-return 1;
+  endDocument ();
+  pop_sem_stack ();
+  return 1;
+}
+
+static int
+startDocument ()
+{
+}
+
+static int
+endDocument ()
+{
 }
 
 static char *blanks =
@@ -122,7 +112,7 @@ doDotsText (xmlNode * node)
 static int
 doUtdbrlonly (xmlNode * node)
 {
-  utd2transinxml (node);
+  utd2transinxml (node, skipChoicesBefore);
   return 1;
 }
 
@@ -179,10 +169,12 @@ walkSubTree (xmlNode * node, int action)
       break;
     case utdbrl:
     case utdmeta:
-      walkSubTree (node, 0);
+      interpret_utd (node, 0);
       if (action != 0)
 	pop_sem_stack ();
       return 1;
+	case utdmeta:
+	  return 1;
 	case utdbrlonly:
 	  doUtdbrlonly (node);
 	  if (action != firstCall)
