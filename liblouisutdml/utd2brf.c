@@ -33,11 +33,16 @@
 #include <string.h>
 #include "louisutdml.h"
 
-static int walkTree (xmlNode *node);
-static int walkSubTree (xmlNode *node, int action);
+static int findBrlNodes (xmlNode * node);
+static int doBrlNode (xmlNode * node, int action);
 static int beginDocument ();
-static int endSubTree ();
+static int finishBrlNode ();
 static int finishDocument ();
+static int doUtdbrlonly (xmlNode *node, int action);
+static int doUtdnewpage (xmlNode *node);
+static int doUtdnewline (xmlNode *node);
+static int doUtdgraphic (xmlNode *node);
+
 
 int
 utd2brf (xmlNode * node)
@@ -45,7 +50,7 @@ utd2brf (xmlNode * node)
   ud->top = -1;
   ud->style_top = -1;
   beginDocument ();
-  walkTree (node);
+  findBrlNodes (node);
   finishDocument ();
   return 1;
 }
@@ -58,41 +63,54 @@ beginDocument ()
 static int
 finishDocument ()
 {
+  output_xml (ud->doc);
 }
 
+static xmlNode *curNode;
+static int useNextNode;
+static xmlNode *nextNode;
+
 static int
-walkTree (xmlNode *node)
+findBrlNodes (xmlNode * node)
 {
-xmlNode *child;
-if (node == NULL)
-return 0;
+  xmlNode *child;
+  if (node == NULL)
+    return 0;
+  useNextNode = 0;
   push_sem_stack (node);
   switch (ud->stack[ud->top])
     {
-    case utdbrl:
     case utdmeta:
-      walkSubTree (node, 0);
+      return 1;
+    case utdbrl:
+      curNode = node;
+      doBrlNode (node, 0);
+      pop_sem_stack ();
       return 1;
     default:
       break;
     }
-      child = node->children;
-      while (child)
+  child = node->children;
+  while (child)
+    {
+      switch (child->type)
 	{
-	  switch (child->type)
-	    {
-	    case XML_ELEMENT_NODE:
-	      walkTree (child);
-	      break;
-	    case XML_TEXT_NODE:
-	      break;
-	    default:
-	      break;
-	    }
-	  child = child->next;
+	case XML_ELEMENT_NODE:
+	  findBrlNodes (child);
+	  break;
+	case XML_TEXT_NODE:
+	  break;
+	default:
+	  break;
 	}
-pop_sem_stack ();
-return 1;
+      if (useNextNode)
+      child = nextNode;
+      else
+      child = child->next;
+    }
+  pop_sem_stack ();
+  useNextNode = 0;
+  return 1;
 }
 
 static char *blanks =
@@ -120,9 +138,59 @@ doDotsText (xmlNode * node)
 }
 
 static int
-doUtdbrlonly (xmlNode * node)
+doUtdbrlonly (xmlNode * node, int action)
 {
-  utd2transinxml (node);
+  xmlNode *child;
+  if (node == NULL)
+    return 0;
+  if (ud->top == 0)
+    action = 1;
+  if (action != 0)
+    push_sem_stack (node);
+  switch (ud->stack[ud->top])
+    {
+    case utdnewpage:
+      doUtdnewpage (node);
+      if (action != firstCall)
+	pop_sem_stack ();
+      return 1;
+    case utdnewline:
+      doUtdnewline (node);
+      if (action != firstCall)
+	pop_sem_stack ();
+      return 1;
+    case utdgraphic:
+      transcribe_graphic (node, firstCall);
+      if (action != firstCall)
+	pop_sem_stack ();
+      return 1;
+    case changetable:
+      change_table (node);
+      return 1;
+    default:
+      break;
+    }
+  child = node->children;
+  while (child)
+    {
+      switch (child->type)
+	{
+	case XML_ELEMENT_NODE:
+	  doUtdbrlonly (child, 1);
+	  break;
+	case XML_TEXT_NODE:
+	  doDotsText (child);
+	  break;
+	default:
+	  break;
+	}
+      child = child->next;
+    }
+  if (action != 0)
+    {
+      pop_sem_stack ();
+      return 1;
+    }
   return 1;
 }
 
@@ -161,11 +229,12 @@ doUtdnewline (xmlNode * node)
 }
 
 int
-walkSubTree (xmlNode * node, int action)
+doBrlNode (xmlNode * node, int action)
 {
   xmlNode *child;
   if (node == NULL)
     return 0;
+  ud->outbuf1_len_so_far = 0;
   if (ud->top == 0)
     action = 1;
   if (action != 0)
@@ -174,35 +243,29 @@ walkSubTree (xmlNode * node, int action)
     {
     case markhead:
       if (ud->head_node == NULL)
-        ud->head_node = node;
+	ud->head_node = node;
       pop_sem_stack ();
       break;
-    case utdbrl:
-    case utdmeta:
-      walkSubTree (node, 0);
-      if (action != 0)
+    case utdbrlonly:
+      doUtdbrlonly (node, 0);
+      if (action != firstCall)
 	pop_sem_stack ();
       return 1;
-	case utdbrlonly:
-	  doUtdbrlonly (node);
-	  if (action != firstCall)
-	    pop_sem_stack ();
-	  return 1;
-	case utdnewpage:
-	  doUtdnewpage (node);
-	  if (action != firstCall)
-	    pop_sem_stack ();
-	  return 1;
-	case utdnewline:
-	  doUtdnewline (node);
-	  if (action != firstCall)
-	    pop_sem_stack ();
-	  return 1;
-	case utdgraphic:
-	  transcribe_graphic (node, firstCall);
-	  if (action != firstCall)
-	    pop_sem_stack ();
-	  return 1;
+    case utdnewpage:
+      doUtdnewpage (node);
+      if (action != firstCall)
+	pop_sem_stack ();
+      return 1;
+    case utdnewline:
+      doUtdnewline (node);
+      if (action != firstCall)
+	pop_sem_stack ();
+      return 1;
+    case utdgraphic:
+      transcribe_graphic (node, firstCall);
+      if (action != firstCall)
+	pop_sem_stack ();
+      return 1;
     case changetable:
       change_table (node);
       return 1;
@@ -215,25 +278,50 @@ walkSubTree (xmlNode * node, int action)
       switch (child->type)
 	{
 	case XML_ELEMENT_NODE:
-	  walkSubTree (child, 1);
+	  doBrlNode (child, 1);
 	  break;
 	case XML_TEXT_NODE:
+	  doDotsText (child);
 	  break;
 	default:
 	  break;
 	}
-	child = child->next;
+      child = child->next;
     }
   if (action != 0)
-{
-    pop_sem_stack ();
+    {
+      pop_sem_stack ();
+      return 1;
+    }
+  finishBrlNode ();
   return 1;
-  }
-  endSubTree ();
-  return 1;
-}
-static int
-endSubTree ()
-{
 }
 
+static int
+finishBrlNode ()
+{
+  int wcLength;
+  int utf8Length;
+  unsigned char *transText = (unsigned char *) ud->outbuf2;
+  xmlNode *transNode;
+  xmlNode *oldText;
+  xmlNode *oldNode;
+  wcLength = ud->outbuf1_len_so_far;
+  utf8Length = ud->outbuf2_len;
+  wc_string_to_utf8 (ud->outbuf1, &wcLength, transText, &utf8Length);
+  transText[utf8Length] = 0;
+  transNode = xmlNewText (transText);
+  oldText = curNode->prev;
+  if (oldText != NULL && strcmp (oldText->name, "text") == 0)
+  {
+  xmlUnlinkNode (oldText);
+  xmlFree (oldText);
+  }
+  xmlAddPrevSibling (curNode, transNode);
+  nextNode = curNode->next;
+  useNextNode = 1;
+  oldNode = curNode;
+  xmlUnlinkNode (oldNode);
+  xmlFree (oldNode);
+  return 1;
+}
