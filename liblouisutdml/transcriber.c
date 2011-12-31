@@ -4433,7 +4433,8 @@ utd_doOrdinaryText ()
 	  lastSpace = 0;
 	  for (cellsToWrite = 0;
 	       cellsToWrite < availableCells
-	       && (dots =
+	       && (charactersWritten + cellsToWrite) < 
+	       ud->translated_length && (dots =
 		   translatedBuffer[charactersWritten +
 				    cellsToWrite]) != ENDSEGMENT;
 	       cellsToWrite++)

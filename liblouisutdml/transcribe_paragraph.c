@@ -319,7 +319,8 @@ transcribe_paragraph (xmlNode * node, int action)
 		  orphan_control_pos = ud->lines_length;
 		}
 	    }
-	  transcribe_paragraph (child, 1);
+	  if (strcmp (child->name, "brl") != 0)
+	    transcribe_paragraph (child, 1);
 	  break;
 	case XML_TEXT_NODE:
 	  insert_text (child);

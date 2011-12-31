@@ -38,6 +38,11 @@ static int doBrlNode (xmlNode * node, int action);
 static int beginDocument ();
 static int finishBrlNode ();
 static int finishDocument ();
+static int doUtdbrlonly (xmlNode *node, int action);
+static int doUtdnewpage (xmlNode *node);
+static int doUtdnewline (xmlNode *node);
+static int doUtdgraphic (xmlNode *node);
+
 
 int
 utd2transinxml (xmlNode * node)
@@ -133,9 +138,59 @@ doDotsText (xmlNode * node)
 }
 
 static int
-doUtdbrlonly (xmlNode * node)
+doUtdbrlonly (xmlNode * node, int action)
 {
-  utd2transinxml (node);
+  xmlNode *child;
+  if (node == NULL)
+    return 0;
+  if (ud->top == 0)
+    action = 1;
+  if (action != 0)
+    push_sem_stack (node);
+  switch (ud->stack[ud->top])
+    {
+    case utdnewpage:
+      doUtdnewpage (node);
+      if (action != firstCall)
+	pop_sem_stack ();
+      return 1;
+    case utdnewline:
+      doUtdnewline (node);
+      if (action != firstCall)
+	pop_sem_stack ();
+      return 1;
+    case utdgraphic:
+      transcribe_graphic (node, firstCall);
+      if (action != firstCall)
+	pop_sem_stack ();
+      return 1;
+    case changetable:
+      change_table (node);
+      return 1;
+    default:
+      break;
+    }
+  child = node->children;
+  while (child)
+    {
+      switch (child->type)
+	{
+	case XML_ELEMENT_NODE:
+	  doUtdbrlonly (child, 1);
+	  break;
+	case XML_TEXT_NODE:
+	  doDotsText (child);
+	  break;
+	default:
+	  break;
+	}
+      child = child->next;
+    }
+  if (action != 0)
+    {
+      pop_sem_stack ();
+      return 1;
+    }
   return 1;
 }
 
@@ -192,7 +247,7 @@ doBrlNode (xmlNode * node, int action)
       pop_sem_stack ();
       break;
     case utdbrlonly:
-      doUtdbrlonly (node);
+      doUtdbrlonly (node, 0);
       if (action != firstCall)
 	pop_sem_stack ();
       return 1;
