@@ -3350,6 +3350,7 @@ utd_start ()
   backIndices = NULL;
   backBuf = NULL;
   backLength = 0;
+  lineWidth = NORMALLINE;
   return 1;
 }
 
@@ -3925,14 +3926,17 @@ typedef enum
   topOfPage,
   lastLine,
   bottomOfPage,
-  nearBottom
+  nearBottom,
+  midPage
 } PageStatus;
 
 static PageStatus
 checkPageStatus ()
 {
   int remaining;
-  if (ud->vert_line_pos = 0)
+  if (ud->vert_line_pos < ud->page_top)
+    ud->vert_line_pos = ud->page_top;
+  if (ud->vert_line_pos == ud->page_top)
     return topOfPage;
   remaining = ud->page_bottom - ud->vert_line_pos;
   if (remaining < NORMALLINE)
@@ -3941,18 +3945,19 @@ checkPageStatus ()
     return lastLine;
   if (remaining > (2 * NORMALLINE) && remaining < (3 * NORMALLINE))
     return nearBottom;
+  return midPage;
 }
 
 static int
 utd_getPageNumber ()
 {
   int k;
-  PageStatus pageStatus;
+  PageStatus curPageStatus;
   int braillePageNumber = 0;
   int printPageNumber = 0;
   pageNumberLength = 0;
-  pageStatus = checkPageStatus ();
-  if (pageStatus == topOfPage)
+  curPageStatus = checkPageStatus ();
+  if (curPageStatus == topOfPage)
     {
       if (ud->print_pages && ud->print_page_number_at
 	  && ud->print_page_number_first[0] != '_')
@@ -3964,7 +3969,7 @@ utd_getPageNumber ()
 	  braillePageNumber = 1;
 	}
     }
-  else if (pageStatus == bottomOfPage)
+  else if (curPageStatus == bottomOfPage)
     {
       if (ud->print_pages && !ud->print_page_number_at
 	  && ud->print_page_number_first[0] != '_')
@@ -4254,7 +4259,6 @@ setNewlineNode ()
 {
   xmlNode *newNode = xmlNewNode (NULL, (xmlChar *) "newline");
   newlineNode = xmlAddChild (brlNode, newNode);
-  lineWidth = NORMALLINE;
   return 1;
 }
 
@@ -4262,10 +4266,9 @@ static int
 setNewlineProp (int horizLinePos)
 {
   char position[MAXNUMLEN];
-  sprintf (position, "%d,%d", (CELLWIDTH * horizLinePos +
-			       ud->page_left), ud->vert_line_pos);
+  sprintf (position, "%d,%d", horizLinePos, 
+  ud->vert_line_pos);
   xmlNewProp (newlineNode, (xmlChar *) "xy", (xmlChar *) position);
-  ud->vert_line_pos += lineWidth;
   return 1;
 }
 
@@ -4273,14 +4276,14 @@ static int
 utd_startLine ()
 {
   int availableCells = 0;
-  PageStatus pageStatus;
+  PageStatus curPageStatus;
   while (availableCells == 0)
     {
-      ud->vert_line_pos += lineWidth;
       setNewlineNode ();
+      lineWidth = NORMALLINE;
       utd_getPageNumber ();
-      pageStatus = checkPageStatus ();
-      if (pageStatus == topOfPage)
+      curPageStatus = checkPageStatus ();
+      if (curPageStatus == topOfPage)
 	{
 	  if (ud->running_head_length > 0
 	      || (style->skip_number_lines && pageNumberLength > 0))
@@ -4291,13 +4294,12 @@ utd_startLine ()
 	    }
 	  availableCells = ud->cells_per_line - pageNumberLength;
 	}
-      else if (pageStatus == bottomOfPage)
+      else if (curPageStatus == lastLine)
 	{
 	  if (ud->footer_length > 0 ||
 	      (style->skip_number_lines && pageNumberLength > 0))
 	    {
 	      utd_finishLine (0, 0);
-	      setNewlineNode ();
 	      continue;
 	    }
 	  availableCells = ud->cells_per_line - pageNumberLength;
@@ -4317,10 +4319,10 @@ utd_finishLine (int leadingBlanks, int length)
   int leaveBlank;
   int horizLinePos = ud->page_left + leadingBlanks * CELLWIDTH;
   cellsOnLine = leadingBlanks + length;
-  PageStatus pageStatus;
+  PageStatus curPageStatus;
   for (leaveBlank = -1; leaveBlank < ud->line_spacing; leaveBlank++)
     {
-      pageStatus = checkPageStatus ();
+      curPageStatus = checkPageStatus ();
       if (leaveBlank != -1)
 	{
 	  utd_startLine ();
@@ -4332,7 +4334,7 @@ utd_finishLine (int leadingBlanks, int length)
 	  if (!spaceOut (cellsToWrite, pageNumberString, pageNumberLength))
 	    return 0;
 	}
-      else if (pageStatus == topOfPage)
+      else if (curPageStatus == topOfPage)
 	{
 	  if (ud->running_head_length > 0)
 	    centerHeadFoot (ud->running_head, ud->running_head_length);
@@ -4347,7 +4349,7 @@ utd_finishLine (int leadingBlanks, int length)
 		}
 	    }
 	}
-      else if (pageStatus == bottomOfPage)
+      else if (curPageStatus == lastLine)
 	{
 	  if (ud->footer_length > 0)
 	    centerHeadFoot (ud->footer, ud->footer_length);
@@ -4365,11 +4367,11 @@ utd_finishLine (int leadingBlanks, int length)
 	}
     }
   setNewlineProp (horizLinePos);
-  pageStatus = checkPageStatus ();
-  if (pageStatus == bottomOfPage)
+  ud->vert_line_pos += lineWidth;
+  curPageStatus = checkPageStatus ();
+  if (curPageStatus == bottomOfPage)
     {
       ud->braille_page_number++;
-      lineWidth = NORMALLINE;
       ud->vert_line_pos = ud->page_top;
       makeNewpage (brlNode);
     }
@@ -4380,15 +4382,12 @@ static int
 hasText (xmlNode * node)
 {
   int k;
-  xmlChar *classAttrValue = xmlGetProp (node, (xmlChar *) "class");
-  if (classAttrValue == NULL)
-    return 1;
-  if (strcmp (classAttrValue, "notext") != 0)
-    k = 1;
-  else
-    k = 0;
-  xmlFree (classAttrValue);
-  return k;
+  xmlNode *prevSib  = node->prev;
+  if (prevSib == NULL)
+  return 0;
+  if (strcmp (prevSib->name, "text") != 0)
+  return 0;
+  return 1;
 }
 
 static int
@@ -4434,7 +4433,7 @@ utd_doOrdinaryText ()
 	  for (cellsToWrite = 0;
 	       cellsToWrite < availableCells
 	       && (charactersWritten + cellsToWrite) < 
-	       ud->translated_length && (dots =
+	       translatedLength && (dots =
 		   translatedBuffer[charactersWritten +
 				    cellsToWrite]) != ENDSEGMENT;
 	       cellsToWrite++)
@@ -4468,7 +4467,8 @@ utd_doOrdinaryText ()
 	      newLineNeeded = 1;
 	    }
 	}
-      while (dots != ENDSEGMENT);
+      while (dots != ENDSEGMENT && charactersWritten < 
+      translatedLength);
       charactersWritten++;
       prevBrlNode = brlNode;
       brlNode = brlNode->_private;
@@ -4481,21 +4481,22 @@ utd_doOrdinaryText ()
 static int
 utd_makeBlankLines (int number, int beforeAfter)
 {
-  int availableCells;
   int k;
-  if (number == 0)
+  PageStatus curPageStatus;
+  if (number <= 0)
     return 1;
-  if (beforeAfter == 0 && (ud->lines_on_page == 0 ||
+  curPageStatus = checkPageStatus ();
+  if (beforeAfter == 0 && (curPageStatus == topOfPage  ||
 			   prevStyle->lines_after > 0
 			   || prevStyle->action == document))
     return 1;
   else
     if (beforeAfter == 1
-	&& (ud->lines_per_page - ud->lines_on_page - number) < 2)
+	&& curPageStatus == nearBottom)
     return 1;
   for (k = 0; k < number; k++)
     {
-      availableCells = utd_startLine ();
+      utd_startLine ();
       if (!utd_finishLine (0, 0))
 	return 0;
     }
@@ -4505,8 +4506,13 @@ utd_makeBlankLines (int number, int beforeAfter)
 static int
 utd_fillPage ()
 {
-  ud->lines_on_page = ud->lines_per_page - 1;
-  ud->vert_line_pos = ud->page_top + NORMALLINE * ud->lines_per_page;
+  PageStatus curPageStatus = checkPageStatus ();
+  if (curPageStatus == topOfPage)
+    {
+      utd_startLine ();
+      utd_finishLine (0, 0);
+    }
+  ud->vert_line_pos = ud->page_bottom - NORMALLINE;
   utd_startLine ();
   utd_finishLine (0, 0);
   return 1;
@@ -4919,7 +4925,6 @@ utd_startStyle ()
       && styleSpec->node != NULL)
     {
       xmlNode *newNode = xmlNewNode (NULL, (xmlChar *) "brl");
-      xmlNewProp (newNode, (xmlChar *) "class", (xmlChar *) "notexxt");
       link_brl_node (xmlAddPrevSibling (styleSpec->node->children, newNode));
       if (style->action == document)
 	{
@@ -4931,7 +4936,7 @@ utd_startStyle ()
     }
   if (prevStyle->action != document)
     {
-      PageStatus pageStatus = checkPageStatus ();
+      PageStatus curPageStatus = checkPageStatus ();
       if (style->righthand_page)
 	{
 	  utd_fillPage ();
@@ -4942,9 +4947,10 @@ utd_startStyle ()
 	utd_fillPage ();
       else
 	if (style->lines_before > 0
-	    && prevStyle->lines_after == 0 && pageStatus == topOfPage)
+	    && prevStyle->lines_after == 0 && curPageStatus == 
+	    topOfPage)
 	{
-	  if (pageStatus == nearBottom)
+	  if (curPageStatus == nearBottom)
 	    utd_fillPage ();
 	  else if (!utd_makeBlankLines (style->lines_before, 0))
 	    return 0;
@@ -5047,12 +5053,12 @@ utd_styleBody ()
 static int
 utd_finishStyle ()
 {
-  PageStatus pageStatus = checkPageStatus ();
+  PageStatus curPageStatus = checkPageStatus ();
   if (style->newpage_after)
     utd_fillPage ();
   else if (style->lines_after > 0)
     {
-      if (pageStatus == nearBottom)
+      if (curPageStatus == nearBottom)
 	utd_fillPage ();
       else
 	{
