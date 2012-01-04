@@ -715,6 +715,7 @@ compileConfig (FileInfo * nested)
     "notUC", "1<<28",
     "notSync", "1<<27",
     "utdInput", "1<<26",
+    "convertOnly", "1<<25",
     NULL
   };
 
@@ -1303,8 +1304,11 @@ read_configuration_file (const char *configFileList, const char
     strcat (ud->xml_header, "]>\n");
   ud->mode = mode | ud->config_mode;
   ud->orig_format_for = ud->format_for;
-  if (ud->format_for > browser)
-    ud->format_for = utd;
+  if (ud->format_for > utd)
+  {
+  ud->mode |= notSync;
+  }
+  ud->format_for = utd;
   if (ud->format_for == utd)
     {
       const double dpi = 20.0;

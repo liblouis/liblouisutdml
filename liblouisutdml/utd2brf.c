@@ -34,15 +34,14 @@
 #include "louisutdml.h"
 
 static int findBrlNodes (xmlNode * node);
-static int doBrlNode (xmlNode * node, int action);
+static int brfDoBrlNode (xmlNode * node, int action);
 static int beginDocument ();
 static int finishBrlNode ();
 static int finishDocument ();
-static int doUtdbrlonly (xmlNode *node, int action);
-static int doUtdnewpage (xmlNode *node);
-static int doUtdnewline (xmlNode *node);
-static int doUtdgraphic (xmlNode *node);
-
+static int doUtdbrlonly (xmlNode * node, int action);
+static int doUtdnewpage (xmlNode * node);
+static int doUtdnewline (xmlNode * node);
+static int doUtdgraphic (xmlNode * node);
 
 int
 utd2brf (xmlNode * node)
@@ -63,12 +62,8 @@ beginDocument ()
 static int
 finishDocument ()
 {
-  output_xml (ud->doc);
 }
 
-static xmlNode *curNode;
-static int useNextNode;
-static xmlNode *nextNode;
 
 static int
 findBrlNodes (xmlNode * node)
@@ -76,15 +71,13 @@ findBrlNodes (xmlNode * node)
   xmlNode *child;
   if (node == NULL)
     return 0;
-  useNextNode = 0;
   push_sem_stack (node);
   switch (ud->stack[ud->top])
     {
     case utdmeta:
       return 1;
     case utdbrl:
-      curNode = node;
-      doBrlNode (node, 0);
+      brfDoBrlNode (node, 0);
       pop_sem_stack ();
       return 1;
     default:
@@ -103,13 +96,9 @@ findBrlNodes (xmlNode * node)
 	default:
 	  break;
 	}
-      if (useNextNode)
-      child = nextNode;
-      else
       child = child->next;
     }
   pop_sem_stack ();
-  useNextNode = 0;
   return 1;
 }
 
@@ -131,7 +120,7 @@ doDotsText (xmlNode * node)
   insert_utf8 (node->content);
   if (!lou_dotsToChar (ud->main_braille_table, ud->text_buffer,
 		       &ud->outbuf1[ud->outbuf1_len_so_far],
-		       ud->text_length, ud->louis_mode))
+		       ud->text_length, 0))
     return 0;
   ud->outbuf1_len_so_far += ud->text_length;
   return 1;
@@ -151,17 +140,17 @@ doUtdbrlonly (xmlNode * node, int action)
     {
     case utdnewpage:
       doUtdnewpage (node);
-      if (action != firstCall)
+      if (action != 0)
 	pop_sem_stack ();
       return 1;
     case utdnewline:
       doUtdnewline (node);
-      if (action != firstCall)
+      if (action != 0)
 	pop_sem_stack ();
       return 1;
     case utdgraphic:
-      transcribe_graphic (node, firstCall);
-      if (action != firstCall)
+      transcribe_graphic (node, 0);
+      if (action != 0)
 	pop_sem_stack ();
       return 1;
     case changetable:
@@ -229,15 +218,14 @@ doUtdnewline (xmlNode * node)
 }
 
 int
-doBrlNode (xmlNode * node, int action)
+brfDoBrlNode (xmlNode * node, int action)
 {
   xmlNode *child;
   if (node == NULL)
     return 0;
-  ud->outbuf1_len_so_far = 0;
-  if (ud->top == 0)
-    action = 1;
-  if (action != 0)
+  if (action == 0)
+    ud->outbuf1_len_so_far = 0;
+  else
     push_sem_stack (node);
   switch (ud->stack[ud->top])
     {
@@ -248,22 +236,22 @@ doBrlNode (xmlNode * node, int action)
       break;
     case utdbrlonly:
       doUtdbrlonly (node, 0);
-      if (action != firstCall)
+      if (action != 0)
 	pop_sem_stack ();
       return 1;
     case utdnewpage:
       doUtdnewpage (node);
-      if (action != firstCall)
+      if (action != 0)
 	pop_sem_stack ();
       return 1;
     case utdnewline:
       doUtdnewline (node);
-      if (action != firstCall)
+      if (action != 0)
 	pop_sem_stack ();
       return 1;
     case utdgraphic:
-      transcribe_graphic (node, firstCall);
-      if (action != firstCall)
+      transcribe_graphic (node, 0);
+      if (action != 0)
 	pop_sem_stack ();
       return 1;
     case changetable:
@@ -278,7 +266,7 @@ doBrlNode (xmlNode * node, int action)
       switch (child->type)
 	{
 	case XML_ELEMENT_NODE:
-	  doBrlNode (child, 1);
+	  brfDoBrlNode (child, 1);
 	  break;
 	case XML_TEXT_NODE:
 	  doDotsText (child);
@@ -303,25 +291,11 @@ finishBrlNode ()
   int wcLength;
   int utf8Length;
   unsigned char *transText = (unsigned char *) ud->outbuf2;
-  xmlNode *transNode;
-  xmlNode *oldText;
-  xmlNode *oldNode;
   wcLength = ud->outbuf1_len_so_far;
   utf8Length = ud->outbuf2_len;
   wc_string_to_utf8 (ud->outbuf1, &wcLength, transText, &utf8Length);
-  transText[utf8Length] = 0;
-  transNode = xmlNewText (transText);
-  oldText = curNode->prev;
-  if (oldText != NULL && strcmp (oldText->name, "text") == 0)
-  {
-  xmlUnlinkNode (oldText);
-  xmlFree (oldText);
-  }
-  xmlAddPrevSibling (curNode, transNode);
-  nextNode = curNode->next;
-  useNextNode = 1;
-  oldNode = curNode;
-  xmlUnlinkNode (oldNode);
-  xmlFree (oldNode);
+  ud->outbuf2_len_so_far = utf8Length;
+  ud->outbuf2_enabled = 1;
+  write_buffer (2, 0);
   return 1;
 }

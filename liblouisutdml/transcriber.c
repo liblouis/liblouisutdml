@@ -1255,7 +1255,7 @@ nextBraillePage ()
 {
   if (ud->braille_pages)
     {
-      if (!writeBuffer (1, 0))
+      if (!write_buffer (1, 0))
 	return 0;
       if (ud->outbuf2_enabled)
 	{
@@ -1263,14 +1263,14 @@ nextBraillePage ()
 	  cellsWritten = 0;
 	  getPageNumber ();
 	  finishLine ();
-	  if (!writeBuffer (1, 2))
+	  if (!write_buffer (1, 2))
 	    return 0;
-	  if (!writeBuffer (2, 0))
+	  if (!write_buffer (2, 0))
 	    return 0;
 	}
       if (!insertCharacters (ud->pageEnd, strlen (ud->pageEnd)))
 	return 0;
-      if (!writeBuffer (1, 2))
+      if (!write_buffer (1, 2))
 	return 0;
       ud->lines_on_page = 0;
       ud->braille_page_number++;
@@ -1414,8 +1414,7 @@ centerHeadFoot (widechar * toCenter, int length)
     {
       if (!spaceOut (leadingBlanks, toCenter, length))
 	return 0;
-      if (!spaceOut (trailingBlanks, pageNumberString, 
-      pageNumberLength))
+      if (!spaceOut (trailingBlanks, pageNumberString, pageNumberLength))
 	return 0;
     }
   else
@@ -1520,11 +1519,11 @@ makeBlankPage ()
 static int
 writeOutbuf ()
 {
-  return writeBuffer (1, 0);
+  return write_buffer (1, 0);
 }
 
 int
-writeBuffer (int from, int skip)
+write_buffer (int from, int skip)
 {
   int to = 0;
   widechar *buffer_from;
@@ -1534,7 +1533,6 @@ writeBuffer (int from, int skip)
   int *buffer_from_len_so_far;
   int *buffer_to_len_so_far;
   int k;
-  unsigned char *utf8Str;
   switch (from)
     {
     case 1:
@@ -1568,8 +1566,20 @@ writeBuffer (int from, int skip)
   switch (to)
     {
     case 0:
-      if (*buffer_from_len_so_far > 0 && ud->outFile != NULL)
+      if (*buffer_from_len_so_far == 0)
+	return 1;
+      if (ud->outFile == NULL)
 	{
+	  if ((ud->outlen_so_far + *buffer_from_len_so_far) >= 
+	  ud->outlen)
+	    return 0;
+	  for (k = 0; k < *buffer_from_len_so_far; k++)
+	    ud->outbuf[ud->outlen_so_far++] = buffer_from[k];
+	  return 1;
+	}
+      else
+	{
+	  unsigned char *utf8Str;
 	  switch (ud->output_encoding)
 	    {
 	    case utf8:
@@ -2467,46 +2477,6 @@ doCenterRight ()
   return 1;
 }
 
-int
-write_outbuf ()
-{
-  int k;
-  unsigned char *utf8Str;
-  if (ud->outlen_so_far == 0 || ud->outFile == NULL)
-    return 1;			/*output stays in ud->outbuf */
-  switch (ud->output_encoding)
-    {
-    case utf8:
-      for (k = 0; k < ud->outlen_so_far; k++)
-	{
-	  utf8Str = wcCharToUtf8 (ud->outbuf[k]);
-	  fwrite (utf8Str, strlen ((char *) utf8Str), 1, ud->outFile);
-	}
-      break;
-    case utf16:
-      for (k = 0; k < ud->outlen_so_far; k++)
-	{
-	  unsigned short uc16 = (unsigned short) ud->outbuf[k];
-	  fwrite (&uc16, 1, sizeof (uc16), ud->outFile);
-	}
-      break;
-    case utf32:
-      for (k = 0; k < ud->outlen_so_far; k++)
-	{
-	  unsigned int uc32 = (unsigned int) ud->outbuf[k];
-	  fwrite (&uc32, 1, sizeof (uc32), ud->outFile);
-	}
-      break;
-    default:
-    case ascii8:
-      for (k = 0; k < ud->outlen_so_far; k++)
-	fputc ((char) ud->outbuf[k], ud->outFile);
-      break;
-    }
-  ud->outlen_so_far = 0;
-  return 1;
-}
-
 static int
 editTrans ()
 {
@@ -2608,7 +2578,7 @@ styleBody ()
   if (action == contentsheader && ud->contents != 2)
     {
       fillPage ();
-      writeBuffer (3, 0);
+      write_buffer (3, 0);
       ud->outbuf3_enabled = 0;
 
       initialize_contents ();
@@ -2993,7 +2963,7 @@ back_translate_braille_string ()
 	return 0;
       if (!insertCharacters (ud->lineEnd, strlen (ud->lineEnd)))
 	return 0;
-      write_outbuf ();
+// fix this       write_outbuf ();
       ud->output_encoding = ascii8;
     }
   return 1;
@@ -3692,8 +3662,7 @@ makeDotsTextNode (xmlNode * node, const widechar * content, int length,
       if (kind)
 	memcpy (ud->outbuf1, content, length * CHARSIZE);
       else
-	lou_dotsToChar (currentTable, (char *) content, ud->outbuf1,
-			length, 0);
+	lou_dotsToChar (currentTable, content, ud->outbuf1, length, 0);
       inlen = 0;
       for (k = 0; k < length; k++)
 	{
@@ -4106,7 +4075,7 @@ makePageSeparator (xmlChar * printPageNumber, int length)
       if (!insertCharacters (ud->lineEnd, strlen (ud->lineEnd)))
 	return 0;
       ud->lines_on_page++;
-      write_outbuf ();
+      // fix this write_outbuf ();
     }
   return 1;
 }
@@ -4266,8 +4235,7 @@ static int
 setNewlineProp (int horizLinePos)
 {
   char position[MAXNUMLEN];
-  sprintf (position, "%d,%d", horizLinePos, 
-  ud->vert_line_pos);
+  sprintf (position, "%d,%d", horizLinePos, ud->vert_line_pos);
   xmlNewProp (newlineNode, (xmlChar *) "xy", (xmlChar *) position);
   return 1;
 }
@@ -4313,13 +4281,13 @@ utd_startLine ()
 static int
 utd_finishLine (int leadingBlanks, int length)
 {
+  PageStatus curPageStatus;
   int cellsOnLine = 0;
   int cellsToWrite = 0;
   int k;
   int leaveBlank;
   int horizLinePos = ud->page_left + leadingBlanks * CELLWIDTH;
   cellsOnLine = leadingBlanks + length;
-  PageStatus curPageStatus;
   for (leaveBlank = -1; leaveBlank < ud->line_spacing; leaveBlank++)
     {
       curPageStatus = checkPageStatus ();
@@ -4382,11 +4350,11 @@ static int
 hasText (xmlNode * node)
 {
   int k;
-  xmlNode *prevSib  = node->prev;
+  xmlNode *prevSib = node->prev;
   if (prevSib == NULL)
-  return 0;
+    return 0;
   if (strcmp (prevSib->name, "text") != 0)
-  return 0;
+    return 0;
   return 1;
 }
 
@@ -4432,11 +4400,11 @@ utd_doOrdinaryText ()
 	  lastSpace = 0;
 	  for (cellsToWrite = 0;
 	       cellsToWrite < availableCells
-	       && (charactersWritten + cellsToWrite) < 
+	       && (charactersWritten + cellsToWrite) <
 	       translatedLength && (dots =
-		   translatedBuffer[charactersWritten +
-				    cellsToWrite]) != ENDSEGMENT;
-	       cellsToWrite++)
+				    translatedBuffer[charactersWritten +
+						     cellsToWrite]) !=
+	       ENDSEGMENT; cellsToWrite++)
 	    if (dots == SPACE)
 	      lastSpace = cellsToWrite;
 	  if (cellsToWrite == availableCells)
@@ -4467,8 +4435,7 @@ utd_doOrdinaryText ()
 	      newLineNeeded = 1;
 	    }
 	}
-      while (dots != ENDSEGMENT && charactersWritten < 
-      translatedLength);
+      while (dots != ENDSEGMENT && charactersWritten < translatedLength);
       charactersWritten++;
       prevBrlNode = brlNode;
       brlNode = brlNode->_private;
@@ -4486,13 +4453,11 @@ utd_makeBlankLines (int number, int beforeAfter)
   if (number <= 0)
     return 1;
   curPageStatus = checkPageStatus ();
-  if (beforeAfter == 0 && (curPageStatus == topOfPage  ||
+  if (beforeAfter == 0 && (curPageStatus == topOfPage ||
 			   prevStyle->lines_after > 0
 			   || prevStyle->action == document))
     return 1;
-  else
-    if (beforeAfter == 1
-	&& curPageStatus == nearBottom)
+  else if (beforeAfter == 1 && curPageStatus == nearBottom)
     return 1;
   for (k = 0; k < number; k++)
     {
@@ -4947,8 +4912,7 @@ utd_startStyle ()
 	utd_fillPage ();
       else
 	if (style->lines_before > 0
-	    && prevStyle->lines_after == 0 && curPageStatus == 
-	    topOfPage)
+	    && prevStyle->lines_after == 0 && curPageStatus == topOfPage)
 	{
 	  if (curPageStatus == nearBottom)
 	    utd_fillPage ();

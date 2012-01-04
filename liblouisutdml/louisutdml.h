@@ -352,7 +352,7 @@ int find_action (const char **actions, const char *action);
 int find_group_length (const char groupSym[2], const char *groupStart);
 char *alloc_string (const char *inString);
 char *alloc_string_if_not (const char *inString);
-int write_outbuf ();
+int write_buffer (int from, int skip);
 int link_brl_node (xmlNode * node);
 void clean_semantic_table ();
 int back_translate_braille_string ();
