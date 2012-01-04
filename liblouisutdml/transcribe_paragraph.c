@@ -432,7 +432,7 @@ transcribe_paragraph (xmlNode * node, int action)
 	  if ((!dont_split && !keep_with_previous &&
 	       !keep_with_next && !orphan_control) || (!child && state_saved))
 	    {
-	      writeBuffer (3, 0);
+	      write_buffer (3, 0);
 	      ud->outbuf3_enabled = 0;
 	      state_saved = 0;
 	    }
