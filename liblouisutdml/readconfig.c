@@ -714,6 +714,7 @@ compileConfig (FileInfo * nested)
     "htmlDoc", "1<<29",
     "notUC", "1<<28",
     "notSync", "1<<27",
+    "utdInput", "1<<26",
     NULL
   };
 

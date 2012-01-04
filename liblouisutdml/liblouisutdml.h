@@ -72,7 +72,8 @@ include louisutdml.h */
     doInit = 1 << 30,
     htmlDoc = 1 << 29,
     notUC = 1 << 28,
-    notSync = 1<<27
+    notSync = 1<<27,
+    utdInput = 1<<26
   } ProcessingModes;
 
   int EXPORT_CALL lbu_translateString
