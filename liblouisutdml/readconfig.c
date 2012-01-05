@@ -1307,8 +1307,8 @@ read_configuration_file (const char *configFileList, const char
   if (ud->format_for > utd)
   {
   ud->mode |= notSync & ~notUC;
+    ud->format_for = utd;
   }
-  ud->format_for = utd;
   if (ud->format_for == utd)
     {
       const double dpi = 20.0;
