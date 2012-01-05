@@ -201,6 +201,7 @@ doUtdnewline (xmlNode * node)
   char *xy;
   int k;
   int leadingBlanks;
+  int linePos;
   if (skipFirstNew)
     skipFirstNew = newpagePending = 0;
   else
@@ -212,7 +213,8 @@ doUtdnewline (xmlNode * node)
     }
   xy = (char *) xmlGetProp (node, (xmlChar *) "xy");
   for (k = 0; xy[k] != ','; k++);
-  leadingBlanks = (atoi (&xy[k + 1]) - ud->left_margin) / CELLWIDTH;
+  leadingBlanks = (atoi (xy) - ud->left_margin) / CELLWIDTH;
+  linePos = atoi (&xy[k + 1]);
   writeCharacters (blanks, leadingBlanks);
   return 1;
 }
@@ -288,14 +290,8 @@ brfDoBrlNode (xmlNode * node, int action)
 static int
 finishBrlNode ()
 {
-  int wcLength;
-  int utf8Length;
-  unsigned char *transText = (unsigned char *) ud->outbuf2;
-  wcLength = ud->outbuf1_len_so_far;
-  utf8Length = ud->outbuf2_len;
-  wc_string_to_utf8 (ud->outbuf1, &wcLength, transText, &utf8Length);
-  ud->outbuf2_len_so_far = utf8Length;
-  ud->outbuf2_enabled = 1;
-  write_buffer (2, 0);
+  if (ud->outbuf1_len_so_far == 0)
+    return 1;
+  write_buffer (1, 0);
   return 1;
 }
