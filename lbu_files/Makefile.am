@@ -4,6 +4,7 @@ lbu_files_DATA = \
 	doc.sem \
 	sample-utd.cfg \
 	transinxml.cfg \
+	brf.cfg \
 	viewutd.cfg \
 	viewutd.ctb \
 	volumes.cfg \

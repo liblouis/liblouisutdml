@@ -1306,7 +1306,7 @@ read_configuration_file (const char *configFileList, const char
   ud->orig_format_for = ud->format_for;
   if (ud->format_for > utd)
   {
-  ud->mode |= notSync;
+  ud->mode |= notSync & ~notUC;
   }
   ud->format_for = utd;
   if (ud->format_for == utd)
