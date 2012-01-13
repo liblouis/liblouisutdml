@@ -1306,12 +1306,14 @@ read_configuration_file (const char *configFileList, const char
   ud->orig_format_for = ud->format_for;
   if (ud->format_for > utd)
   {
-  ud->mode |= notSync & ~notUC;
-    ud->format_for = utd;
+  ud->mode &= ~notUC;
+  ud->format_for = utd;
   }
   if (ud->format_for == utd)
     {
       const double dpi = 20.0;
+      ud->braille_pages = 1;
+      ud->paragraphs = 1;
       ud->paper_width = (int) (paperWidth * dpi);
       ud->paper_height = (int) (paperHeight * dpi);
       ud->left_margin = (int) (leftMargin * dpi);
