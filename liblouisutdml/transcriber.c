@@ -864,8 +864,6 @@ handlePagenum (xmlChar * printPageNumber, int length)
   return 1;
 }
 
-static int makePageSeparator (xmlChar * printPageNumber, int length);
-
 void
 insert_text (xmlNode * node)
 {
@@ -3300,6 +3298,7 @@ static xmlNode *containsBrlOnlyNode;
 static xmlNode *brlOnlyNode;
 static xmlNode *containsContents;
 static xmlNode *addContentsBlock;
+static xmlNode *newpageNode;
 static xmlNode *newlineNode;
 static xmlChar *brlContent;
 static int maxContent;
@@ -3310,6 +3309,8 @@ static int cellsToWrite;
 static int
 utd_start ()
 {
+  ud->braille_pages = 1;
+  ud->paragraphs = 1;
   brlContent = (xmlChar *) ud->outbuf1;
   maxContent = ud->outbuf1_len * CHARSIZE;
   utilStringBuf = (char *) ud->text_buffer;
@@ -3836,7 +3837,8 @@ makeBrlOnlyNode ()
   newNode = xmlNewNode (NULL, (xmlChar *) "span");
   xmlNewProp (newNode, (xmlChar *) "class", (xmlChar *) "brlonly");
   containsBrlOnlyNode = xmlAddChild (brlNode, newNode);
-  brlOnlyNode = xmlNewNode (NULL, (xmlChar *) "brl");
+  newNode = xmlNewNode (NULL, (xmlChar *) "brl");
+  brlOnlyNode = xmlAddChild (containsBrlOnlyNode, newNode);
   return 1;
 }
 
@@ -3938,7 +3940,7 @@ utd_getPageNumber ()
 	  braillePageNumber = 1;
 	}
     }
-  else if (curPageStatus == bottomOfPage)
+  else if (curPageStatus == lastLine)
     {
       if (ud->print_pages && !ud->print_page_number_at
 	  && ud->print_page_number_first[0] != '_')
@@ -4022,6 +4024,7 @@ makePageSeparator (xmlChar * printPageNumber, int length)
   int translatedLength = MAXNUMLEN;
   widechar separatorLine[128];
   char setup[MAXNUMLEN];
+  PageStatus curPageStatus = checkPageStatus ();
   if (!ud->print_pages || !*printPageNumber)
     return 1;
   strcpy (setup, " ");
@@ -4037,13 +4040,11 @@ makePageSeparator (xmlChar * printPageNumber, int length)
 			    &translatedLength, NULL, NULL, 0))
     return 0;
   ud->print_page_number[translatedLength] = 0;
-  if (ud->braille_pages && ud->lines_on_page == 0)
+  if (curPageStatus == topOfPage)
     return 1;
-  if (ud->format_for == utd)
-    {
       lou_charToDots (ud->main_braille_table,
 		      ud->print_page_number, translatedBuffer,
-		      translatedLength, ud->louis_mode);
+		      translatedLength, 0);
       translatedBuffer[0] = HYPHEN;
       for (k = 0; k < (ud->cells_per_line - translatedLength); k++)
 	separatorLine[k] = HYPHEN;
@@ -4052,31 +4053,14 @@ makePageSeparator (xmlChar * printPageNumber, int length)
 	separatorLine[k] = translatedBuffer[kk++];
       separatorLine[k] = 0;
       ud->print_page_number[0] = 'a';
-      if (ud->braille_pages && ud->lines_on_page >= (ud->lines_per_page - 2))
+      if (curPageStatus == nearBottom)
+      {
 	utd_fillPage ();
+	return 1;
+	}
       makeBrlOnlyNode ();
       makeNewline (brlOnlyNode, 0);
       makeDotsTextNode (brlOnlyNode, separatorLine, ud->cells_per_line, 0);
-    }
-  else
-    {
-      memcpy (translatedBuffer, ud->print_page_number, translatedLength
-	      * CHARSIZE);
-      translatedBuffer[0] = '-';
-      for (k = 0; k < (ud->cells_per_line - translatedLength); k++)
-	separatorLine[k] = '-';
-      kk = 0;
-      for (; k < ud->cells_per_line; k++)
-	separatorLine[k] = translatedBuffer[kk++];
-      if (ud->braille_pages && ud->lines_on_page >= (ud->lines_per_page - 2))
-	fillPage ();
-      if (!insertWidechars (separatorLine, ud->cells_per_line))
-	return 0;
-      if (!insertCharacters (ud->lineEnd, strlen (ud->lineEnd)))
-	return 0;
-      ud->lines_on_page++;
-      // fix this write_outbuf ();
-    }
   return 1;
 }
 
@@ -4086,8 +4070,8 @@ makeNewpage (xmlNode * parent)
   char number[MAXNUMLEN];
   xmlNode *newNode = xmlNewNode (NULL, (xmlChar *) "newpage");
   sprintf (number, "%d", ud->braille_page_number);
-  xmlNewProp (newNode, (xmlChar *) "number", (xmlChar *) number);
-  xmlAddChild (parent, newNode);
+  xmlNewProp (newNode, (xmlChar *) "brlnumber", (xmlChar *) number);
+  newpageNode = xmlAddChild (parent, newNode);
   return 1;
 }
 
@@ -4294,6 +4278,7 @@ utd_finishLine (int leadingBlanks, int length)
       if (leaveBlank != -1)
 	{
 	  utd_startLine ();
+	  ud->vert_line_pos += NORMALLINE;
 	  setNewlineProp (0);
 	}
       if (cellsOnLine > 0 && pageNumberLength > 0)
@@ -4339,6 +4324,9 @@ utd_finishLine (int leadingBlanks, int length)
   curPageStatus = checkPageStatus ();
   if (curPageStatus == bottomOfPage)
     {
+      if (ud->print_page_number[0] != '_')
+        xmlSetProp (newpageNode, (xmlChar *) "printnumber", (xmlChar *) 
+        ud->print_page_number);
       ud->braille_page_number++;
       ud->vert_line_pos = ud->page_top;
       makeNewpage (brlNode);

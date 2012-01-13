@@ -185,10 +185,12 @@ doUtdbrlonly (xmlNode * node, int action)
 
 static int skipFirstNew = 0;
 static int newpagePending = 0;
+static int lastLinepos;
 
 static int
 doUtdnewpage (xmlNode * node)
 {
+  lastLinepos = 0;
   if (skipFirstNew)
     return 1;
   newpagePending = 1;
@@ -201,7 +203,7 @@ doUtdnewline (xmlNode * node)
   char *xy;
   int k;
   int leadingBlanks;
-  int linePos;
+  int linepos;
   if (skipFirstNew)
     skipFirstNew = newpagePending = 0;
   else
@@ -214,7 +216,7 @@ doUtdnewline (xmlNode * node)
   xy = (char *) xmlGetProp (node, (xmlChar *) "xy");
   for (k = 0; xy[k] != ','; k++);
   leadingBlanks = (atoi (xy) - ud->left_margin) / CELLWIDTH;
-  linePos = atoi (&xy[k + 1]);
+  linepos = (atoi (&xy[k + 1]) - ud->page_top) / NORMALLINE;
   writeCharacters (blanks, leadingBlanks);
   return 1;
 }
