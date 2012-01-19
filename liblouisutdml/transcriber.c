@@ -192,8 +192,6 @@ end_document ()
     return utd_finish ();
   if (ud->style_top < 0)
     ud->style_top = 0;
-  if (ud->contains_utd)
-    return 1;
   if (ud->text_length != 0)
     insert_translation (ud->main_braille_table);
   if (ud->translated_length != 0)
@@ -643,8 +641,6 @@ insert_translation (const char *table)
   int translationLength;
   int translatedLength;
   int k;
-  if (ud->contains_utd)
-    return 1;
   if (table == NULL)
     {
       memset (ud->typeform, 0, sizeof (ud->typeform));
@@ -869,8 +865,6 @@ insert_text (xmlNode * node)
 {
   int length;
   int wcLength;
-  if (ud->contains_utd)
-    return;
   for (length = strlen ((char *) node->content); length > 0 &&
        node->content[length - 1] <= 32; length--);
   if (length <= 0)
@@ -1396,7 +1390,9 @@ startLine ()
   return availableCells;
 }
 
-static int spaceOut (int numSpaces, widechar * text, int length);
+static int shortBrlOnly (int numSpaces, const widechar * content, int 
+length, 
+int kind);
 
 static int
 centerHeadFoot (widechar * toCenter, int length)
@@ -1410,9 +1406,10 @@ centerHeadFoot (widechar * toCenter, int length)
   trailingBlanks = numCells - leadingBlanks - length;
   if (ud->format_for == utd)
     {
-      if (!spaceOut (leadingBlanks, toCenter, length))
+      if (!shortBrlOnly (leadingBlanks, toCenter, length, 1))
 	return 0;
-      if (!spaceOut (trailingBlanks, pageNumberString, pageNumberLength))
+      if (!shortBrlOnly (trailingBlanks, pageNumberString, 
+      pageNumberLength, 1))
 	return 0;
     }
   else
@@ -2652,8 +2649,6 @@ int
 write_paragraph (sem_act action, xmlNode * node)
 {
   StyleType *holdStyle;
-  if (ud->contains_utd)
-    return 1;
   if (!((ud->text_length > 0 || ud->translated_length > 0) &&
 	ud->style_top >= 0))
     return 1;
@@ -3294,10 +3289,8 @@ static xmlNode *brlNode;
 static xmlNode *firstBrlNode;
 static xmlNode *prevBrlNode;
 static xmlNode *documentNode = NULL;
-static xmlNode *containsBrlOnlyNode;
+static xmlNode *parentOfBrlOnlyNode;
 static xmlNode *brlOnlyNode;
-static xmlNode *containsContents;
-static xmlNode *addContentsBlock;
 static xmlNode *newpageNode;
 static xmlNode *newlineNode;
 static xmlChar *brlContent;
@@ -3581,7 +3574,9 @@ backTranslateBlock (xmlNode * curBlock, xmlNode * curBrl)
       backBuf = malloc ((4 * backLength + 4) * CHARSIZE);
       if (backIndices != NULL)
 	free (backIndices);
-      backIndices = malloc ((4 * backLength + 4) * sizeof (int));
+      backIndices = NULL;
+      if (!(ud->mode & notSync))
+        backIndices = malloc ((4 * backLength + 4) * sizeof (int));
     }
   translationLength = ud->text_length;
   translatedLength = 4 * backLength;
@@ -3599,33 +3594,9 @@ backTranslateBlock (xmlNode * curBlock, xmlNode * curBrl)
   for (k = 0; k < translatedLength; k++)
     {
       widechar ch = backBuf[k];
-      if (ch < 127)
-	{
-	  if (ch == '<' || ch == '&')
-	    {
-	      utilStringBuf[pos++] = '&';
-	      if (ch == '<')
-		{
-		  utilStringBuf[pos++] = 'l';
-		  utilStringBuf[pos++] = 't';
-		}
-	      else
-		{
-		  utilStringBuf[pos++] = 'a';
-		  utilStringBuf[pos++] = 'm';
-		  utilStringBuf[pos++] = 'p';
-		}
-	      utilStringBuf[pos++] = ';';
-	    }
-	  else
-	    utilStringBuf[pos++] = ch;
-	}
-      else
-	{
 	  unsigned char *utf8str = wcCharToUtf8 (ch);
 	  for (kk = 0; utf8str[kk]; kk++)
 	    utilStringBuf[pos++] = utf8str[kk];
-	}
     }
   utilStringBuf[pos] = 0;
   backText = xmlNewText ((xmlChar *) utilStringBuf);
@@ -3633,19 +3604,23 @@ backTranslateBlock (xmlNode * curBlock, xmlNode * curBrl)
   addBrl = xmlAddChild (curBlock, curBrl);
   if (!goodTrans)
     {
+      if (!(ud->mode & notSync))
       xmlNewProp (addBrl, (xmlChar *) "index", (xmlChar *) "-1");
       return 1;
     }
   kk = 0;
+  if (!(ud->mode & notSync))
+  {
   for (k = 0; k < translatedLength; k++)
     {
       char posx[MAXNUMLEN];
-      int posxLen = sprintf (posx, "%d,", backIndices[k]);
+      int posxLen = sprintf (posx, "%d ", backIndices[k]);
       strcpy (&utilStringBuf[kk], posx);
       kk += posxLen;
     }
   utilStringBuf[--kk] = 0;
   xmlNewProp (addBrl, (xmlChar *) "index", (xmlChar *) utilStringBuf);
+ }
   return 1;
 }
 
@@ -3666,26 +3641,7 @@ makeDotsTextNode (xmlNode * node, const widechar * content, int length,
 	lou_dotsToChar (currentTable, content, ud->outbuf1, length, 0);
       inlen = 0;
       for (k = 0; k < length; k++)
-	{
-	  if (ud->outbuf1[k] == '<' || ud->outbuf1[k] == '&')
-	    {
-	      ud->text_buffer[inlen++] = '&';
-	      if (ud->outbuf1[k] == '<')
-		{
-		  ud->text_buffer[inlen++] = 'l';
-		  ud->text_buffer[inlen++] = 't';
-		}
-	      else
-		{
-		  ud->text_buffer[inlen++] = 'a';
-		  ud->text_buffer[inlen++] = 'm';
-		  ud->text_buffer[inlen++] = 'p';
-		}
-	      ud->text_buffer[inlen++] = ';';
-	    }
-	  else
-	    ud->text_buffer[inlen++] = ud->outbuf1[k];
-	}
+    ud->text_buffer[inlen++] = ud->outbuf1[k];
     }
   else
     {
@@ -3836,33 +3792,29 @@ makeBrlOnlyNode ()
   xmlNode *newNode;
   newNode = xmlNewNode (NULL, (xmlChar *) "span");
   xmlNewProp (newNode, (xmlChar *) "class", (xmlChar *) "brlonly");
-  containsBrlOnlyNode = xmlAddChild (brlNode, newNode);
+  parentOfBrlOnlyNode = xmlAddChild (brlNode, newNode);
   newNode = xmlNewNode (NULL, (xmlChar *) "brl");
-  brlOnlyNode = xmlAddChild (containsBrlOnlyNode, newNode);
+  brlOnlyNode = xmlAddChild (parentOfBrlOnlyNode, newNode);
   return 1;
 }
 
 static int
-shortBrlOnly (const widechar * content, int length, int kind)
-{
-  makeBrlOnlyNode ();
-  makeDotsTextNode (brlOnlyNode, content, length, kind);
-  backTranslateBlock (containsBrlOnlyNode, brlOnlyNode);
-  return 1;
-}
-
-static int
-spaceOut (int numSpaces, widechar * text, int length)
+shortBrlOnly (int numSpaces, const widechar * content, int length, int 
+kind)
 {
   widechar buf[MAXNAMELEN];
   int k;
   int kk = 0;
   for (k = 0; k < numSpaces; k++)
+    if (kind == 0)
+    buf[k] = SPACE;
+    else
     buf[k] = ' ';
   for (; k < (numSpaces + length); k++)
-    buf[k] = text[kk++];
-  if (!shortBrlOnly (buf, numSpaces + length, 1))
-    return 0;
+    buf[k] = content[kk++];
+  makeBrlOnlyNode ();
+  makeDotsTextNode (brlOnlyNode, buf, length, kind);
+  backTranslateBlock (parentOfBrlOnlyNode, brlOnlyNode);
   return 1;
 }
 
@@ -3912,7 +3864,7 @@ checkPageStatus ()
   remaining = ud->page_bottom - ud->vert_line_pos;
   if (remaining < NORMALLINE)
     return bottomOfPage;
-  if (remaining > NORMALLINE && remaining < (3 * NORMALLINE / 2))
+  if (remaining >= NORMALLINE && remaining < (3 * NORMALLINE / 2))
     return lastLine;
   if (remaining > (2 * NORMALLINE) && remaining < (3 * NORMALLINE))
     return nearBottom;
@@ -3928,6 +3880,8 @@ utd_getPageNumber ()
   int printPageNumber = 0;
   pageNumberLength = 0;
   curPageStatus = checkPageStatus ();
+  if (curPageStatus == midPage)
+    return 1;
   if (curPageStatus == topOfPage)
     {
       if (ud->print_pages && ud->print_page_number_at
@@ -4171,7 +4125,7 @@ utd_insert_text (xmlNode * node, int length)
       if (!ud->print_pages)
 	return;
       fineFormat ();
-      makePageSeparator (node->content, length);
+      handlePagenum (node->content, length);
       return;
     default:
       break;
@@ -4284,7 +4238,8 @@ utd_finishLine (int leadingBlanks, int length)
       if (cellsOnLine > 0 && pageNumberLength > 0)
 	{
 	  cellsToWrite = ud->cells_per_line - pageNumberLength - cellsOnLine;
-	  if (!spaceOut (cellsToWrite, pageNumberString, pageNumberLength))
+	  if (!shortBrlOnly (cellsToWrite, pageNumberString, 
+	  pageNumberLength, 1))
 	    return 0;
 	}
       else if (curPageStatus == topOfPage)
@@ -4296,8 +4251,9 @@ utd_finishLine (int leadingBlanks, int length)
 	      if (pageNumberLength)
 		{
 		  cellsToWrite = ud->cells_per_line - pageNumberLength;
-		  if (!spaceOut
-		      (cellsToWrite, pageNumberString, pageNumberLength))
+		  if (!shortBrlOnly
+		      (cellsToWrite, pageNumberString, 
+		      pageNumberLength, 1))
 		    return 0;
 		}
 	    }
@@ -4312,8 +4268,9 @@ utd_finishLine (int leadingBlanks, int length)
 		{
 		  horizLinePos = (ud->cells_per_line -
 				  pageNumberLength) * CELLWIDTH;
-		  if (!spaceOut
-		      (horizLinePos, pageNumberString, pageNumberLength))
+		  if (!shortBrlOnly
+		      (horizLinePos, pageNumberString, 
+		      pageNumberLength, 1))
 		    return 0;
 		}
 	    }
@@ -4326,7 +4283,7 @@ utd_finishLine (int leadingBlanks, int length)
     {
       if (ud->print_page_number[0] != '_')
         xmlSetProp (newpageNode, (xmlChar *) "printnumber", (xmlChar *) 
-        ud->print_page_number);
+        ud->print_page_number_first);
       ud->braille_page_number++;
       ud->vert_line_pos = ud->page_top;
       makeNewpage (brlNode);
@@ -4700,175 +4657,6 @@ utd_doListColumns ()
 }
 
 static int
-utd_doContents ()
-{
-  int hasPageNumbers = 1;
-  int lastWord;
-  int lastWordLength;
-  int untilLastWord;
-  int numbersStart;
-  int numbersLength;
-  int leadingBlanks = 0;
-  int charactersWritten = 0;
-  int cellsToWrite = 0;
-  int availableCells = 0;
-  int k;
-  xmlNode *contentsBlock;
-  brlNode = xmlNewNode (NULL, (xmlChar *) "brl");
-  contentsBlock = xmlNewNode (NULL, (xmlChar *) "p");
-  if (translatedBuffer[translatedLength - 1] == (NBSP))
-    {
-      /* No page numbers */
-      translatedLength--;
-      hasPageNumbers = 0;
-    }
-  for (k = translatedLength - 1; k > 0 && translatedBuffer[k] != SPACE; k--);
-  if (k == 0)
-    hasPageNumbers = 0;
-  if (hasPageNumbers)
-    {
-      numbersStart = k + 1;
-      numbersLength = translatedLength - numbersStart;
-      for (--k; k >= 0 && translatedBuffer[k] > SPACE; k--);
-      lastWord = k + 1;
-      lastWordLength = numbersStart - lastWord;
-      untilLastWord = lastWord - 1;
-    }
-  else
-    untilLastWord = translatedLength;
-  while (charactersWritten < untilLastWord)
-    {
-      int wordTooLong = 0;
-      int breakAt = 0;
-      availableCells = utd_startLine ();
-      if (styleSpec->status == startBody)
-	{
-	  leadingBlanks = style->left_margin + style->first_line_indent;
-	  styleSpec->status = resumeBody;
-	}
-      else
-	leadingBlanks = style->left_margin;
-      if (leadingBlanks < 0)
-	leadingBlanks = 0;
-      availableCells -= leadingBlanks;
-      if ((charactersWritten + availableCells) >= untilLastWord)
-	cellsToWrite = untilLastWord - charactersWritten;
-      else
-	{
-	  for (cellsToWrite = availableCells - 2; cellsToWrite > 0;
-	       cellsToWrite--)
-	    if (translatedBuffer[charactersWritten + cellsToWrite] == SPACE)
-	      break;
-	  if (cellsToWrite == 0)
-	    {
-	      cellsToWrite = availableCells - 1;
-	      wordTooLong = 1;
-	    }
-	  else
-	    {
-	      if (ud->hyphenate)
-		breakAt =
-		  hyphenatex (charactersWritten + cellsToWrite,
-			      charactersWritten + availableCells);
-	      if (breakAt)
-		cellsToWrite = breakAt - charactersWritten;
-	    }
-	}
-      if (!insertTextFragment
-	  (&translatedBuffer[charactersWritten], cellsToWrite))
-	return 0;
-      charactersWritten += cellsToWrite;
-      if (translatedBuffer[charactersWritten] == SPACE)
-	charactersWritten++;
-      if ((breakAt && translatedBuffer[breakAt - 1] != *litHyphen)
-	  || wordTooLong)
-	{
-	  if (!utd_insertCharacters (brlNode, litHyphen, strlen (litHyphen)))
-	    return 0;
-	}
-      if (charactersWritten < untilLastWord)
-	utd_finishLine (leadingBlanks, cellsToWrite);
-      else
-	{
-	  availableCells -= cellsToWrite;
-	  if (availableCells <= 0)
-	    {
-	      utd_finishLine (leadingBlanks, cellsToWrite);
-	      availableCells = 0;
-	    }
-	}
-    }
-  if (availableCells == 0)
-    {
-      availableCells = utd_startLine ();
-      if (styleSpec->status == startBody)
-	{
-	  leadingBlanks = style->left_margin + style->first_line_indent;
-	  styleSpec->status = resumeBody;
-	}
-      else
-	leadingBlanks = style->left_margin;
-      if (leadingBlanks < 0)
-	leadingBlanks = 0;
-      availableCells -= leadingBlanks;
-    }
-  if (!hasPageNumbers)
-    {
-      if ((lastWordLength + numbersLength + 2) < availableCells)
-	{
-	  utd_insertCharacters (brlNode, blanks, 1);
-	  availableCells--;
-	  if (!insertTextFragment
-	      (&translatedBuffer[lastWord], lastWordLength))
-	    return 0;
-	  availableCells -= lastWordLength;
-	  if ((availableCells - numbersLength) < 3)
-	    utd_insertCharacters (brlNode, blanks, availableCells -
-				  numbersLength);
-	  else
-	    {
-	      utd_insertCharacters (brlNode, blanks, 1);
-	      for (k = availableCells - (numbersLength + 1); k > 0; k--)
-		utd_insertCharacters (brlNode, &ud->line_fill, 1);
-	      utd_insertCharacters (brlNode, blanks, 1);
-	    }
-	  if (!insertTextFragment (&translatedBuffer[numbersStart],
-				   numbersLength))
-	    return 0;
-	  utd_finishLine (leadingBlanks, cellsToWrite);
-	}
-      else
-	{
-	  utd_finishLine (leadingBlanks, cellsToWrite);
-	  availableCells = utd_startLine ();
-	  leadingBlanks = style->left_margin;
-	  availableCells -= leadingBlanks;
-	  if (!insertTextFragment
-	      (&translatedBuffer[lastWord], lastWordLength))
-	    return 0;
-	  availableCells -= lastWordLength;
-	  if ((availableCells - numbersLength) < 3)
-	    utd_insertCharacters (brlNode, blanks, availableCells -
-				  numbersLength);
-	  else
-	    {
-	      utd_insertCharacters (brlNode, blanks, 1);
-	      for (k = availableCells - (numbersLength + 1); k > 0; k--)
-		utd_insertCharacters (brlNode, &ud->line_fill, 1);
-	      utd_insertCharacters (brlNode, blanks, 1);
-	    }
-	  if (!insertTextFragment (&translatedBuffer[numbersStart],
-				   numbersLength))
-	    return 0;
-	  utd_finishLine (leadingBlanks, numbersLength);
-	}
-    }
-  backTranslateBlock (contentsBlock, brlNode);
-  xmlAddChild (addContentsBlock, contentsBlock);
-  return 1;
-}
-
-static int
 utd_startStyle ()
 {
   firstBrlNode = NULL;
@@ -4991,8 +4779,7 @@ utd_styleBody ()
       utd_doComputerCode ();
       break;
     case contents:
-      utd_doContents ();
-      break;
+    break;
     }
   if (ud->contents == 1)
     finish_heading (action);
@@ -5060,14 +4847,6 @@ utd_finish ()
   if (ud->translated_length != 0)
     write_paragraph (para, NULL);
   utd_fillPage ();
-  if (ud->contents)
-    {
-      containsContents = xmlNewNode (NULL, (xmlChar *) "brl");
-      newNode = xmlNewNode (NULL, (xmlChar *) "span");
-      xmlNewProp (newNode, (xmlChar *) "class", (xmlChar *) "brlonly");
-      addContentsBlock = xmlAddChild (containsContents, newNode);
-      make_contents ();
-    }
   if (ud->head_node)
     {
       newNode = xmlNewNode (NULL, (xmlChar *) "meta");
