@@ -225,7 +225,7 @@ doUtdnewline (xmlNode * node)
     }
   xy = (char *) xmlGetProp (node, (xmlChar *) "xy");
   for (k = 0; xy[k] != ','; k++);
-  leadingBlanks = (atoi (&xy[k + 1]) - ud->left_margin) / CELLWIDTH;
+  leadingBlanks = (atoi (xy) - ud->left_margin) / CELLWIDTH;
   writeCharacters (blanks, leadingBlanks);
   return 1;
 }
@@ -290,11 +290,9 @@ txDoBrlNode (xmlNode * node, int action)
       child = child->next;
     }
   if (action != 0)
-    {
-      pop_sem_stack ();
-      return 1;
-    }
-  finishBrlNode ();
+    pop_sem_stack ();
+    else
+    finishBrlNode ();
   return 1;
 }
 
@@ -312,7 +310,7 @@ finishBrlNode ()
   wc_string_to_utf8 (ud->outbuf1, &wcLength, transText, &utf8Length);
   transNode = xmlNewText (transText);
   oldText = curBrlNode->prev;
-  if (oldText != NULL && strcmp (oldText->name, "text") == 0)
+  if (oldText != NULL && oldText->type == XML_TEXT_NODE)
   {
   xmlUnlinkNode (oldText);
   xmlFree (oldText);

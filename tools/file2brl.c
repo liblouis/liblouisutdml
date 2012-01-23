@@ -194,7 +194,7 @@ main (int argc, char **argv)
     {
       if (!(inputFile = fopen (inputFileName, "r")))
 	{
-	  lou_logPrint ("Can't open file %s.\n", inputFileName);
+	  lou_logPrint ("Can't open input file %s.\n", inputFileName);
 	  exit (EXIT_FAILURE);
 	}
     }
