@@ -272,6 +272,11 @@ transcribe_paragraph (xmlNode * node, int action)
       switch (child->type)
 	{
 	case XML_ELEMENT_NODE:
+	  if (ud->format_for == utd)
+	  {
+	  }
+	  else
+	  {
 	  style_this = is_style (child);
 	  if (style_this && ud->braille_pages)
 	    {
@@ -319,6 +324,7 @@ transcribe_paragraph (xmlNode * node, int action)
 		  orphan_control_pos = ud->lines_length;
 		}
 	    }
+	  }
 	  if (strcmp (child->name, "brl") != 0)
 	    transcribe_paragraph (child, 1);
 	  break;
@@ -336,6 +342,11 @@ transcribe_paragraph (xmlNode * node, int action)
 	}
       if (child != NULL)
 	child = child->next;
+      if (ud->format_for == utd)
+      {
+      }
+      else
+      {
       if (ud->outbuf3_enabled)
 	{
 	  if (dont_split_status >= 0 &&
@@ -445,6 +456,7 @@ transcribe_paragraph (xmlNode * node, int action)
 	keep_with_previous = 0;
       if (orphan_control_this)
 	orphan_control = 0;
+    }
     }
   insert_code (node, branchCount);
   insert_code (node, -1);

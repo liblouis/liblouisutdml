@@ -617,8 +617,7 @@ compileConfig (FileInfo * nested)
     "35",
     "leftMargin",
     "36",
-    "containsUtd",
-    "37",
+// available    "37",
     "volumeSem",
     "38",
     "braillePageNumber",
@@ -688,6 +687,8 @@ compileConfig (FileInfo * nested)
     "transInXml", "4",
     "volumes", "5",
     "brf", "6",
+    "volumesPef", "7"
+    "volumesBrf", "8",
     NULL
   };
 
@@ -896,10 +897,7 @@ compileConfig (FileInfo * nested)
 	case 36:
 	  leftMargin = atof (nested->value);
 	  break;
-	case 37:
-	  if ((k = checkValues (nested, yesNo)) != NOTFOUND)
-	    ud->contains_utd = k;
-	  break;
+// available	case 37:
 	case 38:
 	  ud->volume_sem = alloc_string (nested->value);
 	  break;
