@@ -2,11 +2,12 @@ lbu_filesdir = $(datadir)/liblouisutdml/lbu_files
 
 lbu_files_DATA = \
 	doc.sem \
+	document-content.sem
 	sample-utd.cfg \
 	transinxml.cfg \
 	brf.cfg \
-	viewutd.cfg \
-	viewutd.ctb \
+	viewxml.cfg \
+	viewxml.ctb \
 	volumes.cfg \
 	marburg.cfg \
 	marburg.sem \

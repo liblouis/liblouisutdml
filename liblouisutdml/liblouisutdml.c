@@ -112,6 +112,10 @@ processXmlDocument (const char *inputDoc, int length)
       lou_logPrint ("Document is empty");
       return 0;
     }
+  if (ud->mode & convertOnly)
+  convert_utd ();
+  else
+  {
   haveSemanticFile = compile_semantic_table (rootElement);
   do_xpath_expr ();
   examine_document (rootElement);
@@ -119,6 +123,7 @@ processXmlDocument (const char *inputDoc, int length)
   if (!haveSemanticFile)
     return 0;
   transcribe_document (rootElement);
+  }
   xmlFreeDoc (ud->doc);
   xmlCleanupParser ();
   initGenericErrorDefaultFunc (NULL);

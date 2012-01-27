@@ -127,7 +127,9 @@ typedef enum
   pef,
   transinxml,
   volumes,
-  brf
+  brf,
+  volumesPef,
+  volumesBrf
 } FormatFor;
 
 typedef enum
@@ -190,7 +192,6 @@ typedef struct
   int bottom_margin;
   int left_margin;
   int right_margin;
-  int contains_utd;
   int cells_per_line;
   int lines_per_page;
   int beginning_braille_page_number;

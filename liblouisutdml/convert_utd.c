@@ -62,7 +62,6 @@ convert_utd ()
     }
   clean_semantic_table ();
   ud->format_for = ud->orig_format_for;
-  ud->contains_utd = 1;
   switch (ud->format_for)
     {
     case pef:
@@ -72,6 +71,8 @@ convert_utd ()
       ud->semantic_files = ud->transinxml_sem;
       break;
     case volumes:
+    case volumesPef:
+    case volumesBrf:
       ud->semantic_files = ud->volume_sem;
       break;
     case brf:
@@ -104,6 +105,8 @@ convert_utd ()
     utd2pef (rootElement);
       break;
     case volumes:
+    case volumesPef:
+    case volumesBrf:
       utd2volumes (rootElement);
       break;
     default:

@@ -313,7 +313,7 @@ finishBrlNode ()
   if (oldText != NULL && oldText->type == XML_TEXT_NODE)
   {
   xmlUnlinkNode (oldText);
-  xmlFree (oldText);
+  xmlFreeNode (oldText);
   }
   xmlAddPrevSibling (curBrlNode, transNode);
   afterCurBrl = curBrlNode->next;

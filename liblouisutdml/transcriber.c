@@ -3941,7 +3941,7 @@ assignIndices ()
   if (firstBrlNode == NULL)
     return 0;
   curBrlNode = firstBrlNode;
-  while (curPos < translatedLength)
+  while (curPos < translatedLength && curBrlNode != NULL)
     {
       if (translatedBuffer[curPos] == ENDSEGMENT || prevSegment == 0)
 	{
@@ -4129,7 +4129,7 @@ utd_insert_text (xmlNode * node, int length)
       if (!ud->print_pages)
 	return;
       fineFormat ();
-      handlePagenum (node->content, length);
+      makePageSeparator (node->content, length);
       return;
     default:
       break;
@@ -4198,7 +4198,8 @@ postponedStartActions ()
 	utd_fillPage ();
       else
 	if (style->lines_before > 0
-	    && prevStyle->lines_after == 0 && curPageStatus == topOfPage)
+	    && prevStyle->lines_after == 0 && curPageStatus != 
+	    topOfPage)
 	{
 	  if (curPageStatus == nearBottom)
 	    utd_fillPage ();
@@ -4209,7 +4210,8 @@ postponedStartActions ()
   else
     {
       if (style->lines_before > 0 && prevStyle->lines_after == 0
-	  && prevStyle->action != document)
+	  && prevStyle->action != document && curPageStatus != 
+	  topOfPage)
 	{
 	  if (!utd_makeBlankLines (style->lines_before, 0))
 	    return 0;
@@ -4224,13 +4226,13 @@ utd_startLine ()
   int availableCells = 0;
   if (firstPage)
     {
-      makeNewpage (brlNode);
       firstPage = 0;
+      makeNewpage (brlNode);
     }
   if (postponedStart)
     {
-      postponedStartActions ();
       postponedStart = 0;
+      postponedStartActions ();
     }
   while (availableCells == 0)
     {
@@ -4330,7 +4332,7 @@ utd_finishLine (int leadingBlanks, int length)
     {
       if (ud->print_page_number[0] != '_')
 	xmlSetProp (newpageNode, (xmlChar *) "printnumber", (xmlChar *)
-		    ud->print_page_number_first);
+		    ud->print_page_number);
       ud->braille_page_number++;
       ud->vert_line_pos = ud->page_top;
       makeNewpage (brlNode);
