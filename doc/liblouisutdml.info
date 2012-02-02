@@ -6,7 +6,7 @@ START-INFO-DIR-ENTRY
 * Liblouisutdml: (liblouisutdml). An xml to Braille Translation Library.
 END-INFO-DIR-ENTRY
 
-   This manual is for liblouisutdml (version 2.1.0, 9 December 2011),
+   This manual is for liblouisutdml (version 2.1.0, 31 January 2012),
 an xml to Braille Translation Library.
 
    This file may contain code borrowed from the Linux screenreader
@@ -36,7 +36,7 @@ File: liblouisutdml.info,  Node: Top,  Next: Introduction,  Prev: (dir),  Up: (d
 Liblouisutdml User's and Programmer's Manual
 ********************************************
 
-This manual is for liblouisutdml (version 2.1.0, 9 December 2011), an
+This manual is for liblouisutdml (version 2.1.0, 31 January 2012), an
 xml to Braille Translation Library.
 
    This file may contain code borrowed from the Linux screenreader
@@ -137,7 +137,7 @@ Programming with liblouisutdml
 
 Example files
 
-* canonical.cfg::
+* liblouisutdml.ini::
 * default.cfg::
 * html.sem::
 * nemeth.sem::
@@ -260,7 +260,7 @@ various optional parts control how the program will behave, as follows:
      except those having to do with styles. *Note Configuration
      Settings Index::, for a list of available settings. These must be
      specified in configuration files. The settings may be in any
-     order. They override any settings in `canonical.cfg' or in the
+     order. They override any settings in `liblouisutdml.ini' or in the
      configuration file used by `file2brl'.
 
 `-b'
@@ -480,44 +480,47 @@ include the header file `louisutdml.h'. You do not need to call
 
    A configuration file specification may contain more than one file
 name, separated by commas. liblouisutdml will process these files in
-sequence.  The first file name may also contain a path. liblouisutdml
-will search for the files it needs first on this path. To make it
-search first the current directory precede the first file name with
-`./'. After the path, if any, has been evaluated, but before reading
-any of the files, liblouisutdml reads in a file called `canonical.cfg'.
-This file specifies values for all possible settings. It is needed to
-complete the initialization of the program. You may alter the values in
-the distribution `canonical.cfg', but you should not delete any
-settings. Do not specify `canonical.cfg' as your configuration file.
-This will lead to error messages and program termination. If a
+sequence, merging the information they contain. The first file name may
+also contain a path. liblouisutdml will search for the files it needs
+first on this path. To make it search first the current directory
+precede the first file name with `./'. After the path, if any, has been
+evaluated, but before reading any of the files, liblouisutdml reads in a
+file called `liblouisutdml.ini'. This file can contain any
+configuration settings, but it usually contains only the minimum ones
+for liblouisutdml to operate properly. You may alter the values in the
+distribution `liblouisutdml.ini', but you should not delete any
+settings. Do not specify `liblouisutdml.ini' as your configuration
+file. This will lead to error messages and program termination. If a
 configuration file read in later contains a particular setting name, the
-value specified simply replaces the one specified in `canonical.cfg'.
+value specified simply replaces the one specified in
+`liblouisutdml.ini' or any previously read configuration file.
 
-   As you will see by looking at `canonical.cfg', it contains four main
-sections, `outputFormat', `translation', `xml' and `style'. In
-addition, a configuration file can contain an include entry. This
-causes the file named on that line to be read in at the point where the
-line occurs. The sections need not follow each other in any particular
-order, nor is the order of settings within each section important. The
-section names, except for `style' are optional. In this document and in
-the `canonical.cfg' file, where section and setting names consist of
-more than one word, the first letter of each word following the initial
-one is capitalized. This is merely for readability. The case of the
-letters in these names is ignored by the program. Section and setting
-names may not contain spaces.
+   Originally, configuration files contained four main sections,
+`outputFormat', `translation', `xml' and `style'.  The section names,
+except for `style' are now optional. In addition, a configuration file
+can contain an include entry. This causes the file named on that line
+to be read in at the point where the line occurs. The sections need not
+follow each other in any particular order, nor is the order of settings
+within each section important. The section names, except for `style'
+are optional. In this document and in the `liblouisutdml.ini' file,
+where section and setting names consist of more than one word, the
+first letter of each word following the initial one is capitalized.
+This is merely for readability. The case of the letters in these names
+is ignored by the program. Section and setting names may not contain
+spaces.
 
    Here, then, is an explanation of each section and setting in the
-`canonical.cfg' file. When you look at this file you will see that the
-section names start at the left margin, while the settings are indented
-one tab stop. This is done for readability. it has no effect on the
-meaning of the lines. You will also see lines beginning with a number
-sign (`#'), which are comments. Blank lines can also be used anywhere
-in a configuration file. In general, a section name is a single word or
-combination of unspaced words. However, each style has a section of its
-own, so the word `style' is followed by a space then by the name of the
-style. Setting lines begin with the name of the setting, followed by at
-least one space or tab, followed by the value of the setting. A few
-settings have two values.
+`liblouisutdml.ini' file. When you look at this file you will see that
+the section names start at the left margin, while the settings are
+indented one tab stop. This is done for readability. it has no effect
+on the meaning of the lines. You will also see lines beginning with a
+number sign (`#'), which are comments. Blank lines can also be used
+anywhere in a configuration file. In general, a section name is a
+single word or combination of unspaced words. However, each style has a
+section of its own, so the word `style' is followed by a space then by
+the name of the style. Setting lines begin with the name of the
+setting, followed by at least one space or tab, followed by the value
+of the setting. A few settings have two values.
 
 * Menu:
 
@@ -781,7 +784,7 @@ files.
      one of those that has two values. The first is the thing to be
      replaced, and the second is the replacement. As many entity lines
      as necessary can be used. The information they contain is added to
-     the information provided by xmlHeader. In `canonical.cfg' this
+     the information provided by xmlHeader. In `liblouisutdml.ini' this
      line is commented out, because specifying it at this point would
      prevent the user from specifying his own xmlheader.
 
@@ -819,7 +822,7 @@ define any style desired, with any name except `document', `para',
 `contents1', `contents2', `contents3' and `contents4'. The first two
 are needed for basic formatting. The others are needed for the table of
 contents tool. The user must define settings for these styles as for any
-others. This is done in `canonical.cfg', which also contains
+others. This is done in `liblouisutdml.ini', which also contains
 definitions and settings for many other styles. The user can add styles
 at any time in her/his own configuration files.
 
@@ -1598,7 +1601,7 @@ any subtree starting from `elementSpecifier'.
 `msup elementSpecifier'
 
 `mtable elementSpecifier'
-     The file `canonical.cfg' defines the style `matrix'. The
+     The file `liblouisutdml.ini' defines the style `matrix'. The
      semantic-action files for math codes declare `mtable' to be
      `matrix'. Depending on the attributes of this element, it can be
      set to other styles, such as long division. The `matrix' style
@@ -1807,8 +1810,8 @@ much like a heading style. The others correspond to the four heading
 levels and are `contents1', `contents2', `contents3' and `contents4'.
 These styles are chosen as appropriate while the table of contents is
 being made. Do not declare them in a semantic-action file. See the
-`canonical.cfg' file for the current default definitions of all these
-styles.
+`liblouisutdml.ini' file for the current default definitions of all
+these styles.
 
    The table of contents will be placed where the xml tag is that you
 declared in the `contentsheader' semantic action (*note contentsheader:
@@ -2027,8 +2030,8 @@ File: liblouisutdml.info,  Node: Poetry,  Next: Dividing a Book Into Volumes,  P
 6.7 Poetry
 ==========
 
-`canonical.cfg' defines two styles which can be used to format poetry,
-as follows:
+`liblouisutdml.ini' defines two styles which can be used to format
+poetry, as follows:
 
      style stanza
      linesBefore 1
@@ -2438,19 +2441,19 @@ File: liblouisutdml.info,  Node: lbx_initialize,  Next: lbx_translateString,  Pr
      const char *settingsString)
 
    This function initializes the libxml2 library, processes
-`canonical.cfg' and configuration settings given in the configuration
-files given in `configFilelist'. This is a list of configuration file
-names separated by commas. If the first character is a comma it is
-taken to be a string containing configuration settings and is processed
-like the `settingsString' string. if the parameter `settingsString' is
-not `NULL' it is processed last. Such a string must conform to the
-format of a configuration file. Newlines should be represented with
-ASCII 10. If `logfilename' is not `null', a log file is produced on the
-current directory. If it is `null' any messages are printed on stderr.
-The function returns a pointer to the `UserData' structure. This
-pointer is `void' and must be cast to `(UserData *)' in the calling
-program. To access the information in this structure you must include
-`louisutdml.h'. This function is used by `file2brl'.
+`liblouisutdml.ini' and configuration settings given in the
+configuration files given in `configFilelist'. This is a list of
+configuration file names separated by commas. If the first character is
+a comma it is taken to be a string containing configuration settings
+and is processed like the `settingsString' string. if the parameter
+`settingsString' is not `NULL' it is processed last. Such a string must
+conform to the format of a configuration file. Newlines should be
+represented with ASCII 10. If `logfilename' is not `null', a log file
+is produced on the current directory. If it is `null' any messages are
+printed on stderr. The function returns a pointer to the `UserData'
+structure. This pointer is `void' and must be cast to `(UserData *)' in
+the calling program. To access the information in this structure you
+must include `louisutdml.h'. This function is used by `file2brl'.
 
 
 File: liblouisutdml.info,  Node: lbx_translateString,  Next: lbx_translateFile,  Prev: lbx_initialize,  Up: Programming with liblouisutdml
@@ -2476,7 +2479,7 @@ The header is specified by the `xmlHeader' line in the configuration
 file. If no such line is present, a default header specifying UTF-8
 encoding is used. The `mode' parameter specifies whether you want the
 library to be initialized. If it is 0 everything is reset, the
-`canonical.cfg' file is processed and the configuration file and/or
+`liblouisutdml.ini' file is processed and the configuration file and/or
 string (see previous section) are processed.  If `mode' is 1
 liblouisutdml simply prepares to handle a new document. For more on the
 `mode' parameter see the next section.
@@ -2594,17 +2597,17 @@ studied to see how things are done.
 
 * Menu:
 
-* canonical.cfg::
+* liblouisutdml.ini::
 * default.cfg::
 * html.sem::
 * nemeth.sem::
 * Files for BAUK Maths (ukmaths)::
 
 
-File: liblouisutdml.info,  Node: canonical.cfg,  Next: default.cfg,  Prev: Example files,  Up: Example files
+File: liblouisutdml.info,  Node: liblouisutdml.ini,  Next: default.cfg,  Prev: Example files,  Up: Example files
 
-A.1 `canonical.cfg'
-===================
+A.1 `liblouisutdml.ini'
+=======================
 
      # canonical Configuration File
 
@@ -2784,7 +2787,7 @@ A.1 `canonical.cfg'
      style volume
 
 
-File: liblouisutdml.info,  Node: default.cfg,  Next: html.sem,  Prev: canonical.cfg,  Up: Example files
+File: liblouisutdml.info,  Node: default.cfg,  Next: html.sem,  Prev: liblouisutdml.ini,  Up: Example files
 
 A.2 `default.cfg'
 =================
@@ -4300,146 +4303,146 @@ Program Index
 
 Tag Table:
 Node: Top1435
-Node: Introduction4565
-Node: Transcribing Documents6585
-Node: Transcribing XML files with file2brl7067
-Node: Transcribing Text Documents13765
-Node: Transcribing Poorly Formatted Documents14298
-Node: Transcribing html Documents15131
-Node: Transcribing Microsoft Word files with msword2brl15649
-Node: Transcribing RTF files with rtf2brl16339
-Node: Transcribing PDF files with pdf2brl17235
-Node: Customization Configuring liblouisutdml18157
-Node: outputFormat22595
-Ref: continuePages setting25688
-Ref: pageSeparator setting25845
-Ref: printPageNumberRange setting26951
-Ref: formatFor setting29044
-Ref: lineFill setting30744
-Node: translation30947
-Node: xml32747
-Node: style35025
-Ref: contentsheader style40390
-Node: Connecting with the xml Document41917
-Node: Semantic Actions Overview42306
-Node: Semantic Actions in detail56199
-Ref: contenss1 semantic57382
-Ref: contenss2 semantic57637
-Ref: contenss3 semantic57666
-Ref: contenss4 semantic57696
-Ref: contentsheader semantic57726
-Ref: document semantic57891
-Ref: heading1 semantic57919
-Ref: heading2 semantic57948
-Ref: heading3 semantic57977
-Ref: heading4 semantic58006
-Ref: para semantic58035
-Ref: blankline semantic58324
-Ref: boldx semantic58678
-Ref: boxline semantic59005
-Ref: chemistry semantic59395
-Ref: changetable semantic59602
-Ref: compbrl semantic60210
-Ref: configfile semantic60491
-Ref: configstring semantic61429
-Ref: configtweak semantic61889
-Ref: contracted semantic62425
-Ref: footer semantic62455
-Ref: generic semantic62655
-Ref: graphic semantic63221
-Ref: htmllink semantic63349
-Ref: htmltarget semantic63529
-Ref: italicx semantic63710
-Ref: linespacing semantic64044
-Ref: maction semantic64474
-Ref: maligngroup semantic64919
-Ref: malignmark semantic64950
-Ref: math semantic64981
-Ref: menclose semantic65613
-Ref: merror semantic65641
-Ref: mfenced semantic65668
-Ref: mfrac semantic65696
-Ref: mglyph semantic65722
-Ref: mi semantic65749
-Ref: mlabeledtr semantic65772
-Ref: mmultiscripts semantic65803
-Ref: mn semantic65837
-Ref: mo semantic65860
-Ref: mover semantic65883
-Ref: mpadded semantic65909
-Ref: mphantom semantic65937
-Ref: mprescripts semantic65966
-Ref: mroot semantic65998
-Ref: mrow semantic66111
-Ref: ms semantic66288
-Ref: mspace semantic66310
-Ref: msqrt semantic66420
-Ref: mstyle semantic66445
-Ref: msub semantic66546
-Ref: msubsup semantic66570
-Ref: msup semantic66598
-Ref: mtable semantic66623
-Ref: mtd semantic66969
-Ref: mtext semantic67297
-Ref: mtr semantic67322
-Ref: munder semantic67784
-Ref: munderover semantic67810
-Ref: music semantic67841
-Ref: newpage semantic68001
-Ref: no semantic68261
-Ref: none semantic68581
-Ref: notranslate semantic68637
-Ref: pagenum semantic68964
-Ref: reverse semantic69568
-Ref: righthandpage semantic69864
-Ref: runninghead semantic70197
-Ref: semantics semantic70479
-Ref: skip semantic70596
-Ref: softreturn semantic70759
-Ref: uncontracted semantic70941
-Node: Pseudo-actions71061
-Node: Using XPath Expressions72339
-Node: Special Features73423
-Node: Table of contents73723
-Node: Back-translation77088
-Node: Reformatting78144
-Node: Interlining78819
-Node: Browser-Friendly Output79361
-Node: CDATA Sections80323
-Node: Special Formats80826
-Node: Tables81199
-Node: Reserving Space for Graphics81971
-Node: Displayed Text82706
-Node: Displayed Mathematics83023
-Node: Spatial Layouts in Mathematics83352
-Node: Arithmetic Examples83745
-Node: Poetry84027
-Node: Dividing a Book Into Volumes84841
-Node: Implementing Braille Mathematics Codes85953
-Node: Programming with liblouisutdml94811
-Node: License95225
-Node: Overview96297
-Node: Files and Paths99252
-Node: lbx_version101269
-Node: lbx_initialize101655
-Node: lbx_translateString102901
-Node: lbx_translateFile104939
-Node: lbx_translateTextFile106119
-Node: lbx_backTranslateFile107128
-Node: lbx_free108170
-Node: Example files108674
-Node: canonical.cfg109215
-Node: default.cfg113673
-Node: html.sem114328
-Node: nemeth.sem130989
-Node: Files for BAUK Maths (ukmaths)134478
-Node: ukmaths.cfg134734
-Node: ukmaths.sem135094
-Node: ukmaths.ctb138304
-Node: ukmaths_edit.ctb143544
-Node: Configuration Settings Index145474
-Node: Semantic Action Index149478
-Node: Function Index160181
-Node: Program Index160858
+Node: Introduction4569
+Node: Transcribing Documents6589
+Node: Transcribing XML files with file2brl7071
+Node: Transcribing Text Documents13773
+Node: Transcribing Poorly Formatted Documents14306
+Node: Transcribing html Documents15139
+Node: Transcribing Microsoft Word files with msword2brl15657
+Node: Transcribing RTF files with rtf2brl16347
+Node: Transcribing PDF files with pdf2brl17243
+Node: Customization Configuring liblouisutdml18165
+Node: outputFormat22767
+Ref: continuePages setting25860
+Ref: pageSeparator setting26017
+Ref: printPageNumberRange setting27123
+Ref: formatFor setting29216
+Ref: lineFill setting30916
+Node: translation31119
+Node: xml32919
+Node: style35201
+Ref: contentsheader style40570
+Node: Connecting with the xml Document42097
+Node: Semantic Actions Overview42486
+Node: Semantic Actions in detail56379
+Ref: contenss1 semantic57562
+Ref: contenss2 semantic57817
+Ref: contenss3 semantic57846
+Ref: contenss4 semantic57876
+Ref: contentsheader semantic57906
+Ref: document semantic58071
+Ref: heading1 semantic58099
+Ref: heading2 semantic58128
+Ref: heading3 semantic58157
+Ref: heading4 semantic58186
+Ref: para semantic58215
+Ref: blankline semantic58504
+Ref: boldx semantic58858
+Ref: boxline semantic59185
+Ref: chemistry semantic59575
+Ref: changetable semantic59782
+Ref: compbrl semantic60390
+Ref: configfile semantic60671
+Ref: configstring semantic61609
+Ref: configtweak semantic62069
+Ref: contracted semantic62605
+Ref: footer semantic62635
+Ref: generic semantic62835
+Ref: graphic semantic63401
+Ref: htmllink semantic63529
+Ref: htmltarget semantic63709
+Ref: italicx semantic63890
+Ref: linespacing semantic64224
+Ref: maction semantic64654
+Ref: maligngroup semantic65099
+Ref: malignmark semantic65130
+Ref: math semantic65161
+Ref: menclose semantic65793
+Ref: merror semantic65821
+Ref: mfenced semantic65848
+Ref: mfrac semantic65876
+Ref: mglyph semantic65902
+Ref: mi semantic65929
+Ref: mlabeledtr semantic65952
+Ref: mmultiscripts semantic65983
+Ref: mn semantic66017
+Ref: mo semantic66040
+Ref: mover semantic66063
+Ref: mpadded semantic66089
+Ref: mphantom semantic66117
+Ref: mprescripts semantic66146
+Ref: mroot semantic66178
+Ref: mrow semantic66291
+Ref: ms semantic66468
+Ref: mspace semantic66490
+Ref: msqrt semantic66600
+Ref: mstyle semantic66625
+Ref: msub semantic66726
+Ref: msubsup semantic66750
+Ref: msup semantic66778
+Ref: mtable semantic66803
+Ref: mtd semantic67153
+Ref: mtext semantic67481
+Ref: mtr semantic67506
+Ref: munder semantic67968
+Ref: munderover semantic67994
+Ref: music semantic68025
+Ref: newpage semantic68185
+Ref: no semantic68445
+Ref: none semantic68765
+Ref: notranslate semantic68821
+Ref: pagenum semantic69148
+Ref: reverse semantic69752
+Ref: righthandpage semantic70048
+Ref: runninghead semantic70381
+Ref: semantics semantic70663
+Ref: skip semantic70780
+Ref: softreturn semantic70943
+Ref: uncontracted semantic71125
+Node: Pseudo-actions71245
+Node: Using XPath Expressions72523
+Node: Special Features73607
+Node: Table of contents73907
+Node: Back-translation77276
+Node: Reformatting78332
+Node: Interlining79007
+Node: Browser-Friendly Output79549
+Node: CDATA Sections80511
+Node: Special Formats81014
+Node: Tables81387
+Node: Reserving Space for Graphics82159
+Node: Displayed Text82894
+Node: Displayed Mathematics83211
+Node: Spatial Layouts in Mathematics83540
+Node: Arithmetic Examples83933
+Node: Poetry84215
+Node: Dividing a Book Into Volumes85033
+Node: Implementing Braille Mathematics Codes86145
+Node: Programming with liblouisutdml95003
+Node: License95417
+Node: Overview96489
+Node: Files and Paths99444
+Node: lbx_version101461
+Node: lbx_initialize101847
+Node: lbx_translateString103097
+Node: lbx_translateFile105139
+Node: lbx_translateTextFile106319
+Node: lbx_backTranslateFile107328
+Node: lbx_free108370
+Node: Example files108874
+Node: liblouisutdml.ini109419
+Node: default.cfg113889
+Node: html.sem114548
+Node: nemeth.sem131209
+Node: Files for BAUK Maths (ukmaths)134698
+Node: ukmaths.cfg134954
+Node: ukmaths.sem135314
+Node: ukmaths.ctb138524
+Node: ukmaths_edit.ctb143764
+Node: Configuration Settings Index145694
+Node: Semantic Action Index149698
+Node: Function Index160401
+Node: Program Index161078
 
 End Tag Table

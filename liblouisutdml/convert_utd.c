@@ -62,6 +62,7 @@ convert_utd ()
     }
   clean_semantic_table ();
   ud->format_for = ud->orig_format_for;
+  ud->semantic_files = NULL;
   switch (ud->format_for)
     {
     case pef:

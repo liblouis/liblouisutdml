@@ -143,7 +143,7 @@ start_document ()
   if (!lou_getTable (ud->main_braille_table))
     {
       lou_logPrint ("Cannot open main table %s", ud->main_braille_table);
-      return 0;
+      kill_safely ();
     }
   if (ud->has_contentsheader)
     ud->braille_page_number = 1;
@@ -242,7 +242,7 @@ transcribe_text_string ()
   StyleType *docStyle = lookup_style ("document");
   StyleType *paraStyle = lookup_style ("para");
   if (!start_document ())
-    return 0;
+    kill_safely ();
   ud->input_encoding = ud->input_text_encoding;
   start_style (docStyle, NULL);
   while (1)
@@ -298,7 +298,7 @@ transcribe_text_file ()
   StyleType *docStyle = lookup_style ("document");
   StyleType *paraStyle = lookup_style ("para");
   if (!start_document ())
-    return 0;
+    kill_safely ();
   start_style (docStyle, NULL);
   ud->outbuf = outbufx;
   ud->outbuf1_len = outlenx;
@@ -676,8 +676,8 @@ insert_translation (const char *table)
   ud->text_length = 0;
   if (!k)
     {
-      table = NULL;
-      return 0;
+      lou_logPrint ("Cannot find table %s", table);
+      kill_safely ();
     }
   if ((ud->translated_length + translatedLength) < MAX_TRANS_LENGTH)
     ud->translated_length += translatedLength;
@@ -3930,6 +3930,30 @@ utd_getPageNumber ()
   return 1;
 }
 
+int
+hasAttrValue  (xmlNode *node, char *attrName, char *value)
+{
+  xmlChar *values;
+  int k;
+  int prevValue = 0;
+  if (node == NULL) 
+    return 0;
+  values = xmlGetProp (node, (xmlChar *) attrName);
+  if (values == NULL)
+    return 0;
+  for (k = 0; values[k]; k++)
+    if (values[k] == ' ')
+    {
+    values[k] = 0;
+    if (strcmp (&values[prevValue], value)  == 0)
+    return 1;
+    prevValue = k + 1;
+  }
+    if (strcmp (&values[prevValue], value)  == 0)
+    return 1;
+  return 0;
+}
+
 static int
 assignIndices ()
 {
@@ -3943,6 +3967,11 @@ assignIndices ()
   curBrlNode = firstBrlNode;
   while (curPos < translatedLength && curBrlNode != NULL)
     {
+      if (hasAttrValue (curBrlNode, "modifiers", "noindex"))
+      {
+      curBrlNode = curBrlNode->_private;
+      continue;
+      }
       if (translatedBuffer[curPos] == ENDSEGMENT || prevSegment == 0)
 	{
 	  int indexPos = prevSegment;
@@ -3966,6 +3995,7 @@ assignIndices ()
 	  curPos += indexPos;
 	}
       curPos++;
+      prevSegment = curPos;
     }
   return 1;
 }

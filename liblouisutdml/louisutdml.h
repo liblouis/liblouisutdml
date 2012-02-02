@@ -368,4 +368,7 @@ int utd2brf (xmlNode * node);
 int utd2pef (xmlNode * node);
 int utd2transinxml (xmlNode * node);
 int utd2volumes (xmlNode * node);
+int hasAttrValue  (xmlNode *node, char *attrName, char *value);
+void kill_safely ();
+
 #endif /*louisutdml_h */

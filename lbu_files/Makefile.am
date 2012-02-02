@@ -2,7 +2,7 @@ lbu_filesdir = $(datadir)/liblouisutdml/lbu_files
 
 lbu_files_DATA = \
 	doc.sem \
-	document-content.sem
+	document-content.sem \
 	sample-utd.cfg \
 	transinxml.cfg \
 	brf.cfg \
