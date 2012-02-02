@@ -35,7 +35,7 @@
 
 static void mathTrans (void);
 static void mathText (xmlNode * node, int action);
-static xmlNode *thisNode;
+static xmlNode *mathRoot;
 
 int
 transcribe_math (xmlNode * node, int action)
@@ -45,12 +45,13 @@ transcribe_math (xmlNode * node, int action)
   int branchCount = 0;
   if (node == NULL)
     return 0;
-  thisNode = node;
   if (action == 0)
     {
       insert_translation (ud->main_braille_table);
+      mathRoot = node;
     }
-  push_sem_stack (node);
+  else
+    push_sem_stack (node);
   switch (ud->stack[ud->top])
     {
     case skip:
@@ -104,7 +105,11 @@ mathTrans (void)
   if (ud->format_for == utd)
     {
       xmlNode *newNode = xmlNewNode (NULL, (xmlChar *) "brl");
-      link_brl_node (xmlAddChild (thisNode, newNode));
+      xmlSetProp (newNode, (xmlChar *) "modifiers", (xmlChar *) 
+      "noindex notext");
+      xmlNode *curBrlNode = xmlAddSibling (mathRoot, newNode);
+      link_brl_node (curBrlNode);
+      ud->text_buffer[ud->text_length++] = ENDSEGMENT;
     }
   insert_translation (ud->mathexpr_table_name);
 }

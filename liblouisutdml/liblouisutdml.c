@@ -61,6 +61,9 @@ libxml_errors (void *ctx ATTRIBUTE_UNUSED, const char *msg, ...)
   lou_logPrint ("%s", buffer);
 }
 
+static xmlParserCtxt *ctxt;
+static int initialized = 0;
+
 static int
 processXmlDocument (const char *inputDoc, int length)
 {
@@ -70,8 +73,6 @@ processXmlDocument (const char *inputDoc, int length)
    * Sort of hackish, but only hackers will see it. */
   xmlNode *rootElement = NULL;
   int haveSemanticFile;
-  xmlParserCtxt *ctxt;
-  static int initialized = 0;
   if (!initialized)
     {
       initialized = 1;
@@ -129,6 +130,20 @@ processXmlDocument (const char *inputDoc, int length)
   initGenericErrorDefaultFunc (NULL);
   xmlFreeParserCtxt (ctxt);
   return 1;
+}
+
+void
+kill_safely ()
+{
+  lou_logEnd ();
+  lbu_free ();
+  if (!initialized)
+    exit (1);
+  xmlFreeDoc (ud->doc);
+  xmlCleanupParser ();
+  initGenericErrorDefaultFunc (NULL);
+  xmlFreeParserCtxt (ctxt);
+  exit (1);
 }
 
 void *EXPORT_CALL

@@ -166,7 +166,7 @@ Programming with liblouisutdml
 
 Example files
 
-* canonical.cfg::
+* liblouisutdml.ini::
 * default.cfg::
 * html.sem::
 * nemeth.sem::
@@ -294,7 +294,7 @@ as many @option{-C} options as you wish. Any settings can be specified
 except those having to do with styles. @xref{Configuration Settings
 Index}, for a list of available settings. These must be specified in
 configuration files. The settings may be in any order. They override
-any settings in @file{canonical.cfg} or in the configuration file used
+any settings in @file{liblouisutdml.ini} or in the configuration file used
 by @command{file2brl}.
 
 @item -b
@@ -508,38 +508,39 @@ structure containing the configuration information. The calling program
 must include the header file @code{louisutdml.h}. You do not need to call
 @code{lbx_initialize} unless you need the facilities which it provides.
 
-A configuration file specification may contain more than one file name,
-separated by commas. liblouisutdml will process these files in sequence.
-The first file name may also contain a path. liblouisutdml will search for
-the files it needs first on this path. To make it search first the
-current directory precede the first file name with @code{./}. After the
-path, if any, has been evaluated, but before reading any of the files,
-liblouisutdml reads in a file called @file{canonical.cfg}. This file
-specifies values for all possible settings. It is needed to complete the
-initialization of the program. You may alter the values in the
-distribution @file{canonical.cfg}, but you should not delete any
-settings. Do not specify @file{canonical.cfg} as your configuration
-file. This will lead to error messages and program termination. If a
-configuration file read in later contains a particular setting name, the
-value specified simply replaces the one specified in
-@file{canonical.cfg}.
+A configuration file specification may contain more than one file name, 
+separated by commas. liblouisutdml will process these files in sequence, 
+merging the information they contain. The first file name may also 
+contain a path. liblouisutdml will search for the files it needs first 
+on this path. To make it search first the current directory precede the 
+first file name with @code{./}. After the path, if any, has been 
+evaluated, but before reading any of the files, liblouisutdml reads in a 
+file called @file{liblouisutdml.ini}. This file can contain any 
+configuration settings, but it usually contains only the minimum ones 
+for liblouisutdml to operate properly. You may alter the values in the 
+distribution @file{liblouisutdml.ini}, but you should not delete any 
+settings. Do not specify @file{liblouisutdml.ini} as your configuration 
+file. This will lead to error messages and program termination. If a 
+configuration file read in later contains a particular setting name, the 
+value specified simply replaces the one specified in 
+@file{liblouisutdml.ini} or any previously read configuration file.
 
-As you will see by looking at @file{canonical.cfg}, it contains four
-main sections, @code{outputFormat}, @code{translation}, @code{xml} and
-@code{style}. In addition, a configuration file can contain an
-include entry. This causes the file named on that line to be read in
-at the point where the line occurs. The sections need not follow each
-other in any particular order, nor is the order of settings within
-each section important. The section names, except for @code{style} are
-optional. In this document and in the
-@file{canonical.cfg} file, where section and setting names consist of
-more than one word, the first letter of each word following the
-initial one is capitalized. This is merely for readability. The case
-of the letters in these names is ignored by the program. Section and
+Originally, configuration files contained four main sections, 
+@code{outputFormat}, @code{translation}, @code{xml} and @code{style}. 
+The section names, except for @code{style} are now optional. In 
+addition, a configuration file can contain an include entry. This causes 
+the file named on that line to be read in at the point where the line 
+occurs. The sections need not follow each other in any particular order, 
+nor is the order of settings within each section important. The section 
+names, except for @code{style} are optional. In this document and in the 
+@file{liblouisutdml.ini} file, where section and setting names consist 
+of more than one word, the first letter of each word following the 
+initial one is capitalized. This is merely for readability. The case of 
+the letters in these names is ignored by the program. Section and 
 setting names may not contain spaces.
 
 Here, then, is an explanation of each section and setting in the
-@file{canonical.cfg} file. When you look at this file you will see
+@file{liblouisutdml.ini} file. When you look at this file you will see
 that the section names start at the left margin, while the settings
 are indented one tab stop. This is done for readability. it has no
 effect on the meaning of the lines. You will also see lines beginning
@@ -814,7 +815,7 @@ This line defines an entity or substitution in an xml file. It is one
 of those that has two values. The first is the thing to be replaced,
 and the second is the replacement. As many entity lines as necessary
 can be used. The information they contain is added to the information
-provided by xmlHeader. In @file{canonical.cfg} this line is commented
+provided by xmlHeader. In @file{liblouisutdml.ini} this line is commented
 out, because specifying it at this point would prevent the user from
 specifying his own xmlheader.
 
@@ -851,7 +852,7 @@ define any style desired, with any name except @code{document},
 @code{contents2}, @code{contents3} and @code{contents4}. The first two
 are needed for basic formatting. The others are needed for the table of
 contents tool. The user must define settings for these styles as for any
-others. This is done in @file{canonical.cfg}, which also contains
+others. This is done in @file{liblouisutdml.ini}, which also contains
 definitions and settings for many other styles. The user can add styles
 at any time in her/his own configuration files.
 
@@ -1722,7 +1723,7 @@ This MathML element should usually have the semantic action @code{skip}.
 
 @semanticAction{mtable, elementSpecifier}
 
-The file @file{canonical.cfg} defines the style @code{matrix}. The
+The file @file{liblouisutdml.ini} defines the style @code{matrix}. The
 semantic-action files for math codes declare @code{mtable} to be
 @code{matrix}. Depending on the attributes of this element, it can be
 set to other styles, such as long division. The @code{matrix} style
@@ -1942,7 +1943,7 @@ a heading style. The others correspond to the four heading levels and
 are @code{contents1}, @code{contents2}, @code{contents3} and
 @code{contents4}. These styles are chosen as appropriate while the table
 of contents is being made. Do not declare them in a semantic-action
-file. See the @file{canonical.cfg} file for the current default
+file. See the @file{liblouisutdml.ini} file for the current default
 definitions of all these styles.
 
 The table of contents will be placed where the xml tag is that you
@@ -2141,7 +2142,7 @@ difficult in earlier versions.
 @node Poetry, Dividing a Book Into Volumes, Arithmetic Examples, Special Formats
 @section Poetry
 
-@file{canonical.cfg} defines two styles which can be used to format
+@file{liblouisutdml.ini} defines two styles which can be used to format
 poetry, as follows:
 
 @example
@@ -2576,7 +2577,7 @@ const char *settingsString)
 @end example
 
 This function initializes the libxml2 library, processes
-@file{canonical.cfg} and configuration settings given in
+@file{liblouisutdml.ini} and configuration settings given in
 the configuration files given in @code{configFilelist}. This is a list
 of configuration file names separated by commas. If the first character
 is a comma it is taken to be a string containing configuration settings
@@ -2615,7 +2616,7 @@ accordingly. The header is specified by the @code{xmlHeader} line in
 the configuration file. If no such line is present, a default header
 specifying UTF-8 encoding is used. The @code{mode} parameter specifies
 whether you want the library to be initialized. If it is 0 everything
-is reset, the @file{canonical.cfg} file is processed and the
+is reset, the @file{liblouisutdml.ini} file is processed and the
 configuration file and/or string (see previous section) are processed.
 If @code{mode} is 1 liblouisutdml simply prepares to handle a new
 document. For more on the @code{mode} parameter see the next section.
@@ -2734,15 +2735,15 @@ software may change. Besides being used for reference, they can be
 studied to see how things are done.
 
 @menu
-* canonical.cfg::
+* liblouisutdml.ini::
 * default.cfg::
 * html.sem::
 * nemeth.sem::
 * Files for BAUK Maths (ukmaths)::
 @end menu
 
-@node canonical.cfg, default.cfg, Example files, Example files
-@section @file{canonical.cfg}
+@node liblouisutdml.ini, default.cfg, Example files, Example files
+@section @file{liblouisutdml.ini}
 
 @example
 # canonical Configuration File
@@ -2924,7 +2925,7 @@ style volume
 @end example
 
 
-@node default.cfg, html.sem, canonical.cfg, Example files
+@node default.cfg, html.sem, liblouisutdml.ini, Example files
 @section @file{default.cfg}
 
 @example
