@@ -88,10 +88,10 @@ char *
 alloc_string (const char *inString)
 {
   int length;
+  char *newString;
   if (inString == NULL)
   return NULL;
   length  = strlen (inString);
-  char *newString;
   if ((length + ud->string_buf_len) >= sizeof (ud->string_buffer))
     return NULL;
   newString = &ud->string_buffer[ud->string_buf_len];
