@@ -303,23 +303,24 @@ finishBrlNode ()
   int utf8Length;
   unsigned char *transText = (unsigned char *) ud->outbuf2;
   xmlNode *transNode;
-  xmlNode *oldText;
-  xmlNode *oldNode;
+  xmlNode *linkedTransNode;
+  xmlNode *oldPrevSib;
+  xmlNode *oldBrlNode;
   wcLength = ud->outbuf1_len_so_far;
   utf8Length = ud->outbuf2_len;
   wc_string_to_utf8 (ud->outbuf1, &wcLength, transText, &utf8Length);
   transNode = xmlNewText (transText);
-  oldText = curBrlNode->prev;
-  if (oldText != NULL && oldText->type == XML_TEXT_NODE)
+  oldPrevSib = curBrlNode->prev;
+  if (oldPrevSib != NULL)
   {
-  xmlUnlinkNode (oldText);
-  xmlFreeNode (oldText);
+  xmlUnlinkNode (oldPrevSib);
+  xmlFreeNode (oldPrevSib);
   }
-  xmlAddPrevSibling (curBrlNode, transNode);
+  linkedTransNode = xmlAddPrevSibling (curBrlNode, transNode);
   afterCurBrl = curBrlNode->next;
   useAfterCurBrl = 1;
-  oldNode = curBrlNode;
-  xmlUnlinkNode (oldNode);
-  xmlFree (oldNode);
+  oldBrlNode = curBrlNode;
+  xmlUnlinkNode (oldBrlNode);
+  xmlFreeNode (oldBrlNode);
   return 1;
 }

@@ -713,7 +713,8 @@ compileLine (FileInfo * nested)
   if (actionNum == notFound && style == NULL)
     {
       semanticError (nested,
-		     "Action or style %s in column 1 not recognized", action);
+		     "Action or style '%s' in column 1 not recognized", 
+		     action);
       return 0;
     }
   if (actionNum > end_all)
@@ -852,7 +853,8 @@ sem_compileFile (const char *fileName)
     }
   if (!haveAppended && !find_file (fileName, completePath))
     {
-      semanticError (NULL, "Can't find semantic-action file %s", fileName);
+      semanticError (NULL, "Can't find semantic-action file '%s'", 
+      fileName);
       haveSemanticFile = 0;
       strcpy (firstFileName, fileName);
       return 0;
@@ -870,12 +872,13 @@ sem_compileFile (const char *fileName)
       fclose (nested.in);
       if (nested.unedited)
 	semanticError (NULL,
-		       "File %s needs editing to produce good results.",
+       "File '%s' needs editing to produce good results.",
 		       nested.fileName);
     }
   else
     {
-      semanticError (NULL, "Can't open semantic-action file %s", fileName);
+      semanticError (NULL, "Can't open semantic-action file '%s'", 
+      fileName);
       return 0;
     }
   numEntries += nested.numEntries;
@@ -1337,10 +1340,11 @@ append_new_entries (void)
     }
   fclose (semOut);
   if (haveSemanticFile)
-    lou_logPrint ("%d new entries appended to %s%s.", numEntries,
+    lou_logPrint ("%d new entries appended to '%s%s'.", numEntries,
 		  filePrefix, firstFileName);
   else
-    lou_logPrint ("%d entries written to new semantic-action file %s%s.",
+    lou_logPrint (
+    "%d entries written to new semantic-action file '%s%s'.",
 		  numEntries, filePrefix, firstFileName);
   moreEntries = 0;
 }

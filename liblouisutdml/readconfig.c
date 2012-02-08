@@ -87,7 +87,10 @@ configureError (FileInfo * nested, char *format, ...)
 char *
 alloc_string (const char *inString)
 {
-  int length = strlen (inString);
+  int length;
+  if (inString == NULL)
+  return NULL;
+  length  = strlen (inString);
   char *newString;
   if ((length + ud->string_buf_len) >= sizeof (ud->string_buffer))
     return NULL;
@@ -100,7 +103,10 @@ alloc_string (const char *inString)
 char *
 alloc_string_if_not (const char *inString)
 {
-  int alreadyStored = inString - ud->string_buffer;
+  int alreadyStored;
+  if (inString == NULL)
+  return NULL;
+  alreadyStored = inString - ud->string_buffer;
   if (alreadyStored >= 0 && alreadyStored < ud->string_buf_len)
     return (char *) inString;
   return (char *) alloc_string (inString);
@@ -195,10 +201,11 @@ findTable (FileInfo * nested)
   char trialPath[MAXNAMELEN];
   if (!find_file (nested->value, trialPath))
     {
-      configureError (nested, "Table %s cannot be found.", nested->value);
+      configureError (nested, "Table '%s' cannot be found.", 
+      nested->value);
       return NULL;
     }
-  return alloc_string (trialPath);
+  return alloc_string_if_not (trialPath);
 }
 
 static int
@@ -230,7 +237,8 @@ controlCharValue (FileInfo * nested)
 	      decoded[decodedLength++] = 13;
 	      break;
 	    default:
-	      configureError (nested, "invalid value %s", nested->value);
+	      configureError (nested, "invalid value '%s'", 
+	      nested->value);
 	      return 0;
 	    }
 	  k++;
@@ -261,7 +269,8 @@ config_compileSettings (const char *fileName)
     return compileConfig (&nested);
   if (!find_file (fileName, completePath))
     {
-      configureError (NULL, "Can't find configuration file %s", fileName);
+      configureError (NULL, "Can't find configuration file '%s'", 
+      fileName);
       return 0;
     }
   if ((nested.in = fopen ((char *) completePath, "rb")))
@@ -271,7 +280,8 @@ config_compileSettings (const char *fileName)
     }
   else
     {
-      configureError (NULL, "Can't open configuration file %s", fileName);
+      configureError (NULL, "Can't open configuration file '%s'", 
+      fileName);
       return 0;
     }
   return 1;
@@ -432,7 +442,7 @@ checkValues (FileInfo * nested, const char **values)
       break;
   if (values[k] == NULL)
     {
-      configureError (nested, "word %s in column 2 not recognized",
+      configureError (nested, "word '%s' in column 2 not recognized",
 		      nested->value);
       return NOTFOUND;
     }
@@ -503,7 +513,7 @@ orValues (FileInfo * nested, const char **values)
     }
   if (result == 0)
     {
-      configureError (nested, "word %s in column 2 not recognized",
+      configureError (nested, "word '%s' in column 2 not recognized",
 		      nested->value);
       return NOTFOUND;
     }
@@ -526,7 +536,8 @@ checkSubActions (FileInfo * nested, const char **mainActions, const char
     {
       mainActionNumber = checkActions (nested, mainActions);
       if (mainActionNumber == NOTFOUND)
-	configureError (nested, "word %s in first column not recognized",
+	configureError (nested, 
+	"word '%s' in first column not recognized",
 			nested->action);
       return NOTFOUND;
     }
@@ -727,9 +738,9 @@ compileConfig (FileInfo * nested)
       if (mainActionNumber == NOTFOUND)
 	{
 	  configureError (nested,
-			  "word %s in first column not recognized",
+			  "word '%s' in first column not recognized",
 			  nested->action);
-	  return 0;
+	  continue;
 	}
     choseMainAction:
       switch (mainActionNumber)

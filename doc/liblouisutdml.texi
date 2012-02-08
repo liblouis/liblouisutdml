@@ -539,19 +539,25 @@ initial one is capitalized. This is merely for readability. The case of
 the letters in these names is ignored by the program. Section and 
 setting names may not contain spaces.
 
-Here, then, is an explanation of each section and setting in the
-@file{liblouisutdml.ini} file. When you look at this file you will see
-that the section names start at the left margin, while the settings
-are indented one tab stop. This is done for readability. it has no
-effect on the meaning of the lines. You will also see lines beginning
-with a number sign (@samp{#}), which are comments. Blank lines can
-also be used anywhere in a configuration file. In general, a section
-name is a single word or combination of unspaced words. However, each
-style has a section of its own, so the word @samp{style} is followed
-by a space then by the name of the style. Setting lines begin with the
-name of the
-setting, followed by at least one space or tab, followed by the value
-of the setting. A few settings have two values.
+In addition to @file{liblouisutdml.ini} the distribution also 
+sontains a number of configuration files. The most important of 
+these is @file{preferences.cfg}, which contains all possible 
+settings and a "default" value for each. You should use this file 
+as a refererence. It is the file read by the @command{file2brl} 
+command-line interface program if no configuration file is giben.
+
+Here, then, is an explanation of each section and setting in the 
+@file{preferences.cfg} file. When you look at this file you will see 
+that the section names start at the left margin, while the settings are 
+indented one tab stop. This is done for readability. it has no effect on 
+the meaning of the lines. You will also see lines beginning with a 
+number sign (@samp{#}), which are comments. Blank lines can also be used 
+anywhere in a configuration file. In general, a section name is a single 
+word or combination of unspaced words. However, each style has a section 
+of its own, so the word @samp{style} is followed by a space then by the 
+name of the style. Setting lines begin with the name of the setting, 
+followed by at least one space or tab, followed by the value of the 
+setting. A few settings have two values.
 
 @menu
 * outputFormat::

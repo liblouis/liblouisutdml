@@ -6,7 +6,7 @@ START-INFO-DIR-ENTRY
 * Liblouisutdml: (liblouisutdml). An xml to Braille Translation Library.
 END-INFO-DIR-ENTRY
 
-   This manual is for liblouisutdml (version 2.1.0, 31 January 2012),
+   This manual is for liblouisutdml (version 2.1.0, 3 February 2012),
 an xml to Braille Translation Library.
 
    This file may contain code borrowed from the Linux screenreader
@@ -36,7 +36,7 @@ File: liblouisutdml.info,  Node: Top,  Next: Introduction,  Prev: (dir),  Up: (d
 Liblouisutdml User's and Programmer's Manual
 ********************************************
 
-This manual is for liblouisutdml (version 2.1.0, 31 January 2012), an
+This manual is for liblouisutdml (version 2.1.0, 3 February 2012), an
 xml to Braille Translation Library.
 
    This file may contain code borrowed from the Linux screenreader
@@ -509,18 +509,25 @@ This is merely for readability. The case of the letters in these names
 is ignored by the program. Section and setting names may not contain
 spaces.
 
+   In addition to `liblouisutdml.ini' the distribution also sontains a
+number of configuration files. The most important of these is
+`preferences.cfg', which contains all possible settings and a "default"
+value for each. You should use this file as a refererence. It is the
+file read by the `file2brl' command-line interface program if no
+configuration file is giben.
+
    Here, then, is an explanation of each section and setting in the
-`liblouisutdml.ini' file. When you look at this file you will see that
+`preferences.cfg' file. When you look at this file you will see that
 the section names start at the left margin, while the settings are
-indented one tab stop. This is done for readability. it has no effect
-on the meaning of the lines. You will also see lines beginning with a
+indented one tab stop. This is done for readability. it has no effect on
+the meaning of the lines. You will also see lines beginning with a
 number sign (`#'), which are comments. Blank lines can also be used
-anywhere in a configuration file. In general, a section name is a
-single word or combination of unspaced words. However, each style has a
-section of its own, so the word `style' is followed by a space then by
-the name of the style. Setting lines begin with the name of the
-setting, followed by at least one space or tab, followed by the value
-of the setting. A few settings have two values.
+anywhere in a configuration file. In general, a section name is a single
+word or combination of unspaced words. However, each style has a section
+of its own, so the word `style' is followed by a space then by the name
+of the style. Setting lines begin with the name of the setting,
+followed by at least one space or tab, followed by the value of the
+setting. A few settings have two values.
 
 * Menu:
 
@@ -4313,136 +4320,136 @@ Node: Transcribing Microsoft Word files with msword2brl15657
 Node: Transcribing RTF files with rtf2brl16347
 Node: Transcribing PDF files with pdf2brl17243
 Node: Customization Configuring liblouisutdml18165
-Node: outputFormat22767
-Ref: continuePages setting25860
-Ref: pageSeparator setting26017
-Ref: printPageNumberRange setting27123
-Ref: formatFor setting29216
-Ref: lineFill setting30916
-Node: translation31119
-Node: xml32919
-Node: style35201
-Ref: contentsheader style40570
-Node: Connecting with the xml Document42097
-Node: Semantic Actions Overview42486
-Node: Semantic Actions in detail56379
-Ref: contenss1 semantic57562
-Ref: contenss2 semantic57817
-Ref: contenss3 semantic57846
-Ref: contenss4 semantic57876
-Ref: contentsheader semantic57906
-Ref: document semantic58071
-Ref: heading1 semantic58099
-Ref: heading2 semantic58128
-Ref: heading3 semantic58157
-Ref: heading4 semantic58186
-Ref: para semantic58215
-Ref: blankline semantic58504
-Ref: boldx semantic58858
-Ref: boxline semantic59185
-Ref: chemistry semantic59575
-Ref: changetable semantic59782
-Ref: compbrl semantic60390
-Ref: configfile semantic60671
-Ref: configstring semantic61609
-Ref: configtweak semantic62069
-Ref: contracted semantic62605
-Ref: footer semantic62635
-Ref: generic semantic62835
-Ref: graphic semantic63401
-Ref: htmllink semantic63529
-Ref: htmltarget semantic63709
-Ref: italicx semantic63890
-Ref: linespacing semantic64224
-Ref: maction semantic64654
-Ref: maligngroup semantic65099
-Ref: malignmark semantic65130
-Ref: math semantic65161
-Ref: menclose semantic65793
-Ref: merror semantic65821
-Ref: mfenced semantic65848
-Ref: mfrac semantic65876
-Ref: mglyph semantic65902
-Ref: mi semantic65929
-Ref: mlabeledtr semantic65952
-Ref: mmultiscripts semantic65983
-Ref: mn semantic66017
-Ref: mo semantic66040
-Ref: mover semantic66063
-Ref: mpadded semantic66089
-Ref: mphantom semantic66117
-Ref: mprescripts semantic66146
-Ref: mroot semantic66178
-Ref: mrow semantic66291
-Ref: ms semantic66468
-Ref: mspace semantic66490
-Ref: msqrt semantic66600
-Ref: mstyle semantic66625
-Ref: msub semantic66726
-Ref: msubsup semantic66750
-Ref: msup semantic66778
-Ref: mtable semantic66803
-Ref: mtd semantic67153
-Ref: mtext semantic67481
-Ref: mtr semantic67506
-Ref: munder semantic67968
-Ref: munderover semantic67994
-Ref: music semantic68025
-Ref: newpage semantic68185
-Ref: no semantic68445
-Ref: none semantic68765
-Ref: notranslate semantic68821
-Ref: pagenum semantic69148
-Ref: reverse semantic69752
-Ref: righthandpage semantic70048
-Ref: runninghead semantic70381
-Ref: semantics semantic70663
-Ref: skip semantic70780
-Ref: softreturn semantic70943
-Ref: uncontracted semantic71125
-Node: Pseudo-actions71245
-Node: Using XPath Expressions72523
-Node: Special Features73607
-Node: Table of contents73907
-Node: Back-translation77276
-Node: Reformatting78332
-Node: Interlining79007
-Node: Browser-Friendly Output79549
-Node: CDATA Sections80511
-Node: Special Formats81014
-Node: Tables81387
-Node: Reserving Space for Graphics82159
-Node: Displayed Text82894
-Node: Displayed Mathematics83211
-Node: Spatial Layouts in Mathematics83540
-Node: Arithmetic Examples83933
-Node: Poetry84215
-Node: Dividing a Book Into Volumes85033
-Node: Implementing Braille Mathematics Codes86145
-Node: Programming with liblouisutdml95003
-Node: License95417
-Node: Overview96489
-Node: Files and Paths99444
-Node: lbx_version101461
-Node: lbx_initialize101847
-Node: lbx_translateString103097
-Node: lbx_translateFile105139
-Node: lbx_translateTextFile106319
-Node: lbx_backTranslateFile107328
-Node: lbx_free108370
-Node: Example files108874
-Node: liblouisutdml.ini109419
-Node: default.cfg113889
-Node: html.sem114548
-Node: nemeth.sem131209
-Node: Files for BAUK Maths (ukmaths)134698
-Node: ukmaths.cfg134954
-Node: ukmaths.sem135314
-Node: ukmaths.ctb138524
-Node: ukmaths_edit.ctb143764
-Node: Configuration Settings Index145694
-Node: Semantic Action Index149698
-Node: Function Index160401
-Node: Program Index161078
+Node: outputFormat23134
+Ref: continuePages setting26227
+Ref: pageSeparator setting26384
+Ref: printPageNumberRange setting27490
+Ref: formatFor setting29583
+Ref: lineFill setting31283
+Node: translation31486
+Node: xml33286
+Node: style35568
+Ref: contentsheader style40937
+Node: Connecting with the xml Document42464
+Node: Semantic Actions Overview42853
+Node: Semantic Actions in detail56746
+Ref: contenss1 semantic57929
+Ref: contenss2 semantic58184
+Ref: contenss3 semantic58213
+Ref: contenss4 semantic58243
+Ref: contentsheader semantic58273
+Ref: document semantic58438
+Ref: heading1 semantic58466
+Ref: heading2 semantic58495
+Ref: heading3 semantic58524
+Ref: heading4 semantic58553
+Ref: para semantic58582
+Ref: blankline semantic58871
+Ref: boldx semantic59225
+Ref: boxline semantic59552
+Ref: chemistry semantic59942
+Ref: changetable semantic60149
+Ref: compbrl semantic60757
+Ref: configfile semantic61038
+Ref: configstring semantic61976
+Ref: configtweak semantic62436
+Ref: contracted semantic62972
+Ref: footer semantic63002
+Ref: generic semantic63202
+Ref: graphic semantic63768
+Ref: htmllink semantic63896
+Ref: htmltarget semantic64076
+Ref: italicx semantic64257
+Ref: linespacing semantic64591
+Ref: maction semantic65021
+Ref: maligngroup semantic65466
+Ref: malignmark semantic65497
+Ref: math semantic65528
+Ref: menclose semantic66160
+Ref: merror semantic66188
+Ref: mfenced semantic66215
+Ref: mfrac semantic66243
+Ref: mglyph semantic66269
+Ref: mi semantic66296
+Ref: mlabeledtr semantic66319
+Ref: mmultiscripts semantic66350
+Ref: mn semantic66384
+Ref: mo semantic66407
+Ref: mover semantic66430
+Ref: mpadded semantic66456
+Ref: mphantom semantic66484
+Ref: mprescripts semantic66513
+Ref: mroot semantic66545
+Ref: mrow semantic66658
+Ref: ms semantic66835
+Ref: mspace semantic66857
+Ref: msqrt semantic66967
+Ref: mstyle semantic66992
+Ref: msub semantic67093
+Ref: msubsup semantic67117
+Ref: msup semantic67145
+Ref: mtable semantic67170
+Ref: mtd semantic67520
+Ref: mtext semantic67848
+Ref: mtr semantic67873
+Ref: munder semantic68335
+Ref: munderover semantic68361
+Ref: music semantic68392
+Ref: newpage semantic68552
+Ref: no semantic68812
+Ref: none semantic69132
+Ref: notranslate semantic69188
+Ref: pagenum semantic69515
+Ref: reverse semantic70119
+Ref: righthandpage semantic70415
+Ref: runninghead semantic70748
+Ref: semantics semantic71030
+Ref: skip semantic71147
+Ref: softreturn semantic71310
+Ref: uncontracted semantic71492
+Node: Pseudo-actions71612
+Node: Using XPath Expressions72890
+Node: Special Features73974
+Node: Table of contents74274
+Node: Back-translation77643
+Node: Reformatting78699
+Node: Interlining79374
+Node: Browser-Friendly Output79916
+Node: CDATA Sections80878
+Node: Special Formats81381
+Node: Tables81754
+Node: Reserving Space for Graphics82526
+Node: Displayed Text83261
+Node: Displayed Mathematics83578
+Node: Spatial Layouts in Mathematics83907
+Node: Arithmetic Examples84300
+Node: Poetry84582
+Node: Dividing a Book Into Volumes85400
+Node: Implementing Braille Mathematics Codes86512
+Node: Programming with liblouisutdml95370
+Node: License95784
+Node: Overview96856
+Node: Files and Paths99811
+Node: lbx_version101828
+Node: lbx_initialize102214
+Node: lbx_translateString103464
+Node: lbx_translateFile105506
+Node: lbx_translateTextFile106686
+Node: lbx_backTranslateFile107695
+Node: lbx_free108737
+Node: Example files109241
+Node: liblouisutdml.ini109786
+Node: default.cfg114256
+Node: html.sem114915
+Node: nemeth.sem131576
+Node: Files for BAUK Maths (ukmaths)135065
+Node: ukmaths.cfg135321
+Node: ukmaths.sem135681
+Node: ukmaths.ctb138891
+Node: ukmaths_edit.ctb144131
+Node: Configuration Settings Index146061
+Node: Semantic Action Index150065
+Node: Function Index160768
+Node: Program Index161445
 
 End Tag Table
