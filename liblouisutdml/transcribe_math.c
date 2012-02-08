@@ -104,10 +104,11 @@ mathTrans (void)
 {
   if (ud->format_for == utd)
     {
+      xmlNode *curBrlNode;
       xmlNode *newNode = xmlNewNode (NULL, (xmlChar *) "brl");
       xmlSetProp (newNode, (xmlChar *) "modifiers", (xmlChar *) 
       "noindex notext");
-      xmlNode *curBrlNode = xmlAddSibling (mathRoot, newNode);
+      curBrlNode = xmlAddSibling (mathRoot, newNode);
       link_brl_node (curBrlNode);
       ud->text_buffer[ud->text_length++] = ENDSEGMENT;
     }
