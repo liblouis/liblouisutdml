@@ -185,6 +185,12 @@ transcribe_paragraph (xmlNode * node, int action)
       break;
     case configtweak:
       do_configstring (node);
+    ud->main_braille_table = ud->contracted_table_name;
+  if (!lou_getTable (ud->main_braille_table))
+    {
+      lou_logPrint ("Cannot open main table %s", ud->main_braille_table);
+      kill_safely ();
+    }
       break;
     case htmllink:
       if (ud->format_for != browser)

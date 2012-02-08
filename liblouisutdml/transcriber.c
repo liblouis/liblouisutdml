@@ -4371,18 +4371,6 @@ utd_finishLine (int leadingBlanks, int length)
 }
 
 static int
-hasText (xmlNode * node)
-{
-  int k;
-  xmlNode *prevSib = node->prev;
-  if (prevSib == NULL)
-    return 0;
-  if (prevSib->type != XML_TEXT_NODE)
-    return 0;
-  return 1;
-}
-
-static int
 utd_doOrdinaryText ()
 {
   int availableCells;
@@ -4396,12 +4384,6 @@ utd_doOrdinaryText ()
   brlNode = firstBrlNode;
   while (brlNode)
     {
-      if (!hasText (brlNode))
-	{
-	  brlNode = brlNode->_private;
-	  if (brlNode == NULL)
-	    break;
-	}
       do
 	{
 	  if (newLineNeeded)

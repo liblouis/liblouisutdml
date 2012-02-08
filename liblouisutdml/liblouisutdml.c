@@ -105,7 +105,12 @@ processXmlDocument (const char *inputDoc, int length)
   if (ud->doc == NULL)
     {
       lou_logPrint ("Document could not be processed");
-      return 0;
+      kill_safely ();
+    }
+  if (ud->format_for >= utd && strcmp (ud->doc->encoding, "UTF-8") != 0)
+    {
+    lou_logPrint ("This format requires UTF-8 encoding");
+    kill_safely ();
     }
   rootElement = xmlDocGetRootElement (ud->doc);
   if (rootElement == NULL)
