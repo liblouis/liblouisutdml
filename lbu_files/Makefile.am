@@ -14,6 +14,7 @@ lbu_files_DATA = \
 	article.sem \
 	book.sem \
 	chapter.sem \
+	liblouisutdml.ini \
 	preferences.cfg \
 	dtbook.sem \
 	dtbookutd.sem \
