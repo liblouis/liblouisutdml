@@ -332,6 +332,9 @@ parseLine (FileInfo * nested)
 {
   char *curchar = NULL;
   int ch = 0;
+  nested->action = NULL;
+  nested->value = NULL;
+  nested->value2 = NULL;
   while (getLine (nested))
     {
       nested->lineNumber++;
@@ -847,6 +850,8 @@ compileConfig (FileInfo * nested)
 	  strcpy (ud->xml_header, nested->value);
 	  break;
 	case 26:
+	  if (nested->value == NULL)
+	    break;
 	  if (!entities)
 	    strcat (ud->xml_header, "<!DOCTYPE entities [\n");
 	  entities = 1;

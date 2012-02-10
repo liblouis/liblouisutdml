@@ -4751,8 +4751,11 @@ utd_editTrans ()
       if (!lou_translate
 	  (ud->edit_table_name, ud->text_buffer,
 	   &translationLength, ud->translated_buffer,
-	   &translatedLength, NULL, NULL, NULL, indices, NULL, dotsIO))
+	   &translatedLength, NULL, NULL, NULL, NULL, NULL, dotsIO))
 	{
+	  lou_logPrint (
+	  "edit table '%s' could not be found or contains errors", 
+	  ud->edit_table_name);
 	  ud->edit_table_name = NULL;
 	  return 0;
 	}

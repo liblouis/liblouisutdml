@@ -62,7 +62,7 @@ libxml_errors (void *ctx ATTRIBUTE_UNUSED, const char *msg, ...)
 }
 
 static xmlParserCtxt *ctxt;
-static int initialized = 0;
+static int libxml2_initialized = 0;
 
 static int
 processXmlDocument (const char *inputDoc, int length)
@@ -73,9 +73,9 @@ processXmlDocument (const char *inputDoc, int length)
    * Sort of hackish, but only hackers will see it. */
   xmlNode *rootElement = NULL;
   int haveSemanticFile;
-  if (!initialized)
+  if (!libxml2_initialized)
     {
-      initialized = 1;
+      libxml2_initialized = 1;
       LIBXML_TEST_VERSION xmlKeepBlanksDefault (0);
       xmlSubstituteEntitiesDefault (1);
       xmlThrDefIndentTreeOutput (1);
@@ -109,7 +109,9 @@ processXmlDocument (const char *inputDoc, int length)
     }
   if (ud->format_for >= utd && strcmp (ud->doc->encoding, "UTF-8") != 0)
     {
-    lou_logPrint ("This format requires UTF-8 encoding");
+    lou_logPrint (
+    "This format requires UTF-8 encoding, not '%s'",
+    ud->doc->encoding);
     kill_safely ();
     }
   rootElement = xmlDocGetRootElement (ud->doc);
@@ -141,10 +143,11 @@ void
 kill_safely ()
 {
   lou_logEnd ();
+  if (ud->doc != NULL)
+    xmlFreeDoc (ud->doc);
   lbu_free ();
-  if (!initialized)
+  if (!libxml2_initialized)
     exit (1);
-  xmlFreeDoc (ud->doc);
   xmlCleanupParser ();
   initGenericErrorDefaultFunc (NULL);
   xmlFreeParserCtxt (ctxt);
