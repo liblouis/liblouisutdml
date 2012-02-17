@@ -38,10 +38,10 @@ static int txDoBrlNode (xmlNode * node, int action);
 static int beginDocument ();
 static int finishBrlNode ();
 static int finishDocument ();
-static int doUtdbrlonly (xmlNode *node, int action);
-static int doUtdnewpage (xmlNode *node);
-static int doUtdnewline (xmlNode *node);
-static int doUtdgraphic (xmlNode *node);
+static int doUtdbrlonly (xmlNode * node, int action);
+static int doUtdnewpage (xmlNode * node);
+static int doUtdnewline (xmlNode * node);
+static int doUtdgraphic (xmlNode * node);
 
 int
 utd2transinxml (xmlNode * node)
@@ -103,12 +103,12 @@ findBrlNodes (xmlNode * node)
 	  break;
 	}
       if (useAfterCurBrl)
-        {
-          child = afterCurBrl;
-          useAfterCurBrl = 0;
-      }
+	{
+	  child = afterCurBrl;
+	  useAfterCurBrl = 0;
+	}
       else
-      child = child->next;
+	child = child->next;
     }
   pop_sem_stack ();
   useAfterCurBrl = 0;
@@ -225,7 +225,7 @@ doUtdnewline (xmlNode * node)
     }
   xy = (char *) xmlGetProp (node, (xmlChar *) "xy");
   for (k = 0; xy[k] != ','; k++);
-  leadingBlanks = (atoi (xy) - ud->left_margin) / CELLWIDTH;
+  leadingBlanks = (atoi (xy) - ud->left_margin) / ud->cell_width;
   writeCharacters (blanks, leadingBlanks);
   return 1;
 }
@@ -291,7 +291,7 @@ txDoBrlNode (xmlNode * node, int action)
     }
   if (action != 0)
     pop_sem_stack ();
-    else
+  else
     finishBrlNode ();
   return 1;
 }
@@ -311,11 +311,11 @@ finishBrlNode ()
   wc_string_to_utf8 (ud->outbuf1, &wcLength, transText, &utf8Length);
   transNode = xmlNewText (transText);
   oldPrevSib = curBrlNode->prev;
-  if (oldPrevSib != NULL)
-  {
-  xmlUnlinkNode (oldPrevSib);
-  xmlFreeNode (oldPrevSib);
-  }
+  if (oldPrevSib != NULL && oldPrevSib->type == XML_TEXT_NODE)
+    {
+      xmlUnlinkNode (oldPrevSib);
+      xmlFreeNode (oldPrevSib);
+    }
   linkedTransNode = xmlAddPrevSibling (curBrlNode, transNode);
   afterCurBrl = curBrlNode->next;
   useAfterCurBrl = 1;

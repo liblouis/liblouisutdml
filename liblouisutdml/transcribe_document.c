@@ -41,6 +41,8 @@ transcribe_document (xmlNode * node)
   int childrenDone = 0;
   ud->top = -1;
   ud->style_top = -1;
+  ud->text_length = 0;
+  ud->translated_length = 0;
   start_document ();
   push_sem_stack (node);
   if ((style = is_style (node)) != NULL)

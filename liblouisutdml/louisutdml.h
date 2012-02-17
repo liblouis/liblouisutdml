@@ -94,9 +94,6 @@ typedef struct
 #define CHARSIZE sizeof (widechar)
 #endif
 
-#define CELLWIDTH 5
-#define NORMALLINE 8
-#define WIDELINE 10
 #define BUFSIZE 8192
 #define MAX_LENGTH BUFSIZE - 4
 #define MAX_TRANS_LENGTH 2 * BUFSIZE - 4
@@ -180,6 +177,10 @@ typedef struct
   unsigned int config_mode;
   translationModes louis_mode;
   int emphasis;
+  double dpi;
+  int cell_width;
+  int normal_line;
+  int wide_line;
   int debug;
   int paper_width;
   int paper_height;
@@ -254,6 +255,7 @@ typedef struct
   char line_fill;
   char lit_hyphen[5];
   char comp_hyphen[5];
+  char letsign[5];
   widechar running_head[MAXNAMELEN / 2];
   widechar footer[MAXNAMELEN / 2];
   int running_head_length;
