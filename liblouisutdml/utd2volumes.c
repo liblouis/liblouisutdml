@@ -155,7 +155,8 @@ doUtdnewline (xmlNode * node)
     }
   xy = (char *) xmlGetProp (node, (xmlChar *) "xy");
   for (k = 0; xy[k] != ','; k++);
-  leadingBlanks = (atoi (&xy[k + 1]) - ud->left_margin) / CELLWIDTH;
+  leadingBlanks = (atoi (&xy[k + 1]) - ud->left_margin) / 
+  ud->cell_width;
   writeCharacters (blanks, leadingBlanks);
   return 1;
 }

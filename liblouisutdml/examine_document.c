@@ -146,7 +146,7 @@ do_configstring (xmlNode * node)
   int savedTextLength = ud->text_length;
   insert_code (node, 0);
   configString[kk++] = ud->string_escape;
-  for (k = savedTextLength; k < ud->text_length; kk++)
+  for (k = savedTextLength; k < ud->text_length; k++)
     {
       if (ud->text_buffer[k] == '=')
 	configString[kk++] = ' ';

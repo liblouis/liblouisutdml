@@ -34,7 +34,6 @@
 #include <string.h>
 #include "louisutdml.h"
 
-#define LETSIGN "\\_"
 static StyleRecord *styleSpec;
 /* Note that the following is an actual data area, not a pointer*/
 static StyleRecord prevStyleSpec;
@@ -69,8 +68,6 @@ find_current_style ()
 static int doLeftJustify ();
 static widechar pageNumberString[MAXNUMLEN];
 static int pageNumberLength;
-static char *litHyphen = "-";
-static char *compHyphen = "_&";
 static char *blanks =
   "                                                                      ";
 static int fillPage ();
@@ -842,7 +839,7 @@ handlePagenum (xmlChar * printPageNumber, int length)
     return 1;
   strcpy (setup, " ");
   if (!(printPageNumber[0] >= '0' && printPageNumber[0] <= '9'))
-    strcat (setup, LETSIGN);
+    strcat (setup, ud->letsign);
   strcat (setup, printPageNumber);
   length = strlen (setup);
   utf8ToWc (setup, &length, &translationBuffer[0], &translationLength);
@@ -945,7 +942,7 @@ getBraillePageString ()
 	sprintf (brlPageString, "p%d", ud->braille_page_number);
       break;
     case roman:
-      strcpy (brlPageString, LETSIGN);
+      strcpy (brlPageString, ud->letsign);
       strcat (brlPageString, makeRomanNumber (ud->braille_page_number));
       translationLength = strlen (brlPageString);
       break;
@@ -1681,7 +1678,7 @@ hyphenatex (int lastBlank, int lineEnd)
     return 0;
   for (k = wordLength - minSyllableLength - 1; k >= minSyllableLength; k--)
     if ((wordStart + k) < lineEnd && translatedBuffer[wordStart + k] ==
-	*litHyphen && !hyphenFound)
+	*ud->lit_hyphen && !hyphenFound)
       {
 	hyphens[k + 1] = '1';
 	hyphenFound = 1;
@@ -1702,7 +1699,7 @@ hyphenatex (int lastBlank, int lineEnd)
       if (hyphens[k] == '1' &&
 	  (breakAt < lineEnd
 	   || (breakAt == lineEnd
-	       && translatedBuffer[breakAt - 1] == *litHyphen)))
+	       && translatedBuffer[breakAt - 1] == *ud->lit_hyphen)))
 	break;
     }
   if (k < minSyllableLength)
@@ -1885,7 +1882,7 @@ doAlignColumns ()
 	  charactersWritten += cellsToWrite;
 	  if (rowTooLong)
 	    {
-	      if (!insertDubChars (litHyphen, strlen (litHyphen)))
+	      if (!insertDubChars (ud->lit_hyphen, strlen (ud->lit_hyphen)))
 		return 0;
 	    }
 	  finishLine ();
@@ -1974,10 +1971,10 @@ doListColumns ()
 	      charactersWritten += cellsToWrite;
 	      if (thisRow[charactersWritten] == ' ')
 		charactersWritten++;
-	      if ((breakAt && thisRow[breakAt - 1] != *litHyphen)
+	      if ((breakAt && thisRow[breakAt - 1] != *ud->lit_hyphen)
 		  || wordTooLong)
 		{
-		  if (!insertDubChars (litHyphen, strlen (litHyphen)))
+		  if (!insertDubChars (ud->lit_hyphen, strlen (ud->lit_hyphen)))
 		    return 0;
 		}
 	      finishLine ();
@@ -2068,10 +2065,10 @@ doListLines ()
 	    charactersWritten += cellsToWrite;
 	    if (thisLine[charactersWritten] == ' ')
 	      charactersWritten++;
-	    if ((breakAt && thisLine[breakAt - 1] != *litHyphen)
+	    if ((breakAt && thisLine[breakAt - 1] != *ud->lit_hyphen)
 		|| wordTooLong)
 	      {
-		if (!insertDubChars (litHyphen, strlen (litHyphen)))
+		if (!insertDubChars (ud->lit_hyphen, strlen (ud->lit_hyphen)))
 		  return 0;
 	      }
 	    finishLine ();
@@ -2104,7 +2101,7 @@ doComputerCode ()
       if (cellsToWrite == availableCells &&
 	  translatedBuffer[charactersWritten + cellsToWrite] != 0x0a)
 	{
-	  cellsToWrite = availableCells - strlen (compHyphen);
+	  cellsToWrite = availableCells - strlen (ud->comp_hyphen);
 	  lineTooLong = 1;
 	}
       if (translatedBuffer[charactersWritten + cellsToWrite] == 0x0a)
@@ -2120,7 +2117,7 @@ doComputerCode ()
 	charactersWritten++;
       if (lineTooLong)
 	{
-	  if (!insertDubChars (compHyphen, strlen (compHyphen)))
+	  if (!insertDubChars (ud->comp_hyphen, strlen (ud->comp_hyphen)))
 	    return 0;
 	}
       finishLine ();
@@ -2183,10 +2180,10 @@ doLeftJustify ()
       charactersWritten += cellsToWrite;
       if (translatedBuffer[charactersWritten] == ' ')
 	charactersWritten++;
-      if ((breakAt && translatedBuffer[breakAt - 1] != *litHyphen)
+      if ((breakAt && translatedBuffer[breakAt - 1] != *ud->lit_hyphen)
 	  || wordTooLong)
 	{
-	  if (!insertDubChars (litHyphen, strlen (litHyphen)))
+	  if (!insertDubChars (ud->lit_hyphen, strlen (ud->lit_hyphen)))
 	    return 0;
 	}
       finishLine ();
@@ -2286,10 +2283,10 @@ doContents ()
       charactersWritten += cellsToWrite;
       if (translatedBuffer[charactersWritten] == ' ')
 	charactersWritten++;
-      if ((breakAt && translatedBuffer[breakAt - 1] != *litHyphen)
+      if ((breakAt && translatedBuffer[breakAt - 1] != *ud->lit_hyphen)
 	  || wordTooLong)
 	{
-	  if (!insertDubChars (litHyphen, strlen (litHyphen)))
+	  if (!insertDubChars (ud->lit_hyphen, strlen (ud->lit_hyphen)))
 	    return 0;
 	}
       if (charactersWritten < untilLastWord)
@@ -2360,9 +2357,9 @@ doContents ()
 	      (&translatedBuffer[charactersWritten], cellsToWrite))
 	    return 0;
 	  charactersWritten += cellsToWrite;
-	  if ((breakAt && translatedBuffer[breakAt - 1] != *litHyphen)
+	  if ((breakAt && translatedBuffer[breakAt - 1] != *ud->lit_hyphen)
 	      || lastWordNewRule)
-	    if (!insertDubChars (litHyphen, strlen (litHyphen)))
+	    if (!insertDubChars (ud->lit_hyphen, strlen (ud->lit_hyphen)))
 	      return 0;
 	}
       finishLine ();
@@ -2465,7 +2462,7 @@ doCenterRight ()
 	charactersWritten++;
       if (wordTooLong)
 	{
-	  if (!insertDubChars (litHyphen, strlen (litHyphen)))
+	  if (!insertDubChars (ud->lit_hyphen, strlen (ud->lit_hyphen)))
 	    return 0;
 	}
       finishLine ();
@@ -2707,7 +2704,7 @@ makeParagraph ()
   k = 0;
   while (k < ud->text_length)
     {
-      if (ud->text_buffer[k] == *litHyphen
+      if (ud->text_buffer[k] == *ud->lit_hyphen
 	  && ud->text_buffer[k + 1] == 10
 	  && ud->text_buffer[k + 2] != escapeChar)
 	k += 2;
@@ -3319,7 +3316,7 @@ utd_start ()
   backIndices = NULL;
   backBuf = NULL;
   backLength = 0;
-  lineWidth = NORMALLINE;
+  lineWidth = ud->normal_line;
   return 1;
 }
 
@@ -3831,7 +3828,7 @@ checkTextFragment (widechar * text, int length)
     {
       dots = text[k];
       if ((dots & (B7 | B8)))
-	lineWidth = WIDELINE;
+	lineWidth = ud->wide_line;
       if (dots == NBSP)
 	text[k] = SPACE;
     }
@@ -3866,11 +3863,11 @@ checkPageStatus ()
   if (ud->vert_line_pos == ud->page_top)
     return topOfPage;
   remaining = ud->page_bottom - ud->vert_line_pos;
-  if (remaining < NORMALLINE)
+  if (remaining < ud->normal_line)
     return bottomOfPage;
-  if (remaining >= NORMALLINE && remaining < (3 * NORMALLINE / 2))
+  if (remaining >= ud->normal_line && remaining < (3 * ud->normal_line / 2))
     return lastLine;
-  if (remaining > (2 * NORMALLINE) && remaining < (3 * NORMALLINE))
+  if (remaining > (2 * ud->normal_line) && remaining < (3 * ud->normal_line))
     return nearBottom;
   return midPage;
 }
@@ -4017,7 +4014,7 @@ makePageSeparator (xmlChar * printPageNumber, int length)
     return 1;
   strcpy (setup, " ");
   if (!(printPageNumber[0] >= '0' && printPageNumber[0] <= '9'))
-    strcat (setup, LETSIGN);
+    strcat (setup, ud->letsign);
   strcat (setup, printPageNumber);
   length = strlen (setup);
   translationLength = MAXNUMLEN;
@@ -4068,12 +4065,12 @@ makeNewline (xmlNode * parent, int start)
 {
   char position[MAXNUMLEN];
   xmlNode *newNode = xmlNewNode (NULL, (xmlChar *) "newline");
-  sprintf (position, "%d,%d", (CELLWIDTH * start +
+  sprintf (position, "%d,%d", (ud->cell_width * start +
 			       ud->page_left), ud->vert_line_pos);
   xmlNewProp (newNode, (xmlChar *) "xy", (xmlChar *) position);
   xmlAddChild (parent, newNode);
   ud->vert_line_pos += lineWidth;
-  lineWidth = NORMALLINE;
+  lineWidth = ud->normal_line;
   return 1;
 }
 
@@ -4267,7 +4264,7 @@ utd_startLine ()
   while (availableCells == 0)
     {
       setNewlineNode ();
-      lineWidth = NORMALLINE;
+      lineWidth = ud->normal_line;
       curPageStatus = checkPageStatus ();
       utd_getPageNumber ();
       if (curPageStatus == topOfPage)
@@ -4305,7 +4302,7 @@ utd_finishLine (int leadingBlanks, int length)
   int cellsToWrite = 0;
   int k;
   int leaveBlank;
-  int horizLinePos = ud->page_left + leadingBlanks * CELLWIDTH;
+  int horizLinePos = ud->page_left + leadingBlanks * ud->cell_width;
   cellsOnLine = leadingBlanks + length;
   for (leaveBlank = -1; leaveBlank < ud->line_spacing; leaveBlank++)
     {
@@ -4313,7 +4310,7 @@ utd_finishLine (int leadingBlanks, int length)
       if (leaveBlank != -1)
 	{
 	  utd_startLine ();
-	  ud->vert_line_pos += NORMALLINE;
+	  ud->vert_line_pos += ud->normal_line;
 	  setNewlineProp (0);
 	}
       if (cellsOnLine > 0 && pageNumberLength > 0)
@@ -4347,7 +4344,7 @@ utd_finishLine (int leadingBlanks, int length)
 	      if (pageNumberLength)
 		{
 		  horizLinePos = (ud->cells_per_line -
-				  pageNumberLength) * CELLWIDTH;
+				  pageNumberLength) * ud->cell_width;
 		  if (!shortBrlOnly
 		      (horizLinePos, pageNumberString, pageNumberLength, 1))
 		    return 0;
@@ -4483,7 +4480,7 @@ utd_fillPage ()
       utd_startLine ();
       utd_finishLine (0, 0);
     }
-  ud->vert_line_pos = ud->page_bottom - NORMALLINE;
+  ud->vert_line_pos = ud->page_bottom - ud->normal_line;
   utd_startLine ();
   utd_finishLine (0, 0);
   return 1;
@@ -4514,7 +4511,7 @@ utd_doComputerCode ()
       if (cellsToWrite == availableCells
 	  && translatedBuffer[charactersWritten + cellsToWrite] != CR)
 	{
-	  cellsToWrite = availableCells - strlen (compHyphen);
+	  cellsToWrite = availableCells - strlen (ud->comp_hyphen);
 	  lineTooLong = 1;
 	}
       if (translatedBuffer[charactersWritten + cellsToWrite] == CR)
@@ -4527,8 +4524,8 @@ utd_doComputerCode ()
 	charactersWritten++;
       if (lineTooLong)
 	{
-	  if (!utd_insertCharacters (brlNode, compHyphen, strlen
-				     (compHyphen)))
+	  if (!utd_insertCharacters (brlNode, ud->comp_hyphen, strlen
+				     (ud->comp_hyphen)))
 	    return 0;
 	}
       utd_finishLine (0, cellsToWrite);
@@ -4700,8 +4697,8 @@ utd_doAlignColumns ()
 	  charactersWritten += cellsToWrite;
 	  if (rowTooLong)
 	    {
-	      if (!utd_insertCharacters (brlNode, litHyphen, strlen
-					 (litHyphen)))
+	      if (!utd_insertCharacters (brlNode, ud->lit_hyphen, strlen
+					 (ud->lit_hyphen)))
 		return 0;
 	    }
 	  utd_finishLine (0, cellsToWrite);

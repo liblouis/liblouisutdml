@@ -712,6 +712,7 @@ compileConfig (FileInfo * nested)
     "bold", "4",
     "computer_braille", "8",
     "all", "15",
+    "none", "0",
     NULL
   };
   static const char *configModes[] = {
@@ -1242,6 +1243,15 @@ read_configuration_file (const char *configFileList, const char
   ud->top = -1;
   ud->style_top = -1;
   ud->emphasis = 15;
+  /* There will be configuration settings for these values*/
+  ud->cell_width = 5;
+  ud->normal_line = 8;
+  ud->wide_line = 10;
+  ud->dpi = 20.0;
+  strcpy (ud->lit_hyphen, "-");
+  strcpy (ud->comp_hyphen, "_&");
+  strcpy (ud->letsign, "\\_");
+  /*End of values*/
   for (k = document; k < notranslate; k++)
     {
       StyleType *style = new_style ((xmlChar *) semNames[k]);
@@ -1325,15 +1335,14 @@ read_configuration_file (const char *configFileList, const char
   }
   if (ud->format_for == utd)
     {
-      const double dpi = 20.0;
       ud->braille_pages = 1;
       ud->paragraphs = 1;
-      ud->paper_width = (int) (paperWidth * dpi);
-      ud->paper_height = (int) (paperHeight * dpi);
-      ud->left_margin = (int) (leftMargin * dpi);
-      ud->right_margin = (int) (rightMargin * dpi);
-      ud->top_margin = (int) (topMargin * dpi);
-      ud->bottom_margin = (int) (bottomMargin * dpi);
+      ud->paper_width = (int) (paperWidth * ud->dpi);
+      ud->paper_height = (int) (paperHeight * ud->dpi);
+      ud->left_margin = (int) (leftMargin * ud->dpi);
+      ud->right_margin = (int) (rightMargin * ud->dpi);
+      ud->top_margin = (int) (topMargin * ud->dpi);
+      ud->bottom_margin = (int) (bottomMargin * ud->dpi);
     }
   else
     {
@@ -1352,8 +1361,8 @@ read_configuration_file (const char *configFileList, const char
 	  lbu_free ();
 	  return 0;
 	}
-      ud->cells_per_line = (ud->page_right - ud->page_left) / CELLWIDTH;
-      ud->lines_on_page = (ud->page_bottom - ud->page_top) / NORMALLINE;
+      ud->cells_per_line = (ud->page_right - ud->page_left) / ud->cell_width;
+      ud->lines_on_page = (ud->page_bottom - ud->page_top) / ud->normal_line;
       ud->back_text = textDevice;
       ud->back_line_length = 70;
     }
