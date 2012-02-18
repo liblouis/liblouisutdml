@@ -712,7 +712,7 @@ compileConfig (FileInfo * nested)
     "bold", "4",
     "computer_braille", "8",
     "all", "15",
-    "none", "0",
+    "none", "0x100",
     NULL
   };
   static const char *configModes[] = {
