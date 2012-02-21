@@ -638,6 +638,8 @@ insert_translation (const char *table)
   int translationLength;
   int translatedLength;
   int k;
+  if (style->translation_table != NULL)
+    table = style->translation_table;
   if (table == NULL)
     {
       memset (ud->typeform, 0, sizeof (ud->typeform));
@@ -795,6 +797,7 @@ insertWidechars (widechar * chars, int length)
 
 static int startLine ();
 static int finishLine ();
+static int lastLineInStyle;
 
 static int
 makeBlankLines (int number)
@@ -1390,9 +1393,6 @@ startLine ()
   return availableCells;
 }
 
-static int shortBrlOnly (int numSpaces, const widechar * content, int
-			 length, int kind);
-
 static int
 centerHeadFoot (widechar * toCenter, int length)
 {
@@ -1403,16 +1403,6 @@ centerHeadFoot (widechar * toCenter, int length)
     length = numCells - 4;
   leadingBlanks = (numCells - length) / 2;
   trailingBlanks = numCells - leadingBlanks - length;
-  if (ud->format_for == utd)
-    {
-      if (!shortBrlOnly (leadingBlanks, toCenter, length, 1))
-	return 0;
-      if (!shortBrlOnly (trailingBlanks, pageNumberString,
-			 pageNumberLength, 1))
-	return 0;
-    }
-  else
-    {
       if (!insertCharacters (blanks, leadingBlanks))
 	return 0;
       if (!insertWidechars (toCenter, length))
@@ -1421,7 +1411,6 @@ centerHeadFoot (widechar * toCenter, int length)
 	return 0;
       if (!insertWidechars (pageNumberString, pageNumberLength))
 	return 0;
-    }
   return 1;
 }
 
@@ -1480,9 +1469,11 @@ finishLine ()
 		}
 	    }
 	}
-
+      //if (lastLineInStyle && !style->newline_after)
+      {
       if (!insertCharacters (ud->lineEnd, strlen (ud->lineEnd)))
 	return 0;
+	}
       if (ud->braille_pages && ud->lines_on_page == ud->lines_per_page)
 	{
 	  if (!nextBraillePage ())
@@ -2149,7 +2140,10 @@ doLeftJustify ()
 	return 0;
       availableCells -= leadingBlanks;
       if ((charactersWritten + availableCells) >= translatedLength)
+      {
 	cellsToWrite = translatedLength - charactersWritten;
+	lastLineInStyle = 1;
+	}
       else
 	{
 	  for (cellsToWrite = availableCells; cellsToWrite > 0;
@@ -2502,6 +2496,7 @@ startStyle ()
 {
 /*Line or page skipping before body*/
   styleSpec->status = startBody;
+  lastLineInStyle = 0;
   if (ud->format_for == utd)
     return utd_startStyle ();
   if (!ud->paragraphs)
@@ -2639,7 +2634,6 @@ finishStyle ()
     }
   writeOutbuf ();
   ud->blank_lines = maximum (ud->blank_lines, style->lines_after);
-
   return 1;
 }
 
@@ -4209,7 +4203,7 @@ setNewlineProp (int horizLinePos)
   return 1;
 }
 
-static void
+static int
 postponedStartActions ()
 {
   PageStatus curPageStatus = checkPageStatus ();
@@ -4244,6 +4238,7 @@ postponedStartActions ()
 	    return 0;
 	}
     }
+  return 1;
 }
 
 static int
@@ -4903,3 +4898,4 @@ bottomMargin=%d", ud->braille_page_number, ud->paper_width, ud->paper_height, ud
     output_xml (ud->doc);
   return 1;
 }
+
