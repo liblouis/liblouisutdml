@@ -76,13 +76,14 @@ typedef struct
   int dont_split;
   int orphan_control;
   int first_line_indent;	/* At true margin if negative */
-  sem_act translate;
+  char *translation_table;
   int skip_number_lines;	/*Don't write on lines with page numbers */
   StyleFormat format;
   BrlPageNumFormat brlNumFormat;
   int newpage_before;
   int newpage_after;
   int righthand_page;
+  int newline_after;
 } StyleType;
 
 #ifdef _WIN32

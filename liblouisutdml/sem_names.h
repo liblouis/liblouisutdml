@@ -40,6 +40,8 @@ static const char *semNames[] = {
   "uncontracted",
   "contracted",
   "pagenum",
+  "pagebreak",
+  "attrtotext",
   "runninghead",
   "footer",
   "boxline",
