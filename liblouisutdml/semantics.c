@@ -1383,6 +1383,7 @@ new_style (xmlChar * name)
     return latestEntry->style;
   style = malloc (sizeof (StyleType));
   memset (style, 0, sizeof (StyleType));
+  style->newline_after = 1;
   hashInsert (semanticTable, key, styleEntry, 0, NULL, style);
   return style;
 }
