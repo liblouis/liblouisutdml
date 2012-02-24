@@ -1469,7 +1469,7 @@ finishLine ()
 		}
 	    }
 	}
-      //if (lastLineInStyle && !style->newline_after)
+      if (!(lastLineInStyle && !style->newline_after))
 	{
 	  if (!insertCharacters (ud->lineEnd, strlen (ud->lineEnd)))
 	    return 0;
@@ -3275,7 +3275,6 @@ end_style ()
 static char *currentTable;
 static char currentTableName[MAXNAMELEN];
 static int firstPage;
-static unsigned char pageNumberSpaces[4];
 static int postponedStart;
 static int *indices;
 static int *backIndices;
@@ -3313,10 +3312,6 @@ utd_start ()
   backBuf = NULL;
   backLength = 0;
   lineWidth = ud->normal_line;
-  pageNumberSpaces[0] = 0xa0;
-  pageNumberSpaces[1] = 0xa0;
-  pageNumberSpaces[2] = 0xa0;
-  pageNumberSpaces[3] = 0;
   return 1;
 }
 
@@ -3927,26 +3922,44 @@ addBrlOnly (xmlNode * node, ShortBrlOnlyStrings * sbstr)
 }
 
 static int
-addPrefixes (ShortBrlOnlyStrings * sbstr, widechar dots, widechar
-	     character, int prefixHowMany)
+addSpaces (ShortBrlOnlyStrings *sbstr, int howMany)
 {
   int k;
   int kk = 0;
-  for (k = 0; k < prefixHowMany && k < sizeof (sbstr->prefixedTransText); k++)
-    sbstr->prefixedTransText[k] = dots;
-  for (; k < sizeof (sbstr->prefixedTransText); k++)
+  for (k = 0; k < howMany && k < MAXNAMELEN; k++)
+    sbstr->prefixedTransText[k] = SPACE;
+  for (; k < MAXNAMELEN; k++)
     {
-      if (k >= sbstr->transTextLength)
+      if (kk > sbstr->transTextLength)
+	break;
+      sbstr->prefixedTransText[k] = sbstr->transText[kk++];
+    }
+  memcpy (sbstr->transText, sbstr->prefixedTransText, k * CHARSIZE);
+  sbstr->transTextLength = k;
+  return 1;
+}
+
+static int
+addPrefixes (ShortBrlOnlyStrings * sbstr, widechar dots, widechar
+	     character, int howMany)
+{
+  int k;
+  int kk = 0;
+  for (k = 0; k < howMany && k < MAXNAMELEN; k++)
+    sbstr->prefixedTransText[k] = dots;
+  for (; k < MAXNAMELEN; k++)
+    {
+      if (kk > sbstr->transTextLength)
 	break;
       sbstr->prefixedTransText[k] = sbstr->transText[kk++];
     }
   sbstr->prefixedTransTextLength = k;
   kk = 0;
-  for (k = 0; k < prefixHowMany && k < sizeof (sbstr->prefixedOrigText); k++)
+  for (k = 0; k < howMany && k < MAXNAMELEN; k++)
     sbstr->prefixedOrigText[k] = character;
-  for (; k < sizeof (sbstr->prefixedOrigText); k++)
+  for (; k < MAXNAMELEN; k++)
     {
-      if (k >= sbstr->origTextLength)
+      if (kk > sbstr->origTextLength)
 	break;
       sbstr->prefixedOrigText[k] = sbstr->origText[kk++];
     }
@@ -3956,10 +3969,14 @@ addPrefixes (ShortBrlOnlyStrings * sbstr, widechar dots, widechar
 static int utd_fillPage ();
 static int makeNewline (xmlNode * parent, int start);
 static ShortBrlOnlyStrings pageNumber;
+
 static int
 insertPageNumber (int howMany)
 {
+  if (howMany < 0)
+    howMany = 1;
   addPrefixes (&pageNumber, howMany, SPACE, ' ');
+  makeBrlOnlyNode ();
   if (!addBrlOnly (brlOnlyNode, &pageNumber))
     return 0;
   return 1;
@@ -3968,7 +3985,7 @@ insertPageNumber (int howMany)
 static int utd_fillPage ();
 
 static int
-makePageSeparator (xmlChar * printPageNumber, int length)
+utd_makePageSeparator (xmlChar * printPageNumber, int length)
 {
   ShortBrlOnlyStrings sb;
   int k;
@@ -3983,6 +4000,8 @@ makePageSeparator (xmlChar * printPageNumber, int length)
   length = strlen (setup);
   for (k = 0; k < length; k++)
     ud->print_page_number[k] = setup[k];
+  ud->print_page_number[k] = 0;
+  memset (&sb, 0, sizeof (sb));
   setOrigTextChar (&sb, setup, length);
   translateShortBrlOnly (&sb);
   if (curPageStatus == topOfPage)
@@ -3997,6 +4016,7 @@ makePageSeparator (xmlChar * printPageNumber, int length)
   makeBrlOnlyNode ();
   makeNewline (brlOnlyNode, 0);
   addBrlOnly (brlOnlyNode, &sb);
+  makeNewline (brlOnlyNode, 0);
   return 1;
 }
 
@@ -4015,33 +4035,36 @@ utd_getBraillePageString ()
       return 1;
     default:
     case normal:
-      sprintf (brlPageString, "%s%d", pageNumberSpaces,
+      sprintf (brlPageString, "%d", 
 	       ud->braille_page_number);
       break;
     case p:
-      sprintf (brlPageString, "%sp%d", pageNumberSpaces,
+      sprintf (brlPageString, "p%d", 
 	       ud->braille_page_number);
       break;
     case roman:
-      strcpy (brlPageString, pageNumberSpaces);
-      strcat (brlPageString, ud->letsign);
+      strcpy (brlPageString, ud->letsign);
       strcat (brlPageString, makeRomanNumber (ud->braille_page_number));
       break;
     }
   setOrigTextChar (&pageNumber, brlPageString, strlen (brlPageString));
   translateShortBrlOnly (&pageNumber);
+  addSpaces (&pageNumber, 3);
   return 1;
 }
 
-static void
+static int
 utd_getPrintPageString ()
 {
-  char printPageString[40];
-  strcpy (printPageString, pageNumberSpaces);
-  strcat (printPageString, ud->print_page_number);
-  setOrigTextChar (&pageNumber, printPageString, strlen (printPageString));
+  widechar printPageString[40];
+  int k;
+  for (k = 0; ud->print_page_number[k]; k++)
+  printPageString[k] = ud->print_page_number[k];
+  setOrigTextWidechar (&pageNumber, printPageString, k);
   translateShortBrlOnly (&pageNumber);
+  addSpaces (&pageNumber, 3);
   ud->print_page_number[0]++;
+  return 1;
 }
 
 static int
@@ -4285,7 +4308,7 @@ utd_insert_text (xmlNode * node, int length)
       if (!ud->print_pages)
 	return;
       fineFormat ();
-      makePageSeparator (node->content, length);
+      utd_makePageSeparator (node->content, length);
       return;
     default:
       break;
@@ -4441,9 +4464,10 @@ utd_finishLine (int leadingBlanks, int length)
 	  ud->vert_line_pos += ud->normal_line;
 	  setNewlineProp (0);
 	}
-      if (cellsOnLine > 0 && pageNumberLength > 0)
+      if (cellsOnLine > 0 && pageNumber.transTextLength > 0)
 	{
-	  cellsToWrite = ud->cells_per_line - pageNumberLength - cellsOnLine;
+	  cellsToWrite = ud->cells_per_line - pageNumber.transTextLength 
+	  - cellsOnLine;
 	  if (!insertPageNumber (cellsToWrite))
 	    return 0;
 	}
@@ -4453,9 +4477,10 @@ utd_finishLine (int leadingBlanks, int length)
 	    centerHeadFoot (ud->running_head, ud->running_head_length);
 	  else
 	    {
-	      if (pageNumberLength)
+	      if (pageNumber.transTextLength)
 		{
-		  cellsToWrite = ud->cells_per_line - pageNumberLength;
+		  cellsToWrite = ud->cells_per_line - 
+		  pageNumber.transTextLength;
 		  if (!insertPageNumber (cellsToWrite))
 		    return 0;
 		}
@@ -4467,11 +4492,13 @@ utd_finishLine (int leadingBlanks, int length)
 	    centerHeadFoot (ud->footer, ud->footer_length);
 	  else
 	    {
-	      if (pageNumberLength)
+	      if (pageNumber.transTextLength)
 		{
-		  horizLinePos = (ud->cells_per_line -
-				  pageNumberLength) * ud->cell_width;
-		  if (!insertPageNumber (horizLinePos))
+		int k = ud->cells_per_line - 
+		pageNumber.transTextLength;
+		  horizLinePos = k * 
+				  ud->cell_width;
+		  if (!insertPageNumber (k))
 		    return 0;
 		}
 	    }
