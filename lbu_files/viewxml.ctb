@@ -1,4 +1,4 @@
-# liblouis: U.S. English 8 dot Computer braille table
+# liblouis: Modified U.S. English 8 dot Computer braille table
 
 space \t 9 tab
 space \s 0 blank
@@ -73,7 +73,6 @@ sign \\ 12567
 sign | 1256
 math / 34
 sign * 16
-repeated \s 0
 
 pass2 @3-3 @3-0-3
 
