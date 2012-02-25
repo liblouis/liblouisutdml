@@ -3911,31 +3911,13 @@ translateShortBrlOnly (ShortBrlOnlyStrings * sbstr)
 static int
 addBrlOnly (xmlNode * node, ShortBrlOnlyStrings * sbstr)
 {
-  int wcLength = sbstr->origTextLength;
+  int wcLength = sbstr->prefixedOrigTextLength;
   xmlChar buf[2 * MAXNAMELEN];
   int utf8Length = sizeof (buf) - 4;
   makeDotsTextNode (node, sbstr->prefixedTransText,
 		    sbstr->prefixedTransTextLength, 0);
   wc_string_to_utf8 (sbstr->prefixedOrigText, &wcLength, buf, &utf8Length);
   xmlAddPrevSibling (node, xmlNewText (buf));
-  return 1;
-}
-
-static int
-addSpaces (ShortBrlOnlyStrings *sbstr, int howMany)
-{
-  int k;
-  int kk = 0;
-  for (k = 0; k < howMany && k < MAXNAMELEN; k++)
-    sbstr->prefixedTransText[k] = SPACE;
-  for (; k < MAXNAMELEN; k++)
-    {
-      if (kk > sbstr->transTextLength)
-	break;
-      sbstr->prefixedTransText[k] = sbstr->transText[kk++];
-    }
-  memcpy (sbstr->transText, sbstr->prefixedTransText, k * CHARSIZE);
-  sbstr->transTextLength = k;
   return 1;
 }
 
@@ -3966,6 +3948,19 @@ addPrefixes (ShortBrlOnlyStrings * sbstr, widechar dots, widechar
   sbstr->prefixedOrigTextLength = k;
 }
 
+static int
+addSpaces (ShortBrlOnlyStrings * sbstr, int howMany)
+{
+  addPrefixes (sbstr, SPACE, ' ', howMany);
+  memcpy (sbstr->origText, sbstr->prefixedOrigText,
+	  sbstr->prefixedOrigTextLength * CHARSIZE);
+  memcpy (sbstr->transText, sbstr->prefixedTransText,
+	  sbstr->prefixedTransTextLength * CHARSIZE);
+  sbstr->origTextLength = sbstr->prefixedOrigTextLength;
+  sbstr->transTextLength = sbstr->prefixedTransTextLength;
+  return 1;
+}
+
 static int utd_fillPage ();
 static int makeNewline (xmlNode * parent, int start);
 static ShortBrlOnlyStrings pageNumber;
@@ -3975,7 +3970,7 @@ insertPageNumber (int howMany)
 {
   if (howMany < 0)
     howMany = 1;
-  addPrefixes (&pageNumber, howMany, SPACE, ' ');
+  addPrefixes (&pageNumber, SPACE, ' ', howMany);
   makeBrlOnlyNode ();
   if (!addBrlOnly (brlOnlyNode, &pageNumber))
     return 0;
@@ -3998,11 +3993,11 @@ utd_makePageSeparator (xmlChar * printPageNumber, int length)
     strcat (setup, ud->letsign);
   strcat (setup, printPageNumber);
   length = strlen (setup);
-  for (k = 0; k < length; k++)
-    ud->print_page_number[k] = setup[k];
-  ud->print_page_number[k] = 0;
   memset (&sb, 0, sizeof (sb));
   setOrigTextChar (&sb, setup, length);
+  memcpy (ud->print_page_number, sb.origText, sb.origTextLength * 
+  CHARSIZE);
+  ud->print_page_number[sb.origTextLength] = 0;
   translateShortBrlOnly (&sb);
   if (curPageStatus == topOfPage)
     return 1;
@@ -4035,12 +4030,10 @@ utd_getBraillePageString ()
       return 1;
     default:
     case normal:
-      sprintf (brlPageString, "%d", 
-	       ud->braille_page_number);
+      sprintf (brlPageString, "%d", ud->braille_page_number);
       break;
     case p:
-      sprintf (brlPageString, "p%d", 
-	       ud->braille_page_number);
+      sprintf (brlPageString, "p%d", ud->braille_page_number);
       break;
     case roman:
       strcpy (brlPageString, ud->letsign);
@@ -4059,7 +4052,7 @@ utd_getPrintPageString ()
   widechar printPageString[40];
   int k;
   for (k = 0; ud->print_page_number[k]; k++)
-  printPageString[k] = ud->print_page_number[k];
+    printPageString[k] = ud->print_page_number[k];
   setOrigTextWidechar (&pageNumber, printPageString, k);
   translateShortBrlOnly (&pageNumber);
   addSpaces (&pageNumber, 3);
@@ -4124,8 +4117,8 @@ utd_centerHeadFoot (widechar * toCenter, int length)
     sb.transTextLength = numCells - 4;
   leadingBlanks = (numCells - sb.transTextLength) / 2;
   trailingBlanks = numCells - leadingBlanks - sb.transTextLength;
-  addPrefixes (&sb, leadingBlanks, SPACE, ' ');
-  addPrefixes (&pageNumber, trailingBlanks, SPACE, ' ');
+  addPrefixes (&sb, SPACE, ' ', leadingBlanks);
+  addPrefixes (&pageNumber, SPACE, ' ', trailingBlanks);
   return 1;
 }
 
@@ -4421,23 +4414,23 @@ utd_startLine ()
       if (curPageStatus == topOfPage)
 	{
 	  if (ud->running_head_length > 0
-	      || (style->skip_number_lines && pageNumberLength > 0))
+	      || (style->skip_number_lines && pageNumber.transTextLength > 0))
 	    {
 	      utd_finishLine (0, 0);
 	      setNewlineNode ();
 	      continue;
 	    }
-	  availableCells = ud->cells_per_line - pageNumberLength;
+	  availableCells = ud->cells_per_line - pageNumber.transTextLength;
 	}
       else if (curPageStatus == lastLine)
 	{
 	  if (ud->footer_length > 0 ||
-	      (style->skip_number_lines && pageNumberLength > 0))
+	      (style->skip_number_lines && pageNumber.transTextLength > 0))
 	    {
 	      utd_finishLine (0, 0);
 	      continue;
 	    }
-	  availableCells = ud->cells_per_line - pageNumberLength;
+	  availableCells = ud->cells_per_line - pageNumber.transTextLength;
 	}
       else
 	availableCells = ud->cells_per_line;
@@ -4466,8 +4459,8 @@ utd_finishLine (int leadingBlanks, int length)
 	}
       if (cellsOnLine > 0 && pageNumber.transTextLength > 0)
 	{
-	  cellsToWrite = ud->cells_per_line - pageNumber.transTextLength 
-	  - cellsOnLine;
+	  cellsToWrite = ud->cells_per_line - pageNumber.transTextLength
+	    - cellsOnLine;
 	  if (!insertPageNumber (cellsToWrite))
 	    return 0;
 	}
@@ -4479,8 +4472,8 @@ utd_finishLine (int leadingBlanks, int length)
 	    {
 	      if (pageNumber.transTextLength)
 		{
-		  cellsToWrite = ud->cells_per_line - 
-		  pageNumber.transTextLength;
+		  cellsToWrite = ud->cells_per_line -
+		    pageNumber.transTextLength;
 		  if (!insertPageNumber (cellsToWrite))
 		    return 0;
 		}
@@ -4494,10 +4487,8 @@ utd_finishLine (int leadingBlanks, int length)
 	    {
 	      if (pageNumber.transTextLength)
 		{
-		int k = ud->cells_per_line - 
-		pageNumber.transTextLength;
-		  horizLinePos = k * 
-				  ud->cell_width;
+		  int k = ud->cells_per_line - pageNumber.transTextLength;
+		  horizLinePos = k * ud->cell_width;
 		  if (!insertPageNumber (k))
 		    return 0;
 		}
