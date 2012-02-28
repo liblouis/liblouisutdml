@@ -42,12 +42,16 @@ static int doUtdbrlonly (xmlNode * node, int action);
 static int doUtdnewpage (xmlNode * node);
 static int doUtdnewline (xmlNode * node);
 static int doUtdgraphic (xmlNode * node);
+static int firstPage;
+static int firstLineOnPage;
 
 int
 utd2transinxml (xmlNode * node)
 {
   ud->top = -1;
   ud->style_top = -1;
+  firstPage = 1;
+  firstLineOnPage = 1;
   beginDocument ();
   findBrlNodes (node);
   finishDocument ();
@@ -118,7 +122,7 @@ findBrlNodes (xmlNode * node)
 static char *blanks =
   "                                                            ";
 static int
-writeCharacters (const char *text, int length)
+insertCharacters (const char *text, int length)
 {
   int k;
   for (k = 0; k < length; k++)
@@ -196,15 +200,20 @@ doUtdbrlonly (xmlNode * node, int action)
   return 1;
 }
 
-static int skipFirstNew = 0;
-static int newpagePending = 0;
+static int lastLinepos;
 
 static int
 doUtdnewpage (xmlNode * node)
 {
-  if (skipFirstNew)
-    return 1;
-  newpagePending = 1;
+  lastLinepos = ud->page_top;
+  firstLineOnPage = 1;
+  if (firstPage)
+  {
+  firstPage = 0;
+  return 1;
+  }
+  insertCharacters (ud->lineEnd, strlen (ud->lineEnd));
+  insertCharacters (ud->pageEnd, strlen (ud->pageEnd));
   return 1;
 }
 
@@ -214,19 +223,16 @@ doUtdnewline (xmlNode * node)
   char *xy;
   int k;
   int leadingBlanks;
-  if (skipFirstNew)
-    skipFirstNew = newpagePending = 0;
-  else
-    writeCharacters (ud->lineEnd, strlen (ud->lineEnd));
-  if (newpagePending)
-    {
-      writeCharacters (ud->pageEnd, strlen (ud->pageEnd));
-      newpagePending = 0;
-    }
+  int linepos;
+  if (!firstLineOnPage)
+    insertCharacters (ud->lineEnd, strlen (ud->lineEnd));
   xy = (char *) xmlGetProp (node, (xmlChar *) "xy");
   for (k = 0; xy[k] != ','; k++);
   leadingBlanks = (atoi (xy) - ud->left_margin) / ud->cell_width;
-  writeCharacters (blanks, leadingBlanks);
+  linepos = (atoi (&xy[k + 1]) - ud->page_top) / ud->normal_line;
+  insertCharacters (blanks, leadingBlanks);
+  if (firstLineOnPage)
+  firstLineOnPage = 0;
   return 1;
 }
 
