@@ -1,0 +1,24 @@
+# use glob syntax.
+syntax: glob
+
+*~
+*.orig
+*.o
+*.la
+*.lo
+
+.deps
+
+**Makefile
+**Makefile.in
+
+config.log
+config.status
+configure
+
+doc/liblouisutdml.html
+doc/liblouisutdml.info
+doc/liblouisutdml.txt
+
+doc/stamp-vti
+doc/version.texi
