@@ -344,7 +344,7 @@ transcribe_text_file ()
 static int first0Bit[MAXBYTES] = { 0x80, 0xC0, 0xE0, 0xF0, 0xF8, 0xFC, 0XFE };
 
 int
-utf8_string_to_wc (const unsigned char *instr, int *inSize, widechar *
+utf8_string_to_wc (const unsigned char *inStr, int *inSize, widechar *
 		   outstr, int *outSize)
 {
   int in = 0;
@@ -357,7 +357,7 @@ utf8_string_to_wc (const unsigned char *instr, int *inSize, widechar *
   int k;
   while (in < *inSize)
     {
-      ch = instr[in++] & 0xff;
+      ch = inStr[in++] & 0xff;
       if (ch < 128 || ud->input_encoding == ascii8)
 	{
 	  outstr[out++] = (widechar) ch;
@@ -379,7 +379,7 @@ utf8_string_to_wc (const unsigned char *instr, int *inSize, widechar *
 	{
 	  if (in >= *inSize)
 	    break;
-	  utf32 = (utf32 << 6) + (instr[in++] & 0x3f);
+	  utf32 = (utf32 << 6) + (inStr[in++] & 0x3f);
 	}
       if (CHARSIZE == 2 && utf32 > 0xffff)
 	utf32 = 0xffff;
@@ -397,7 +397,7 @@ utf8_string_to_wc (const unsigned char *instr, int *inSize, widechar *
 }
 
 int
-wc_string_to_utf8 (const widechar * instr, int *inSize, unsigned char *outstr,
+wc_string_to_utf8 (const widechar * inStr, int *inSize, unsigned char *outstr,
 		   int *outSize)
 {
   int in = 0;
@@ -410,7 +410,7 @@ wc_string_to_utf8 (const widechar * instr, int *inSize, unsigned char *outstr,
   int k;
   while (in < *inSize)
     {
-      utf32 = instr[in++];
+      utf32 = inStr[in++];
       if (utf32 < 128)
 	{
 	  utf8Str[0] = utf32;
@@ -3863,11 +3863,14 @@ typedef struct
 } ShortBrlOnlyStrings;
 
 static int
-setOrigTextChar (ShortBrlOnlyStrings * sbstr, unsigned char *instr, int
+setOrigTextChar (ShortBrlOnlyStrings * sbstr, unsigned char *inStr, int
 		 length)
 {
-  sbstr->origTextLength = sizeof (sbstr->origText) - 4;
-  utf8_string_to_wc (instr, &length, sbstr->origText, &sbstr->origTextLength);
+  for (; length >= 0 && inStr[length - 1] <= 32; length--);
+  if (length <= 0)
+    return 0;
+  sbstr->origTextLength = MAXNAMELEN - 4;
+  utf8_string_to_wc (inStr, &length, sbstr->origText, &sbstr->origTextLength);
   sbstr->transTextLength = 0;
   sbstr->prefixedOrigTextLength = 0;
   sbstr->prefixedTransTextLength = 0;
@@ -3875,13 +3878,14 @@ setOrigTextChar (ShortBrlOnlyStrings * sbstr, unsigned char *instr, int
 }
 
 static int
-setOrigTextWidechar (ShortBrlOnlyStrings * sbstr, widechar * instr,
+setOrigTextWidechar (ShortBrlOnlyStrings * sbstr, widechar * inStr,
 		     int length)
 {
+  if (length <= 0)
+    return 0;
   if (length >= MAXNAMELEN)
     length = MAXNAMELEN - 4;
-  sbstr->origTextLength = length;
-  memcpy (sbstr->origText, instr, length * CHARSIZE);
+  memcpy (sbstr->origText, inStr, length * CHARSIZE);
   sbstr->origTextLength = length;
   sbstr->transTextLength = 0;
   sbstr->prefixedOrigTextLength = 0;
@@ -3893,18 +3897,16 @@ static int
 translateShortBrlOnly (ShortBrlOnlyStrings * sbstr)
 {
   int translationLength = sbstr->origTextLength;
-  int translatedLength = sizeof (sbstr->transText);
-  int k;
+  int translatedLength = MAXNAMELEN - 4;
   if (!lou_translateString (currentTable, sbstr->origText,
 			    &translationLength,
 			    sbstr->transText, &translatedLength, NULL, NULL,
 			    dotsIO))
     return 0;
+  for (; sbstr->transText[translatedLength - 1] == SPACE; 
+  translatedLength--);
   sbstr->transText[translatedLength] = 0;
   sbstr->transTextLength = translatedLength;
-  for (k = 0; k < translatedLength; k++)
-    if (sbstr->transText[k] == 160)
-      sbstr->transText[k] = ' ';
   return 1;
 }
 
@@ -3931,9 +3933,9 @@ addPrefixes (ShortBrlOnlyStrings * sbstr, widechar dots, widechar
     sbstr->prefixedTransText[k] = dots;
   for (; k < MAXNAMELEN; k++)
     {
+      sbstr->prefixedTransText[k] = sbstr->transText[kk++];
       if (kk > sbstr->transTextLength)
 	break;
-      sbstr->prefixedTransText[k] = sbstr->transText[kk++];
     }
   sbstr->prefixedTransTextLength = k;
   kk = 0;
@@ -3941,9 +3943,9 @@ addPrefixes (ShortBrlOnlyStrings * sbstr, widechar dots, widechar
     sbstr->prefixedOrigText[k] = character;
   for (; k < MAXNAMELEN; k++)
     {
+      sbstr->prefixedOrigText[k] = sbstr->origText[kk++];
       if (kk > sbstr->origTextLength)
 	break;
-      sbstr->prefixedOrigText[k] = sbstr->origText[kk++];
     }
   sbstr->prefixedOrigTextLength = k;
 }
@@ -3988,7 +3990,7 @@ utd_makePageSeparator (xmlChar * printPageNumber, int length)
   PageStatus curPageStatus = checkPageStatus ();
   if (!ud->print_pages || !*printPageNumber)
     return 1;
-  strcpy (setup, " ");
+  strcpy (setup, "-");
   if (!(printPageNumber[0] >= '0' && printPageNumber[0] <= '9'))
     strcat (setup, ud->letsign);
   strcat (setup, printPageNumber);
@@ -4501,8 +4503,14 @@ utd_finishLine (int leadingBlanks, int length)
   if (curPageStatus == bottomOfPage)
     {
       if (ud->print_page_number[0] != '_')
-	xmlSetProp (newpageNode, (xmlChar *) "printnumber", (xmlChar *)
-		    ud->print_page_number);
+	{
+	  unsigned char holder[MAXNUMLEN];
+	  int k;
+	  for (k = 0; ud->print_page_number[k]; k++)
+	  holder[k] = ud->print_page_number[k];
+	  holder[k] = 0;
+	  xmlSetProp (newpageNode, (xmlChar *) "printnumber", holder);
+	}
       ud->braille_page_number++;
       ud->vert_line_pos = ud->page_top;
       makeNewpage (brlNode);
