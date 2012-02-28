@@ -5,7 +5,7 @@ markhead head
 utdmeta meta,name,utd
 utdbrl brl
 utdbrlonly span,class,brlonly
-utdnewpage newpage,number
+utdnewpage newpage,brlnumber
 utdnewline newline,xy
 utdgraphic xxx
 newentries no
