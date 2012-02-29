@@ -1007,7 +1007,7 @@ compileConfig (FileInfo * nested)
 	      "2",
 	      "firstLineIndent",
 	      "3",
-	      "translate",
+	      "translattionTable",
 	      "6",
 	      "skipNumberLines",
 	      "7",
@@ -1029,6 +1029,8 @@ compileConfig (FileInfo * nested)
 	      "15",
 	      "orphanControl",
 	      "16",
+	      "newlineAfter",
+	      "17",
 	      NULL
 	    };
 	    static const char *formats[] = {
@@ -1045,10 +1047,23 @@ compileConfig (FileInfo * nested)
 	      "listColumns",
 	      "5",
 	      "listLines",
-	      "6", "computerCoded", "7", "contents", "8", NULL
+	      "6", 
+	      "computerCoded", 
+	      "7", 
+	      "contents", 
+	      "8", 
+	      NULL
 	    };
 	    static const char *pageNumFormats[] = {
-	      "normal", "0", "blank", "1", "p", "2", "roman", "3", NULL
+	      "normal", 
+	      "0", 
+	      "blank", 
+	      "1", 
+	      "p", 
+	      "2", 
+	      "roman", 
+	      "3", 
+	      NULL
 	    };
 	    StyleType *style;
 	    sem_act styleAction;
@@ -1061,6 +1076,7 @@ compileConfig (FileInfo * nested)
 	    styleAction = find_semantic_number (nested->value);
 	    style = new_style (nested->value);
 	    style->action = styleAction;
+	    style->newline_after = 1;
 	    while (parseLine (nested))
 	      {
 		checkSubActions (nested, mainActions, actions);
@@ -1083,17 +1099,7 @@ compileConfig (FileInfo * nested)
 		    style->first_line_indent = atoi (nested->value);
 		    break;
 		  case 6:
-		    switch ((k = find_semantic_number (nested->value)))
-		      {
-		      case contracted:
-		      case uncontracted:
-		      case compbrl:
-			style->translate = k;
-			break;
-		      default:
-			configureError (nested, "no such translation");
-			break;
-		      }
+		    style->translation_table = findTable (nested);
 		    break;
 		  case 7:
 		    if ((k = checkValues (nested, yesNo)) != NOTFOUND)
@@ -1134,6 +1140,10 @@ compileConfig (FileInfo * nested)
 		  case 16:
 		    style->orphan_control = atoi (nested->value);
 		    break;
+		  case 17:
+		    if ((k = checkValues (nested, yesNo)) != NOTFOUND)
+		      style->newline_after = k;
+		  break;
 		  default:
 		    configureError (nested, "Program error in readconfig.c");
 		    continue;
