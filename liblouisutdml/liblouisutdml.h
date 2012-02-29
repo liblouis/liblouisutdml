@@ -52,12 +52,12 @@ documentation see liblouisutdml.html or type info liblouisutdml. */
   char *EXPORT_CALL lbu_version (void);
 /* Returns the version of liblouisutdml and liblouis. */
 
-  void *EXPORT_CALL lbu_initialize (const char *configFileName,
+  void *EXPORT_CALL lbu_initialize (const char *configFileList,
 				    const char *logFileName,
 				    const char *settingsString);
 
-/* This function initializes the libxml2 library, runs canonical.cfg and
-processes the configuration file given in configFileName, sets up a log
+/* This function initializes the libxml2 library, runs liblouisutdml.ini and
+processes the configuration file given in configFileList, sets up a log
 file if logFileName is not NULL and processes the settings in
 settingsString if this is not null. It returns a pointer to the UserData
 structure. This pointer is void and must be cast to (UserData *) in the
@@ -78,7 +78,7 @@ include louisutdml.h */
   } ProcessingModes;
 
   int EXPORT_CALL lbu_translateString
-    (const char *configFileName,
+    (const char *configFileList,
      const char *inbuf, int inlen, widechar *outbuf, int *outlen,
      const char *logFileName, const char *settingsString, unsigned int mode);
 
@@ -88,8 +88,8 @@ outbuf.  The xml expression must be immediately followed by a zero or
 null byte. If it does not begin with an xul header, one is added. The
 header is specified by the xmlHeader line in the configuration file. If
 no such line is present, a default header specifying UTF-8 encoding is
-used. The configFileName parameter points to a configuration file.
-canonical.cfg is processed before this file. Note that the *outlen
+used. The configFileList parameter points to a configuration file.
+liblouisutdml.ini is processed before this file. Note that the *outlen
 parameter is a pointer to an integer. When the function is called, this
 integer contains the maximum output length. When it returns, it is set
 to the actual length used.  The mode parameter is used to pass options
@@ -101,24 +101,24 @@ if a conplete translation could not be done.  */
 
 
   int EXPORT_CALL lbu_backTranslateString
-    (const char *configFileName,
+    (const char *configFileList,
      const char *inbuf, int inlen, widechar *outbuf, int *outlen,
      const char *logFileName, const char *settingsString, unsigned int mode);
 
-  int EXPORT_CALL lbu_translateFile (const char *configFileName, const char
+  int EXPORT_CALL lbu_translateFile (const char *configFileList, const char
 				     *inputFileName,
 				     const char *outputFileName,
 				     const char *logFileName,
 				     const char *settingsString,
 				     unsigned int mode);
 
-  int EXPORT_CALL lbu_translateTextFile (const char *configFileName,
+  int EXPORT_CALL lbu_translateTextFile (const char *configFileList,
 					 const char *inputFileName,
 					 const char *outputFileName,
 					 const char *logFileName,
 					 const char *settingsString,
 					 unsigned int mode);
-  int EXPORT_CALL lbu_backTranslateFile (const char *configFileName,
+  int EXPORT_CALL lbu_backTranslateFile (const char *configFileList,
 					 const char *inputFileName,
 					 const char *outputFileName,
 					 const char *logFileName,

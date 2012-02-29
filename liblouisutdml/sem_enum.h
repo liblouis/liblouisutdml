@@ -75,6 +75,8 @@ typedef enum
   contracted,
   /* General text */
   pagenum,
+  pagebreak,
+  attrtotext,
   runninghead,
   footer,
   boxline,

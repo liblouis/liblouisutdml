@@ -185,12 +185,12 @@ transcribe_paragraph (xmlNode * node, int action)
       break;
     case configtweak:
       do_configstring (node);
-    ud->main_braille_table = ud->contracted_table_name;
-  if (!lou_getTable (ud->main_braille_table))
-    {
-      lou_logPrint ("Cannot open main table %s", ud->main_braille_table);
-      kill_safely ();
-    }
+      ud->main_braille_table = ud->contracted_table_name;
+      if (!lou_getTable (ud->main_braille_table))
+	{
+	  lou_logPrint ("Cannot open main table %s", ud->main_braille_table);
+	  kill_safely ();
+	}
       break;
     case htmllink:
       if (ud->format_for != browser)
@@ -279,58 +279,58 @@ transcribe_paragraph (xmlNode * node, int action)
 	{
 	case XML_ELEMENT_NODE:
 	  if (ud->format_for == utd)
-	  {
-	  }
-	  else
-	  {
-	  style_this = is_style (child);
-	  if (style_this && ud->braille_pages)
 	    {
-	      if (keep_with_next_this && ud->lines_length > 0)
-		keep_with_previous_this = 1;
-	      keep_with_next_this = 0;
-	      if (!dont_split)
+	    }
+	  else
+	    {
+	      style_this = is_style (child);
+	      if (style_this && ud->braille_pages)
 		{
-		  if (ud->lines_on_page > 0 &&
-		      !((keep_with_previous || keep_with_previous_this) &&
-			!ud->outbuf3_enabled))
+		  if (keep_with_next_this && ud->lines_length > 0)
+		    keep_with_previous_this = 1;
+		  keep_with_next_this = 0;
+		  if (!dont_split)
 		    {
-		      if (style_this->dont_split
-			  || style_this->keep_with_next)
-			dont_split_this = 1;
-		      else if (style_this->orphan_control > 1)
-			orphan_control_this = style_this->orphan_control;
+		      if (ud->lines_on_page > 0 &&
+			  !((keep_with_previous || keep_with_previous_this) &&
+			    !ud->outbuf3_enabled))
+			{
+			  if (style_this->dont_split
+			      || style_this->keep_with_next)
+			    dont_split_this = 1;
+			  else if (style_this->orphan_control > 1)
+			    orphan_control_this = style_this->orphan_control;
+			}
+		      keep_with_next_this = style_this->keep_with_next;
 		    }
-		  keep_with_next_this = style_this->keep_with_next;
-		}
-	      if (dont_split_this || orphan_control_this)
-		{
-		  if (!ud->outbuf3_enabled)
+		  if (dont_split_this || orphan_control_this)
 		    {
-	      saved_child = child;
-		      saved_branchCount = branchCount - 1;
-		      saveState ();
-		      state_saved = 1;
-		      ud->outbuf3_enabled = 1;
-		      ud->lines_length = 0;
+		      if (!ud->outbuf3_enabled)
+			{
+			  saved_child = child;
+			  saved_branchCount = branchCount - 1;
+			  saveState ();
+			  state_saved = 1;
+			  ud->outbuf3_enabled = 1;
+			  ud->lines_length = 0;
+			}
 		    }
-		}
-	      if (dont_split_this)
-		dont_split = dont_split_this;
-	      if (keep_with_next_this)
-		keep_with_next = keep_with_next_this;
-	      if (keep_with_previous_this)
-		{
-		  keep_with_previous = keep_with_previous_this;
-		  keep_with_previous_pos = ud->lines_length;
-		}
-	      if (orphan_control_this)
-		{
-		  orphan_control = orphan_control_this;
-		  orphan_control_pos = ud->lines_length;
+		  if (dont_split_this)
+		    dont_split = dont_split_this;
+		  if (keep_with_next_this)
+		    keep_with_next = keep_with_next_this;
+		  if (keep_with_previous_this)
+		    {
+		      keep_with_previous = keep_with_previous_this;
+		      keep_with_previous_pos = ud->lines_length;
+		    }
+		  if (orphan_control_this)
+		    {
+		      orphan_control = orphan_control_this;
+		      orphan_control_pos = ud->lines_length;
+		    }
 		}
 	    }
-	  }
 	  if (strcmp (child->name, "brl") != 0)
 	    transcribe_paragraph (child, 1);
 	  break;
@@ -349,120 +349,122 @@ transcribe_paragraph (xmlNode * node, int action)
       if (child != NULL)
 	child = child->next;
       if (ud->format_for == utd)
-      {
-      }
-      else
-      {
-      if (ud->outbuf3_enabled)
 	{
-	  if (dont_split_status >= 0 &&
-	      keep_with_previous_status >= 0 && orphan_control_status >= 0)
+	}
+      else
+	{
+	  if (ud->outbuf3_enabled)
 	    {
-	      if (keep_with_previous)
+	      if (dont_split_status >= 0 &&
+		  keep_with_previous_status >= 0
+		  && orphan_control_status >= 0)
 		{
-		  if (keep_with_previous_this)
-		    keep_with_previous_status = 1;
-		  else if (keep_with_previous_pos < ud->lines_length)
-		    keep_with_previous_status = 1;
-		  else
-		    keep_with_previous_status = 0;
-		  if (keep_with_previous_pos < ud->lines_length &&
-		      ud->lines_pagenum[keep_with_previous_pos] >
-		      ud->lines_pagenum[keep_with_previous_pos - 1] &&
-		      !ud->lines_newpage[keep_with_previous_pos])
-		    keep_with_previous_status = -1;
-		}
-	      if (dont_split_this)
-		{
-		  dont_split_status = 1;
-		  for (i = 1; i < ud->lines_length; i++)
+		  if (keep_with_previous)
 		    {
-		      if (ud->lines_pagenum[i] > ud->lines_pagenum[i - 1])
+		      if (keep_with_previous_this)
+			keep_with_previous_status = 1;
+		      else if (keep_with_previous_pos < ud->lines_length)
+			keep_with_previous_status = 1;
+		      else
+			keep_with_previous_status = 0;
+		      if (keep_with_previous_pos < ud->lines_length &&
+			  ud->lines_pagenum[keep_with_previous_pos] >
+			  ud->lines_pagenum[keep_with_previous_pos - 1] &&
+			  !ud->lines_newpage[keep_with_previous_pos])
+			keep_with_previous_status = -1;
+		    }
+		  if (dont_split_this)
+		    {
+		      dont_split_status = 1;
+		      for (i = 1; i < ud->lines_length; i++)
 			{
-			  if (!ud->lines_newpage[i])
-			    dont_split_status = -1;
-			  break;
+			  if (ud->lines_pagenum[i] > ud->lines_pagenum[i - 1])
+			    {
+			      if (!ud->lines_newpage[i])
+				dont_split_status = -1;
+			      break;
+			    }
 			}
 		    }
-		}
-	      if (orphan_control)
-		{
-		  if (orphan_control_this)
-		    orphan_control_status = 1;
-		  else
-		    orphan_control_status = 0;
-		  i = 1;
-		  while (i < orphan_control
-			 && orphan_control_pos + i < ud->lines_length)
+		  if (orphan_control)
 		    {
-		      if (ud->lines_pagenum[orphan_control_pos + i] >
-			  ud->lines_pagenum[orphan_control_pos + i - 1])
+		      if (orphan_control_this)
+			orphan_control_status = 1;
+		      else
+			orphan_control_status = 0;
+		      i = 1;
+		      while (i < orphan_control
+			     && orphan_control_pos + i < ud->lines_length)
 			{
-			  if (!ud->lines_newpage[i])
-			    orphan_control_status = -1;
-			  break;
+			  if (ud->lines_pagenum[orphan_control_pos + i] >
+			      ud->lines_pagenum[orphan_control_pos + i - 1])
+			    {
+			      if (!ud->lines_newpage[i])
+				orphan_control_status = -1;
+			      break;
+			    }
+			  i++;
 			}
-		      i++;
+		      if (i == orphan_control)
+			orphan_control_status = 1;
 		    }
-		  if (i == orphan_control)
-		    orphan_control_status = 1;
 		}
-	    }
-	  if (dont_split_status < 0 ||
-	      keep_with_previous_status < 0 || orphan_control_status < 0)
-	    {
-	      if (state_saved)
+	      if (dont_split_status < 0 ||
+		  keep_with_previous_status < 0 || orphan_control_status < 0)
+		{
+		  if (state_saved)
+		    {
+		      dont_split = 0;
+		      dont_split_status = 0;
+		      keep_with_next = 0;
+		      keep_with_previous = 0;
+		      keep_with_previous_status = 0;
+		      orphan_control = 0;
+		      orphan_control_status = 0;
+		      restoreState ();
+		      child = saved_child;
+		      branchCount = saved_branchCount;
+		      state_saved = 0;
+		      ud->outbuf3_len_so_far = 0;
+		      ud->outbuf3_enabled = 0;
+		      do_newpage ();
+		    }
+		  else
+		    break;
+		}
+	      if (dont_split_status > 0)
 		{
 		  dont_split = 0;
 		  dont_split_status = 0;
-		  keep_with_next = 0;
+		}
+	      if (keep_with_previous_status > 0)
+		{
 		  keep_with_previous = 0;
 		  keep_with_previous_status = 0;
+		}
+	      if (orphan_control_status > 0)
+		{
 		  orphan_control = 0;
 		  orphan_control_status = 0;
-		  restoreState ();
-		  child = saved_child;
-		  branchCount = saved_branchCount;
-		  state_saved = 0;
-		  ud->outbuf3_len_so_far = 0;
-		  ud->outbuf3_enabled = 0;
-		  do_newpage ();
 		}
-	      else
-		break;
+	      if ((!dont_split && !keep_with_previous &&
+		   !keep_with_next && !orphan_control) || (!child
+							   && state_saved))
+		{
+		  write_buffer (3, 0);
+		  ud->outbuf3_enabled = 0;
+		  state_saved = 0;
+		}
 	    }
-	  if (dont_split_status > 0)
-	    {
-	      dont_split = 0;
-	      dont_split_status = 0;
-	    }
-	  if (keep_with_previous_status > 0)
-	    {
-	      keep_with_previous = 0;
-	      keep_with_previous_status = 0;
-	    }
-	  if (orphan_control_status > 0)
-	    {
-	      orphan_control = 0;
-	      orphan_control_status = 0;
-	    }
-	  if ((!dont_split && !keep_with_previous &&
-	       !keep_with_next && !orphan_control) || (!child && state_saved))
-	    {
-	      write_buffer (3, 0);
-	      ud->outbuf3_enabled = 0;
-	      state_saved = 0;
-	    }
+	  if (dont_split_this)
+	    dont_split = 0;
+	  if (keep_with_next_this)
+	    keep_with_next = 0;
+	  if (keep_with_previous_this)
+	    keep_with_previous = 0;
+	  if (orphan_control_this)
+	    orphan_control = 0;
 	}
-      if (dont_split_this)
-	dont_split = 0;
-      if (keep_with_next_this)
-	keep_with_next = 0;
-      if (keep_with_previous_this)
-	keep_with_previous = 0;
-      if (orphan_control_this)
-	orphan_control = 0;
-    }
     }
   insert_code (node, branchCount);
   insert_code (node, -1);
@@ -472,22 +474,40 @@ transcribe_paragraph (xmlNode * node, int action)
     switch (ud->stack[ud->top])
       {
       case runninghead:
-	insert_translation (ud->main_braille_table);
-	if (ud->translated_length > (ud->cells_per_line - 9))
-	  ud->running_head_length = ud->cells_per_line - 9;
+	if (ud->format_for == utd)
+	  {
+	    memcpy (ud->running_head, ud->text_buffer, ud->text_length *
+		    CHARSIZE);
+	    ud->running_head_length = ud->text_length;
+	  }
 	else
-	  ud->running_head_length = ud->translated_length;
-	memcpy (&ud->running_head[0], &ud->translated_buffer[0],
-		ud->running_head_length * CHARSIZE);
+	  {
+	    insert_translation (ud->main_braille_table);
+	    if (ud->translated_length > (ud->cells_per_line - 9))
+	      ud->running_head_length = ud->cells_per_line - 9;
+	    else
+	      ud->running_head_length = ud->translated_length;
+	    memcpy (&ud->running_head[0], &ud->translated_buffer[0],
+		    ud->running_head_length * CHARSIZE);
+	  }
 	break;
       case footer:
-	insert_translation (ud->main_braille_table);
-	if (ud->translated_length > (ud->cells_per_line - 9))
-	  ud->footer_length = ud->cells_per_line - 9;
+	if (ud->format_for == utd)
+	  {
+	    memcpy (ud->footer, ud->text_buffer, ud->text_length * 
+	    CHARSIZE);
+	    ud->footer_length = ud->text_length;
+	  }
 	else
-	  ud->footer_length = ud->translated_length;
-	memcpy (&ud->footer[0], &ud->translated_buffer[0],
-		ud->footer_length * CHARSIZE);
+	  {
+	    insert_translation (ud->main_braille_table);
+	    if (ud->translated_length > (ud->cells_per_line - 9))
+	      ud->footer_length = ud->cells_per_line - 9;
+	    else
+	      ud->footer_length = ud->translated_length;
+	    memcpy (&ud->footer[0], &ud->translated_buffer[0],
+		    ud->footer_length * CHARSIZE);
+	  }
 	break;
       default:
 	break;
