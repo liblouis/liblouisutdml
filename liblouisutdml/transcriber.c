@@ -128,16 +128,26 @@ static int utd_makeBlankLines (int number, int beforeAfter);
 static int utd_startStyle ();
 static int utd_styleBody ();
 static int utd_finishStyle ();
+static const TranslationTableHeader *origTableHeader;
+static const char *origTableName;
+
+static TranslationTableRule *
+getLiblouisRule (TranslationTableOffset offset)
+{
+  if (offset == 0)
+    return NULL;
+  return (TranslationTableRule *) & origTableHeader->ruleArea[offset];
+}
 
 int
 start_document ()
 {
   ud->head_node = NULL;
   if (ud->has_math)
-    ud->main_braille_table = ud->mathtext_table_name;
+    origTableName = ud->main_braille_table = ud->mathtext_table_name;
   else
-    ud->main_braille_table = ud->contracted_table_name;
-  if (!lou_getTable (ud->main_braille_table))
+    origTableName = ud->main_braille_table = ud->contracted_table_name;
+  if (!(origTableHeader = lou_getTable (ud->main_braille_table)))
     {
       lou_logPrint ("Cannot open main table %s", ud->main_braille_table);
       kill_safely ();
@@ -3898,7 +3908,7 @@ translateShortBrlOnly (ShortBrlOnlyStrings * sbstr)
 {
   int translationLength = sbstr->origTextLength;
   int translatedLength = MAXNAMELEN - 4;
-  if (!lou_translateString (currentTable, sbstr->origText,
+  if (!lou_translateString (origTableName, sbstr->origText,
 			    &translationLength,
 			    sbstr->transText, &translatedLength, NULL, NULL,
 			    dotsIO))
@@ -4053,10 +4063,23 @@ utd_getPrintPageString ()
 {
   widechar printPageString[40];
   int k;
+  TranslationTableRule *rule;
   for (k = 0; ud->print_page_number[k]; k++)
     printPageString[k] = ud->print_page_number[k];
   setOrigTextWidechar (&pageNumber, printPageString, k);
   translateShortBrlOnly (&pageNumber);
+  rule = getLiblouisRule (origTableHeader->letterSign);
+  if (rule != NULL)
+  {
+    for (k = 0; k < pageNumber.transTextLength; k++)
+    if (pageNumber.transText[k] == rule->charsdots[0])
+    {
+    pageNumber.transText[k] = SPACE;
+    addSpaces (&pageNumber, 2);
+    break;
+    }
+  }
+  else
   addSpaces (&pageNumber, 3);
   ud->print_page_number[0]++;
   return 1;
@@ -4564,7 +4587,7 @@ utd_doOrdinaryText ()
 	  if (cellsToWrite == availableCells)
 	    newLineNeeded = 1;
 	  if (dots != ENDSEGMENT && lastSpace != 0)
-	    cellsToWrite = lastSpace + 1;
+	    cellsToWrite = lastSpace;
 	  cellsOnLine += cellsToWrite;
 	  availableCells -= cellsToWrite;
 	  insertTextFragment (&translatedBuffer[charactersWritten],
