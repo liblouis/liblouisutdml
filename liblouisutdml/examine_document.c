@@ -143,10 +143,10 @@ do_configstring (xmlNode * node)
   int k;
   int kk = 0;
   xmlChar configString[2 * MAXNAMELEN];
-  int savedTextLength = ud->text_length;
+  ud->text_length = 0;
   insert_code (node, 0);
   configString[kk++] = ud->string_escape;
-  for (k = savedTextLength; k < ud->text_length; k++)
+  for (k = 0; k < ud->text_length; k++)
     {
       if (ud->text_buffer[k] == '=')
 	configString[kk++] = ' ';
@@ -155,9 +155,10 @@ do_configstring (xmlNode * node)
       else
 	configString[kk++] = (xmlChar) ud->text_buffer[k];
     }
+  configString[kk++] = '\n';
   configString[kk] = 0;
+  ud->text_length = 0;
   if (!config_compileSettings ((char *) configString))
     return 0;
-  ud->text_length = savedTextLength;
   return 1;
 }

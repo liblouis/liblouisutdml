@@ -191,7 +191,9 @@ transcribe_paragraph (xmlNode * node, int action)
 	  lou_logPrint ("Cannot open main table %s", ud->main_braille_table);
 	  kill_safely ();
 	}
-      break;
+      if (action != 0)
+        pop_sem_stack ();
+      return 1;
     case htmllink:
       if (ud->format_for != browser)
 	break;
