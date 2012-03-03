@@ -722,6 +722,7 @@ JNIEXPORT jboolean JNICALL Java_org_liblouis_liblouisutdml_file2brl
 		case 'b':
 		case 'p':
 		case 'r':
+		case 'T':
 		case 'x':
 		  whichProc = curArg[1];
 		  k++;
@@ -906,12 +907,13 @@ configSettings, 0))
 				   outputFileName, NULL, NULL, mode);
 	}
 	break;
-      case 't':
       case 'p':
+      case 'T':
 	lbu_translateTextFile (configFileList, tempFileName, outputFileName,
 			       NULL, NULL, mode);
 	break;
       case 'x':
+      case 't':
 	lbu_translateFile (configFileList, tempFileName, outputFileName, NULL,
 			   NULL, mode);
 	break;

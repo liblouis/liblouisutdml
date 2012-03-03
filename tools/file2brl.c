@@ -91,7 +91,7 @@ int
 main (int argc, char **argv)
 {
   int mode = 0;
-  char *configFileName = NULL;
+  char *configFileList = NULL;
   char *inputFileName = "stdin";
   char *outputFileName = "stdout";
   char tempFileName[MAXNAMELEN];
@@ -132,7 +132,7 @@ main (int argc, char **argv)
 	mode |= htmlDoc;
 	break;
       case 'f':
-	configFileName = optarg;
+	configFileList = optarg;
 	break;
       case 'b':
       case 'p':
@@ -185,9 +185,9 @@ main (int argc, char **argv)
     for (k = 0; configSettings[k]; k++)
       if (configSettings[k] == '=' && configSettings[k - 1] != ' ')
 	configSettings[k] = ' ';
-  if (configFileName == NULL)
-    configFileName = "preferences.cfg";
-  if ((ud = lbu_initialize (configFileName, logFileName, 
+  if (configFileList == NULL)
+    configFileList = "preferences.cfg";
+  if ((ud = lbu_initialize (configFileList, logFileName, 
   configSettings)) == NULL)
     exit (EXIT_FAILURE);
   if (strcmp (inputFileName, "stdin") != 0)
@@ -287,7 +287,7 @@ main (int argc, char **argv)
     switch (whichProc)
       {
       case 'b':
-	lbu_backTranslateFile (configFileName, tempFileName,
+	lbu_backTranslateFile (configFileList, tempFileName,
 			       outputFileName, logFileName, configSettings,
 			       mode);
 	break;
@@ -296,33 +296,33 @@ main (int argc, char **argv)
 	  char temp2FileName[MAXNAMELEN];
 	  strcpy (temp2FileName, lbu_getWriteablePath ());
 	  strcat (temp2FileName, "file2brl2.temp");
-	  if ((lbu_backTranslateFile (configFileName, tempFileName,
+	  if ((lbu_backTranslateFile (configFileList, tempFileName,
 				      temp2FileName, logFileName,
 				      configSettings, mode)) != 1)
 	    exit (EXIT_FAILURE);
 	  if (ud->back_text == html)
-	    lbu_translateFile (configFileName, temp2FileName,
+	    lbu_translateFile (configFileList, temp2FileName,
 			       outputFileName, logFileName, configSettings,
 			       mode);
 	  else
-	    lbu_translateTextFile (configFileName, temp2FileName,
+	    lbu_translateTextFile (configFileList, temp2FileName,
 				   outputFileName, logFileName,
 				   configSettings, mode);
 	}
 	break;
-      case 't':
       case 'p':
-	lbu_translateTextFile (configFileName, tempFileName,
+	lbu_translateTextFile (configFileList, tempFileName,
 			       outputFileName, logFileName, configSettings,
 			       mode);
 	break;
       case 'T':
-	lbu_translateTextFile (configFileName, tempFileName,
+	lbu_translateTextFile (configFileList, tempFileName,
 			       outputFileName,
 			       logFileName, configSettings, mode);
 	break;
+      case 't':
       case '0':
-	lbu_translateFile (configFileName, tempFileName, outputFileName,
+	lbu_translateFile (configFileList, tempFileName, outputFileName,
 			   logFileName, configSettings, mode);
 	break;
       default:
