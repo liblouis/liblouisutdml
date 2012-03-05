@@ -128,15 +128,15 @@ static int utd_makeBlankLines (int number, int beforeAfter);
 static int utd_startStyle ();
 static int utd_styleBody ();
 static int utd_finishStyle ();
-static const TranslationTableHeader *origTableHeader;
-static const char *origTableName;
+static const TranslationTableHeader *firstTableHeader;
+static const char *firstTableName;
 
 static TranslationTableRule *
 getLiblouisRule (TranslationTableOffset offset)
 {
   if (offset == 0)
     return NULL;
-  return (TranslationTableRule *) & origTableHeader->ruleArea[offset];
+  return (TranslationTableRule *) & firstTableHeader->ruleArea[offset];
 }
 
 int
@@ -144,10 +144,10 @@ start_document ()
 {
   ud->head_node = NULL;
   if (ud->has_math)
-    origTableName = ud->main_braille_table = ud->mathtext_table_name;
+    firstTableName = ud->main_braille_table = ud->mathtext_table_name;
   else
-    origTableName = ud->main_braille_table = ud->contracted_table_name;
-  if (!(origTableHeader = lou_getTable (ud->main_braille_table)))
+    firstTableName = ud->main_braille_table = ud->contracted_table_name;
+  if (!(firstTableHeader = lou_getTable (ud->main_braille_table)))
     {
       lou_logPrint ("Cannot open main table %s", ud->main_braille_table);
       kill_safely ();
@@ -3908,7 +3908,7 @@ translateShortBrlOnly (ShortBrlOnlyStrings * sbstr)
 {
   int translationLength = sbstr->origTextLength;
   int translatedLength = MAXNAMELEN - 4;
-  if (!lou_translateString (origTableName, sbstr->origText,
+  if (!lou_translateString (firstTableName, sbstr->origText,
 			    &translationLength,
 			    sbstr->transText, &translatedLength, NULL, NULL,
 			    dotsIO))
@@ -4068,7 +4068,7 @@ utd_getPrintPageString ()
     printPageString[k] = ud->print_page_number[k];
   setOrigTextWidechar (&pageNumber, printPageString, k);
   translateShortBrlOnly (&pageNumber);
-  rule = getLiblouisRule (origTableHeader->letterSign);
+  rule = getLiblouisRule (firstTableHeader->letterSign);
   if (rule != NULL)
   {
     for (k = 0; k < pageNumber.transTextLength; k++)
