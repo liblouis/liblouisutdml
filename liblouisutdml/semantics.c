@@ -61,7 +61,8 @@ typedef enum
 {
   styleEntry = 1,
   xpathEntry = 2,
-  actionEntry = 4
+  actionEntry = 4,
+  macroEntry = 8
 } EntryType;
 
 typedef struct
@@ -72,6 +73,7 @@ typedef struct
   int semNum;
   InsertsType *inserts;
   StyleType *style;
+  unsigned char *macro;
 } HashEntry;
 
 typedef struct
@@ -158,7 +160,8 @@ hashFree (HashTable * table)
 
 static void hashInsert (HashTable * table, const unsigned char *key, int
 			type, int
-			semNum, InsertsType * inserts, StyleType * style);
+			semNum, InsertsType * inserts, StyleType * 
+			style, unsigned char *macro);
 
 void
 clean_semantic_table (void)
@@ -175,7 +178,7 @@ clean_semantic_table (void)
 	next = e->next;
 	if (!(e->type == 0 || e->type == xpathEntry))
 	  hashInsert (newSemanticTable, e->key, e->type, e->semNum, NULL,
-		      e->style);
+		      e->style, NULL);
 	free (e->key);
 	if (e->inserts != NULL)
 	  free (e->inserts);
@@ -225,7 +228,8 @@ static HashEntry *latestEntry;
 /* assumes that key is not already present! */
 static void
 hashInsert (HashTable * table, const unsigned char *key, int type, int
-	    semNum, InsertsType * inserts, StyleType * style)
+	    semNum, InsertsType * inserts, StyleType * style, unsigned 
+	    char *macro)
 {
   int i;
   if (table == NULL || key == NULL || *key == 0)
@@ -239,6 +243,7 @@ hashInsert (HashTable * table, const unsigned char *key, int type, int
   latestEntry->semNum = semNum;
   latestEntry->inserts = inserts;
   latestEntry->style = style;
+  latestEntry->macro = macro;
   table->entries[i] = latestEntry;
 }
 
@@ -294,7 +299,7 @@ find_semantic_number (const char *name)
 	  strcpy (realName, semNames[k]);
 	  strcat (realName, SEMANTICSUF);
 	  hashInsert (semanticTable, (xmlChar *) realName, actionEntry, k,
-		      NULL, NULL);
+		      NULL, NULL, NULL);
 	}
       k = 0;
       while (pseudoActions[k] != NULL)
@@ -302,7 +307,7 @@ find_semantic_number (const char *name)
 	  strcpy (realName, pseudoActions[k]);
 	  strcat (realName, SEMANTICSUF);
 	  hashInsert (semanticTable, (xmlChar *) realName,
-		      actionEntry, k + end_all + 1, NULL, NULL);
+		      actionEntry, k + end_all + 1, NULL, NULL, NULL);
 	  k++;
 	}
     }
@@ -557,7 +562,8 @@ countAttrValues (xmlChar * key)
 	return 1;
       if (curCount >= NUMCOUNTS)
 	return 0;
-      hashInsert (attrValueCountsTable, key, 0, curCount, NULL, NULL);
+      hashInsert (attrValueCountsTable, key, 0, curCount, NULL, NULL, 
+      NULL);
       curCount++;
       return 1;
     case 3:
@@ -568,7 +574,8 @@ countAttrValues (xmlChar * key)
       if (thisCount == notFound)
 	{
 	  attrValueCounts[curCount]++;
-	  hashInsert (attrValueCountsTable, key, 0, curCount, NULL, NULL);
+	  hashInsert (attrValueCountsTable, key, 0, curCount, NULL, 
+	  NULL, NULL);
 	  curCount++;
 	}
       key[lastComma] = ',';
@@ -798,7 +805,7 @@ compileLine (FileInfo * nested)
   else
     {
       hashInsert (semanticTable, (xmlChar *) lookFor, type, actionNum,
-		  inserts, style);
+		  inserts, style, NULL);
       nested->numEntries++;
     }
   return 1;
@@ -1214,6 +1221,16 @@ is_style (xmlNode * node)
     return NULL;
 }
 
+char *
+is_macro (xmlNode * node)
+{
+  HashEntry *nodeEntry = (HashEntry *) node->_private;
+  if (nodeEntry != NULL)
+    return nodeEntry->macro;
+  else
+    return NULL;
+}
+
 xmlChar *
 get_attr_value (xmlNode * node)
 {
@@ -1283,7 +1300,7 @@ addNewEntries (const xmlChar * newEntry)
     }
   if (hashLookup (newEntriesTable, newEntry) != notFound)
     return;
-  hashInsert (newEntriesTable, newEntry, 0, 0, NULL, NULL);
+  hashInsert (newEntriesTable, newEntry, 0, 0, NULL, NULL, NULL);
 }
 
 void
@@ -1384,8 +1401,25 @@ new_style (xmlChar * name)
   style = malloc (sizeof (StyleType));
   memset (style, 0, sizeof (StyleType));
   style->newline_after = 1;
-  hashInsert (semanticTable, key, styleEntry, 0, NULL, style);
+  hashInsert (semanticTable, key, styleEntry, 0, NULL, style, NULL);
   return style;
+}
+
+#define MACROSUF " orcam"
+xmlChar *
+new_macro (xmlChar * name, xmlChar *body)
+{
+  char *storedBody = alloc_string (body);
+  char key[MAXNAMELEN];
+  if (!semanticTable)
+    semanticTable = hashNew ();
+  strcpy (key, name);
+  strcat (key, MACROSUF);
+  if (hashLookup (semanticTable, key) != notFound)
+    return NULL;
+  hashInsert (semanticTable, key, macroEntry, 0, NULL, NULL, 
+  storedBody);
+  return storedBody;
 }
 
 StyleType *
@@ -1396,6 +1430,17 @@ lookup_style (xmlChar * name)
   strcat (key, STYLESUF);
   if (hashLookup (semanticTable, key) != notFound)
     return latestEntry->style;
+  return NULL;
+}
+
+unsigned char *
+lookup_macro (xmlChar * name)
+{
+  char key[MAXNAMELEN];
+  strcpy (key, name);
+  strcat (key, MACROSUF);
+  if (hashLookup (semanticTable, key) != notFound)
+    return latestEntry->macro;
   return NULL;
 }
 

@@ -142,6 +142,7 @@ processXmlDocument (const char *inputDoc, int length)
 void
 kill_safely ()
 {
+  lou_logPrint ("liblouisutdml is terminating.");
   lou_logEnd ();
   if (ud->doc != NULL)
     xmlFreeDoc (ud->doc);
