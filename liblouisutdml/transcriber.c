@@ -3314,7 +3314,7 @@ utd_start ()
   brlContent = (xmlChar *) ud->outbuf1;
   maxContent = ud->outbuf1_len * CHARSIZE;
   utilStringBuf = (char *) ud->text_buffer;
-  currentTable = NULL;
+  currentTable = firstTableName;
   brlNode = firstBrlNode = prevBrlNode = NULL;
   ud->louis_mode = dotsIO;
   indices = NULL;
@@ -5056,12 +5056,15 @@ utd_finish ()
       newNode = xmlNewNode (NULL, (xmlChar *) "meta");
       xmlNewProp (newNode, (xmlChar *) "name", (xmlChar *) "utd");
       sprintf (utilStringBuf, "braillePageNumber=%d \
+firstTable=%s \
 paperWidth=%d \
 paperHeight=%d \
 leftMargin=%d \
 rightMargin=%d \
 topMargin=%d \
-bottomMargin=%d", ud->braille_page_number, ud->paper_width, ud->paper_height, ud->left_margin, ud->right_margin, ud->top_margin, ud->bottom_margin);
+bottomMargin=%d", ud->braille_page_number, 
+firstTableName, ud->paper_width, 
+ud->paper_height, ud->left_margin, ud->right_margin, ud->top_margin, ud->bottom_margin);
       xmlNewProp (newNode, (xmlChar *) "content", (xmlChar *) utilStringBuf);
       xmlAddChild (ud->head_node, newNode);
     }

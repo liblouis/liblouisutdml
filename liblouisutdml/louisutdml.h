@@ -32,7 +32,6 @@
 #ifndef liblouisutdml_h
 #define liblouisutdml_h
 #include <libxml/parser.h>
-#include <louis.h>
 #include "liblouisutdml.h"
 #include "sem_enum.h"
 

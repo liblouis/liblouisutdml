@@ -5,7 +5,8 @@ doSemanticActions (xmlNode * node, int *posx)
 {
   int pos = *posx;
   HashEntry *nodeEntry = (HashEntry *) node->_private;
-  char *macro = nodeEntry->macro int length = strlen (macro);
+  char *macro = nodeEntry->macro;
+  int length = strlen (macro);
   char *paramStart = NULL;
   int retVal = 1;
   int semNum = atoi (macro[pos]);
@@ -26,7 +27,25 @@ doSemanticActions (xmlNode * node, int *posx)
       ud->head_node = node;
       break;
     case configtweak:
-      do_configstring (node);
+{
+  int k;
+  int kk = 0;
+  xmlChar configString[2 * MAXNAMELEN];
+  configString[kk++] = ud->string_escape;
+  for (k = 0; k < paramLength; k++)
+    {
+      if (paramStart[k] == '=')
+	configString[kk++] = ' ';
+      else if (paramStart[k] == ';')
+	configString[kk++] = '\n';
+      else
+	configString[kk++] = (xmlChar) paramStart[k];
+    }
+  configString[kk++] = '\n';
+  configString[kk] = 0;
+  if (!config_compileSettings ((char *) configString))
+    return 0;
+}
       ud->main_braille_table = ud->contracted_table_name;
       if (!lou_getTable (ud->main_braille_table))
 	{
@@ -98,16 +117,17 @@ compileMacro (HashEntry * nodeEntry)
     {
     }
   strcpy (uncompiledMacro, compiledMacro);
+  return 1;
 }
 
 int
-do_macro (xmlNode * node)
+start_macro (xmlNode * node)
 {
   HashEntry *nodeEntry = (HashEntry *) node->_private;
   xmlChar *macro;
   int pos = 0;
   int hasStyle = 0;
-  if (nodeEntry == NULL || node->entrymacro == NULL)
+  if (nodeEntry == NULL || nodeEntry->macro == NULL)
     return 0;
   /*compile macro the first time it is used. */
   if (isalpha (nodeEntry->macro[0]))
@@ -124,12 +144,16 @@ do_macro (xmlNode * node)
 	pos++;
       if (macro[pos] == '~')
 	{
-	  start_style (nodeEntry->style);
+	  start_style (nodeEntry->style, node);
 	  hasStyle = `;
 	  pos++;
 	}
     }
   return hasStyle;
+}
+
+end_macro ()
+{
 }
 
 /* End of macro processing */

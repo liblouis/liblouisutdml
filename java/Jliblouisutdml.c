@@ -693,7 +693,8 @@ JNIEXPORT jboolean JNICALL Java_org_liblouis_liblouisutdml_file2brl
   strcpy (configFileList, "preferences.cfg");
   strcpy (inputFileName, "stdin");
   strcpy (outputFileName, "stdout");
-  strcpy (logFileName, "file2brl.log");
+  strcpy (logFileName, lbu_getWriteablePath ());
+  strcat (logFileName, "file2brl.log");
   if (numArgs != 0)
     {
       getArg (env, obj, args, -1);
@@ -708,7 +709,8 @@ JNIEXPORT jboolean JNICALL Java_org_liblouis_liblouisutdml_file2brl
 	      switch (curArg[1])
 		{
 		case 'l':
-		  strcpy (logFileName, getArg (env, obj, args, k + 1));
+		  strcpy (logFileName, lbu_getWriteablePath ());
+		  strcat (logFileName, getArg (env, obj, args, k + 1));
 		  k += 2;
 		  break;
 		case 't':
@@ -742,7 +744,7 @@ JNIEXPORT jboolean JNICALL Java_org_liblouis_liblouisutdml_file2brl
 		  k++;
 		  break;
 		default:
-		  lou_logPrint ("invalid argument%s", curArg);
+		  lou_logPrint ("invalid argument '%s'", curArg);
 		  return JNI_FALSE;
 		}
 	      continue;
@@ -762,7 +764,7 @@ JNIEXPORT jboolean JNICALL Java_org_liblouis_liblouisutdml_file2brl
 		}
 	      else
 		{
-		  lou_logPrint ("extra operand: %s\n",
+		  lou_logPrint ("extra operand: '%s'\n",
 				getArg (env, obj, args, k + 2));
 		  return JNI_FALSE;
 		}
@@ -788,7 +790,7 @@ configSettings, 0))
     {
       if (!(inputFile = fopen (inputFileName, "rb")))
 	{
-	  lou_logPrint ("Can't open file %s.\n", inputFileName);
+	  lou_logPrint ("Can't open input file ;%s'.\n", inputFileName);
 	  lou_logEnd ();
 	  return JNI_FALSE;
 	}
@@ -798,7 +800,7 @@ configSettings, 0))
   /*Create somewhat edited temporary file to facilitate use of stdin. */
   strcpy (tempFileName, lbu_getWriteablePath ());
   strcat (tempFileName, "file2brl.temp");
-  if (!(tempFile = fopen (tempFileName, "w")))
+  if (!(tempFile = fopen (tempFileName, "wb")))
     {
       lou_logPrint ("Can't open temporary file.\n");
       lou_logEnd ();
