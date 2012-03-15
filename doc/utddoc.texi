@@ -1,14 +1,16 @@
 @section Universal Tactile Document Markup Language (UTDML)
 
-Universal Tactile Document (UTDML) is  a way of adding braille 
+Universal Tactile Document Markup Language (UTDML) is  a way of adding 
+braille 
 translations, information synchronizing braille and print, and tactile 
-graphics to an original xml document, while preserving the structureand 
+graphics to an original xml document, while preserving the structure and 
 text of that document. This is done by using a number of new xml 
 elements and attributes. It is best shown by examples.
 
 The first example shows a short xml document designed to show how 
 UTDML operates. Note that, though it looks like a Daisy xml file, it is 
-not, and would not validate. liblouisxml, by devault, requires only that 
+not, and would not validate. liblouisutdml, by default, requires only 
+that 
 an xml document be well-formed. It will perform validation if 
 requested. The verse which this example contains is not intended as a 
 serious poetic effort, but it is intended as a reflection of the hacker 
@@ -28,17 +30,15 @@ mentality.
 </dtbook>
 @end example
 
-The next example was derived from the first in three steps. The files
-needed for these steps are in the @file{lbx_files} directory. First a
+The next example was derived from the first in two steps. The files
+needed for these steps are in the @file{lbu_files} directory. First a
 UTDML file was produced by aplying @file{makeutd.cfg} (via the
-@command{xml1brl} command). The essential feature of this file is that
+@command{file2brl} command). The essential feature of this file is that
 it has the configuration setting @code{formatFor utd}. The result is a
 file that contains the UTDML tags and Unicode braille encoded as UTF-8.
-This is not very readable, so two more steps were necessary. First, the
-UTDML file was opened in a text editor and an x (Any character except
-@samp{<} would do.) was added at the beginning. This was to prevent
-liblouisxml from considering it as an xml file. The configuration file
-@file{viewutd.cfg} was then applied to the result. This file uses a
+This is not very readable, so anotgher step was necessary.
+@file{viewxml.cfg} was then applied to the result. 
+This file uses a
 special liblouis table to produce readable text showing everything in
 the UTDML file. The Unicode braille is shown in hexadecimal form, as
 liblouis usually shows unknown characters.
@@ -110,7 +110,7 @@ number="2"/> </brl> </book>
 
 An analysiis of the example will show the main features of UTDML.
 
-The @code{<?xml} processing instruction was added by liblouisxml to 
+The @code{<?xml} processing instruction was added by liblouisutdml to 
 prooduce a well-formed xml document. it is not part of UTDML.
 
 In the first example the @code{<head>} element is empty. UTDML has added a 

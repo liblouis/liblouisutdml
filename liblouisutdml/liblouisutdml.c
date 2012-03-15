@@ -156,29 +156,29 @@ kill_safely ()
 }
 
 void *EXPORT_CALL
-lbu_initialize (const char *configFileName,
+lbu_initialize (const char *configFileList,
 		const char *logFileName, const char *settingsString)
 {
-  if (!read_configuration_file (configFileName, logFileName,
+  if (!read_configuration_file (configFileList, logFileName,
 				settingsString, 0))
     return NULL;
   return (void *) ud;
 }
 
 int EXPORT_CALL
-lbu_translateString (const char *configFileName,
+lbu_translateString (const char *configFileList,
 		     const char *inbuf, int inlen, widechar *outbuf,
 		     int *outlen,
 		     const char *logFileName, const char *settingsString,
 		     unsigned int mode)
 {
 /* Translate the well-formed xml expression in inbuf into braille 
-* according to the specifications in configFileName. If the expression 
+* according to the specifications in configFileList. If the expression 
 * is not well-formed or there are oteer errors, return 0.*/
   int k;
   char *xmlInbuf;
   if (!read_configuration_file
-      (configFileName, logFileName, settingsString, mode))
+      (configFileList, logFileName, settingsString, mode))
     return 0;
   ud->inbuf = inbuf;
   ud->inlen = inlen;
@@ -208,7 +208,6 @@ lbu_translateString (const char *configFileName,
       strcat (xmlInbuf, "\n");
       strcat (xmlInbuf, inbuf);
     }
-  ud->inFile = ud->outFile = NULL;
   if (!processXmlDocument (xmlInbuf, inlen))
     return 0;
   *outlen = ud->outlen_so_far;
@@ -220,16 +219,16 @@ lbu_translateString (const char *configFileName,
 
 int
   EXPORT_CALL lbu_translateFile
-  (const char *configFileName, const char *inFileName,
+  (const char *configFileList, const char *inFileName,
    const char *outFileName, const char *logFileName,
    const char *settingsString, unsigned int mode)
 {
 /* Translate the well-formed xml expression in inFileName into 
-* braille according to the specifications in configFileName. If the 
+* braille according to the specifications in configFileList. If the 
 * expression is not well-formed or there are other errors, 
 * return 0. */
   if (!read_configuration_file
-      (configFileName, logFileName, settingsString, mode))
+      (configFileList, logFileName, settingsString, mode))
     return 0;
   if (strcmp (outFileName, "stdout"))
     {
@@ -251,16 +250,16 @@ int
 
 int
   EXPORT_CALL lbu_translateTextFile
-  (const char *configFileName, const char *inFileName,
+  (const char *configFileList, const char *inFileName,
    const char *outFileName, const char *logFileName,
    const char *settingsString, unsigned int mode)
 {
 /* Translate the text file in inFileName into braille according to
-* the specifications in configFileName. If there are errors, print 
+* the specifications in configFileList. If there are errors, print 
 * an error message and return 0.*/
   widechar outbuf[2 * BUFSIZE];
   if (!read_configuration_file
-      (configFileName, logFileName, settingsString, mode))
+      (configFileList, logFileName, settingsString, mode))
     return 0;
   ud->outbuf = outbuf;
   ud->outlen = (sizeof (outbuf) / CHARSIZE) - 4;
@@ -294,7 +293,7 @@ int
 }
 
 int EXPORT_CALL
-lbu_backTranslateString (const char *configFileName,
+lbu_backTranslateString (const char *configFileList,
 			 const char *inbuf, int inlen, widechar
 			 *outbuf,
 			 int *outlen,
@@ -302,7 +301,7 @@ lbu_backTranslateString (const char *configFileName,
 			 *settingsString, unsigned int mode)
 {
   if (!read_configuration_file
-      (configFileName, logFileName, settingsString, mode))
+      (configFileList, logFileName, settingsString, mode))
     return 0;
   ud->inbuf = inbuf;
   ud->inlen = inlen;
@@ -319,17 +318,17 @@ lbu_backTranslateString (const char *configFileName,
 
 int
   EXPORT_CALL lbu_backTranslateFile
-  (const char *configFileName, const char *inFileName,
+  (const char *configFileList, const char *inFileName,
    const char *outFileName, const char *logFileName,
    const char *settingsString, unsigned int mode)
 {
 /* Back translate the braille file in inFileName into either an 
 * xml file or a text file according to
-* the specifications in configFileName. If there are errors, print an 
+* the specifications in configFileList. If there are errors, print an 
 * error message and return 0.*/
   widechar outbuf[2 * BUFSIZE];
   if (!read_configuration_file
-      (configFileName, logFileName, settingsString, mode))
+      (configFileList, logFileName, settingsString, mode))
     return 0;
   ud->outbuf = outbuf;
   ud->outlen = (sizeof (outbuf) / CHARSIZE) - 4;
