@@ -39,8 +39,7 @@ static int beginDocument ();
 static int finishBrlNode ();
 static int finishDocument ();
 static int doUtdbrlonly (xmlNode * node, int action);
-static int 
-doUtdnewpage (xmlNode * node);
+static int doUtdnewpage (xmlNode * node);
 static int doUtdnewline (xmlNode * node);
 static int doUtdgraphic (xmlNode * node);
 static int firstPage;
@@ -114,7 +113,7 @@ insertCharacters (const char *text, int length)
 {
   int k;
   for (k = 0; k < length; k++)
-  ud->outbuf1[ud->outbuf1_len_so_far++] = text[k];
+    ud->outbuf1[ud->outbuf1_len_so_far++] = text[k];
   return 1;
 }
 
@@ -181,7 +180,7 @@ doUtdbrlonly (xmlNode * node, int action)
       child = child->next;
     }
   if (action != 0)
-      pop_sem_stack ();
+    pop_sem_stack ();
   return 1;
 }
 
@@ -193,10 +192,10 @@ doUtdnewpage (xmlNode * node)
   lastLinepos = ud->page_top;
   firstLineOnPage = 1;
   if (firstPage)
-  {
-  firstPage = 0;
-  return 1;
-  }
+    {
+      firstPage = 0;
+      return 1;
+    }
   insertCharacters (ud->lineEnd, strlen (ud->lineEnd));
   insertCharacters (ud->pageEnd, strlen (ud->pageEnd));
   return 1;
@@ -217,7 +216,7 @@ doUtdnewline (xmlNode * node)
   linepos = (atoi (&xy[k + 1]) - ud->page_top) / ud->normal_line;
   insertCharacters (blanks, leadingBlanks);
   if (firstLineOnPage)
-  firstLineOnPage = 0;
+    firstLineOnPage = 0;
   return 1;
 }
 

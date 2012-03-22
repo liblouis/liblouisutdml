@@ -1569,6 +1569,7 @@ write_buffer (int from, int skip)
 	    return 0;
 	  for (k = 0; k < *buffer_from_len_so_far; k++)
 	    ud->outbuf[ud->outlen_so_far++] = buffer_from[k];
+	  *buffer_from_len_so_far = 0;
 	  return 1;
 	}
       else
@@ -3913,8 +3914,7 @@ translateShortBrlOnly (ShortBrlOnlyStrings * sbstr)
 			    sbstr->transText, &translatedLength, NULL, NULL,
 			    dotsIO))
     return 0;
-  for (; sbstr->transText[translatedLength - 1] == SPACE; 
-  translatedLength--);
+  for (; sbstr->transText[translatedLength - 1] == SPACE; translatedLength--);
   sbstr->transText[translatedLength] = 0;
   sbstr->transTextLength = translatedLength;
   return 1;
@@ -4007,8 +4007,7 @@ utd_makePageSeparator (xmlChar * printPageNumber, int length)
   length = strlen (setup);
   memset (&sb, 0, sizeof (sb));
   setOrigTextChar (&sb, setup, length);
-  memcpy (ud->print_page_number, sb.origText, sb.origTextLength * 
-  CHARSIZE);
+  memcpy (ud->print_page_number, sb.origText, sb.origTextLength * CHARSIZE);
   ud->print_page_number[sb.origTextLength] = 0;
   translateShortBrlOnly (&sb);
   if (curPageStatus == topOfPage)
@@ -4070,17 +4069,17 @@ utd_getPrintPageString ()
   translateShortBrlOnly (&pageNumber);
   rule = getLiblouisRule (firstTableHeader->letterSign);
   if (rule != NULL)
-  {
-    for (k = 0; k < pageNumber.transTextLength; k++)
-    if (pageNumber.transText[k] == rule->charsdots[0])
     {
-    pageNumber.transText[k] = SPACE;
-    addSpaces (&pageNumber, 2);
-    break;
+      for (k = 0; k < pageNumber.transTextLength; k++)
+	if (pageNumber.transText[k] == rule->charsdots[0])
+	  {
+	    pageNumber.transText[k] = SPACE;
+	    addSpaces (&pageNumber, 2);
+	    break;
+	  }
     }
-  }
   else
-  addSpaces (&pageNumber, 3);
+    addSpaces (&pageNumber, 3);
   ud->print_page_number[0]++;
   return 1;
 }
@@ -4530,7 +4529,7 @@ utd_finishLine (int leadingBlanks, int length)
 	  unsigned char holder[MAXNUMLEN];
 	  int k;
 	  for (k = 0; ud->print_page_number[k]; k++)
-	  holder[k] = ud->print_page_number[k];
+	    holder[k] = ud->print_page_number[k];
 	  holder[k] = 0;
 	  xmlSetProp (newpageNode, (xmlChar *) "printnumber", holder);
 	}
@@ -5057,14 +5056,13 @@ utd_finish ()
       xmlNewProp (newNode, (xmlChar *) "name", (xmlChar *) "utd");
       sprintf (utilStringBuf, "braillePageNumber=%d \
 firstTable=%s \
+dpi=%d \
 paperWidth=%d \
 paperHeight=%d \
 leftMargin=%d \
 rightMargin=%d \
 topMargin=%d \
-bottomMargin=%d", ud->braille_page_number, 
-firstTableName, ud->paper_width, 
-ud->paper_height, ud->left_margin, ud->right_margin, ud->top_margin, ud->bottom_margin);
+bottomMargin=%d", ud->braille_page_number, firstTableName, ud->dpi, ud->paper_width, ud->paper_height, ud->left_margin, ud->right_margin, ud->top_margin, ud->bottom_margin);
       xmlNewProp (newNode, (xmlChar *) "content", (xmlChar *) utilStringBuf);
       xmlAddChild (ud->head_node, newNode);
     }

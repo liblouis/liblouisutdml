@@ -31,7 +31,7 @@
 
 #ifndef __LIBLOUISUTDML_H_
 #define __LIBLOUISUTDML_H_
-#include <louis.h>
+#include <liblouis.h>
 
 #ifdef __cplusplus
 extern "C"

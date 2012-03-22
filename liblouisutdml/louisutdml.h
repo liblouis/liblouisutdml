@@ -33,6 +33,7 @@
 #define liblouisutdml_h
 #include <libxml/parser.h>
 #include "liblouisutdml.h"
+#include <louis.h>
 #include "sem_enum.h"
 
 typedef enum
