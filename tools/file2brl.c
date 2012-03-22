@@ -264,7 +264,7 @@ main (int argc, char **argv)
 	if (charsRead == 0)
 	  {
 	    if (ch != '<' && whichProc == '0')
-	      whichProc = 't';
+	      whichProc = 'T';
 	    nch = fgetc (inputFile);
 	    if (!(mode & htmlDoc) && whichProc == '0' && nch != '?')
 	      fprintf (tempFile, "%s\n", ud->xml_header);

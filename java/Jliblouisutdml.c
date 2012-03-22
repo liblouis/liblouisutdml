@@ -862,7 +862,7 @@ configSettings, 0))
 	if (charsRead == 0)
 	  {
 	    if (ch != '<' && whichProc == 'x')
-	      whichProc = 't';
+	      whichProc = 'T';
 	    nch = fgetc (inputFile);
 	    if (!(mode & htmlDoc) && whichProc == 'x' && nch != '?')
 	      fprintf (tempFile, "%s\n", ud->xml_header);

@@ -182,8 +182,8 @@ lbu_translateString (const char *configFileList,
     return 0;
   ud->inbuf = inbuf;
   ud->inlen = inlen;
-  ud->outbuf = (widechar *)outbuf;
-  ud->outbuf1_len = *outlen;
+  ud->outbuf = outbuf;
+  ud->outlen = *outlen;
   ud->inFile = ud->outFile = NULL;
   for (k = 0; k < inlen; k++)
     if (inbuf[k] > ' ')
