@@ -647,12 +647,12 @@ compileLine (FileInfo * nested)
   if (ch == 0 || ch == '#' || ch == '<')
     return 1;
   action = curchar - 1;
-  while ((ch = *curchar++) > 32);
+  while ((ch = *curchar++) > 32 || ch == '=');
   actionLength = curchar - action - 1;
   action[actionLength] = 0;
   if (!(actionLength == 2 && action[0] == 'n' && action[1] == 'o'))
     nested->unedited = 0;
-  while ((ch = *curchar++) <= 32 && ch != 0);
+  while (((ch = *curchar++) <= 32 || ch == '=') && ch != 0);
   if (ch == 0)
     {
       semanticError (nested, "Nothing to look for");

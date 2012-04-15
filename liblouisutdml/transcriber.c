@@ -5055,7 +5055,7 @@ utd_finish ()
       newNode = xmlNewNode (NULL, (xmlChar *) "meta");
       xmlNewProp (newNode, (xmlChar *) "name", (xmlChar *) "utd");
       sprintf (utilStringBuf, "braillePageNumber=%d \
-firstTable=%s \
+firstTableName=%s \
 dpi=%d \
 paperWidth=%d \
 paperHeight=%d \

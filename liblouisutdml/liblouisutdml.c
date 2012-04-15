@@ -305,10 +305,8 @@ lbu_backTranslateString (const char *configFileList,
     return 0;
   ud->inbuf = inbuf;
   ud->inlen = inlen;
-  ud->outbuf = (widechar *)outbuf;
-  ud->outbuf1_len = *outlen;
-  ud->outbuf = (widechar *) outbuf;
-  ud->outlen = ud->outlen / CHARSIZE;
+  ud->outbuf = outbuf;
+  ud->outlen = *outlen;
   ud->inFile = ud->outFile = NULL;
   back_translate_braille_string ();
   *outlen = ud->outlen_so_far;

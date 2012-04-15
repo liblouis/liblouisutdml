@@ -96,6 +96,7 @@ typedef struct
 #endif
 
 #define BUFSIZE 8192
+#define BIG_BUFSIZE 4 * BUFSIZE - 8
 #define MAX_LENGTH BUFSIZE - 4
 #define MAX_TRANS_LENGTH 2 * BUFSIZE - 4
 #define MAXNAMELEN 256
