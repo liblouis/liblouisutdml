@@ -343,10 +343,10 @@ parseLine (FileInfo * nested)
       if (ch == 0 || ch == '#' || ch == '<')
 	continue;
       nested->action = curchar - 1;
-      while ((ch = *curchar++) > 32);
+      while ((ch = *curchar++) > 32 && ch != '=');
       nested->actionLength = curchar - nested->action - 1;
       nested->action[nested->actionLength] = 0;
-      while ((ch = *curchar++) <= 32 && ch != 0);
+      while (((ch = *curchar++) <= 32 || ch == '=') && ch != 0);
       if (ch == 0)
 	{
 	  nested->value = NULL;
@@ -1231,18 +1231,19 @@ read_configuration_file (const char *configFileList, const char
       ud->mode = mode | ud->config_mode;
       return 1;
     }
-  lbu_free ();
   paperWidth = 0;
   paperHeight = 0;
   leftMargin = 0;
   rightMargin = 0;
   topMargin = 0;
   bottomMargin = 0;
+  if (ud == NULL)
+  {
   if (!(ud = malloc (sizeof (UserData))))
     {
       lou_logPrint ("liblouisutdml: not enough memory for buffers");
-      lou_logEnd ();
-      return 0;
+      kill_safely ();
+    }
     }
   memset (ud, 0, sizeof (UserData));
   ud->outbuf1_len = (sizeof (ud->outbuf1) / CHARSIZE) - 4;
