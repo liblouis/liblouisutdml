@@ -46,6 +46,7 @@ typedef enum
 
 typedef enum
 {
+  inherit = -100,
   leftJustified = 0,
   rightJustified = 1,
   centered = 2,
@@ -71,7 +72,7 @@ typedef struct
   int lines_before;
   int lines_after;
   int left_margin;
-  int centered_margin;
+  int right_margin;
   int keep_with_next;
   int dont_split;
   int orphan_control;
@@ -147,6 +148,10 @@ typedef struct
   xmlNode *node;
   StyleStatus status;
   BrlPageNumFormat curBrlNumFormat;
+  StyleFormat curStyleFormat;
+  int curLeftMargin;
+  int curRightMargin;
+  int curFirstLineIndent;
 } StyleRecord;
 
 typedef struct
@@ -284,6 +289,10 @@ typedef struct
   StyleRecord style_stack[STACKSIZE];
   int style_top;
   BrlPageNumFormat brl_page_num_format;
+  StyleFormat style_format;
+  int style_left_margin;
+  int style_right_margin;
+  int style_first_line_indent;
   char xml_header[2 * MAXNAMELEN];
   widechar text_buffer[2 * BUFSIZE];
   widechar translated_buffer[2 * BUFSIZE];

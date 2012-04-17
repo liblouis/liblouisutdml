@@ -1773,7 +1773,7 @@ doAlignColumns ()
 	colLength++;
     }
   colSize[numCols - 1] += rowEnd;
-  if (style->format == alignColumnsLeft)
+  if (ud->style_format == alignColumnsLeft)
     {
       /*Calculate starting points of columns in output */
       int colStart = 0;
@@ -1807,7 +1807,7 @@ doAlignColumns ()
       int cellsToWrite = 0;
       int availableCells = 0;
       rowLength = 0;
-      if (style->format == alignColumnsLeft)
+      if (ud->style_format == alignColumnsLeft)
 	{
 	  for (colNum = 0; colNum < numCols; colNum++)
 	    {
@@ -1928,15 +1928,15 @@ doListColumns ()
 	      availableCells = startLine ();
 	      if (styleSpec->status == startBody)
 		{
-		  if (style->first_line_indent < 0)
+		  if (ud->style_first_line_indent < 0)
 		    leadingBlanks = 0;
 		  else
 		    leadingBlanks =
-		      style->left_margin + style->first_line_indent;
+		      ud->style_left_margin + ud->style_first_line_indent;
 		  styleSpec->status = resumeBody;
 		}
 	      else
-		leadingBlanks = style->left_margin;
+		leadingBlanks = ud->style_left_margin;
 	      if (!insertCharacters (blanks, leadingBlanks))
 		return 0;
 	      availableCells -= leadingBlanks;
@@ -2024,15 +2024,15 @@ doListLines ()
 	    availableCells = startLine ();
 	    if (styleSpec->status == startBody)
 	      {
-		if (style->first_line_indent < 0)
+		if (ud->style_first_line_indent < 0)
 		  leadingBlanks = 0;
 		else
 		  leadingBlanks =
-		    style->left_margin + style->first_line_indent;
+		    ud->style_left_margin + ud->style_first_line_indent;
 		styleSpec->status = resumeBody;
 	      }
 	    else
-	      leadingBlanks = style->left_margin;
+	      leadingBlanks = ud->style_left_margin;
 	    if (!insertCharacters (blanks, leadingBlanks))
 	      return 0;
 	    availableCells -= leadingBlanks;
@@ -2140,17 +2140,20 @@ doLeftJustify ()
       int wordTooLong = 0;
       int breakAt = 0;
       int leadingBlanks = 0;
+      int trailingBlanks = 0;
       availableCells = startLine ();
       if (styleSpec->status == startBody)
 	{
-	  leadingBlanks = style->left_margin + style->first_line_indent;
+	  leadingBlanks = ud->style_left_margin + ud->style_first_line_indent;
 	  styleSpec->status = resumeBody;
 	}
       else
-	leadingBlanks = style->left_margin;
+	leadingBlanks = ud->style_left_margin;
+	  trailingBlanks = ud->style_right_margin;
       if (!insertCharacters (blanks, leadingBlanks))
 	return 0;
       availableCells -= leadingBlanks;
+      availableCells -= trailingBlanks;
       if ((charactersWritten + availableCells) >= translatedLength)
 	{
 	  cellsToWrite = translatedLength - charactersWritten;
@@ -2242,11 +2245,11 @@ doContents ()
       availableCells = startLine ();
       if (styleSpec->status == startBody)
 	{
-	  leadingBlanks = style->left_margin + style->first_line_indent;
+	  leadingBlanks = ud->style_left_margin + ud->style_first_line_indent;
 	  styleSpec->status = resumeBody;
 	}
       else
-	leadingBlanks = style->left_margin;
+	leadingBlanks = ud->style_left_margin;
       if (leadingBlanks < 0)
 	leadingBlanks = 0;
       if (!insertCharacters (blanks, leadingBlanks))
@@ -2312,11 +2315,11 @@ doContents ()
       availableCells = startLine ();
       if (styleSpec->status == startBody)
 	{
-	  leadingBlanks = style->left_margin + style->first_line_indent;
+	  leadingBlanks = ud->style_left_margin + ud->style_first_line_indent;
 	  styleSpec->status = resumeBody;
 	}
       else
-	leadingBlanks = style->left_margin;
+	leadingBlanks = ud->style_left_margin;
       if (leadingBlanks < 0)
 	leadingBlanks = 0;
       if (!insertCharacters (blanks, leadingBlanks))
@@ -2370,7 +2373,7 @@ doContents ()
 	}
       finishLine ();
       availableCells = startLine ();
-      leadingBlanks = style->left_margin;
+      leadingBlanks = ud->style_left_margin;
       if (!insertCharacters (blanks, leadingBlanks))
 	return 0;
       availableCells -= leadingBlanks;
@@ -2404,28 +2407,31 @@ doCenterRight ()
   int charactersWritten = 0;
   int cellsToWrite = 0;
   int availableCells = 0;
-  int margin = 0;
   int k;
-  if (style->format == centered)
-    {
-      margin = style->centered_margin;
-      if (margin < 0)
-	margin = 0;
-    }
   while (charactersWritten < translatedLength)
     {
       int wordTooLong = 0;
+      int leadingBlanks = 0;
+      int trailingBlanks = 0;
       availableCells = startLine ();
-      if (style->format == centered)
-	availableCells -= (2 * margin);
+      if (styleSpec->status == startBody)
+	{
+	  leadingBlanks = ud->style_left_margin + ud->style_first_line_indent;
+	  styleSpec->status = resumeBody;
+	}
+      else
+	leadingBlanks = ud->style_left_margin;
+      trailingBlanks = ud->style_right_margin;
+      availableCells -= leadingBlanks;
+      availableCells -= trailingBlanks;
       if ((translatedLength - charactersWritten) < availableCells)
 	{
 	  k = (availableCells - (translatedLength - charactersWritten));
-	  if (style->format == centered)
+	  if (ud->style_format == centered)
 	    k /= 2;
-	  else if (style->format != rightJustified)
+	  else if (ud->style_format != rightJustified)
 	    return 0;
-	  if (!insertCharacters (blanks, margin + k))
+	  if (!insertCharacters (blanks, leadingBlanks + k))
 	    return 0;
 	  if (!insertWidechars (&translatedBuffer[charactersWritten],
 				translatedLength - charactersWritten))
@@ -2453,12 +2459,12 @@ doCenterRight ()
       if (!wordTooLong)
 	{
 	  k = availableCells - cellsToWrite;
-	  if (style->format == centered)
+	  if (ud->style_format == centered)
 	    k /= 2;
 	}
       else
 	k = 0;
-      if (!insertCharacters (blanks, margin + k))
+      if (!insertCharacters (blanks, leadingBlanks + k))
 	return 0;
       if (!insertWidechars
 	  (&translatedBuffer[charactersWritten], cellsToWrite))
@@ -2479,7 +2485,7 @@ doCenterRight ()
 static int
 editTrans ()
 {
-  if (!(ud->contents == 2) && !(style->format == computerCoded) &&
+  if (!(ud->contents == 2) && !(ud->style_format == computerCoded) &&
       *ud->edit_table_name && (ud->has_math || ud->has_chem || ud->has_music))
     {
       translationLength = ud->translated_length;
@@ -2543,7 +2549,7 @@ styleBody ()
     return utd_styleBody ();
   if (!editTrans ())
     return 0;
-  if (style->format != computerCoded && action != document)
+  if (ud->style_format != computerCoded && action != document)
     {
       int realStart;
       for (realStart = 0; realStart < translatedLength &&
@@ -2598,7 +2604,7 @@ styleBody ()
 	getBraillePageString ();
       start_heading (action, translatedBuffer, translatedLength);
     }
-  switch (style->format)
+  switch (ud->style_format)
     {
     case centered:
     case rightJustified:
@@ -2668,7 +2674,24 @@ write_paragraph (sem_act action, xmlNode * node)
   styleSpec->status = beforeBody;
   if (style->brlNumFormat != normal)
     ud->brl_page_num_format = style->brlNumFormat;
+  if (style->format != inherit)
+  	ud->style_format = style->format;
+  else if (ud->style_format != leftJustified &&
+		  ud->style_format != rightJustified &&
+  		  ud->style_format != centered) {
+  	ud->style_format = leftJustified;
+  }
+  if (style->left_margin != -100)
+  	ud->style_left_margin = style->left_margin;
+  if (style->right_margin != -100)
+  	ud->style_right_margin = style->right_margin;
+  if (style->first_line_indent != -100)
+  	ud->style_first_line_indent = style->first_line_indent;
   styleSpec->curBrlNumFormat = ud->brl_page_num_format;
+  styleSpec->curStyleFormat = ud->style_format;
+  styleSpec->curLeftMargin = ud->style_left_margin;
+  styleSpec->curRightMargin = ud->style_right_margin;
+  styleSpec->curFirstLineIndent = ud->style_first_line_indent;
   startStyle ();
   insert_translation (ud->main_braille_table);
   styleBody ();
@@ -3228,6 +3251,10 @@ start_style (StyleType * curStyle, xmlNode * node)
       styleSpec = &ud->style_stack[ud->style_top];
       style = styleSpec->style;
       ud->brl_page_num_format = styleSpec->curBrlNumFormat;
+      ud->style_format = styleSpec->curStyleFormat;
+      ud->style_left_margin = styleSpec->curLeftMargin;
+      ud->style_right_margin = styleSpec->curRightMargin;
+      ud->style_first_line_indent = styleSpec->curFirstLineIndent;
       styleBody ();
     }
   if (ud->style_top < (STACKSIZE - 2))
@@ -3238,7 +3265,24 @@ start_style (StyleType * curStyle, xmlNode * node)
   styleSpec->node = node;
   if (style->brlNumFormat != normal)
     ud->brl_page_num_format = style->brlNumFormat;
+  if (style->format != inherit)
+	ud->style_format = style->format;
+  else if (ud->style_format != leftJustified &&
+		  ud->style_format != rightJustified &&
+		  ud->style_format != centered) {
+	ud->style_format = leftJustified;
+  }
+  if (style->left_margin != -100)
+	ud->style_left_margin = style->left_margin;
+  if (style->right_margin != -100)
+	ud->style_right_margin = style->right_margin;
+  if (style->first_line_indent != -100)
+	ud->style_first_line_indent = style->first_line_indent;
   styleSpec->curBrlNumFormat = ud->brl_page_num_format;
+  styleSpec->curStyleFormat = ud->style_format;
+  styleSpec->curLeftMargin = ud->style_left_margin;
+  styleSpec->curRightMargin = ud->style_right_margin;
+  styleSpec->curFirstLineIndent = ud->style_first_line_indent;
   if (node && !node->children)
     return 1;
   startStyle ();
@@ -3252,6 +3296,10 @@ end_style ()
   styleSpec = &ud->style_stack[ud->style_top];
   style = styleSpec->style;
   ud->brl_page_num_format = styleSpec->curBrlNumFormat;
+  ud->style_format = styleSpec->curStyleFormat;
+  ud->style_left_margin = styleSpec->curLeftMargin;
+  ud->style_right_margin = styleSpec->curRightMargin;
+  ud->style_first_line_indent = styleSpec->curFirstLineIndent;
   if (!(styleSpec->node && !styleSpec->node->children))
     {
       insert_translation (ud->main_braille_table);
@@ -3267,6 +3315,10 @@ end_style ()
   styleSpec = &ud->style_stack[ud->style_top];
   style = styleSpec->style;
   ud->brl_page_num_format = styleSpec->curBrlNumFormat;
+  ud->style_format = styleSpec->curStyleFormat;
+  ud->style_left_margin = styleSpec->curLeftMargin;
+  ud->style_right_margin = styleSpec->curRightMargin;
+  ud->style_first_line_indent = styleSpec->curFirstLineIndent;
   return 1;
 }
 

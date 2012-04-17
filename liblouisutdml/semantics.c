@@ -1402,6 +1402,10 @@ new_style (xmlChar * name)
   memset (style, 0, sizeof (StyleType));
   style->newline_after = 1;
   hashInsert (semanticTable, key, styleEntry, 0, NULL, style, NULL);
+  style->format = inherit; /* inherit parent format by default */
+  style->right_margin = -100;
+  style->left_margin = -100;
+  style->first_line_indent = -100;
   return style;
 }
 
