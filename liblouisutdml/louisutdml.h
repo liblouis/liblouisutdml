@@ -383,5 +383,9 @@ int utd2transinxml (xmlNode * node);
 int utd2volumes (xmlNode * node);
 int hasAttrValue  (xmlNode *node, char *attrName, char *value);
 void kill_safely ();
+xmlChar * new_macro (xmlChar * name, xmlChar *body);
+unsigned char * lookup_macro (xmlChar * name);
+int start_macro (xmlNode *node);
+int end_macro ();
 
 #endif /*louisutdml_h */

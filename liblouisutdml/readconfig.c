@@ -676,6 +676,8 @@ compileConfig (FileInfo * nested)
     "58",
     "brfSem",
     "59",
+    "macro",
+    "60",
     "style",
     "90",
     NULL
@@ -995,6 +997,9 @@ compileConfig (FileInfo * nested)
 	  break;
 	case 59:
 	  ud->brf_sem = alloc_string (nested->value);
+	  break;
+	case 60:
+	  new_macro (nested->value, nested->value2);
 	  break;
 	case 90:
 	  {
