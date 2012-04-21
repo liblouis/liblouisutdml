@@ -1461,20 +1461,25 @@ action_to_style (sem_act action)
 
 /* Beginning of macro processing */
 
+/* Hold macro state */
+static char *macro;
+static int macroLength;
+static int posInMacro;;
+static xmlNode *macroNode;
+static HashEntry *isMacroEntry;
+static int macroHasStyle;
+
 static int
-doSemanticActions (xmlNode * node, int *posx)
+doSemanticActions ()
 {
-  int pos = *posx;
-  HashEntry *nodeEntry = (HashEntry *) node->_private;
-  char *macro = nodeEntry->macro;
-  int length = strlen (macro);
   char *paramStart = NULL;
   int paramLength;
   int retVal = 1;
-  int semNum = atoi (&macro[pos]);
-  for (; isdigit (macro[pos]) && pos < length; pos++);
-  if (macro[pos] == '(')
-    paramStart = &macro[++pos];
+  int semNum = atoi (&macro[posInMacro]);
+  for (; isdigit (macro[posInMacro]) && posInMacro < macroLength; 
+  posInMacro++);
+  if (macro[posInMacro] == '(')
+    paramStart = &macro[++posInMacro];
   paramLength = find_group_length ("()", paramStart - 1);
   switch (semNum)
     {
@@ -1486,7 +1491,7 @@ doSemanticActions (xmlNode * node, int *posx)
     case skip:
       retVal = -1;
     case markhead:
-      ud->head_node = node;
+      ud->head_node = macroNode;
       break;
     case configtweak:
 {
@@ -1518,21 +1523,21 @@ doSemanticActions (xmlNode * node, int *posx)
     case htmllink:
       if (ud->format_for != browser)
 	break;
-      insert_linkOrTarget (node, 0);
+      insert_linkOrTarget (macroNode, 0);
       break;
     case htmltarget:
       if (ud->format_for != browser)
 	break;
-      insert_linkOrTarget (node, 1);
+      insert_linkOrTarget (macroNode, 1);
       break;
     case boxline:
-      do_boxline (node);
+      do_boxline (macroNode);
       break;
     case blankline:
       do_blankline ();
       break;
     case linespacing:
-      do_linespacing (node);
+      do_linespacing (macroNode);
       break;
     case softreturn:
       do_softreturn ();
@@ -1541,22 +1546,22 @@ doSemanticActions (xmlNode * node, int *posx)
       do_righthandpage ();
       break;
     case code:
-      transcribe_computerCode (node, 0);
+      transcribe_computerCode (macroNode, 0);
       break;
     case math:
-      transcribe_math (node, 0);
+      transcribe_math (macroNode, 0);
       break;
     case graphic:
-      transcribe_graphic (node, 0);
+      transcribe_graphic (macroNode, 0);
       break;
     case chemistry:
-      transcribe_chemistry (node, 0);
+      transcribe_chemistry (macroNode, 0);
       break;
     case music:
-      transcribe_music (node, 0);
+      transcribe_music (macroNode, 0);
       break;
     case changetable:
-      change_table (node);
+      change_table (macroNode);
       break;
     case pagenum:
       do_pagenum ();
@@ -1564,54 +1569,54 @@ doSemanticActions (xmlNode * node, int *posx)
     default:
       retVal = 0;
     }
-  *posx = pos;
   return retVal;
 }
 
 static int
-compileMacro (HashEntry * nodeEntry)
+compileMacro ()
 {
-  xmlChar *uncompiledMacro = nodeEntry->macro;
   xmlChar compiledMacro[4 * MAXNAMELEN];
   int unPos = 0;
   int pos = 0;
-  while (unPos < strlen (uncompiledMacro))
+  while (unPos < macroLength)
     {
     }
-  strcpy (uncompiledMacro, compiledMacro);
+  strcpy (macro, compiledMacro);
   return 1;
 }
 
 int
 start_macro (xmlNode * node)
 {
-  HashEntry *nodeEntry = (HashEntry *) node->_private;
-  xmlChar *macro;
-  int pos = 0;
-  int hasStyle = 0;
-  if (nodeEntry == NULL || nodeEntry->macro == NULL)
+  /* Set macro state */
+  macroNode = node;
+  isMacroEntry = (HashEntry *) node->_private;
+  if (isMacroEntry == NULL || isMacroEntry->macro == NULL)
     return 0;
+  macro = isMacroEntry->macro;
+  macroLength = strlen (macro);
+  posInMacro = 0;
+  macroHasStyle = 0;
   /*compile macro the first time it is used. */
-  if (isalpha (nodeEntry->macro[0]))
-    compileMacro (nodeEntry);
-  macro = nodeEntry->macro;
+  if (isalpha (macro[0]))
+    compileMacro ();
   if (macro[0] == '!')
     /* Contains errors */
-    return -1;
-  while (pos < strlen (macro))
+    return 0;
+  while (posInMacro < macroLength)
     {
-      if (isdigit (macro[pos]))
-	doSemanticActions (node, &pos);
-      if (macro[pos] == ',')
-	pos++;
-      if (macro[pos] == '~')
+      if (isdigit (macro[posInMacro]))
+	doSemanticActions ();
+      if (macro[posInMacro] == ',')
+	posInMacro++;
+      if (macro[posInMacro] == '~')
 	{
-	  start_style (nodeEntry->style, node);
-	  hasStyle = 1;
-	  pos++;
+	  start_style (isMacroEntry->style, node);
+	  macroHasStyle = 1;
+	  posInMacro++;
 	}
     }
-  return hasStyle;
+  return macroHasStyle;
 }
 
 end_macro ()
