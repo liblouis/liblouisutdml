@@ -385,6 +385,7 @@ int hasAttrValue  (xmlNode *node, char *attrName, char *value);
 void kill_safely ();
 xmlChar * new_macro (xmlChar * name, xmlChar *body);
 unsigned char * lookup_macro (xmlChar * name);
+char *is_macro (xmlNode *node);
 int start_macro (xmlNode *node);
 int end_macro ();
 
