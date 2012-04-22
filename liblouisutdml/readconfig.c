@@ -540,7 +540,7 @@ checkSubActions (FileInfo * nested, const char **mainActions, const char
       mainActionNumber = checkActions (nested, mainActions);
       if (mainActionNumber == NOTFOUND)
 	configureError (nested, 
-	"word '%s' in first column not recognized",
+	"word '%s' in column 1 not recognized",
 			nested->action);
       return NOTFOUND;
     }
@@ -744,7 +744,7 @@ compileConfig (FileInfo * nested)
       if (mainActionNumber == NOTFOUND)
 	{
 	  configureError (nested,
-			  "word '%s' in first column not recognized",
+			  "word '%s' in column 1 not recognized",
 			  nested->action);
 	  continue;
 	}

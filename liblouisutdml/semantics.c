@@ -160,7 +160,7 @@ hashFree (HashTable * table)
 
 static void hashInsert (HashTable * table, const unsigned char *key, int
 			type, int
-			semNum, InsertsType * inserts, StyleType * 
+			semNum, InsertsType * inserts, StyleType *
 			style, unsigned char *macro);
 
 void
@@ -228,7 +228,7 @@ static HashEntry *latestEntry;
 /* assumes that key is not already present! */
 static void
 hashInsert (HashTable * table, const unsigned char *key, int type, int
-	    semNum, InsertsType * inserts, StyleType * style, unsigned 
+	    semNum, InsertsType * inserts, StyleType * style, unsigned
 	    char *macro)
 {
   int i;
@@ -295,7 +295,7 @@ find_semantic_number (const char *name)
   strcat (realName, SEMANTICSUF);
   if (hashLookup (semanticTable, (xmlChar *) realName) == notFound)
     {
-    /* Enter names and numbers in table before checking for this one. */
+      /* Enter names and numbers in table before checking for this one. */
       for (k = 0; k < end_all; k++)
 	{
 	  strcpy (realName, semNames[k]);
@@ -334,7 +334,7 @@ destroy_semantic_table (void)
 }
 
 static widechar
-hexValue (FileInfo * nested, const xmlChar *digits, int length)
+hexValue (FileInfo * nested, const xmlChar * digits, int length)
 {
   int k;
   unsigned int binaryValue = 0;
@@ -565,8 +565,7 @@ countAttrValues (xmlChar * key)
 	return 1;
       if (curCount >= NUMCOUNTS)
 	return 0;
-      hashInsert (attrValueCountsTable, key, 0, curCount, NULL, NULL, 
-      NULL);
+      hashInsert (attrValueCountsTable, key, 0, curCount, NULL, NULL, NULL);
       curCount++;
       return 1;
     case 3:
@@ -577,8 +576,8 @@ countAttrValues (xmlChar * key)
       if (thisCount == notFound)
 	{
 	  attrValueCounts[curCount]++;
-	  hashInsert (attrValueCountsTable, key, 0, curCount, NULL, 
-	  NULL, NULL);
+	  hashInsert (attrValueCountsTable, key, 0, curCount, NULL,
+		      NULL, NULL);
 	  curCount++;
 	}
       key[lastComma] = ',';
@@ -723,7 +722,7 @@ compileLine (FileInfo * nested)
   if (actionNum == notFound && style == NULL)
     {
       semanticError (nested,
-		     "Action or style '%s' in column 1 not recognized", 
+		     "Action or style '%s' in column 1 not recognized",
 		     action);
       return 0;
     }
@@ -863,8 +862,7 @@ sem_compileFile (const char *fileName)
     }
   if (!haveAppended && !find_file (fileName, completePath))
     {
-      semanticError (NULL, "Can't find semantic-action file '%s'", 
-      fileName);
+      semanticError (NULL, "Can't find semantic-action file '%s'", fileName);
       haveSemanticFile = 0;
       strcpy (firstFileName, fileName);
       return 0;
@@ -882,13 +880,12 @@ sem_compileFile (const char *fileName)
       fclose (nested.in);
       if (nested.unedited)
 	semanticError (NULL,
-       "File '%s' needs editing to produce good results.",
+		       "File '%s' needs editing to produce good results.",
 		       nested.fileName);
     }
   else
     {
-      semanticError (NULL, "Can't open semantic-action file '%s'", 
-      fileName);
+      semanticError (NULL, "Can't open semantic-action file '%s'", fileName);
       return 0;
     }
   numEntries += nested.numEntries;
@@ -1363,8 +1360,7 @@ append_new_entries (void)
     lou_logPrint ("%d new entries appended to '%s%s'.", numEntries,
 		  filePrefix, firstFileName);
   else
-    lou_logPrint (
-    "%d entries written to new semantic-action file '%s%s'.",
+    lou_logPrint ("%d entries written to new semantic-action file '%s%s'.",
 		  numEntries, filePrefix, firstFileName);
   moreEntries = 0;
 }
@@ -1405,7 +1401,7 @@ new_style (xmlChar * name)
   memset (style, 0, sizeof (StyleType));
   style->newline_after = 1;
   hashInsert (semanticTable, key, styleEntry, 0, NULL, style, NULL);
-  style->format = inherit; /* inherit parent format by default */
+  style->format = inherit;	/* inherit parent format by default */
   style->right_margin = -100;
   style->left_margin = -100;
   style->first_line_indent = -100;
@@ -1414,7 +1410,7 @@ new_style (xmlChar * name)
 
 #define MACROSUF " orcam"
 xmlChar *
-new_macro (xmlChar * name, xmlChar *body)
+new_macro (xmlChar * name, xmlChar * body)
 {
   char *storedBody = alloc_string (body);
   char key[MAXNAMELEN];
@@ -1424,8 +1420,7 @@ new_macro (xmlChar * name, xmlChar *body)
   strcat (key, MACROSUF);
   if (hashLookup (semanticTable, key) != notFound)
     return NULL;
-  hashInsert (semanticTable, key, macroEntry, 0, NULL, NULL, 
-  storedBody);
+  hashInsert (semanticTable, key, macroEntry, 0, NULL, NULL, storedBody);
   return storedBody;
 }
 
@@ -1469,6 +1464,24 @@ static xmlNode *macroNode;
 static HashEntry *isMacroEntry;
 static int macroHasStyle;
 
+static void
+macroError (char *format, ...)
+{
+  char buffer[MAXNAMELEN];
+  char key[40];
+  va_list arguments;
+  va_start (arguments, format);
+#ifdef WIN32
+  _vsnprintf (buffer, sizeof (buffer), format, arguments);
+#else
+  vsnprintf (buffer, sizeof (buffer), format, arguments);
+#endif
+  va_end (arguments);
+  strncpy (key, isMacroEntry->key, strlen (isMacroEntry->key) - 5);
+  lou_logPrint ("Macro %s: %s", key, buffer);
+  errorCount++;
+}
+
 static int
 doSemanticActions ()
 {
@@ -1476,8 +1489,8 @@ doSemanticActions ()
   int paramLength;
   int retVal = 1;
   int semNum = atoi (&macro[posInMacro]);
-  for (; isdigit (macro[posInMacro]) && posInMacro < macroLength; 
-  posInMacro++);
+  for (; isdigit (macro[posInMacro]) && posInMacro < macroLength;
+       posInMacro++);
   if (macro[posInMacro] == '(')
     paramStart = &macro[++posInMacro];
   paramLength = find_group_length ("()", paramStart - 1);
@@ -1494,25 +1507,25 @@ doSemanticActions ()
       ud->head_node = macroNode;
       break;
     case configtweak:
-{
-  int k;
-  int kk = 0;
-  xmlChar configString[2 * MAXNAMELEN];
-  configString[kk++] = ud->string_escape;
-  for (k = 0; k < paramLength; k++)
-    {
-      if (paramStart[k] == '=')
-	configString[kk++] = ' ';
-      else if (paramStart[k] == ';')
+      {
+	int k;
+	int kk = 0;
+	xmlChar configString[2 * MAXNAMELEN];
+	configString[kk++] = ud->string_escape;
+	for (k = 0; k < paramLength; k++)
+	  {
+	    if (paramStart[k] == '=')
+	      configString[kk++] = ' ';
+	    else if (paramStart[k] == ';')
+	      configString[kk++] = '\n';
+	    else
+	      configString[kk++] = (xmlChar) paramStart[k];
+	  }
 	configString[kk++] = '\n';
-      else
-	configString[kk++] = (xmlChar) paramStart[k];
-    }
-  configString[kk++] = '\n';
-  configString[kk] = 0;
-  if (!config_compileSettings ((char *) configString))
-    return 0;
-}
+	configString[kk] = 0;
+	if (!config_compileSettings ((char *) configString))
+	  return 0;
+      }
       ud->main_braille_table = ud->contracted_table_name;
       if (!lou_getTable (ud->main_braille_table))
 	{
@@ -1585,6 +1598,44 @@ compileMacro ()
   return 1;
 }
 
+static int
+executeMacro ()
+{
+  while (posInMacro < macroLength)
+    {
+      if (isdigit (macro[posInMacro]))
+	doSemanticActions ();
+      else
+	switch (macro[posInMacro])
+	  {
+	  case ',':
+	    posInMacro++;
+	    break;
+	  case '~':
+	    start_style (isMacroEntry->style, macroNode);
+	    macroHasStyle = 1;
+	    posInMacro++;
+	    break;
+	  case '@':
+	    end_style ();
+	    macroHasStyle = 0;
+	    break;
+	  case '#':
+	    /* Pause for calling function to do something. */
+	    posInMacro++;
+	    return 1;
+	  default:
+	    break;
+	  }
+    }
+  if (posInMacro >= macroLength)
+    {
+      if (macroHasStyle)
+	end_style ();
+      macro = NULL;
+    }
+}
+
 int
 start_macro (xmlNode * node)
 {
@@ -1603,24 +1654,17 @@ start_macro (xmlNode * node)
   if (macro[0] == '!')
     /* Contains errors */
     return 0;
-  while (posInMacro < macroLength)
-    {
-      if (isdigit (macro[posInMacro]))
-	doSemanticActions ();
-      if (macro[posInMacro] == ',')
-	posInMacro++;
-      if (macro[posInMacro] == '~')
-	{
-	  start_style (isMacroEntry->style, node);
-	  macroHasStyle = 1;
-	  posInMacro++;
-	}
-    }
+  executeMacro ();
   return macroHasStyle;
 }
 
+int
 end_macro ()
 {
+ if (macro == NULL)
+   return 0;
+  executeMacro ();
+  return 1;
 }
 
 /* End of macro processing */
