@@ -134,7 +134,11 @@ processXmlDocument (const char *inputDoc, int length)
   append_new_entries ();
   if (!haveSemanticFile)
     return 0;
-  transcribe_document (rootElement);
+  if (!transcribe_document (rootElement))
+  {
+  freeEverything ();
+  return 0;
+  }
   }
   xmlFreeDoc (ud->doc);
   xmlCleanupParser ();
