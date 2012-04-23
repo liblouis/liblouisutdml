@@ -112,11 +112,10 @@ processXmlDocument (const char *inputDoc, int length)
     }
   if (ud->format_for >= utd && strcmp (ud->doc->encoding, "UTF-8") != 0)
     {
-    lou_logPrint (
-    "This format requires UTF-8 encoding, not '%s'",
-    ud->doc->encoding);
-    freeEverything ();
-    return 0;
+      lou_logPrint ("This format requires UTF-8 encoding, not '%s'",
+		    ud->doc->encoding);
+      freeEverything ();
+      return 0;
     }
   rootElement = xmlDocGetRootElement (ud->doc);
   if (rootElement == NULL)
@@ -125,21 +124,21 @@ processXmlDocument (const char *inputDoc, int length)
       return 0;
     }
   if (ud->mode & convertOnly)
-  convert_utd ();
+    convert_utd ();
   else
-  {
-  haveSemanticFile = compile_semantic_table (rootElement);
-  do_xpath_expr ();
-  examine_document (rootElement);
-  append_new_entries ();
-  if (!haveSemanticFile)
-    return 0;
-  if (!transcribe_document (rootElement))
-  {
-  freeEverything ();
-  return 0;
-  }
-  }
+    {
+      haveSemanticFile = compile_semantic_table (rootElement);
+      do_xpath_expr ();
+      examine_document (rootElement);
+      append_new_entries ();
+      if (!haveSemanticFile)
+	return 0;
+      if (!transcribe_document (rootElement))
+	{
+	  freeEverything ();
+	  return 0;
+	}
+    }
   xmlFreeDoc (ud->doc);
   xmlCleanupParser ();
   initGenericErrorDefaultFunc (NULL);
@@ -173,7 +172,7 @@ lbu_initialize (const char *configFileList,
 
 int EXPORT_CALL
 lbu_translateString (const char *configFileList,
-		     const char *inbuf, int inlen, widechar *outbuf,
+		     const char *inbuf, int inlen, widechar * outbuf,
 		     int *outlen,
 		     const char *logFileName, const char *settingsString,
 		     unsigned int mode)
@@ -289,7 +288,11 @@ int
     }
   else
     ud->outFile = stdout;
-  transcribe_text_file ();
+  if (!transcribe_text_file ())
+    {
+      freeEverything ();
+      return 0;
+    }
   if (ud->inFile != stdin)
     fclose (ud->inFile);
   if (ud->outFile != stdout)
@@ -301,7 +304,7 @@ int
 int EXPORT_CALL
 lbu_backTranslateString (const char *configFileList,
 			 const char *inbuf, int inlen, widechar
-			 *outbuf,
+			 * outbuf,
 			 int *outlen,
 			 const char *logFileName, const char
 			 *settingsString, unsigned int mode)
@@ -314,7 +317,11 @@ lbu_backTranslateString (const char *configFileList,
   ud->outbuf = outbuf;
   ud->outlen = *outlen;
   ud->inFile = ud->outFile = NULL;
-  back_translate_braille_string ();
+  if (!back_translate_braille_string ())
+    {
+      freeEverything ();
+      return 0;
+    }
   *outlen = ud->outlen_so_far;
   lou_logEnd ();
   return 1;
@@ -356,7 +363,11 @@ int
     }
   else
     ud->outFile = stdout;
-  back_translate_file ();
+  if (!back_translate_file ())
+    {
+      freeEverything ();
+      return 0;
+    }
   if (ud->inFile != stdin)
     fclose (ud->inFile);
   if (ud->outFile != stdout)
