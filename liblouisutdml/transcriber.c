@@ -150,7 +150,7 @@ start_document ()
   if (!(firstTableHeader = lou_getTable (ud->main_braille_table)))
     {
       lou_logPrint ("Cannot open main table %s", ud->main_braille_table);
-      kill_safely ();
+      return 0;
     }
   if (ud->has_contentsheader)
     ud->braille_page_number = 1;
@@ -249,7 +249,7 @@ transcribe_text_string ()
   StyleType *docStyle = lookup_style ("document");
   StyleType *paraStyle = lookup_style ("para");
   if (!start_document ())
-    kill_safely ();
+    return 0;
   ud->input_encoding = ud->input_text_encoding;
   start_style (docStyle, NULL);
   while (1)
@@ -305,7 +305,7 @@ transcribe_text_file ()
   StyleType *docStyle = lookup_style ("document");
   StyleType *paraStyle = lookup_style ("para");
   if (!start_document ())
-    kill_safely ();
+    return 0;
   start_style (docStyle, NULL);
   ud->outbuf = outbufx;
   ud->outbuf1_len = outlenx;
@@ -686,7 +686,7 @@ insert_translation (const char *table)
   if (!k)
     {
       lou_logPrint ("Cannot find table %s", table);
-      kill_safely ();
+      return 0;
     }
   if ((ud->translated_length + translatedLength) < MAX_TRANS_LENGTH)
     ud->translated_length += translatedLength;

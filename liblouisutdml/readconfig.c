@@ -1249,7 +1249,7 @@ read_configuration_file (const char *configFileList, const char
   if (!(ud = malloc (sizeof (UserData))))
     {
       lou_logPrint ("liblouisutdml: not enough memory for buffers");
-      kill_safely ();
+      return 0;
     }
     }
   memset (ud, 0, sizeof (UserData));

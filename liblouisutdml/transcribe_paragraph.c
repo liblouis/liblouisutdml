@@ -201,7 +201,7 @@ transcribe_paragraph (xmlNode * node, int action)
       if (!lou_getTable (ud->main_braille_table))
 	{
 	  lou_logPrint ("Cannot open main table %s", ud->main_braille_table);
-	  kill_safely ();
+	  return 0;
 	}
       if (action != 0)
         pop_sem_stack ();
