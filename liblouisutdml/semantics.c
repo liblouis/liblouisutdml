@@ -1530,7 +1530,7 @@ doSemanticActions ()
       if (!lou_getTable (ud->main_braille_table))
 	{
 	  lou_logPrint ("Cannot open main table %s", ud->main_braille_table);
-	  kill_safely ();
+	  return 0;
 	}
       break;
     case htmllink:

@@ -64,6 +64,8 @@ libxml_errors (void *ctx ATTRIBUTE_UNUSED, const char *msg, ...)
 static xmlParserCtxt *ctxt;
 static int libxml2_initialized = 0;
 
+static void freeEverything ();
+
 static int
 processXmlDocument (const char *inputDoc, int length)
 {
@@ -105,14 +107,16 @@ processXmlDocument (const char *inputDoc, int length)
   if (ud->doc == NULL)
     {
       lou_logPrint ("Document could not be processed");
-      kill_safely ();
+      freeEverything ();
+      return 0;
     }
   if (ud->format_for >= utd && strcmp (ud->doc->encoding, "UTF-8") != 0)
     {
     lou_logPrint (
     "This format requires UTF-8 encoding, not '%s'",
     ud->doc->encoding);
-    kill_safely ();
+    freeEverything ();
+    return 0;
     }
   rootElement = xmlDocGetRootElement (ud->doc);
   if (rootElement == NULL)
@@ -139,20 +143,18 @@ processXmlDocument (const char *inputDoc, int length)
   return 1;
 }
 
-void
-kill_safely ()
+static void
+freeEverything ()
 {
-  lou_logPrint ("liblouisutdml is terminating.");
   lou_logEnd ();
   if (ud->doc != NULL)
     xmlFreeDoc (ud->doc);
   lbu_free ();
   if (!libxml2_initialized)
-    exit (1);
+    return;
   xmlCleanupParser ();
   initGenericErrorDefaultFunc (NULL);
   xmlFreeParserCtxt (ctxt);
-  exit (1);
 }
 
 void *EXPORT_CALL

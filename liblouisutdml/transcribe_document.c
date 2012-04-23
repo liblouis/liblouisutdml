@@ -43,7 +43,8 @@ transcribe_document (xmlNode * node)
   ud->style_top = -1;
   ud->text_length = 0;
   ud->translated_length = 0;
-  start_document ();
+  if (!start_document ())
+    return 0;
   push_sem_stack (node);
   if ((style = is_style (node)) != NULL)
     start_style (style, node);
