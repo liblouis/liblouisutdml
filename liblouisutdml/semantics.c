@@ -483,6 +483,8 @@ encodeInsertions (FileInfo * nested, xmlChar * insertions, int length)
   return insertsPtr;
 }
 
+static int insertFromMacro (int which);
+
 int
 insert_code (xmlNode * node, int which)
 {
@@ -498,6 +500,11 @@ insert_code (xmlNode * node, int which)
   nodeEntry = (HashEntry *) node->_private;
   if (nodeEntry == NULL)
     return 0;
+  if (nodeEntry->macro)
+    {
+      insertFromMacro (which);
+      return 1;
+    }
   if (nodeEntry->inserts == NULL)
     return 1;
   inserts = nodeEntry->inserts;
@@ -1221,16 +1228,6 @@ is_style (xmlNode * node)
     return NULL;
 }
 
-char *
-is_macro (xmlNode * node)
-{
-  HashEntry *nodeEntry = (HashEntry *) node->_private;
-  if (nodeEntry != NULL)
-    return nodeEntry->macro;
-  else
-    return NULL;
-}
-
 xmlChar *
 get_attr_value (xmlNode * node)
 {
@@ -1408,7 +1405,75 @@ new_style (xmlChar * name)
   return style;
 }
 
+StyleType *
+lookup_style (xmlChar * name)
+{
+  char key[MAXNAMELEN];
+  strcpy (key, name);
+  strcat (key, STYLESUF);
+  if (hashLookup (semanticTable, key) != notFound)
+    return latestEntry->style;
+  return NULL;
+}
+
+StyleType *
+action_to_style (sem_act action)
+{
+  if (action < 0 || action >= end_all)
+    return NULL;
+  return lookup_style ((char *) semNames[action]);
+}
+
+/* Beginning of macro processing */
+
+/* Hold macro state */
+static char *macro = NULL;
+static int macroLength;
+static int posInMacro;;
+static xmlNode *macroNode;
+static HashEntry *isMacroEntry;
+static int macroHasStyle;
+
+static void
+macroError (char *format, ...)
+{
+  char key[40];
+  char buffer[MAXNAMELEN];
+  va_list arguments;
+  va_start (arguments, format);
+#ifdef WIN32
+  _vsnprintf (buffer, sizeof (buffer), format, arguments);
+#else
+  vsnprintf (buffer, sizeof (buffer), format, arguments);
+#endif
+  va_end (arguments);
+  strncpy (key, isMacroEntry->key, strlen (isMacroEntry->key) - 5);
+  lou_logPrint ("Macro %s: %s", key, buffer);
+}
+
+char *
+is_macro (xmlNode * node)
+{
+  HashEntry *nodeEntry = (HashEntry *) node->_private;
+  if (nodeEntry != NULL)
+    return nodeEntry->macro;
+  else
+    return NULL;
+}
+
 #define MACROSUF " orcam"
+
+unsigned char *
+lookup_macro (xmlChar * name)
+{
+  char key[MAXNAMELEN];
+  strcpy (key, name);
+  strcat (key, MACROSUF);
+  if (hashLookup (semanticTable, key) != notFound)
+    return latestEntry->macro;
+  return NULL;
+}
+
 xmlChar *
 new_macro (xmlChar * name, xmlChar * body)
 {
@@ -1424,62 +1489,10 @@ new_macro (xmlChar * name, xmlChar * body)
   return storedBody;
 }
 
-StyleType *
-lookup_style (xmlChar * name)
+static int
+insertFromMacro (int which)
 {
-  char key[MAXNAMELEN];
-  strcpy (key, name);
-  strcat (key, STYLESUF);
-  if (hashLookup (semanticTable, key) != notFound)
-    return latestEntry->style;
-  return NULL;
-}
-
-unsigned char *
-lookup_macro (xmlChar * name)
-{
-  char key[MAXNAMELEN];
-  strcpy (key, name);
-  strcat (key, MACROSUF);
-  if (hashLookup (semanticTable, key) != notFound)
-    return latestEntry->macro;
-  return NULL;
-}
-
-StyleType *
-action_to_style (sem_act action)
-{
-  if (action < 0 || action >= end_all)
-    return NULL;
-  return lookup_style ((char *) semNames[action]);
-}
-
-/* Beginning of macro processing */
-
-/* Hold macro state */
-static char *macro;
-static int macroLength;
-static int posInMacro;;
-static xmlNode *macroNode;
-static HashEntry *isMacroEntry;
-static int macroHasStyle;
-
-static void
-macroError (char *format, ...)
-{
-  char buffer[MAXNAMELEN];
-  char key[40];
-  va_list arguments;
-  va_start (arguments, format);
-#ifdef WIN32
-  _vsnprintf (buffer, sizeof (buffer), format, arguments);
-#else
-  vsnprintf (buffer, sizeof (buffer), format, arguments);
-#endif
-  va_end (arguments);
-  strncpy (key, isMacroEntry->key, strlen (isMacroEntry->key) - 5);
-  lou_logPrint ("Macro %s: %s", key, buffer);
-  errorCount++;
+  return 1;
 }
 
 static int
@@ -1593,7 +1606,57 @@ compileMacro ()
   int pos = 0;
   while (unPos < macroLength)
     {
+      if (isalpha (macro[unPos]))
+	{
+	  int namePos = unPos;
+	  char name[40];
+	  int k = 0;
+	  StyleType *style;
+	  for (; isalnum (macro[namePos]) && namePos < macroLength; namePos++)
+	    name[k++] = macro[namePos];
+	  name[k] = 0;
+	  if ((style = lookup_style (name)) != NULL)
+	    {
+	      if (macroHasStyle)
+		{
+		  macroError ("only one style can be specified");
+		  compiledMacro[0] = '!';
+		}
+	      else
+		{
+		  macroHasStyle = 1;
+		  compiledMacro[pos++] = '~';
+		  isMacroEntry->style = style;
+		}
+	    }
+	  else
+	    {
+	      if ((k = find_semantic_number (name)) != notFound)
+		{
+		  k = sprintf (name, "%s", k);
+		  strcpy (&compiledMacro[pos], name);
+		  pos += k;
+		  if (macro[posInMacro] == '(')
+		    {
+		      k = find_group_length ("()", &macro[unPos]);
+		      strncpy (&compiledMacro[pos], &macro[unPos], k);
+		      pos += k;
+		      unPos += k;
+		    }
+		}
+	      else
+		{
+		  macroError ("'%s' is neither a style or semantic action",
+			      name);
+		  compiledMacro[0] = '!';
+		}
+	      unPos += namePos;
+	    }
+	  if (macro[unPos] == ',')
+	    compiledMacro[pos++] = macro[unPos++];
+	}
     }
+  compiledMacro[pos] = 0;
   strcpy (macro, compiledMacro);
   return 1;
 }
@@ -1661,8 +1724,8 @@ start_macro (xmlNode * node)
 int
 end_macro ()
 {
- if (macro == NULL)
-   return 0;
+  if (macro == NULL)
+    return 0;
   executeMacro ();
   return 1;
 }
