@@ -199,6 +199,8 @@ static char *
 findTable (FileInfo * nested)
 {
   char trialPath[MAXNAMELEN];
+  if (lou_getTable (nested->value) != NULL)
+  return getLastTableList ();
   if (!find_file (nested->value, trialPath))
     {
       configureError (nested, "Table '%s' cannot be found.", 
