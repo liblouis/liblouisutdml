@@ -1433,6 +1433,8 @@ static int posInMacro;;
 static xmlNode *macroNode;
 static HashEntry *isMacroEntry;
 static int macroHasStyle;
+static char *paramStart = NULL;
+static int paramLength = 0;
 
 static void
 macroError (char *format, ...)
@@ -1447,7 +1449,7 @@ macroError (char *format, ...)
   vsnprintf (buffer, sizeof (buffer), format, arguments);
 #endif
   va_end (arguments);
-  strncpy (key, isMacroEntry->key, strlen (isMacroEntry->key) - 5);
+  strncpy (key, isMacroEntry->key, strlen (isMacroEntry->key) - 6);
   lou_logPrint ("Macro %s: %s", key, buffer);
 }
 
@@ -1498,8 +1500,6 @@ insertFromMacro (int which)
 static int
 doSemanticActions ()
 {
-  char *paramStart = NULL;
-  int paramLength;
   int retVal = 1;
   int semNum = atoi (&macro[posInMacro]);
   for (; isdigit (macro[posInMacro]) && posInMacro < macroLength;
@@ -1658,6 +1658,7 @@ compileMacro ()
     }
   compiledMacro[pos] = 0;
   strcpy (macro, compiledMacro);
+  macroLength = pos;
   return 1;
 }
 
@@ -1711,6 +1712,8 @@ start_macro (xmlNode * node)
   macroLength = strlen (macro);
   posInMacro = 0;
   macroHasStyle = 0;
+  paramStart = NULL;
+  paramLength = 0;
   /*compile macro the first time it is used. */
   if (isalpha (macro[0]))
     compileMacro ();
