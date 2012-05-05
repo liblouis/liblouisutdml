@@ -90,8 +90,8 @@ alloc_string (const char *inString)
   int length;
   char *newString;
   if (inString == NULL)
-  return NULL;
-  length  = strlen (inString);
+    return NULL;
+  length = strlen (inString);
   if ((length + ud->string_buf_len) >= sizeof (ud->string_buffer))
     return NULL;
   newString = &ud->string_buffer[ud->string_buf_len];
@@ -105,7 +105,7 @@ alloc_string_if_not (const char *inString)
 {
   int alreadyStored;
   if (inString == NULL)
-  return NULL;
+    return NULL;
   alreadyStored = inString - ud->string_buffer;
   if (alreadyStored >= 0 && alreadyStored < ud->string_buf_len)
     return (char *) inString;
@@ -200,12 +200,15 @@ findTable (FileInfo * nested)
 {
   char trialPath[MAXNAMELEN];
   if (lou_getTable (nested->value) != NULL)
-  return getLastTableList ();
-  if (!find_file (nested->value, trialPath))
+    strcpy (trialPath, getLastTableList ());
+  else
     {
-      configureError (nested, "Table '%s' cannot be found.", 
-      nested->value);
-      return NULL;
+      if (!find_file (nested->value, trialPath))
+	{
+	  configureError (nested, "Table '%s' cannot be found.",
+			  nested->value);
+	  return NULL;
+	}
     }
   return alloc_string_if_not (trialPath);
 }
@@ -239,8 +242,7 @@ controlCharValue (FileInfo * nested)
 	      decoded[decodedLength++] = 13;
 	      break;
 	    default:
-	      configureError (nested, "invalid value '%s'", 
-	      nested->value);
+	      configureError (nested, "invalid value '%s'", nested->value);
 	      return 0;
 	    }
 	  k++;
@@ -271,8 +273,7 @@ config_compileSettings (const char *fileName)
     return compileConfig (&nested);
   if (!find_file (fileName, completePath))
     {
-      configureError (NULL, "Can't find configuration file '%s'", 
-      fileName);
+      configureError (NULL, "Can't find configuration file '%s'", fileName);
       return 0;
     }
   if ((nested.in = fopen ((char *) completePath, "rb")))
@@ -282,8 +283,7 @@ config_compileSettings (const char *fileName)
     }
   else
     {
-      configureError (NULL, "Can't open configuration file '%s'", 
-      fileName);
+      configureError (NULL, "Can't open configuration file '%s'", fileName);
       return 0;
     }
   return 1;
@@ -481,7 +481,7 @@ hexValue (FileInfo * nested, const char *digits)
 }
 
 static unsigned int
-convertValue (FileInfo *nested, const char *number)
+convertValue (FileInfo * nested, const char *number)
 {
   if (number[0] == '0' && number[1] == 'x')
     return hexValue (nested, &number[2]);
@@ -503,10 +503,9 @@ orValues (FileInfo * nested, const char **values)
   int wordLength;
   while (word < nested->valueLength)
     {
-      for (wordLength = 0; (word + wordLength) < nested->valueLength && 
-      nested->value[word + wordLength] 
-      > ' '
-	   && nested->value[word + wordLength] != ','; wordLength++);
+      for (wordLength = 0; (word + wordLength) < nested->valueLength &&
+	   nested->value[word + wordLength]
+	   > ' ' && nested->value[word + wordLength] != ','; wordLength++);
       for (k = 0; values[k]; k += 2)
 	if (wordLength == strlen (values[k]) &&
 	    ignoreCaseComp (values[k], &nested->value[word], wordLength) == 0)
@@ -541,8 +540,8 @@ checkSubActions (FileInfo * nested, const char **mainActions, const char
     {
       mainActionNumber = checkActions (nested, mainActions);
       if (mainActionNumber == NOTFOUND)
-	configureError (nested, 
-	"word '%s' in column 1 not recognized",
+	configureError (nested,
+			"word '%s' in column 1 not recognized",
 			nested->action);
       return NOTFOUND;
     }
@@ -705,8 +704,7 @@ compileConfig (FileInfo * nested)
     "transInXml", "4",
     "volumes", "5",
     "brf", "6",
-    "volumesPef", "7"
-    "volumesBrf", "8",
+    "volumesPef", "7" "volumesBrf", "8",
     NULL
   };
 
@@ -918,7 +916,7 @@ compileConfig (FileInfo * nested)
 	case 36:
 	  leftMargin = atof (nested->value);
 	  break;
-// available	case 37:
+// available    case 37:
 	case 38:
 	  ud->volume_sem = alloc_string (nested->value);
 	  break;
@@ -1056,22 +1054,22 @@ compileConfig (FileInfo * nested)
 	      "listColumns",
 	      "5",
 	      "listLines",
-	      "6", 
-	      "computerCoded", 
-	      "7", 
-	      "contents", 
-	      "8", 
+	      "6",
+	      "computerCoded",
+	      "7",
+	      "contents",
+	      "8",
 	      NULL
 	    };
 	    static const char *pageNumFormats[] = {
-	      "normal", 
-	      "0", 
-	      "blank", 
-	      "1", 
-	      "p", 
-	      "2", 
-	      "roman", 
-	      "3", 
+	      "normal",
+	      "0",
+	      "blank",
+	      "1",
+	      "p",
+	      "2",
+	      "roman",
+	      "3",
 	      NULL
 	    };
 	    StyleType *style;
@@ -1152,7 +1150,7 @@ compileConfig (FileInfo * nested)
 		  case 17:
 		    if ((k = checkValues (nested, yesNo)) != NOTFOUND)
 		      style->newline_after = k;
-		  break;
+		    break;
 		  default:
 		    configureError (nested, "Program error in readconfig.c");
 		    continue;
@@ -1247,12 +1245,12 @@ read_configuration_file (const char *configFileList, const char
   topMargin = 0;
   bottomMargin = 0;
   if (ud == NULL)
-  {
-  if (!(ud = malloc (sizeof (UserData))))
     {
-      lou_logPrint ("liblouisutdml: not enough memory for buffers");
-      return 0;
-    }
+      if (!(ud = malloc (sizeof (UserData))))
+	{
+	  lou_logPrint ("liblouisutdml: not enough memory for buffers");
+	  return 0;
+	}
     }
   memset (ud, 0, sizeof (UserData));
   ud->outbuf1_len = (sizeof (ud->outbuf1) / CHARSIZE) - 4;
@@ -1263,7 +1261,7 @@ read_configuration_file (const char *configFileList, const char
   ud->top = -1;
   ud->style_top = -1;
   ud->emphasis = 15;
-  /* There will be configuration settings for these values*/
+  /* There will be configuration settings for these values */
   ud->cell_width = 5;
   ud->normal_line = 8;
   ud->wide_line = 10;
@@ -1271,7 +1269,7 @@ read_configuration_file (const char *configFileList, const char
   strcpy (ud->lit_hyphen, "-");
   strcpy (ud->comp_hyphen, "_&");
   strcpy (ud->letsign, "\\_");
-  /*End of values*/
+  /*End of values */
   for (k = document; k < notranslate; k++)
     {
       StyleType *style = new_style ((xmlChar *) semNames[k]);
@@ -1349,10 +1347,10 @@ read_configuration_file (const char *configFileList, const char
   ud->mode = mode | ud->config_mode;
   ud->orig_format_for = ud->format_for;
   if (ud->format_for > utd)
-  {
-  ud->mode &= ~notUC;
-  ud->format_for = utd;
-  }
+    {
+      ud->mode &= ~notUC;
+      ud->format_for = utd;
+    }
   if (ud->format_for == utd)
     {
       ud->braille_pages = 1;
