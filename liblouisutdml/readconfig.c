@@ -56,7 +56,6 @@ typedef struct
 }
 FileInfo;
 
-static char lastConfigFileList[MAXNAMELEN];
 static double paperWidth;
 static double paperHeight;
 static double leftMargin;
@@ -1208,42 +1207,13 @@ read_configuration_file (const char *configFileList, const char
   int currentListPos = 0;
   errorCount = 0;
   /*Process logFileName later, after writeablePath is set */
-  if ((configFileList != NULL && strcmp (configFileList,
-					 lastConfigFileList) == 0)
-      && !(mode & doInit))
-    {
-      ud->has_comp_code = 0;
-      ud->has_math = 0;
-      ud->has_chem = 0;
-      ud->has_graphics = 0;
-      ud->has_music = 0;
-      ud->has_cdata = 0;
-      ud->has_contentsheader = 0;
-      ud->prelim_pages = 0;
-      ud->braille_page_string[0] = 0;
-      ud->print_page_number[0] = '_';
-      ud->inFile = NULL;
-      ud->outFile = NULL;
-      ud->main_braille_table = ud->contracted_table_name;
-      ud->outlen_so_far = 0;
-      ud->lines_on_page = 0;
-      ud->braille_page_number = ud->beginning_braille_page_number;
-      ud->print_page_number_first[0] = '_';
-      ud->print_page_number[1] = 0;
-      ud->print_page_number_first[1] = 0;
-      ud->print_page_number_last[0] = 0;
-      ud->page_separator_number_first[0] = 0;
-      ud->page_separator_number_first[0] = 0;
-      ud->fill_pages = 0;
-      ud->mode = mode | ud->config_mode;
-      return 1;
-    }
   paperWidth = 0;
   paperHeight = 0;
   leftMargin = 0;
   rightMargin = 0;
   topMargin = 0;
   bottomMargin = 0;
+  destroy_semantic_table ();
   if (ud == NULL)
     {
       if (!(ud = malloc (sizeof (UserData))))
@@ -1295,7 +1265,6 @@ read_configuration_file (const char *configFileList, const char
     }
   else
     {
-      strcpy (lastConfigFileList, configFileList);
       listLength = strlen (configFileList);
       for (k = 0; k < listLength; k++)
 	if (configFileList[k] == ',')

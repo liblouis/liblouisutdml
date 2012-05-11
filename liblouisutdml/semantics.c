@@ -1621,6 +1621,7 @@ compileMacro ()
 		{
 		  macroError ("only one style can be specified");
 		  compiledMacro[0] = '!';
+		  break;
 		}
 	      else
 		{
@@ -1649,6 +1650,7 @@ compileMacro ()
 		  macroError ("'%s' is neither a style or semantic action",
 			      name);
 		  compiledMacro[0] = '!';
+		  break;
 		}
 	      unPos += namePos;
 	    }
