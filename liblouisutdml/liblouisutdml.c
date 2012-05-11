@@ -64,7 +64,26 @@ libxml_errors (void *ctx ATTRIBUTE_UNUSED, const char *msg, ...)
 static xmlParserCtxt *ctxt;
 static int libxml2_initialized = 0;
 
-static void freeEverything ();
+static void
+cleanupLibxml ()
+{
+  destroy_semantic_table ();
+  if (ud->doc != NULL)
+    xmlFreeDoc (ud->doc);
+  if (!libxml2_initialized)
+    return;
+  xmlCleanupParser ();
+  initGenericErrorDefaultFunc (NULL);
+  xmlFreeParserCtxt (ctxt);
+}
+
+static void
+freeEverything ()
+{
+  lou_logEnd ();
+  lbu_free ();
+  cleanupLibxml ();
+}
 
 static int
 processXmlDocument (const char *inputDoc, int length)
@@ -107,57 +126,45 @@ processXmlDocument (const char *inputDoc, int length)
   if (ud->doc == NULL)
     {
       lou_logPrint ("Document could not be processed");
-      freeEverything ();
+      cleanupLibxml ();
       return 0;
     }
   if (ud->format_for >= utd && strcmp (ud->doc->encoding, "UTF-8") != 0)
     {
       lou_logPrint ("This format requires UTF-8 encoding, not '%s'",
 		    ud->doc->encoding);
-      freeEverything ();
+      cleanupLibxml ();
       return 0;
     }
   rootElement = xmlDocGetRootElement (ud->doc);
   if (rootElement == NULL)
     {
       lou_logPrint ("Document is empty");
+      cleanupLibxml ();
       return 0;
     }
   if (ud->mode & convertOnly)
     convert_utd ();
   else
     {
-      haveSemanticFile = compile_semantic_table (rootElement);
+      if (!(haveSemanticFile = compile_semantic_table (rootElement)))
+      {
+      lou_logPrint ("Could not set xml semantics");
+      cleanupLibxml ();
+      return 0;
+      }
       do_xpath_expr ();
       examine_document (rootElement);
       append_new_entries ();
-      if (!haveSemanticFile)
-	return 0;
       if (!transcribe_document (rootElement))
 	{
-	  freeEverything ();
+	  lou_logPrint ("Document could not be transcribed");
+	  cleanupLibxml ();
 	  return 0;
 	}
     }
-  xmlFreeDoc (ud->doc);
-  xmlCleanupParser ();
-  initGenericErrorDefaultFunc (NULL);
-  xmlFreeParserCtxt (ctxt);
+  cleanupLibxml ();
   return 1;
-}
-
-static void
-freeEverything ()
-{
-  lou_logEnd ();
-  if (ud->doc != NULL)
-    xmlFreeDoc (ud->doc);
-  lbu_free ();
-  if (!libxml2_initialized)
-    return;
-  xmlCleanupParser ();
-  initGenericErrorDefaultFunc (NULL);
-  xmlFreeParserCtxt (ctxt);
 }
 
 void *EXPORT_CALL
@@ -456,7 +463,7 @@ lbu_checkTable (const char *tableList, const char *logFile, unsigned int mode)
 }
 
 void EXPORT_CALL
-lbu_free (void)
+lbu_free ()
 {
 /* Free all memory used by liblouisutdml. You MUST call this function at 
 * the END of your application.*/

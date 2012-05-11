@@ -15,7 +15,8 @@ AM_LDFLAGS =	\
 	$(BASE_DEPENDENCIES_LDFLAGS)
 
 bin_PROGRAMS = \
-	testTranslateString
+	testTranslateString\
+	tripleTrans
 
 testTranslateString_SOURCES = testTranslateString.c
-
+tripleTrans_SOURCES = tripleTrans.c
