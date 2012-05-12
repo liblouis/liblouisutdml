@@ -4227,7 +4227,7 @@ hasAttrValue (xmlNode * node, char *attrName, char *value)
 static int
 assignIndices ()
 {
-  int prevSegment = 0;
+  int nextSegment = 0;
   int curPos = 0;
   xmlNode *curBrlNode;
   if (indices == NULL)
@@ -4235,16 +4235,17 @@ assignIndices ()
   if (firstBrlNode == NULL)
     return 0;
   curBrlNode = firstBrlNode;
-  while (curPos < translatedLength && curBrlNode != NULL)
+  while (curPos < translatedLength && curBrlNode != NULL  && 
+    nextSegment < translatedLength)
     {
       if (hasAttrValue (curBrlNode, "modifiers", "noindex"))
 	{
 	  curBrlNode = curBrlNode->_private;
 	  continue;
 	}
-      if (translatedBuffer[curPos] == ENDSEGMENT || prevSegment == 0)
+      if (translatedBuffer[curPos] == ENDSEGMENT || nextSegment == 0)
 	{
-	  int indexPos = prevSegment;
+	  int indexPos = nextSegment;
 	  int firstIndex = indices[indexPos];
 	  int kk = 0;
 	  while (translatedBuffer[indexPos] != ENDSEGMENT && indexPos <
@@ -4262,10 +4263,9 @@ assignIndices ()
 		      utilStringBuf);
 	  if (curBrlNode && curBrlNode->_private != NULL)
 	    curBrlNode = curBrlNode->_private;
-	  curPos += indexPos;
+	  curPos = indexPos;
 	}
-      curPos++;
-      prevSegment = curPos;
+      nextSegment = curPos + 1;
     }
   return 1;
 }
@@ -4382,6 +4382,7 @@ utd_insert_text (xmlNode * node, int length)
     default:
       break;
     }
+  ud->old_text_length = ud->text_length;
   wcLength = insert_utf8 (node->content);
   ud->text_buffer[ud->text_length++] = ENDSEGMENT;
   switch (ud->stack[ud->top])
