@@ -4259,7 +4259,8 @@ assignIndices ()
 	      indexPos++;
 	    }
 	  utilStringBuf[--kk] = 0;
-	  xmlNewProp (curBrlNode, (xmlChar *) "index", (xmlChar *)
+	  if (xmlGetProp (curBrlNode, (xmlChar *) "index") == NULL)
+	    xmlNewProp (curBrlNode, (xmlChar *) "index", (xmlChar *)
 		      utilStringBuf);
 	  if (curBrlNode && curBrlNode->_private != NULL)
 	    curBrlNode = curBrlNode->_private;
