@@ -2149,7 +2149,7 @@ doLeftJustify ()
 	}
       else
 	leadingBlanks = ud->style_left_margin;
-	  trailingBlanks = ud->style_right_margin;
+      trailingBlanks = ud->style_right_margin;
       if (!insertCharacters (blanks, leadingBlanks))
 	return 0;
       availableCells -= leadingBlanks;
@@ -2675,18 +2675,18 @@ write_paragraph (sem_act action, xmlNode * node)
   if (style->brlNumFormat != normal)
     ud->brl_page_num_format = style->brlNumFormat;
   if (style->format != inherit)
-  	ud->style_format = style->format;
+    ud->style_format = style->format;
   else if (ud->style_format != leftJustified &&
-		  ud->style_format != rightJustified &&
-  		  ud->style_format != centered) {
-  	ud->style_format = leftJustified;
-  }
+	   ud->style_format != rightJustified && ud->style_format != centered)
+    {
+      ud->style_format = leftJustified;
+    }
   if (style->left_margin != -100)
-  	ud->style_left_margin = style->left_margin;
+    ud->style_left_margin = style->left_margin;
   if (style->right_margin != -100)
-  	ud->style_right_margin = style->right_margin;
+    ud->style_right_margin = style->right_margin;
   if (style->first_line_indent != -100)
-  	ud->style_first_line_indent = style->first_line_indent;
+    ud->style_first_line_indent = style->first_line_indent;
   styleSpec->curBrlNumFormat = ud->brl_page_num_format;
   styleSpec->curStyleFormat = ud->style_format;
   styleSpec->curLeftMargin = ud->style_left_margin;
@@ -3266,18 +3266,18 @@ start_style (StyleType * curStyle, xmlNode * node)
   if (style->brlNumFormat != normal)
     ud->brl_page_num_format = style->brlNumFormat;
   if (style->format != inherit)
-	ud->style_format = style->format;
+    ud->style_format = style->format;
   else if (ud->style_format != leftJustified &&
-		  ud->style_format != rightJustified &&
-		  ud->style_format != centered) {
-	ud->style_format = leftJustified;
-  }
+	   ud->style_format != rightJustified && ud->style_format != centered)
+    {
+      ud->style_format = leftJustified;
+    }
   if (style->left_margin != -100)
-	ud->style_left_margin = style->left_margin;
+    ud->style_left_margin = style->left_margin;
   if (style->right_margin != -100)
-	ud->style_right_margin = style->right_margin;
+    ud->style_right_margin = style->right_margin;
   if (style->first_line_indent != -100)
-	ud->style_first_line_indent = style->first_line_indent;
+    ud->style_first_line_indent = style->first_line_indent;
   styleSpec->curBrlNumFormat = ud->brl_page_num_format;
   styleSpec->curStyleFormat = ud->style_format;
   styleSpec->curLeftMargin = ud->style_left_margin;
@@ -3371,6 +3371,8 @@ utd_start ()
   brlNode = firstBrlNode = prevBrlNode = NULL;
   ud->louis_mode = dotsIO;
   indices = NULL;
+  if (!(ud->mode & notSync))
+    indices = ud->positionsArray;
   backIndices = NULL;
   backBuf = NULL;
   backLength = 0;
@@ -3629,14 +3631,10 @@ backTranslateBlock (xmlNode * curBlock, xmlNode * curBrl)
   if (ud->text_length > backLength)
     {
       backLength = ud->text_length;
-      if (backBuf != NULL)
-	free (backBuf);
-      backBuf = malloc ((4 * backLength + 4) * CHARSIZE);
-      if (backIndices != NULL)
-	free (backIndices);
+      backBuf = ud->outbuf1;
       backIndices = NULL;
       if (!(ud->mode & notSync))
-	backIndices = malloc ((4 * backLength + 4) * sizeof (int));
+	backIndices = ud->positionsArray;
     }
   translationLength = ud->text_length;
   translatedLength = 4 * backLength;
@@ -4235,8 +4233,8 @@ assignIndices ()
   if (firstBrlNode == NULL)
     return 0;
   curBrlNode = firstBrlNode;
-  while (curPos < translatedLength && curBrlNode != NULL  && 
-    nextSegment < translatedLength)
+  while (curPos < translatedLength && curBrlNode != NULL &&
+	 nextSegment < translatedLength)
     {
       if (hasAttrValue (curBrlNode, "modifiers", "noindex"))
 	{
@@ -4261,7 +4259,7 @@ assignIndices ()
 	  utilStringBuf[--kk] = 0;
 	  if (xmlGetProp (curBrlNode, (xmlChar *) "index") == NULL)
 	    xmlNewProp (curBrlNode, (xmlChar *) "index", (xmlChar *)
-		      utilStringBuf);
+			utilStringBuf);
 	  if (curBrlNode && curBrlNode->_private != NULL)
 	    curBrlNode = curBrlNode->_private;
 	  curPos = indexPos;
@@ -4303,14 +4301,6 @@ utd_insert_translation (const char *table)
   int translatedLength;
   int k;
   int *setIndices;
-  if (ud->mode & notSync)
-    {
-      if (indices != NULL)
-	free (indices);
-      indices = NULL;
-    }
-  else if (indices == NULL)
-    indices = malloc (MAX_TRANS_LENGTH * sizeof (int));
   if (table != currentTable)
     {
       for (k = strlen (table); k >= 0; k--)
@@ -4616,13 +4606,14 @@ utd_doOrdinaryText ()
 	      if (translatedBuffer[charactersWritten] == SPACE)
 		charactersWritten++;
 	      origAvailableCells = availableCells = utd_startLine ();
-	      if (style->format == leftJustified)
+	      if (ud->style_format == leftJustified)
 		{
 		  if (styleSpec->status == startBody)
 		    leadingBlanks =
-		      style->left_margin + style->first_line_indent;
+		      ud->style_left_margin + 
+		      ud->style_first_line_indent;
 		  else
-		    leadingBlanks = style->left_margin;
+		    leadingBlanks = ud->style_left_margin;
 		  availableCells -= leadingBlanks;
 		}
 	      styleSpec->status = resumeBody;
@@ -5120,12 +5111,6 @@ bottomMargin=%d", ud->braille_page_number, firstTableName, ud->dpi, ud->paper_wi
       xmlNewProp (newNode, (xmlChar *) "content", (xmlChar *) utilStringBuf);
       xmlAddChild (ud->head_node, newNode);
     }
-  if (indices != NULL)
-    free (indices);
-  if (backIndices != NULL)
-    free (backIndices);
-  if (backBuf != NULL)
-    free (backBuf);
   if (ud->orig_format_for != utd)
     convert_utd ();
   else
