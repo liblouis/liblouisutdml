@@ -1610,9 +1610,10 @@ compileMacro ()
 	{
 	  int namePos = unPos;
 	  char name[40];
-	  int k = 0;
+	  int k;
 	  StyleType *style;
-	  for (; isalnum (macro[namePos]) && namePos < macroLength; namePos++)
+	  for (k = 0; isalnum (macro[namePos]) && namePos < macroLength;
+	       namePos++)
 	    name[k++] = macro[namePos];
 	  name[k] = 0;
 	  if ((style = lookup_style (name)) != NULL)
@@ -1645,10 +1646,15 @@ compileMacro ()
 		      unPos += k;
 		    }
 		}
+	      else if (strcmp (name, "styleend") == 0)
+		compiledMacro[pos++] = '@';
+	      else if (strcmp (name, "pause") == 0)
+		compiledMacro[pos++] = '#';
 	      else
 		{
-		  macroError ("'%s' is neither a style or semantic action",
-			      name);
+		  macroError
+		    ("'%s' is neither a style or semantic action or keyword",
+		     name);
 		  compiledMacro[0] = '!';
 		  break;
 		}
