@@ -5107,7 +5107,8 @@ paperHeight=%d \
 leftMargin=%d \
 rightMargin=%d \
 topMargin=%d \
-bottomMargin=%d", ud->braille_page_number, firstTableName, ud->dpi, ud->paper_width, ud->paper_height, ud->left_margin, ud->right_margin, ud->top_margin, ud->bottom_margin);
+bottomMargin=%d", ud->braille_page_number, firstTableName, (int)ud->dpi, 
+ud->paper_width, ud->paper_height, ud->left_margin, ud->right_margin, ud->top_margin, ud->bottom_margin);
       xmlNewProp (newNode, (xmlChar *) "content", (xmlChar *) utilStringBuf);
       xmlAddChild (ud->head_node, newNode);
     }

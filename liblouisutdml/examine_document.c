@@ -40,7 +40,7 @@ static int doConfigfile (xmlNode * node);
 int
 examine_document (xmlNode * node)
 {
-/*Examine the DOM tree, add semantic attributes and set indicators.*/
+/*Examine the parse tree, add semantic attributes and set indicators.*/
   xmlNode *child;
   if (node == NULL)
     return 0;
