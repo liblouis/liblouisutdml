@@ -128,7 +128,7 @@ semStringHash (const unsigned char *s)
 }
 
 static HashTable *
-hashNew (void)
+hashNew ()
 {
   HashTable *table;
   table = malloc (sizeof (HashTable));
@@ -164,7 +164,7 @@ static void hashInsert (HashTable * table, const unsigned char *key, int
 			style, unsigned char *macro);
 
 void
-clean_semantic_table (void)
+clean_semantic_table ()
 {
   int i;
   HashEntry *e, *next;
@@ -322,7 +322,7 @@ find_semantic_number (const char *name)
 }
 
 void
-destroy_semantic_table (void)
+destroy_semantic_table ()
 {
   hashFree (semanticTable);
   semanticTable = NULL;
@@ -601,7 +601,7 @@ countAttrValues (xmlChar * key)
 }
 
 static void
-destroyattrValueCountsTable (void)
+destroyattrValueCountsTable ()
 {
   if (attrValueCounts == NULL)
     return;
@@ -967,7 +967,7 @@ compile_semantic_table (xmlNode * rootElement)
 		if (ud->semantic_files[k] == ',')
 		  break;
 	      strncpy (fileName, &ud->semantic_files[currentListPos],
-		       k - currentListPos);
+	      		       k - currentListPos);
 	      fileName[k - currentListPos] = 0;
 	      if (fileName[0] == '*')
 		getRootName (rootElement, fileName);
@@ -1301,7 +1301,7 @@ addNewEntries (const xmlChar * newEntry)
 }
 
 void
-append_new_entries (void)
+append_new_entries ()
 {
   int items;
   char filePrefix[20];

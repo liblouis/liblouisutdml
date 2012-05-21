@@ -295,8 +295,8 @@ typedef struct
   int style_first_line_indent;
   char xml_header[2 * MAXNAMELEN];
   widechar text_buffer[2 * BUFSIZE];
-  widechar translated_buffer[2 * BUFSIZE];
   int positionsArray[2 * BUFSIZE];
+  widechar translated_buffer[2 * BUFSIZE];
   unsigned char typeform[2 * BUFSIZE];
   char string_buffer[2 * BUFSIZE];
 } UserData;

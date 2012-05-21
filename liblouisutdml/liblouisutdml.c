@@ -147,15 +147,18 @@ processXmlDocument (const char *inputDoc, int length)
     convert_utd ();
   else
     {
-      if (!(haveSemanticFile = compile_semantic_table (rootElement)))
-      {
-      lou_logPrint ("Could not set xml semantics");
-      cleanupLibxml ();
-      return 0;
-      }
+      haveSemanticFile = compile_semantic_table (rootElement);
       do_xpath_expr ();
       examine_document (rootElement);
       append_new_entries ();
+      /* This will generate a new semantic-action file if none exists 
+      * and newEntries is  yes in the configuration file.
+      * Otherwise it generates a new_enhtries file.*/
+      if (!haveSemanticFile)
+      {
+      cleanupLibxml ();
+      return 0;
+      }
       if (!transcribe_document (rootElement))
 	{
 	  lou_logPrint ("Document could not be transcribed");
