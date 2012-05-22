@@ -338,6 +338,7 @@ int finish_heading (sem_act action);
 int make_contents ();
 void do_reverse (xmlNode * node);
 int do_boxline (xmlNode * node);
+void do_pagebreak (xmlNode *node);
 void do_linespacing (xmlNode * node);
 int do_newpage ();
 int do_blankline ();

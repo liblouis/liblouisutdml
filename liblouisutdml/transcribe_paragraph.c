@@ -225,6 +225,11 @@ transcribe_paragraph (xmlNode * node, int action)
       if (action != 0)
 	pop_sem_stack ();
       return 1;
+    case pagebreak:
+      do_pagebreak (node);
+      if (action != 0)
+        pop_sem_stack ();
+      return 1;
     case blankline:
       do_blankline ();
       if (action != 0)
