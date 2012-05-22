@@ -870,6 +870,18 @@ handlePagenum (xmlChar * printPageNumber, int length)
   return 1;
 }
 
+static int utd_makePageSeparator (xmlChar *printPageNumber, int length);
+
+void
+do_pagebreak (xmlNode *node)
+{
+  xmlChar *number = get_attr_value (node);
+  if (ud->format_for == utd)
+    utd_makePageSeparator (number, strlen (number));
+  else
+    handlePagenum (number, strlen (number));
+}
+
 void
 insert_text (xmlNode * node)
 {
