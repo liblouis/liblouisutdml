@@ -263,6 +263,8 @@ typedef struct
   char lit_hyphen[5];
   char comp_hyphen[5];
   char letsign[5];
+  char *config_path;
+  char *lbu_files_path;
   widechar running_head[MAXNAMELEN / 2];
   widechar footer[MAXNAMELEN / 2];
   int running_head_length;
@@ -389,5 +391,6 @@ unsigned char * lookup_macro (xmlChar * name);
 char *is_macro (xmlNode *node);
 int start_macro (xmlNode *node);
 int end_macro ();
+int ignore_case_comp (const char *str1, const char *str2, int length);
 
 #endif /*louisutdml_h */
