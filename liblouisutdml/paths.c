@@ -69,8 +69,10 @@ set_paths (const char *configPath)
   char *writePath = NULL;
 
 /*Set configuration path first*/
+  ud->config_path = NULL;
   if (configPath != NULL && configPath[0] != 0)
     {
+      ud->config_path = alloc_string (configPath);
       if (!addPath (configPath))
 	return 0;
     }
@@ -88,6 +90,7 @@ set_paths (const char *configPath)
 	return 0;
       strcpy (currentPath, dataPath);
       strcat (currentPath, "\\liblouisutdml\\lbu_files\\");
+      ud->lbu_files_path = alloc_string (currentPath);
       if (!addPath (currentPath))
 	return 0;
 #else
@@ -97,6 +100,7 @@ set_paths (const char *configPath)
 	return 0;
       strcpy (currentPath, dataPath);
       strcat (currentPath, "/liblouisutdml/lbu_files/");
+      ud->lbu_files_path = alloc_string (currentPath);
       if (!addPath (currentPath))
 	return 0;
 #endif
@@ -114,6 +118,7 @@ set_paths (const char *configPath)
 	  return 0;
 	strcpy (lbuPath, currentPath);
 	strcat (lbuPath, "share\\liblouisutdml\\lbu_files\\");
+      ud->lbu_files_path = alloc_string (lbuPath);
 	strcpy (louisPath, currentPath);
 	strcat (louisPath, "share\\liblouis\\tables\\");
 	addPath (louisPath);
@@ -123,6 +128,7 @@ set_paths (const char *configPath)
 /* Set Unix paths (Linux, Mac OS X, etc.) */
       addPath (LIBLOUIS_TABLES_PATH);
       addPath (LBU_PATH);
+      ud->lbu_files_path = alloc_string (LBU_PATH);
 #endif /*WWIN32 */
     }
 

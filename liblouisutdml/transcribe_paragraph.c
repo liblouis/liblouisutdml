@@ -171,6 +171,7 @@ transcribe_paragraph (xmlNode * node, int action)
   int keep_with_previous_this = 0;
   int orphan_control_this = 0;
   StyleType *style;
+  int haveMacro = 0;
   xmlNode *child;
   int branchCount = 0;
   int i;
@@ -284,6 +285,12 @@ transcribe_paragraph (xmlNode * node, int action)
     default:
       break;
     }
+  if (is_macro (node))
+  {
+  haveMacro = 1;
+  start_macro (node);
+  }
+  else
   if ((style = is_style (node)) != NULL)
     start_style (style, node);
   child = node->children;
@@ -487,6 +494,9 @@ transcribe_paragraph (xmlNode * node, int action)
     }
   insert_code (node, branchCount);
   insert_code (node, -1);
+  if (haveMacro)
+    end_macro ();
+  else
   if (style)
     end_style ();
   else

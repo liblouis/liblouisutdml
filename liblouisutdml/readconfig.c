@@ -198,16 +198,33 @@ static char *
 findTable (FileInfo * nested)
 {
   char trialPath[MAXNAMELEN];
-  if (lou_getTable (nested->value) != NULL)
-    strcpy (trialPath, getLastTableList ());
-  else
+  char filePath[MAXNAMELEN];
+  struct stat statInfo;
+  filePath[0] = 0;
+  if (ud->config_path != NULL)
     {
-      if (!find_file (nested->value, trialPath))
-	{
-	  configureError (nested, "Table '%s' cannot be found.",
-			  nested->value);
-	  return NULL;
-	}
+      strcpy (trialPath, ud->config_path);
+      strcat (trialPath, nested->value);
+      if (stat (trialPath, &statInfo) != -1)
+	strcpy (filePath, trialPath);
+    }
+  else if (filePath[0] == 0)
+    {
+      strcpy (trialPath, ud->lbu_files_path);
+      strcat (trialPath, nested->value);
+      if (stat (trialPath, &statInfo) != -1)
+	strcpy (filePath, trialPath);
+    }
+  strcpy (trialPath, filePath);
+  if (trialPath[0] == 0)
+    {
+      if (lou_getTable (nested->value) != NULL)
+	strcpy (trialPath, getLastTableList ());
+    }
+  if (trialPath[0] == 0)
+    {
+      configureError (nested, "Table '%s' cannot be found.", nested->value);
+      return NULL;
     }
   return alloc_string_if_not (trialPath);
 }
@@ -400,8 +417,8 @@ static int mainActionNumber = NOTFOUND;
 static int subActionNumber;
 static int entities = 0;
 
-static int
-ignoreCaseComp (const char *str1, const char *str2, int length)
+int
+ignore_case_comp (const char *str1, const char *str2, int length)
 {
 /* Replaces strncasecmp, which some compilers don't support */
   int k;
@@ -420,7 +437,7 @@ find_action (const char **actions, const char *action)
   int k;
   for (k = 0; actions[k]; k += 2)
     if (actionLength == strlen (actions[k])
-	&& ignoreCaseComp (actions[k], action, actionLength) == 0)
+	&& ignore_case_comp (actions[k], action, actionLength) == 0)
       break;
   if (actions[k] == NULL)
     return -1;
@@ -442,7 +459,7 @@ checkValues (FileInfo * nested, const char **values)
   int k;
   for (k = 0; values[k]; k += 2)
     if (nested->valueLength == strlen (values[k]) &&
-	ignoreCaseComp (values[k], nested->value, nested->valueLength) == 0)
+	ignore_case_comp (values[k], nested->value, nested->valueLength) == 0)
       break;
   if (values[k] == NULL)
     {
@@ -507,7 +524,7 @@ orValues (FileInfo * nested, const char **values)
 	   > ' ' && nested->value[word + wordLength] != ','; wordLength++);
       for (k = 0; values[k]; k += 2)
 	if (wordLength == strlen (values[k]) &&
-	    ignoreCaseComp (values[k], &nested->value[word], wordLength) == 0)
+	    ignore_case_comp (values[k], &nested->value[word], wordLength) == 0)
 	  {
 	    result |= convertValue (nested, values[k + 1]);
 	    break;

@@ -647,6 +647,7 @@ compileLine (FileInfo * nested)
   char *insertions = NULL;
   int insertionsLength = 0;
   InsertsType *inserts = NULL;
+  unsigned char *macro = NULL;
   StyleType *style = NULL;
   int actionNum = 0;
   if (semanticTable == NULL)
@@ -726,10 +727,11 @@ compileLine (FileInfo * nested)
   lookFor[lookForLength] = 0;
   actionNum = find_semantic_number (action);
   style = lookup_style (action);
-  if (actionNum == notFound && style == NULL)
+  macro = lookup_macro (action);
+  if (actionNum == notFound && style == NULL && macro == NULL)
     {
       semanticError (nested,
-		     "Action or style '%s' in column 1 not recognized",
+"Action or style or macro '%s' in column 1 not recognized",
 		     action);
       return 0;
     }
@@ -814,7 +816,7 @@ compileLine (FileInfo * nested)
   else
     {
       hashInsert (semanticTable, (xmlChar *) lookFor, type, actionNum,
-		  inserts, style, NULL);
+		  inserts, style, macro);
       nested->numEntries++;
     }
   return 1;
