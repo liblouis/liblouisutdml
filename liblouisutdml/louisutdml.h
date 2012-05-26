@@ -392,5 +392,6 @@ char *is_macro (xmlNode *node);
 int start_macro (xmlNode *node);
 int end_macro ();
 int ignore_case_comp (const char *str1, const char *str2, int length);
-
+void insert_text_string (xmlNode *node, xmlChar *str);
+void do_attrtotext (xmlNode *node);
 #endif /*louisutdml_h */

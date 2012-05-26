@@ -883,6 +883,27 @@ do_pagebreak (xmlNode *node)
 }
 
 void
+do_attrtotext (xmlNode *node)
+{
+  insert_text_string (node, get_attr_value (node));
+}
+  
+void
+insert_text_string (xmlNode *node, xmlChar *str)
+{
+  xmlNode *newNode;
+  if (ud->format_for == utd)
+  {
+  newNode = xmlNewNode (NULL, (xmlChar *) "brl");
+  link_brl_node (xmlAddNextSibling (node, newNode));
+  }
+  insert_utf8 (str);
+  if (ud->format_for == utd)
+    ud->text_buffer[ud->text_length++] = ENDSEGMENT;
+  return;
+}
+
+void
 insert_text (xmlNode * node)
 {
   int length;
