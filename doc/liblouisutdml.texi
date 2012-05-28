@@ -909,13 +909,20 @@ this style applies.
 @setting{leftMargin, 0}
 
 The number of cells by which the left margin of all lines in the text
-should be indented. Used for hanging indents, among other things.
+should be indented. Used for hanging indents, among other things. This
+is a "persistent" setting, so by default all nested styles will inherit
+the setting.
+
+@setting{rightMargin, 0}
+
+The equivalent of @samp{leftMargin} for the right side of the page.
+This is also a persistent setting.
 
 @setting{firstLineIndent, 0}
 
 The number of cells by which the first line is to be indented relative
 to leftMargin. firstLineIndent may be negative. If the result is less
-than 0 it will be set to 0.
+than 0 it will be set to 0. This setting is persistent.
 
 @setting{translate, contracted}
 
@@ -941,7 +948,9 @@ and @samp{contents}. The first three are self-explanatory.
 The next two are used for tabular material. @samp{alignColumnsLeft}
 causes the left ends of columns to be aligned. @samp{alignColumnsRight}
 causes the right ends of columns to be aligned. @samp{contents} is used
-only in styles specifically intended for tables of contents.
+only in styles specifically intended for tables of contents. In the
+case of @samp{leftJustified}, @samp{rightJustified} and @samp{centered},
+nested styles inherit this setting by default.
 
 @setting{newPageBefore, no}
 
@@ -970,6 +979,28 @@ means ordinary Arabic numbers. @samp{roman} means Roman numbers.
 preliminary). Finally, @samp{blank} causes the page number to be blank
 (no page numbers). This is a "persistent" style setting.
 
+@setting{dontSplit, no}
+
+If this setting is @samp{yes}, the element is protected from being
+split across pages. This means that if a block of text doesn't fit on
+the current page, it will be placed at the beginning of the next one.
+This setting applies to the whole element, including children, so if
+nested styles specify other values for @samp{dontSplit}, these values
+will be ignored.
+
+@setting{keepWithNext, no}
+
+If this setting is @samp{yes}, the element covered by this style is
+protected from being split across pages, and in addition it is kept
+together with the first line of text of the next sibling.
+
+@setting{orphanControl, 0}
+
+With this setting you can control how many lines of text of an
+element must be printed at least at the bottom of a braille page.
+The default value is @samp{0}. To have an effect, the setting must
+have a value of @samp{2} or more.
+
 @end table
 
 @anchor{contentsheader style}
@@ -989,7 +1020,10 @@ starting and ending markers.
 
 @subsection style contents1
 This style and the other contents styles are used for the table of
-contents and correspond to the four heading levels.
+contents and correspond to the ten heading levels (@samp{contents5},
+@samp{contents6}, @samp{contents7}, @samp{contents8},
+@samp{contents9} and @samp{contents10} are not showed here).
+
 @table @code
 @setting{firstLineIndent, -2}
 @setting{leftMargin, 2}
@@ -1019,13 +1053,9 @@ contents and correspond to the four heading levels.
 This style is used for main headings, such as chapter titles.
 
 @table @code
-
 @setting{linesBefore, 1}
-
 @setting{center, yes}
-
 @setting{linesAfter, 1}
-
 @end table
 
 @subsection style heading2
@@ -1033,11 +1063,8 @@ This style is used for main headings, such as chapter titles.
 The first level of subheadings after the main heading.
 
 @table @code
-
 @setting{linesBefore, 1}
-
 @setting{firstLineIndent, 4}
-
 @end table
 
 @subsection style heading3
@@ -1052,7 +1079,9 @@ The third level of headings.
 
 @subsection style heading4
 
-The fourth and final level of headings.
+The fourth level of headings. There are six more levels:
+@samp{heading5}, @samp{heading6}, @samp{heading7},
+@samp{heading8}, @samp{heading9} and @samp{heading10}.
 
 @table @code
 
@@ -1847,6 +1876,9 @@ paragraph. @code{elementSpecifier} should be empty, for example,
 This semantic action seems superfluous and may be eliminated in the
 future.
 
+@semanticAction{underlinex, elementSpecifier}
+
+Enclose the text which follows in braille underline indicators.
 
 @end table
 
