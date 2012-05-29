@@ -55,6 +55,7 @@ convert_utd ()
 {
   xmlNode *rootElement = xmlDocGetRootElement (ud->doc);
   int haveSemanticFile;
+  char *missingSem;
   if (rootElement == NULL)
     {
       lou_logPrint ("Document is empty");
@@ -66,17 +67,21 @@ convert_utd ()
   switch (ud->format_for)
     {
     case pef:
+      missingSem = "pef";
       ud->semantic_files = ud->pef_sem;
       break;
     case transinxml:
+      missingSem = "transinxml";
       ud->semantic_files = ud->transinxml_sem;
       break;
     case volumes:
     case volumesPef:
     case volumesBrf:
+      missingSem = "volumes";
       ud->semantic_files = ud->volume_sem;
       break;
     case brf:
+      missingSem = "brf";
       ud->semantic_files = ud->brf_sem;
       break;
     default:
@@ -84,7 +89,7 @@ convert_utd ()
     }
   if (ud->semantic_files == NULL)
     {
-      lou_logPrint ("Missing semantic file");
+      lou_logPrint ("Missing %s semantic file", missingSem);
       return 0;
     }
   haveSemanticFile = compile_semantic_table (rootElement);
