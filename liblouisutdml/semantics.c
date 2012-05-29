@@ -1429,8 +1429,9 @@ action_to_style (sem_act action)
 /* Beginning of macro processing */
 
 /* Hold macro state */
+static char macroName[40];
 static char *macro = NULL;
-static int macroLength;
+static int macroLength = 0;
 static int posInMacro;;
 static xmlNode *macroNode;
 static HashEntry *isMacroEntry;
@@ -1441,7 +1442,6 @@ static int paramLength = 0;
 static void
 macroError (char *format, ...)
 {
-  char key[40];
   char buffer[MAXNAMELEN];
   va_list arguments;
   va_start (arguments, format);
@@ -1451,8 +1451,7 @@ macroError (char *format, ...)
   vsnprintf (buffer, sizeof (buffer), format, arguments);
 #endif
   va_end (arguments);
-  strncpy (key, isMacroEntry->key, strlen (isMacroEntry->key) - 6);
-  lou_logPrint ("Macro %s: %s", key, buffer);
+  lou_logPrint ("Macro %s: %s", macroName, buffer);
 }
 
 char *
@@ -1481,16 +1480,22 @@ lookup_macro (xmlChar * name)
 xmlChar *
 new_macro (xmlChar * name, xmlChar * body)
 {
-  char *storedBody = alloc_string (body);
+  char *storedMacro;
   char key[MAXNAMELEN];
+  xmlChar *nameAndBody = (xmlChar *) ud->text_buffer;
+  strcpy (nameAndBody, name);
+  strcat (nameAndBody, ",");
+  strcat (nameAndBody, body); 
+  storedMacro = alloc_string (nameAndBody);
   if (!semanticTable)
     semanticTable = hashNew ();
   strcpy (key, name);
   strcat (key, MACROSUF);
   if (hashLookup (semanticTable, key) != notFound)
     return NULL;
-  hashInsert (semanticTable, key, macroEntry, 0, NULL, NULL, storedBody);
-  return storedBody;
+  hashInsert (semanticTable, key, macroEntry, 0, NULL, NULL, 
+  storedMacro);
+  return storedMacro;
 }
 
 static int
@@ -1509,6 +1514,8 @@ doSemanticActions ()
   if (macro[posInMacro] == '(')
     paramStart = &macro[++posInMacro];
   paramLength = find_group_length ("()", paramStart - 1);
+  posInMacro += paramLength;
+  paramLength -= 2;
   switch (semNum)
     {
     case no:
@@ -1518,8 +1525,15 @@ doSemanticActions ()
       break;
     case skip:
       retVal = -1;
+      break;
     case markhead:
       ud->head_node = macroNode;
+      break;
+    case pagebreak:
+      do_pagebreak (macroNode);
+      break;
+    case attrtotext:
+      do_attrtotext (macroNode);
       break;
     case configtweak:
       {
@@ -1606,17 +1620,17 @@ compileMacro ()
   xmlChar compiledMacro[4 * MAXNAMELEN];
   int unPos = 0;
   int pos = 0;
+  memset (compiledMacro, sizeof (compiledMacro), 0);
   while (unPos < macroLength)
     {
       if (isalpha (macro[unPos]))
 	{
-	  int namePos = unPos;
 	  char name[40];
 	  int k;
 	  StyleType *style;
-	  for (k = 0; isalnum (macro[namePos]) && namePos < macroLength;
-	       namePos++)
-	    name[k++] = macro[namePos];
+	  for (k = 0; isalnum (macro[unPos]) && unPos < macroLength;
+	       unPos++)
+	    name[k++] = macro[unPos];
 	  name[k] = 0;
 	  if ((style = lookup_style (name)) != NULL)
 	    {
@@ -1637,10 +1651,10 @@ compileMacro ()
 	    {
 	      if ((k = find_semantic_number (name)) != notFound)
 		{
-		  k = sprintf (name, "%s", k);
+		  k = sprintf (name, "%d", k);
 		  strcpy (&compiledMacro[pos], name);
 		  pos += k;
-		  if (macro[posInMacro] == '(')
+		  if (macro[unPos] == '(')
 		    {
 		      k = find_group_length ("()", &macro[unPos]);
 		      strncpy (&compiledMacro[pos], &macro[unPos], k);
@@ -1660,11 +1674,10 @@ compileMacro ()
 		  compiledMacro[0] = '!';
 		  break;
 		}
-	      unPos += namePos;
 	    }
+	}
 	  if (macro[unPos] == ',')
 	    compiledMacro[pos++] = macro[unPos++];
-	}
     }
   compiledMacro[pos] = 0;
   strcpy (macro, compiledMacro);
@@ -1693,12 +1706,14 @@ executeMacro ()
 	  case '@':
 	    end_style ();
 	    macroHasStyle = 0;
+	    posInMacro++;
 	    break;
 	  case '#':
 	    /* Pause for calling function to do something. */
 	    posInMacro++;
 	    return 1;
 	  default:
+	    posInMacro++;
 	    break;
 	  }
     }
@@ -1714,11 +1729,21 @@ int
 start_macro (xmlNode * node)
 {
   /* Set macro state */
+  int k;
   macroNode = node;
   isMacroEntry = (HashEntry *) node->_private;
   if (isMacroEntry == NULL || isMacroEntry->macro == NULL)
     return 0;
   macro = isMacroEntry->macro;
+  for (k = 0; macro[k] != ','; k++)
+  macroName[k] = macro[k];
+  macroName[k] = 0;
+  if (macroLength != 0)
+  {
+  macroError ("macros cannot be nested");
+  return 0;
+  }
+  macro = &macro[k + 1];
   macroLength = strlen (macro);
   posInMacro = 0;
   macroHasStyle = 0;
@@ -1737,9 +1762,13 @@ start_macro (xmlNode * node)
 int
 end_macro ()
 {
-  if (macro == NULL)
+  if (macro == NULL || macro[0] == '!')
+    {
+    macroLength = 0;
     return 0;
+    }
   executeMacro ();
+  macroLength = 0;
   return 1;
 }
 
