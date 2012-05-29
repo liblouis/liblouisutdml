@@ -326,7 +326,7 @@ no mstyle,class,label
 no mstyle,id
 no mstyle,id,x1-2001r1
 no mstyle,id,x1-2002r2
-no script
+skip script
 no script,type
 no script,type,text/javascript
 no span,class,titlemark
