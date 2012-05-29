@@ -1028,7 +1028,7 @@ compileConfig (FileInfo * nested)
 	      "2",
 	      "firstLineIndent",
 	      "3",
-	      "translattionTable",
+	      "translationTable",
 	      "6",
 	      "skipNumberLines",
 	      "7",
