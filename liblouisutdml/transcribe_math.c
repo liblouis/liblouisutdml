@@ -33,7 +33,7 @@
 #include <string.h>
 #include "louisutdml.h"
 
-static void mathTrans (void);
+static int mathTrans ();
 static void mathText (xmlNode * node, int action);
 static xmlNode *mathRoot;
 
@@ -99,20 +99,58 @@ transcribe_math (xmlNode * node, int action)
   return 1;
 }
 
-static void
-mathTrans (void)
+static int
+mathTrans ()
 {
+  int translationLength;
+  int translatedLength;
+  int k;
+  translatedLength = MAX_TRANS_LENGTH - ud->translated_length;
+  translationLength = ud->text_length;
   if (ud->format_for == utd)
     {
+      int *setIndices;
       xmlNode *curBrlNode;
       xmlNode *newNode = xmlNewNode (NULL, (xmlChar *) "brl");
-      xmlSetProp (newNode, (xmlChar *) "modifiers", (xmlChar *) 
-      "noindex notext");
-      curBrlNode = xmlAddSibling (mathRoot, newNode);
+      xmlSetProp (newNode, (xmlChar *) "modifiers", (xmlChar *) "notext");
+      curBrlNode = xmlAddNextSibling (mathRoot, newNode);
       link_brl_node (curBrlNode);
       ud->text_buffer[ud->text_length++] = ENDSEGMENT;
+      translationLength++;
+      if (!(ud->mode & notSync))
+	setIndices = &ud->positions_array[ud->translated_length];
+      else
+	setIndices = NULL;
+      k = lou_translate (ud->mathexpr_table_name,
+			 ud->text_buffer,
+			 &translationLength,
+			 &ud->
+			 translated_buffer[ud->translated_length],
+			 &translatedLength,
+			 (char *) ud->typeform, NULL, NULL,
+			 setIndices, NULL, dotsIO);
+      memset (ud->typeform, 0, sizeof (ud->typeform));
+      ud->text_length = 0;
+      if (!k)
+	{
+	  lou_logPrint ("Could not open table %s", ud->mathexpr_table_name);
+	  ud->mathexpr_table_name = NULL;
+	  return 0;
+	}
+      if ((ud->translated_length + translatedLength) < MAX_TRANS_LENGTH)
+	{
+	  if (!(ud->mode & notSync))
+	    for (k = 0; k < 		 translatedLength; k++)
+	      ud->positions_array[ud->translated_length + k] =
+		ud->translated_length + k;
+	  ud->translated_length += translatedLength;
+	}
+      else
+	ud->translated_length = MAX_TRANS_LENGTH;
     }
-  insert_translation (ud->mathexpr_table_name);
+  else
+    insert_translation (ud->mathexpr_table_name);
+  return 1;
 }
 
 static void
