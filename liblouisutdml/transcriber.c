@@ -3405,7 +3405,7 @@ utd_start ()
   ud->louis_mode = dotsIO;
   indices = NULL;
   if (!(ud->mode & notSync))
-    indices = ud->positionsArray;
+    indices = ud->positions_array;
   backIndices = NULL;
   backBuf = NULL;
   backLength = 0;
@@ -3667,7 +3667,7 @@ backTranslateBlock (xmlNode * curBlock, xmlNode * curBrl)
       backBuf = ud->outbuf1;
       backIndices = NULL;
       if (!(ud->mode & notSync))
-	backIndices = ud->positionsArray;
+	backIndices = ud->positions_array;
     }
   translationLength = ud->text_length;
   translatedLength = 4 * backLength;
@@ -4269,11 +4269,6 @@ assignIndices ()
   while (curPos < translatedLength && curBrlNode != NULL &&
 	 nextSegment < translatedLength)
     {
-      if (hasAttrValue (curBrlNode, "modifiers", "noindex"))
-	{
-	  curBrlNode = curBrlNode->_private;
-	  continue;
-	}
       if (translatedBuffer[curPos] == ENDSEGMENT || nextSegment == 0)
 	{
 	  int indexPos = nextSegment;
@@ -4362,8 +4357,8 @@ utd_insert_translation (const char *table)
   ud->text_length = 0;
   if (!k)
     {
-      table = NULL;
       lou_logPrint ("Could not open table %s", table);
+      table = NULL;
       return 0;
     }
   if ((ud->translated_length + translatedLength) < MAX_TRANS_LENGTH)

@@ -1610,7 +1610,8 @@ doSemanticActions ()
       do_pagenum ();
       break;
     default:
-      macroError ("semantic action %d is not supported in a macro", semNum);
+      macroError ("semantic action %s is not supported in a macro", 
+      semNames[semNum]);
       retVal = 0;
     }
   return retVal;
