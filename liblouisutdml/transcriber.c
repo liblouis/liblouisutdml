@@ -307,6 +307,7 @@ transcribe_text_file ()
   if (!start_document ())
     return 0;
   start_style (docStyle, NULL);
+  
   ud->outbuf = outbufx;
   ud->outbuf1_len = outlenx;
   ud->input_encoding = ud->input_text_encoding;
@@ -2518,7 +2519,8 @@ doCenterRight ()
 static int
 editTrans ()
 {
-  if (!(ud->contents == 2) && !(ud->style_format == computerCoded) &&
+  if (ud->needs_editing && !(ud->contents == 2) && !(ud->style_format 
+  == computerCoded) &&
       *ud->edit_table_name && (ud->has_math || ud->has_chem || ud->has_music))
     {
       translationLength = ud->translated_length;
@@ -2729,6 +2731,7 @@ write_paragraph (sem_act action, xmlNode * node)
   insert_translation (ud->main_braille_table);
   styleBody ();
   end_style ();
+  ud->needs_editing = 0;
   return 1;
 }
 
@@ -3272,6 +3275,7 @@ do_linespacing (xmlNode * node)
 int
 start_style (StyleType * curStyle, xmlNode * node)
 {
+  ud->needs_editing = 0;
   if (curStyle == NULL)
     curStyle = lookup_style ("para");
   if (prevStyle == NULL)
@@ -3352,6 +3356,7 @@ end_style ()
   ud->style_left_margin = styleSpec->curLeftMargin;
   ud->style_right_margin = styleSpec->curRightMargin;
   ud->style_first_line_indent = styleSpec->curFirstLineIndent;
+  ud->needs_editing = 0;
   return 1;
 }
 
@@ -4982,7 +4987,7 @@ utd_startStyle ()
 static int
 utd_editTrans ()
 {
-  if (!(ud->contents == 2)
+  if (ud->needs_editing && !(ud->contents == 2)
       && !(style->format == computerCoded)
       && ud->edit_table_name && (ud->has_math || ud->has_chem
 				 || ud->has_music))
