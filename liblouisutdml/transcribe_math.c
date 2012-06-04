@@ -105,6 +105,7 @@ mathTrans ()
   int translationLength;
   int translatedLength;
   int k;
+  ud->needs_editing = 1;
   translatedLength = MAX_TRANS_LENGTH - ud->translated_length;
   translationLength = ud->text_length;
   if (ud->format_for == utd)

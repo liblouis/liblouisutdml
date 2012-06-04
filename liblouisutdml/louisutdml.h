@@ -164,6 +164,7 @@ typedef struct
   int old_text_length;
   int translated_length;
   int string_buf_len;
+  int needs_editing;
   int has_math;
   int has_comp_code;
   int has_chem;
