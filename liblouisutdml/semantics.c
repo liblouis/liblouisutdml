@@ -178,7 +178,7 @@ clean_semantic_table ()
 	next = e->next;
 	if (!(e->type == 0 || e->type == xpathEntry))
 	  hashInsert (newSemanticTable, e->key, e->type, e->semNum, NULL,
-		      e->style, NULL);
+		      e->style, e->macro);
 	free (e->key);
 	if (e->inserts != NULL)
 	  free (e->inserts);
