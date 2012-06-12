@@ -63,35 +63,7 @@ convert_utd ()
     }
   clean_semantic_table ();
   ud->format_for = ud->orig_format_for;
-  ud->semantic_files = NULL;
-  switch (ud->format_for)
-    {
-    case pef:
-      missingSem = "pef";
-      ud->semantic_files = ud->pef_sem;
-      break;
-    case transinxml:
-      missingSem = "transinxml";
-      ud->semantic_files = ud->transinxml_sem;
-      break;
-    case volumes:
-    case volumesPef:
-    case volumesBrf:
-      missingSem = "volumes";
-      ud->semantic_files = ud->volume_sem;
-      break;
-    case brf:
-      missingSem = "brf";
-      ud->semantic_files = ud->brf_sem;
-      break;
-    default:
-      break;
-    }
-  if (ud->semantic_files == NULL)
-    {
-      lou_logPrint ("Missing %s semantic file", missingSem);
-      return 0;
-    }
+  ud->semantic_files = ud->converter_sem;
   haveSemanticFile = compile_semantic_table (rootElement);
   nullPrivate (rootElement);
   do_xpath_expr ();
@@ -101,6 +73,9 @@ convert_utd ()
     return 0;
   switch (ud->format_for)
     {
+    case bible:
+      utd2bible (rootElement);
+      break;
     case brf:
       utd2brf (rootElement);
       break;
