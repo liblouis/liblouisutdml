@@ -4239,14 +4239,16 @@ utd_centerHeadFoot (widechar * toCenter, int length)
 int
 hasAttrValue (xmlNode * node, char *attrName, char *value)
 {
-  xmlChar *values;
+  char values[MAXNAMELEN];
+  xmlChar *allValues;
   int k;
   int prevValue = 0;
   if (node == NULL)
     return 0;
-  values = xmlGetProp (node, (xmlChar *) attrName);
-  if (values == NULL)
+  allValues = xmlGetProp (node, (xmlChar *) attrName);
+  if (allValues == NULL)
     return 0;
+  strcpy (values, allValues);
   for (k = 0; values[k]; k++)
     if (values[k] == ' ')
       {
@@ -4274,6 +4276,13 @@ assignIndices ()
   while (curPos < translatedLength && curBrlNode != NULL &&
 	 nextSegment < translatedLength)
     {
+      if (hasAttrValue (curBrlNode, "modifiers", "notext"))
+      {
+      for (; translatedBuffer[curPos] != ENDSEGMENT && curPos < 
+      translatedLength; curPos++);
+      curBrlNode = curBrlNode->_private;
+      continue;
+      }
       if (translatedBuffer[curPos] == ENDSEGMENT || nextSegment == 0)
 	{
 	  int indexPos = nextSegment;
