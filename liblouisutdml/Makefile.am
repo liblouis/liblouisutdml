@@ -43,6 +43,7 @@ liblouisutdml_la_SOURCES =			\
 	transcribe_paragraph.c \
 	convert_utd.c \
 	utd2transinxml.c \
+	utd2bible.c \
 	utd2brf.c \
 	utd2pef.c \
 	utd2volumes.c \

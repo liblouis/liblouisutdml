@@ -649,7 +649,7 @@ compileConfig (FileInfo * nested)
     "leftMargin",
     "36",
 // available    "37",
-    "volumeSem",
+    "converterSem",
     "38",
     "braillePageNumber",
     "39",
@@ -687,12 +687,9 @@ compileConfig (FileInfo * nested)
     "55",
     "mode",
     "56",
-    "pefSem",
-    "57",
-    "transinxmlSem",
-    "58",
-    "brfSem",
-    "59",
+// available    "57",
+// available     "58",
+// available    "59",
     "macro",
     "60",
     "style",
@@ -720,7 +717,9 @@ compileConfig (FileInfo * nested)
     "transInXml", "4",
     "volumes", "5",
     "brf", "6",
-    "volumesPef", "7" "volumesBrf", "8",
+    "volumesPef", "7", 
+    "volumesBrf", "8",
+    "bible", "9",
     NULL
   };
 
@@ -934,7 +933,7 @@ compileConfig (FileInfo * nested)
 	  break;
 // available    case 37:
 	case 38:
-	  ud->volume_sem = alloc_string (nested->value);
+	  ud->converter_sem = alloc_string (nested->value);
 	  break;
 	case 39:
 	  ud->braille_page_number = atoi (nested->value);
@@ -1005,15 +1004,9 @@ compileConfig (FileInfo * nested)
 	  if ((k = orValues (nested, configModes)) != NOTFOUND)
 	    ud->config_mode = k;
 	  break;
-	case 57:
-	  ud->pef_sem = alloc_string (nested->value);
-	  break;
-	case 58:
-	  ud->transinxml_sem = alloc_string (nested->value);
-	  break;
-	case 59:
-	  ud->brf_sem = alloc_string (nested->value);
-	  break;
+// available	case 57:
+// available	case 58:
+// available	case 59:
 	case 60:
 	  new_macro (nested->value, nested->value2);
 	  break;

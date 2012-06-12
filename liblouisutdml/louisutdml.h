@@ -129,7 +129,8 @@ typedef enum
   volumes,
   brf,
   volumesPef,
-  volumesBrf
+  volumesBrf,
+  bible
 } FormatFor;
 
 typedef enum
@@ -277,10 +278,7 @@ typedef struct
   const char *mathexpr_table_name;
   const char *edit_table_name;
   const char *semantic_files;
-  const char *volume_sem;
-  const char *pef_sem;
-  const char *brf_sem;
-  const char *transinxml_sem;
+  const char *converter_sem;
   widechar print_page_number[MAXNUMLEN];
   widechar braille_page_string[MAXNUMLEN];
   char lineEnd[8];
@@ -382,6 +380,7 @@ int wc_string_to_utf8 (const widechar * instr, int *inSize, unsigned
 		       char *outstr, int *outSize);
 void output_xml (xmlDoc *doc);
 int convert_utd ();
+int utd2bible (xmlNode * node);
 int utd2brf (xmlNode * node);
 int utd2pef (xmlNode * node);
 int utd2transinxml (xmlNode * node);
