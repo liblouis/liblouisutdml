@@ -3746,8 +3746,11 @@ makeDotsTextNode (xmlNode * node, const widechar * content, int length,
 			ud->text_buffer, length, dotsIO);
       else
 	memcpy (ud->text_buffer, content, length * CHARSIZE);
+      if (!(ud->mode & louisDots))
       for (inlen = 0; inlen < length; inlen++)
 	ud->text_buffer[inlen] = (ud->text_buffer[inlen] & 0x00ff) | 0x2800;
+      else
+        inlen = length;
     }
   outlen = maxContent;
   wc_string_to_utf8 (ud->text_buffer, &inlen, brlContent, &outlen);

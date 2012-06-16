@@ -749,6 +749,7 @@ compileConfig (FileInfo * nested)
     "notSync", "1<<27",
     "utdInput", "1<<26",
     "convertOnly", "1<<25",
+    "louisDots", "1<<24",
     NULL
   };
 
@@ -1325,7 +1326,7 @@ read_configuration_file (const char *configFileList, const char
     strcat (ud->xml_header, "]>\n");
   ud->mode = mode | ud->config_mode;
   ud->orig_format_for = ud->format_for;
-  if (ud->format_for > utd)
+  if (ud->format_for > utd || (ud->mode & louisDots))
     {
       ud->mode &= ~notUC;
       ud->format_for = utd;
