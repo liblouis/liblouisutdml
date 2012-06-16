@@ -75,6 +75,9 @@ typedef enum
   contracted,
   /* General text */
   pagenum,
+  /* Use next 2 for anything. */
+  genpurp1,
+  genpurp2,
   pagebreak,
   attrtotext,
   runninghead,
