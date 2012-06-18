@@ -44,6 +44,56 @@ static int doUtdnewline (xmlNode * node);
 static int doUtdgraphic (xmlNode * node);
 static int firstPage;
 static int firstLineOnPage;
+static widechar firstVerse[MAXNUMLEN];
+static int firstVerseLength;
+static widechar lastVerse[MAXNUMLEN];
+static int lastVerseLength;
+
+static int
+doVerseNumber (widechar * line, int length)
+{
+  widechar number[MAXNUMLEN];
+  int numberLength = 0;
+  widechar translatedNumber[MAXNUMLEN];
+  int translationLength;
+  int translatedLength;
+  int k;
+  for (k = 0; k < length; k++)
+    if (line[k] >= 16 && line[k] <= 25)
+      break;
+  if (k == length)
+    return length;
+  number[numberLength++] = line[k] + 32;
+  if (line[k + 1] >= 16 && line[k = 1] <= 25)
+    number[numberLength++] = line[k + 1] + 32;
+  if (line[k + 2] >= 16 && line[k + 2] <= 25)
+    number[numberLength++] = line[k + 2] + 32;
+  line[k] = 39;
+  if (numberLength > 1)
+    {
+      int kk;
+      k++;
+      for (kk = 0; kk < length; kk++)
+	line[k + kk] = line[k + kk + numberLength - 1];
+    }
+  translationLength = numberLength;
+  translatedLength = MAXNUMLEN;
+  lou_translate ("bibleTableConv", number, &translationLength,
+		 translatedNumber, &translatedLength, NULL, NULL, NULL, NULL,
+		 NULL, 0);
+  memcpy (line, translatedNumber, translatedLength * CHARSIZE);
+  if (firstVerseLength == 0)
+    {
+      firstVerseLength = numberLength;
+      memcpy (firstVerse, number, numberLength * CHARSIZE);
+    }
+  else
+    {
+      lastVerseLength = numberLength;
+      memcpy (lastVerse, number, numberLength * CHARSIZE);
+    }
+  return length - numberLength - 1;
+}
 
 int
 utd2bible (xmlNode * node)
@@ -66,6 +116,12 @@ beginDocument ()
 
 static int
 finishDocument ()
+{
+  return 1;
+}
+
+static int
+doUtdgraphic (xmlNode *node)
 {
   return 1;
 }
