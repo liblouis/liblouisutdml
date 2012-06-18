@@ -1,7 +1,7 @@
 Here are the instructions for making liblouisutdml.dll and liblouis.dll, 
 which liblouisutdml uses for actual translation.
 
-First, make sure you have Microsoft VisualC++, Microsoft SDKs or 
+First, make sure you have Microsoft Visual C++, Microsoft SDKs or 
 Microsoft Visual Studio, which should contain the C compiler and the 
 nmake program maintenance tool. The environment variables must be set 
 correctly. If you have Windows Vista or 7 and Microsoft SDKs you can 
@@ -11,7 +11,7 @@ procedure for starting the command-line C tool environment may vary with
 the Microsoft package you are using.
 
 You must also have a Java Development Kit (JDK) for Java 1.6 or later. 
-the JRE does not containt the necessary files.
+the JRE does not contain the necessary files.
 
 You will get either 32-bit or 64-bit liblouisutdml.dll and 
 liblouisutdml.lib according to which version of the compiler you are 
@@ -40,11 +40,11 @@ You will be editing this later. Also in the windows subdirectory is
 another subdirectory called include It contains files that 
 replace some in the source directory of libxml2.
 
-Next download the latest tarball of libxml2 and 
-unpack it. You will need to copy the file xmlversion.h from the 
-liblouisutdml windows/include directory into the include/libxml 
-directory of the libxml2 directory. Note that it replaces the file of 
-the same name that is already there.
+Next download the tarball of libxml2 for version 2.7.2 from the 
+BrailleBlaster website, as described above and unpack it. You will need 
+to copy the file xmlversion.h from the liblouisutdml windows/include 
+directory into the include/libxml directory of the libxml2 directory. 
+Note that it replaces the file of the same name that is already there.
 
 Going back to the directory obtained by unpacking the liblouisutdml
 tarball, go to its windows subdirectory. Edit the file configure.mk
