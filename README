@@ -1,8 +1,3 @@
-WARNIKNG: The repository is Mercurial. If you are usikng a copy of the 
-repository do NOT run autogen.sh in this directory. It meses up  the .hg 
-direcgtory. Use the hg archive subcommand to make a cpy and run 
-autogen.sh there.
-
 INTRODUCTION
 
 Liblouisutdml is an open-source library providing complete braille 
@@ -10,7 +5,7 @@ transcription services for xml, html and text documents. It translates
 into appropriate braille codes and formats according to its style sheet 
 and the specifications in the document. A command-line program, file2brl 
 which uses this library is also included. The latest version of liblouis 
-is required. Java bindings are built in to the libraryl
+is required. Java bindings are built in to the library.
 
 The library is licensed under the GNU Lesser General Public License 
 (LGPL) 
@@ -23,12 +18,12 @@ DOCUMENTATION
 
 For documentation, see liblouisutdml.html or liblouisutdml.txt. These are
 in the docs directory. For an example of a configuration file, see
-example_default.cfg and example_canonical.cfg . For examples of
-semantics-action files, see example_dtbook3.sem and example_math.sem ,
-also in the docs directory. For examples of translation tables, see
+liblouisutdml.ini and preferences.cfg . For examples of
+semantics-action files, see dtbook.sem and nemeth.sem . These files are 
+in the lbu_files subdirectory.
+For examples of translation tables, see
 en-us-g2.ctb en-us-g1.ctb chardefs.cti nemeth.ctb and whatever other
 files they may include. These are all in the tables directory of the
-liblouis distribution.
 
 INSTALLATION
 
@@ -37,13 +32,9 @@ compiling, you should chose between 16- and 32-bit Unicode, as described
 in the README file and the documentation. liblouisutdml inherits this
 choice from liblouis.
 
-After unpacking the distribution tarball for liblouisutdml go to the
-directory it creates. You may need to edit the file paths.c . This
-controls where liblouisutdml and liblouis will look for configuration
-files, semantic-action files, and translation tables. Usually running
-"configure" takes care of this.  After running "configure" run "make"
-and "make install". You will need root privileges for the installation
-step.
+After unpacking the distribution tarball for liblouisutdml go to the 
+directory it creates. After running "configure" run "make" and "make 
+install". You will need root privileges for the installation step.
 
 This will produce the liblouisutdml library and the programs xml2brl and
 the script msword2brl, rtf2brl and pdf2brl.
