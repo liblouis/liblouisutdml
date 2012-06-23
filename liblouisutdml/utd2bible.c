@@ -44,6 +44,7 @@ static int doUtdnewline (xmlNode * node);
 static int doUtdgraphic (xmlNode * node);
 static int firstPage;
 static int firstLineOnPage;
+static int startOfLastLine;
 static widechar firstVerse[MAXNUMLEN];
 static int firstVerseLength;
 static widechar lastVerse[MAXNUMLEN];
@@ -54,10 +55,8 @@ doVerseNumber (widechar * line, int length)
 {
   widechar number[MAXNUMLEN];
   int numberLength = 0;
-  widechar translatedNumber[MAXNUMLEN];
-  int translationLength;
-  int translatedLength;
   int k;
+  int kk;
   for (k = 0; k < length; k++)
     if (line[k] >= 16 && line[k] <= 25)
       break;
@@ -71,17 +70,16 @@ doVerseNumber (widechar * line, int length)
   line[k] = 39;
   if (numberLength > 1)
     {
-      int kk;
       k++;
       for (kk = 0; kk < length; kk++)
 	line[k + kk] = line[k + kk + numberLength - 1];
+      length -= numberLength - 1;
     }
-  translationLength = numberLength;
-  translatedLength = MAXNUMLEN;
-  lou_translate ("bibleTableConv", number, &translationLength,
-		 translatedNumber, &translatedLength, NULL, NULL, NULL, NULL,
-		 NULL, 0);
-  memcpy (line, translatedNumber, translatedLength * CHARSIZE);
+  if (numberLength == 1)
+  kk = 1;
+  else kk = 0;
+  for (k = 0; k < numberLength; k++)
+  line[kk++] = number[k] + 48;
   if (firstVerseLength == 0)
     {
       firstVerseLength = numberLength;
@@ -92,7 +90,7 @@ doVerseNumber (widechar * line, int length)
       lastVerseLength = numberLength;
       memcpy (lastVerse, number, numberLength * CHARSIZE);
     }
-  return length - numberLength - 1;
+  return length;
 }
 
 int
@@ -117,6 +115,9 @@ beginDocument ()
 static int
 finishDocument ()
 {
+    return 1;
+  write_buffer (1, 0);
+  ud->outbuf1_len_so_far = 0;
   return 1;
 }
 
@@ -169,6 +170,8 @@ static int
 insertCharacters (const char *text, int length)
 {
   int k;
+  if ((ud->outbuf1_len_so_far + length) >= ud->outbuf1_len)
+    return 0;
   for (k = 0; k < length; k++)
     ud->outbuf1[ud->outbuf1_len_so_far++] = text[k];
   return 1;
@@ -253,6 +256,9 @@ doUtdnewpage (xmlNode * node)
       firstPage = 0;
       return 1;
     }
+    return 1;
+  write_buffer (1, 0);
+  ud->outbuf1_len_so_far = 0;
   insertCharacters (ud->lineEnd, strlen (ud->lineEnd));
   insertCharacters (ud->pageEnd, strlen (ud->pageEnd));
   return 1;
@@ -266,11 +272,19 @@ doUtdnewline (xmlNode * node)
   int leadingBlanks;
   int linepos;
   if (!firstLineOnPage)
+  {
+    ud->outbuf1_len_so_far = startOfLastLine + 
+    doVerseNumber 
+    (&ud->outbuf1[startOfLastLine], ud->outbuf1_len_so_far 
+   - 
+    startOfLastLine);
     insertCharacters (ud->lineEnd, strlen (ud->lineEnd));
+    }
   xy = (char *) xmlGetProp (node, (xmlChar *) "xy");
   for (k = 0; xy[k] != ','; k++);
   leadingBlanks = (atoi (xy) - ud->left_margin) / ud->cell_width;
   linepos = (atoi (&xy[k + 1]) - ud->page_top) / ud->normal_line;
+  startOfLastLine = ud->outbuf1_len_so_far;
   insertCharacters (blanks, leadingBlanks);
   if (firstLineOnPage)
     firstLineOnPage = 0;
@@ -283,9 +297,7 @@ bibleDoBrlNode (xmlNode * node, int action)
   xmlNode *child;
   if (node == NULL)
     return 0;
-  if (action == 0)
-    ud->outbuf1_len_so_far = 0;
-  else
+  if (action != 0)
     push_sem_stack (node);
   switch (ud->stack[ud->top])
     {
@@ -348,8 +360,5 @@ bibleDoBrlNode (xmlNode * node, int action)
 static int
 finishBrlNode ()
 {
-  if (ud->outbuf1_len_so_far == 0)
-    return 1;
-  write_buffer (1, 0);
   return 1;
 }

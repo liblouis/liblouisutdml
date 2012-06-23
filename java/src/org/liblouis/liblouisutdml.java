@@ -69,45 +69,32 @@ public static final int notUC = 1<<28;
 private static liblouisutdml singleInstance = new liblouisutdml();
 private static boolean libraryLoaded = false;
 
-private liblouisutdml () {
-}
-
-public static liblouisutdml getInstance()
-{
-return singleInstance;
-}
-
-public static native void initialize (String dataPath, String 
-writeablePath);
-
-public static void loadLibrary ()
-throws Exception {
-if (!libraryLoaded)
-{
-System.loadLibrary ("liblouisutdml");
-libraryLoaded = true;
-}
-else
-{
-throw new Exception ("Attempt to reload library.");
-}
-}
-
-public static void load (String filename)
-throws Exception {
-if (!libraryLoaded)
-{
-System.load (filename);
-libraryLoaded = true;
-}
-else
-{
-throw new Exception ("Attempt to reload library.");
-}
-}
-
-/** Return a string giving the versions of both liblouisutdml and 
-* liblouis */
+  private liblouisutdml () {
+  }
+  
+  public static liblouisutdml getInstance()
+  {
+    return singleInstance;
+  }
+  
+  public static native void initialize (String dataPath, String 
+  writeablePath, String logFile);
+  
+  public static void loadLibrary (String libraryPath, String 
+  librarySuffix) throws Exception {
+       if(libraryLoaded)
+      return;
+    if (libraryPath == null || librarySuffix == null)
+      throw new Exception(
+      "Could not load libraries. libraryPath or librarySuffix undefined.");
+              System.load (libraryPath + "/liblouis." + librarySuffix);
+    System.load (libraryPath + "/liblouisutdml." + librarySuffix);
+    libraryLoaded = true;
+  }
+  
+  
+  /** Return a string giving the versions of both liblouisutdml and 
+   * liblouis */
   public native String version ();
 
 /** Make a braille translation of the UTF-8 characters in inbuf 
@@ -120,43 +107,42 @@ will be empty. settingsstring may be used to pass in configuration
 settings. */
 
   public native boolean translateString (String configFileList,
-     byte[]inbuf,
-     byte[]outbuf, int[]outlen,
-					     String logFilename,
-					     String settingsString, int mode);
-
-/** the brf characters in inbuf are translated to print characters in 
-outbuf according to the settings in the configuration files and 
-setingsStrring. The translation will be in UTF-8.
-*/
-
+                                         byte[]inbuf,
+                                         byte[]outbuf, int[]outlen,
+                                         String logFilename,
+                                         String settingsSrting, int mode);
+  
+  /** the brf characters in inbuf are translated to print characters in 
+      outbuf according to the settings in the configuration files and 
+      setingsStrring. The translation will be in UTF-8.
+  */
+  
   public native boolean backTranslateString (String configFileList,
- byte[]inbuf,
- byte[]outbuf, 
-int[]outlen,
-						 String logFilename,
-						 String settingsString,
-						 int mode);
-
-/** The xml document in inputFile is translated into braille and the 
-translation is placed 
-in outputFile. The return value and log file are as described above.
-*/
-
-  public native boolean translateFile (String configFileList, String
-					   inputFileName,
-					   String outputFileName,
-					   String logFileName,
-					   String settingsString, int mode);
-
-/** The plain-text file in inFile is translated to braille and the 
-translation placed in outputFile as described for the previous method. 
-If the text contains blank lines they are treated as paragraph breaks.
-*/
+                                             byte[]inbuf,
+                                             byte[]outbuf, 
+                                             int[]outlen,
+                                             String logFilename,
+                                             String settingsSrting,
+                                             int mode);
+  
+  /** The xml document in inputFile is translated into braille and the 
+      translation is placed 
+      in outputFile. The return value and log file are as described above.
+  */
+  
+  public native boolean translateFile (String configFileList, 
+                                       String inputFileName,
+                                       String outputFileName,
+                                       String logFileName,
+                                       String settingsString, int mode);
+  
+  /** The plain-text file in inFile is translated to braille and the 
+      translation placed in outputFile as described for the previous method. 
+      If the text contains blank lines they are treated as paragraph breaks.
+  */
 
   public native boolean translateTextFile (String configFileList,
-					       String
-					       inputFileName,
+					       String inputFileName,
 					       String outputFileName,
 					       String logFileName,
 					       String settingsString,
@@ -167,8 +153,7 @@ according to configuration specifications.
 */
 
   public native boolean backTranslateFile (String configFileList,
-					       String
-					       inputFileName,
+					       String inputFileName,
 					       String outputFileName,
 					       String logFileName,
 					       String settingsString,
