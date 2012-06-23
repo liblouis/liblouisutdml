@@ -34,28 +34,41 @@
 /*
  * Class:     org_liblouis_liblouisutdml
  * Method:    initialize
- * Signature: (Ljava/lang/String;Ljava/lang/String;)V
+ * Signature: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
  */
 JNIEXPORT void JNICALL Java_org_liblouis_liblouisutdml_initialize
   (JNIEnv *env, jclass class, jstring dataPath, jstring
-writeablePath)
+writeablePath, jstring logfile)
 {
   const jbyte *dataPathX = NULL;
   const jbyte *writeablePathX = NULL;
+  const jbyte *logfileX = NULL;
+  char logfilePath[MAXNAMELEN];
+  char pathEnd[2];
   dataPathX = (*env)->GetStringUTFChars (env, dataPath, NULL);
   if (dataPathX == NULL)
     goto release;
   writeablePathX = (*env)->GetStringUTFChars (env, writeablePath, NULL);
   if (writeablePathX == NULL)
     goto release;
+  logfileX = (*env)->GetStringUTFChars (env, logfile, NULL);
+  if (logfileX == NULL)
+    goto release;
   lou_setDataPath (dataPathX);
   lbu_setWriteablePath (writeablePathX);
-  read_configuration_file (NULL, NULL, NULL, 0);
+  strcpy (logfilePath, writeablePathX);
+  pathEnd[0] = ud->file_separator;
+  pathEnd[1] = 0;
+  strcat (logfilePath, pathEnd);
+  strcat (logfilePath, logfileX);
+  read_configuration_file (NULL, logfilePath, NULL, 0);
 release:
   if (dataPathX != NULL)
     (*env)->ReleaseStringUTFChars (env, dataPath, dataPathX);
   if (writeablePathX != NULL)
     (*env)->ReleaseStringUTFChars (env, writeablePath, writeablePathX);
+  if (logfileX != NULL)
+    (*env)->ReleaseStringUTFChars (env, logfile, logfileX);
 }
 
 /*

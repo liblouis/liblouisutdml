@@ -7,33 +7,35 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-#undef org_liblouis_liblouisutdml_noContractions
-#define org_liblouis_liblouisutdml_noContractions 1L
-#undef org_liblouis_liblouisutdml_compbrlAtCursor
-#define org_liblouis_liblouisutdml_compbrlAtCursor 2L
-#undef org_liblouis_liblouisutdml_dotsIO
-#define org_liblouis_liblouisutdml_dotsIO 4L
-#undef org_liblouis_liblouisutdml_comp8Dots
-#define org_liblouis_liblouisutdml_comp8Dots 8L
-#undef org_liblouis_liblouisutdml_pass1Only
-#define org_liblouis_liblouisutdml_pass1Only 16L
-#undef org_liblouis_liblouisutdml_compbrlLeftCursor
-#define org_liblouis_liblouisutdml_compbrlLeftCursor 32L
-#undef org_liblouis_liblouisutdml_otherTrans
-#define org_liblouis_liblouisutdml_otherTrans 64L
-#undef org_liblouis_liblouisutdml_ucBrl
-#define org_liblouis_liblouisutdml_ucBrl 128L
-#undef org_liblouis_liblouisutdml_dontInit
-#define org_liblouis_liblouisutdml_dontInit 1073741824L
-#undef org_liblouis_liblouisutdml_htmlDoc
-#define org_liblouis_liblouisutdml_htmlDoc 536870912L
+#undef org_liblouis_liblouisutdml_NoContractions
+#define org_liblouis_liblouisutdml_NoContractions 1L
+#undef org_liblouis_liblouisutdml_CompbrlAtCursor
+#define org_liblouis_liblouisutdml_CompbrlAtCursor 2L
+#undef org_liblouis_liblouisutdml_DotsIO
+#define org_liblouis_liblouisutdml_DotsIO 4L
+#undef org_liblouis_liblouisutdml_Comp8Dots
+#define org_liblouis_liblouisutdml_Comp8Dots 8L
+#undef org_liblouis_liblouisutdml_Pass1Only
+#define org_liblouis_liblouisutdml_Pass1Only 16L
+#undef org_liblouis_liblouisutdml_CompbrlLeftCursor
+#define org_liblouis_liblouisutdml_CompbrlLeftCursor 32L
+#undef org_liblouis_liblouisutdml_OtherTrans
+#define org_liblouis_liblouisutdml_OtherTrans 64L
+#undef org_liblouis_liblouisutdml_UcBrl
+#define org_liblouis_liblouisutdml_UcBrl 128L
+#undef org_liblouis_liblouisutdml_DontInit
+#define org_liblouis_liblouisutdml_DontInit 1073741824L
+#undef org_liblouis_liblouisutdml_HtmlDoc
+#define org_liblouis_liblouisutdml_HtmlDoc 536870912L
+#undef org_liblouis_liblouisutdml_notUC
+#define org_liblouis_liblouisutdml_notUC 268435456L
 /*
  * Class:     org_liblouis_liblouisutdml
  * Method:    initialize
- * Signature: (Ljava/lang/String;Ljava/lang/String;)V
+ * Signature: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
  */
 JNIEXPORT void JNICALL Java_org_liblouis_liblouisutdml_initialize
-  (JNIEnv *, jclass, jstring, jstring);
+  (JNIEnv *, jclass, jstring, jstring, jstring);
 
 /*
  * Class:     org_liblouis_liblouisutdml
@@ -121,7 +123,7 @@ JNIEXPORT jboolean JNICALL Java_org_liblouis_liblouisutdml_compileString
  * Signature: (Ljava/lang/String;)V
  */
 JNIEXPORT void JNICALL Java_org_liblouis_liblouisutdml_setDataPath
-  (JNIEnv *, jclass, jstring);
+  (JNIEnv *, jobject, jstring);
 
 /*
  * Class:     org_liblouis_liblouisutdml
@@ -145,7 +147,7 @@ JNIEXPORT jboolean JNICALL Java_org_liblouis_liblouisutdml_file2brl
  * Signature: (Ljava/lang/String;)V
  */
 JNIEXPORT void JNICALL Java_org_liblouis_liblouisutdml_setWriteablePath
-  (JNIEnv *, jclass, jstring);
+  (JNIEnv *, jobject, jstring);
 
 /*
  * Class:     org_liblouis_liblouisutdml
