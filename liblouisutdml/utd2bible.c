@@ -63,7 +63,7 @@ doVerseNumber (widechar * line, int length)
   if (k == length)
     return length;
   number[numberLength++] = line[k] + 32;
-  if (line[k + 1] >= 16 && line[k = 1] <= 25)
+  if (line[k + 1] >= 16 && line[k + 1] <= 25)
     number[numberLength++] = line[k + 1] + 32;
   if (line[k + 2] >= 16 && line[k + 2] <= 25)
     number[numberLength++] = line[k + 2] + 32;
@@ -256,7 +256,6 @@ doUtdnewpage (xmlNode * node)
       firstPage = 0;
       return 1;
     }
-    return 1;
   write_buffer (1, 0);
   ud->outbuf1_len_so_far = 0;
   insertCharacters (ud->lineEnd, strlen (ud->lineEnd));

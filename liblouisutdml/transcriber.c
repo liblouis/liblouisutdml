@@ -886,7 +886,15 @@ do_pagebreak (xmlNode *node)
 void
 do_attrtotext (xmlNode *node)
 {
-  insert_text_string (node, get_attr_value (node));
+  char attrValue[MAXNAMELEN];
+  strcpy (attrValue, get_attr_value (node));
+  if (ud->orig_format_for == bible)
+  { /* Enbncode verse numbers */
+  int k;
+  for (k = 0; attrValue[k]; k++)
+  attrValue[k] -= 32;
+  }
+  insert_text_string (node, attrValue);
 }
   
 void

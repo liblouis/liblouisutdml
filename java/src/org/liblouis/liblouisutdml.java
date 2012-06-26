@@ -31,6 +31,8 @@
 
 package org.liblouis;
 
+import java.lang.reflect.Field;
+
 public final class liblouisutdml {
 /** 
 * Bindings for the liblouisutdml and liblouis C libraries.
@@ -82,13 +84,19 @@ private static boolean libraryLoaded = false;
   
   public static void loadLibrary (String libraryPath, String 
   librarySuffix) throws Exception {
-       if(libraryLoaded)
+ if (libraryLoaded)
       return;
     if (libraryPath == null || librarySuffix == null)
-      throw new Exception(
+      throw new Exception (
       "Could not load libraries. libraryPath or librarySuffix undefined.");
-              System.load (libraryPath + "/liblouis." + librarySuffix);
-    System.load (libraryPath + "/liblouisutdml." + librarySuffix);
+    /*  Make sure we can see the dependent liblouis.dll from 
+    * liblouisutdml
+    */
+	System.setProperty( "java.library.path", libraryPath);
+	Field fieldSysPath = ClassLoader.class.getDeclaredField( "sys_paths" );
+	fieldSysPath.setAccessible( true );
+	fieldSysPath.set( null, null );
+    System.load (libraryPath + "/liblouisutdml" + librarySuffix);
     libraryLoaded = true;
   }
   
