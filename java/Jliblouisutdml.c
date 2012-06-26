@@ -43,8 +43,6 @@ writeablePath, jstring logfile)
   const jbyte *dataPathX = NULL;
   const jbyte *writeablePathX = NULL;
   const jbyte *logfileX = NULL;
-  char logfilePath[MAXNAMELEN];
-  char pathEnd[2];
   dataPathX = (*env)->GetStringUTFChars (env, dataPath, NULL);
   if (dataPathX == NULL)
     goto release;
@@ -56,12 +54,7 @@ writeablePath, jstring logfile)
     goto release;
   lou_setDataPath (dataPathX);
   lbu_setWriteablePath (writeablePathX);
-  strcpy (logfilePath, writeablePathX);
-  pathEnd[0] = ud->file_separator;
-  pathEnd[1] = 0;
-  strcat (logfilePath, pathEnd);
-  strcat (logfilePath, logfileX);
-  read_configuration_file (NULL, logfilePath, NULL, 0);
+  read_configuration_file (NULL, logfileX, NULL, 0);
 release:
   if (dataPathX != NULL)
     (*env)->ReleaseStringUTFChars (env, dataPath, dataPathX);
@@ -706,8 +699,7 @@ JNIEXPORT jboolean JNICALL Java_org_liblouis_liblouisutdml_file2brl
   strcpy (configFileList, "preferences.cfg");
   strcpy (inputFileName, "stdin");
   strcpy (outputFileName, "stdout");
-  strcpy (logFileName, lbu_getWriteablePath ());
-  strcat (logFileName, "file2brl.log");
+  logFileName[0] = 0;
   if (numArgs != 0)
     {
       getArg (env, obj, args, -1);
@@ -786,7 +778,8 @@ JNIEXPORT jboolean JNICALL Java_org_liblouis_liblouisutdml_file2brl
 	}
       getArg (env, obj, args, -1);
     }
-  lou_logFile (logFileName);
+  if (logFileName[0] != 0)
+    lou_logFile (logFileName);
   if (whichProc == 0)
     whichProc = 'x';
   if (configSettings != NULL)
@@ -803,7 +796,7 @@ configSettings, 0))
     {
       if (!(inputFile = fopen (inputFileName, "rb")))
 	{
-	  lou_logPrint ("Can't open input file ;%s'.\n", inputFileName);
+	  lou_logPrint ("Can't open input file '%s'.\n", inputFileName);
 	  lou_logEnd ();
 	  return JNI_FALSE;
 	}
