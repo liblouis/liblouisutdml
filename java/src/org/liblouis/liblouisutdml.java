@@ -92,10 +92,13 @@ private static boolean libraryLoaded = false;
     /*  Make sure we can see the dependent liblouis.dll from 
     * liblouisutdml
     */
-	System.setProperty( "java.library.path", libraryPath);
-	Field fieldSysPath = ClassLoader.class.getDeclaredField( "sys_paths" );
-	fieldSysPath.setAccessible( true );
-	fieldSysPath.set( null, null );
+/*
+System.setProperty( "java.library.path", libraryPath);
+Field fieldSysPath = ClassLoader.class.getDeclaredField( "sys_paths");
+fieldSysPath.setAccessible( true );
+fieldSysPath.set( null, null );
+*/
+    System.load (libraryPath + "/liblouis" + librarySuffix);
     System.load (libraryPath + "/liblouisutdml" + librarySuffix);
     libraryLoaded = true;
   }
