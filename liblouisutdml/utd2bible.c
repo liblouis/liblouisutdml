@@ -79,7 +79,10 @@ doVerseNumber (widechar * line, int length)
   kk = 1;
   else kk = 0;
   for (k = 0; k < numberLength; k++)
-  line[kk++] = number[k] + 48;
+  if (number[k] == 16)
+    line[kk++] = number[k] + 58;
+    else  
+    line[kk++] = number[k] + 48;
   if (firstVerseLength == 0)
     {
       firstVerseLength = numberLength;
