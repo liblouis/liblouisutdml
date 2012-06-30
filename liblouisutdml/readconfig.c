@@ -56,6 +56,7 @@ typedef struct
 }
 FileInfo;
 
+static char pathEnd[2];
 static double paperWidth;
 static double paperHeight;
 static double leftMargin;
@@ -130,9 +131,6 @@ find_file (const char *fileList, char *filePath)
   int k;
   int currentListPos = 0;
   int pathLength;
-  char pathEnd[2];
-  pathEnd[0] = ud->file_separator;
-  pathEnd[1] = 0;
   filePath[0] = 0;
   for (commaPos = 0; fileList[commaPos] && fileList[commaPos] != ',';
        commaPos++);
@@ -1262,11 +1260,19 @@ read_configuration_file (const char *configFileList, const char
 #else
   ud->file_separator = '/';
 #endif
+  pathEnd[0] = ud->file_separator;
+  pathEnd[1] = 0;
 
 /*Process file list*/
   if (configFileList == NULL)
     {
       set_paths (NULL);
+  if (logFileName)
+    {
+      strcpy ((char *) ud->typeform, lbu_getWriteablePath ());
+      strcat ((char *) ud->typeform, logFileName);
+      lou_logFile ((char *) ud->typeform);
+    }
       if (!(config_compileSettings ("liblouisutdml.ini")))
 	return 0;
     }

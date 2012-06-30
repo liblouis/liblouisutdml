@@ -79,7 +79,7 @@ doVerseNumber (widechar * line, int length)
   kk = 1;
   else kk = 0;
   for (k = 0; k < numberLength; k++)
-  if (number[k] == 16)
+  if (number[k] == 48)
     line[kk++] = number[k] + 58;
     else  
     line[kk++] = number[k] + 48;
@@ -94,6 +94,27 @@ doVerseNumber (widechar * line, int length)
       memcpy (lastVerse, number, numberLength * CHARSIZE);
     }
   return length;
+}
+
+static void
+makeFooter ()
+{
+  int translationLength;
+  int translatedLength;
+  int k;
+  int kk;
+  firstVerse[firstVerseLength++] = ud->lit_hyphen[0];
+  for (k = 0; k < lastVerseLength; k++)
+    firstVerse[firstVerseLength++] = lastVerse[k];
+  translationLength = firstVerseLength;
+  translatedLength = MAXNUMLEN;
+  lou_translate (ud->main_braille_table, firstVerse, &translationLength,
+		 lastVerse, &translatedLength, NULL, NULL,
+		 NULL, NULL, NULL, 0);
+  firstVerseLength = 0;
+  kk = startOfLastLine + ((ud->cells_per_line - translatedLength) / 2);
+  for (k = 0; k < translatedLength; k++)
+  ud->outbuf1[kk++] = lastVerse[k];
 }
 
 int
@@ -252,6 +273,7 @@ static int lastLinepos;
 static int
 doUtdnewpage (xmlNode * node)
 {
+  static int prevBrlPageNum = 1;
   lastLinepos = ud->page_top;
   firstLineOnPage = 1;
   if (firstPage)
@@ -259,10 +281,12 @@ doUtdnewpage (xmlNode * node)
       firstPage = 0;
       return 1;
     }
-  write_buffer (1, 0);
-  ud->outbuf1_len_so_far = 0;
+  if ((prevBrlPageNum & 1))
+    makeFooter ();
   insertCharacters (ud->lineEnd, strlen (ud->lineEnd));
   insertCharacters (ud->pageEnd, strlen (ud->pageEnd));
+  write_buffer (1, 0);
+  prevBrlPageNum = atoi (xmlGetProp (node, (xmlChar *) "brlnumber"));
   return 1;
 }
 
