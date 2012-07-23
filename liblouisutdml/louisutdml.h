@@ -219,6 +219,7 @@ typedef struct
   int print_page_number_at;
   int braille_page_number_at;
   int hyphenate;
+  int min_syllable_length;
   int internet_access;
   int new_entries;
   int doc_new_entries;
