@@ -714,7 +714,8 @@ compileConfig (lbu_FileInfo * nested)
     "57",
 	"Endnotes",
 	"58",
-// available    "59",
+    "minSyllableLength",
+    "59",
     "macro",
     "60",
     "style",
@@ -1077,7 +1078,9 @@ compileConfig (lbu_FileInfo * nested)
 	  if ((k = checkValues (nested, yesNo)) != NOTFOUND)
 	    ud->endnotes = k;
 	  break;
-// available	case 59:
+	case 59:
+	  ud->min_syllable_length = atoi (nested->value);
+	  break;
 	case 60:
 	  new_macro (nested->value, nested->value2);
 	  break;

@@ -2006,6 +2006,9 @@ hyphenatex (int lastBlank, int lineEnd, int *breakAt, int *insertHyphen)
   int textWordStart, textWordLength;
   int const textLength = ud->sync_text_length;
   widechar *const textBuffer = ud->sync_text_buffer;
+  int minSyllableLength = MIN_SYLLABLE_LENGTH;
+  if (ud->min_syllable_length > 0)
+      minSyllableLength = ud->min_syllable_length;
   
   if (ud->hyphenate != 1 && ud->hyphenate != 2)
     return 0;
@@ -2042,8 +2045,8 @@ hyphenatex (int lastBlank, int lineEnd, int *breakAt, int *insertHyphen)
   // inserted
   *insertHyphen = 0;
   
-  for (k = minimum(lineEnd - wordStart, wordLength - MIN_SYLLABLE_LENGTH);
-       k > MIN_SYLLABLE_LENGTH;
+  for (k = minimum(lineEnd - wordStart, wordLength - minSyllableLength);
+       k > minSyllableLength;
        k--)
     {
       if (ud->in_sync && ud->hyphenate == 2)
@@ -2099,8 +2102,8 @@ hyphenatex (int lastBlank, int lineEnd, int *breakAt, int *insertHyphen)
 			   hyphens, 1))
     return 0;
   
-  for (k = minimum(lineEnd - wordStart, wordLength - MIN_SYLLABLE_LENGTH) - 1;
-       k > MIN_SYLLABLE_LENGTH;
+  for (k = minimum(lineEnd - wordStart, wordLength - minSyllableLength) - 1;
+       k > minSyllableLength;
        k--)
     if (hyphens[k] == '1')
       {
