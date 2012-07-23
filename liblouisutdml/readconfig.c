@@ -1161,6 +1161,8 @@ compileConfig (lbu_FileInfo * nested)
 	      "2",
 	      "roman",
 	      "3",
+	      "romancaps",
+	      "4",
 	      NULL
 	    };
 	    StyleType *style;

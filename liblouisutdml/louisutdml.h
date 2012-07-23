@@ -62,7 +62,8 @@ typedef enum
   normal = 0,
   blank = 1,
   p = 2,
-  roman = 3
+  roman = 3,
+  romancaps = 4
 } BrlPageNumFormat;
 
 typedef struct
