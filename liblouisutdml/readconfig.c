@@ -1189,7 +1189,7 @@ initConfigFiles (const char *firstConfigFile, char *fileName, const
     k++;
   configPath[k] = 0;
   set_paths (configPath);
-  if (logFileName)
+  if (logFileName && logFileName[0] != 0)
     {
       strcpy ((char *) ud->typeform, lbu_getWriteablePath ());
       strcat ((char *) ud->typeform, logFileName);
@@ -1267,7 +1267,7 @@ read_configuration_file (const char *configFileList, const char
   if (configFileList == NULL)
     {
       set_paths (NULL);
-  if (logFileName)
+  if (logFileName  && logFileName[0] != 0)
     {
       strcpy ((char *) ud->typeform, lbu_getWriteablePath ());
       strcat ((char *) ud->typeform, logFileName);

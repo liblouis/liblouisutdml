@@ -23,7 +23,8 @@ semantics-action files, see dtbook.sem and nemeth.sem . These files are
 in the lbu_files subdirectory.
 For examples of translation tables, see
 en-us-g2.ctb en-us-g1.ctb chardefs.cti nemeth.ctb and whatever other
-files they may include. These are all in the tables directory of the
+files they may include. These are all in the tables directory of 
+liblouis.
 
 INSTALLATION
 
@@ -36,25 +37,9 @@ After unpacking the distribution tarball for liblouisutdml go to the
 directory it creates. After running "configure" run "make" and "make 
 install". You will need root privileges for the installation step.
 
-This will produce the liblouisutdml library and the programs xml2brl and
-the script msword2brl, rtf2brl and pdf2brl.
+This will produce the liblouisutdml library and the program file2brl . 
+To compile the Java bindings go to the java subdirectory and run ant .
 
 Note that that the library and programs will not work properly unless
-you have first installed the latest version of liblouis. msword2brl
-requires the installation of antiword. rtf2brl requires rtf2xml which
-can be obtained from http://rtf2xml.sourceforge.net/. pdf2brl requires
-pdf2text which is part of poppler (http://poppler.freedesktop.org/) or
-also xpdf (http://www.foolabs.com/xpdf/download.html).
-
-RELEASE NOTES 
-
-xml2brl is a full transcription program. Again, type xml2brl -h to see
-usage information. It will handle xml files from bookshare.org, docbook
-files, xhtml files, files saved as xml by Microsoft Word and text files
-"right out of the box." 
-
-msword2brl takes a Microsoft Word file and produces a well-formatted 
-braille file.
-
-
+you have first installed the latest version of liblouis.
 

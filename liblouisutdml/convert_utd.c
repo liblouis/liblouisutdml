@@ -55,7 +55,6 @@ convert_utd ()
 {
   xmlNode *rootElement = xmlDocGetRootElement (ud->doc);
   int haveSemanticFile;
-  char *missingSem;
   if (rootElement == NULL)
     {
       lou_logPrint ("Document is empty");
