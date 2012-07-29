@@ -118,14 +118,20 @@ processXmlDocument (const char *inputDoc, int length)
 	  else
 	    ud->doc = xmlParseFile (inputDoc);
 	  if (ud->doc == NULL)
-	    ud->doc = htmlParseFile (inputDoc, NULL);
+	    {
+      lou_logPrint (
+      "Document could not be processed, probably  malformed");
+      cleanupLibxml ();
+      return 0;
+	    }
 	}
     }
   else
     ud->doc = xmlParseMemory (inputDoc, length);
   if (ud->doc == NULL)
     {
-      lou_logPrint ("Document could not be processed");
+      lou_logPrint (
+      "Document could not be processed, probably  malformed");
       cleanupLibxml ();
       return 0;
     }
@@ -224,12 +230,13 @@ lbu_translateString (const char *configFileList,
       strcat (xmlInbuf, "\n");
       strcat (xmlInbuf, inbuf);
     }
-  if (!processXmlDocument (xmlInbuf, inlen))
-    return 0;
+  k = processXmlDocument (xmlInbuf, inlen);
   *outlen = ud->outlen_so_far;
   if (xmlInbuf != inbuf)
     free (xmlInbuf);
   lou_logEnd ();
+  if (k == 0)
+    return 0;
   return 1;
 }
 
@@ -243,6 +250,7 @@ int
 * braille according to the specifications in configFileList. If the 
 * expression is not well-formed or there are other errors, 
 * return 0. */
+  int k;
   if (!read_configuration_file
       (configFileList, logFileName, settingsString, mode))
     return 0;
@@ -256,11 +264,12 @@ int
     }
   else
     ud->outFile = stdout;
-  if (!processXmlDocument (inFileName, 0))
-    return 0;
+  k = processXmlDocument (inFileName, 0);
   if (ud->outFile != stdout)
     fclose (ud->outFile);
   lou_logEnd ();
+  if (k == 0)
+    return 0;
   return 1;
 }
 
@@ -283,7 +292,7 @@ int
     {
       if (!(ud->inFile = fopen (inFileName, "rb")))
 	{
-	  lou_logPrint ("Can't open input file %s.\n", inFileName);
+	  lou_logPrint ("Can't open input file %s.", inFileName);
 	  return 0;
 	}
     }
@@ -293,7 +302,7 @@ int
     {
       if (!(ud->outFile = fopen (outFileName, "wb")))
 	{
-	  lou_logPrint ("Can't open output file %s.\n", outFileName);
+	  lou_logPrint ("Can't open output file %s.", outFileName);
 	  return 0;
 	}
     }
@@ -358,7 +367,7 @@ int
     {
       if (!(ud->inFile = fopen (inFileName, "rb")))
 	{
-	  lou_logPrint ("Can't open input file %s.\n", inFileName);
+	  lou_logPrint ("Can't open input file %s.", inFileName);
 	  return 0;
 	}
     }
@@ -368,7 +377,7 @@ int
     {
       if (!(ud->outFile = fopen (outFileName, "wb")))
 	{
-	  lou_logPrint ("Can't open output file %s.\n", outFileName);
+	  lou_logPrint ("Can't open output file %s.", outFileName);
 	  return 0;
 	}
     }

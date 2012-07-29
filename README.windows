@@ -55,9 +55,8 @@ nmake /f Makefile.nmake
 The directory will now contain liblouisutdml.dll, liblouisutdml.lib and 
 a number of object files. You will also find a new directory, 
 brailleblasterlib, so-called because the files it contains are intended 
-to be copied into the BrailleBlaster native/lib directory. for Windows, 
-they should be copied into the same folder as brailleblaster.jar. You 
-will also find the directory libslib which contains liblouis-2.lib and 
+to be copied into the BrailleBlaster dist/native/lib directory. You will 
+also find the directory libslib which contains liblouis-2.lib and 
 liblouisutdml.lib. These files are not needed for BrailleBlaster. They 
 are provided in case someone wants to link liblouis and/or liblouisutdml 
 with something else.
