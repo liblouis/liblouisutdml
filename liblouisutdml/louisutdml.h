@@ -232,7 +232,6 @@ typedef struct
   int outbuf3_enabled;
   int fill_pages;
   int after_contents;
-  int fill_page_skipped;
   int blank_lines;
   int print_page_numbers_in_contents;
   int braille_page_numbers_in_contents;
