@@ -830,13 +830,24 @@ fillPage ()
     return 1;
   if (ud->outbuf3_enabled && ud->lines_length <= MAXLINES)
     ud->lines_newpage[ud->lines_length] = 1;
-  if (ud->lines_on_page == 0 && !ud->fill_page_skipped)
-    ud->fill_page_skipped = 1;
-  else
-    {
-      ud->fill_pages++;
-      startLine ();
-    }
+  if (ud->fill_pages == 0 && ud->lines_on_page > 0)
+    ud->fill_pages = 1;
+  if (ud->fill_pages) {
+    startLine ();
+    writeOutbuf ();
+  }
+  return 1;
+}
+
+static int
+fillPageForce ()
+{
+  if (!ud->braille_pages)
+    return 1;
+  if (ud->outbuf3_enabled && ud->lines_length <= MAXLINES)
+    ud->lines_newpage[ud->lines_length] = 1;
+  ud->fill_pages++;
+  startLine ();
   writeOutbuf ();
   return 1;
 }
@@ -1348,7 +1359,6 @@ startLine ()
 	{
 	  ud->lines_on_page++;
 	  ud->after_contents = 0;
-	  ud->fill_page_skipped = 0;
 	  cellsWritten = 0;
 
 	  if (ud->lines_on_page == 1)

@@ -59,7 +59,6 @@ static int saved_lines_on_page;
 static int saved_line_spacing;
 static int saved_blank_lines;
 static int saved_fill_pages;
-static int saved_fill_page_skipped;
 static char saved_soft_hyphens[2 * BUFSIZE];
 static widechar saved_text_buffer[2 * BUFSIZE];
 static widechar saved_translated_buffer[2 * BUFSIZE];
@@ -95,7 +94,6 @@ saveState (void)
   saved_line_spacing = ud->line_spacing;
   saved_blank_lines = ud->blank_lines;
   saved_fill_pages = ud->fill_pages;
-  saved_fill_page_skipped = ud->fill_page_skipped;
   widecharcpy (saved_text_buffer, ud->text_buffer, saved_text_length);
   widecharcpy (saved_translated_buffer, ud->translated_buffer,
 	       saved_translated_length);
@@ -137,7 +135,6 @@ restoreState (void)
   ud->line_spacing = saved_line_spacing;
   ud->blank_lines = saved_blank_lines;
   ud->fill_pages = saved_fill_pages;
-  ud->fill_page_skipped = saved_fill_page_skipped;
   widecharcpy (ud->text_buffer, saved_text_buffer, saved_text_length);
   widecharcpy (ud->translated_buffer, saved_translated_buffer,
 	       saved_translated_length);
