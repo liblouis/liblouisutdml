@@ -94,3 +94,50 @@ convert_utd ()
     }
   return 1;
 }
+
+int
+pass2_conv ()
+{
+  xmlNode *rootElement = xmlDocGetRootElement (ud->doc);
+  int haveSemanticFile;
+  xmlNode *child;
+  if (rootElement == NULL)
+    {
+      lou_logPrint ("Document is empty");
+      return 0;
+    }
+  clean_semantic_table ();
+  ud->semantic_files = ud->pass2_conv_sem;
+  haveSemanticFile = compile_semantic_table (rootElement);
+  nullPrivate (rootElement);
+  do_xpath_expr ();
+  examine_document (rootElement);
+  if (!haveSemanticFile)
+    return 0;
+  ud->format_for = utd;
+  ud->top = -1;
+  ud->style_top = -1;
+  ud->text_length = 0;
+  ud->translated_length = 0;
+      child = rootElement->children;
+      while (child)
+	{
+	  switch (child->type)
+	    {
+	    case XML_ELEMENT_NODE:
+	      transcribe_paragraph (child, 0);
+	      break;
+	    case XML_TEXT_NODE:
+	      insert_text (child);
+	      break;
+	    case XML_CDATA_SECTION_NODE:
+	      transcribe_cdataSection (child);
+	      break;
+	    default:
+	      break;
+	    }
+	  child = child->next;
+	}
+  end_document ();
+  return 1;
+}

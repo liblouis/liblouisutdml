@@ -120,8 +120,6 @@ charcpy (char *to, const char *from, int length)
 static char *makeRomanNumber (int n);
 static int utd_start ();
 static int utd_finish ();
-static int utd_transcribe_text_string ();
-static int utd_transcribe_text_file ();
 static int utd_insert_translation (const char *table);
 static void utd_insert_text (xmlNode * node, int length);
 static int utd_makeBlankLines (int number, int beforeAfter);
@@ -307,7 +305,6 @@ transcribe_text_file ()
   if (!start_document ())
     return 0;
   start_style (docStyle, NULL);
-  
   ud->outbuf = outbufx;
   ud->outbuf1_len = outlenx;
   ud->input_encoding = ud->input_text_encoding;
@@ -3552,7 +3549,7 @@ handleChar (int ch, unsigned char *buf, int *posx)
   return 1;
 }
 
-static int
+int
 utd_transcribe_text_string ()
 {
   xmlNode *addPara = makeDaisyDoc ();
@@ -3597,7 +3594,7 @@ utd_transcribe_text_string ()
   return 1;
 }
 
-static int
+int
 utd_transcribe_text_file ()
 {
   xmlNode *addPara = makeDaisyDoc ();
@@ -3697,7 +3694,7 @@ backTranslateBlock (xmlNode * curBlock, xmlNode * curBrl)
   goodTrans = lou_backTranslate (ud->main_braille_table, ud->text_buffer,
 				 &translationLength,
 				 backBuf, &translatedLength, NULL, NULL,
-				 backIndices, NULL, NULL, dotsIO);
+				 backIndices, NULL, NULL, 0);
   if (!goodTrans)
     {
       translatedLength = translationLength;

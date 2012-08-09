@@ -212,9 +212,13 @@ lbu_translateString (const char *configFileList,
       break;
   if (inbuf[k] != '<')
     {
-      transcribe_text_string ();
+      if (ud->format_for == utd)
+      k = utd_transcribe_text_string ();
+      else
+      k = transcribe_text_string ();
       *outlen = ud->outlen_so_far;
-      return 1;
+      lou_logEnd ();
+      return k;
     }
   if (inbuf[k + 1] == '?')
     xmlInbuf = (char *) inbuf;
@@ -235,9 +239,7 @@ lbu_translateString (const char *configFileList,
   if (xmlInbuf != inbuf)
     free (xmlInbuf);
   lou_logEnd ();
-  if (k == 0)
-    return 0;
-  return 1;
+  return k;
 }
 
 int
@@ -268,9 +270,7 @@ int
   if (ud->outFile != stdout)
     fclose (ud->outFile);
   lou_logEnd ();
-  if (k == 0)
-    return 0;
-  return 1;
+  return k;
 }
 
 int
@@ -282,6 +282,7 @@ int
 /* Translate the text file in inFileName into braille according to
 * the specifications in configFileList. If there are errors, print 
 * an error message and return 0.*/
+  int k;
   widechar outbuf[2 * BUFSIZE];
   if (!read_configuration_file
       (configFileList, logFileName, settingsString, mode))
@@ -308,17 +309,20 @@ int
     }
   else
     ud->outFile = stdout;
-  if (!transcribe_text_file ())
+  if (ud->format_for == utd)
+  k = utd_transcribe_text_file ();
+  else
+  k = transcribe_text_file ();
+  if (!k)
     {
       freeEverything ();
-      return 0;
     }
   if (ud->inFile != stdin)
     fclose (ud->inFile);
   if (ud->outFile != stdout)
     fclose (ud->outFile);
   lou_logEnd ();
-  return 1;
+  return k;
 }
 
 int EXPORT_CALL
@@ -329,6 +333,7 @@ lbu_backTranslateString (const char *configFileList,
 			 const char *logFileName, const char
 			 *settingsString, unsigned int mode)
 {
+  int k;
   if (!read_configuration_file
       (configFileList, logFileName, settingsString, mode))
     return 0;
@@ -337,10 +342,13 @@ lbu_backTranslateString (const char *configFileList,
   ud->outbuf = outbuf;
   ud->outlen = *outlen;
   ud->inFile = ud->outFile = NULL;
-  if (!back_translate_braille_string ())
+  if (ud->format_for == utd)
+  k = utd_back_translate_braille_string ();
+  else
+  k = back_translate_braille_string ();
+  if (!k)
     {
       freeEverything ();
-      return 0;
     }
   *outlen = ud->outlen_so_far;
   lou_logEnd ();
@@ -357,6 +365,7 @@ int
 * xml file or a text file according to
 * the specifications in configFileList. If there are errors, print an 
 * error message and return 0.*/
+  int k;
   widechar outbuf[2 * BUFSIZE];
   if (!read_configuration_file
       (configFileList, logFileName, settingsString, mode))
@@ -383,10 +392,13 @@ int
     }
   else
     ud->outFile = stdout;
-  if (!back_translate_file ())
+  if (ud->format_for == utd)
+  k = utd_back_translate_file ();
+  else
+  k = back_translate_file ();
+  if (!k)
     {
       freeEverything ();
-      return 0;
     }
   if (ud->inFile != stdin)
     fclose (ud->inFile);

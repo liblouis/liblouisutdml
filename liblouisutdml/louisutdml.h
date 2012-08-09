@@ -278,6 +278,7 @@ typedef struct
   const char *edit_table_name;
   const char *semantic_files;
   const char *converter_sem;
+  const char *pass2_conv_sem;
   widechar print_page_number[MAXNUMLEN];
   widechar braille_page_string[MAXNUMLEN];
   char lineEnd[8];
@@ -393,4 +394,8 @@ int end_macro ();
 int ignore_case_comp (const char *str1, const char *str2, int length);
 void insert_text_string (xmlNode *node, xmlChar *str);
 void do_attrtotext (xmlNode *node);
+int utd_transcribe_text_file ();
+int utd_transcribe_text_string ();
+int utd_back_translate_braille_string ();
+int utd_back_translate_file ();
 #endif /*louisutdml_h */
