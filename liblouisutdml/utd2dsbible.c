@@ -34,7 +34,7 @@
 #include "louisutdml.h"
 
 static int findBrlNodes (xmlNode * node);
-static int bibleDoBrlNode (xmlNode * node, int action);
+static int dsBibleDoBrlNode (xmlNode * node, int action);
 static int beginDocument ();
 static int finishBrlNode ();
 static int finishDocument ();
@@ -118,7 +118,7 @@ makeFooter ()
 }
 
 int
-utd2bible (xmlNode * node)
+utd2dsBible (xmlNode * node)
 {
   ud->top = -1;
   ud->style_top = -1;
@@ -126,6 +126,7 @@ utd2bible (xmlNode * node)
   firstLineOnPage = 1;
   beginDocument ();
   findBrlNodes (node);
+  pass2_conv ();
   finishDocument ();
   return 1;
 }
@@ -163,7 +164,7 @@ findBrlNodes (xmlNode * node)
     case utdmeta:
       return 1;
     case utdbrl:
-      bibleDoBrlNode (node, 0);
+      dsBibleDoBrlNode (node, 0);
       pop_sem_stack ();
       return 1;
     default:
@@ -318,7 +319,7 @@ doUtdnewline (xmlNode * node)
 }
 
 int
-bibleDoBrlNode (xmlNode * node, int action)
+dsBibleDoBrlNode (xmlNode * node, int action)
 {
   xmlNode *child;
   if (node == NULL)
@@ -364,7 +365,7 @@ bibleDoBrlNode (xmlNode * node, int action)
       switch (child->type)
 	{
 	case XML_ELEMENT_NODE:
-	  bibleDoBrlNode (child, 1);
+	  dsBibleDoBrlNode (child, 1);
 	  break;
 	case XML_TEXT_NODE:
 	  doDotsText (child);

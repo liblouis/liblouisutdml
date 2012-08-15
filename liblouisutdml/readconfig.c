@@ -646,7 +646,8 @@ compileConfig (FileInfo * nested)
     "35",
     "leftMargin",
     "36",
-// available    "37",
+    "pass2convsem",
+    "37",
     "converterSem",
     "38",
     "braillePageNumber",
@@ -717,7 +718,7 @@ compileConfig (FileInfo * nested)
     "brf", "6",
     "volumesPef", "7", 
     "volumesBrf", "8",
-    "bible", "9",
+    "dsbible", "9",
     NULL
   };
 
@@ -930,7 +931,9 @@ compileConfig (FileInfo * nested)
 	case 36:
 	  leftMargin = atof (nested->value);
 	  break;
-// available    case 37:
+    case 37:
+      ud->pass2_conv_sem = alloc_string (nested->value);
+      break;
 	case 38:
 	  ud->converter_sem = alloc_string (nested->value);
 	  break;

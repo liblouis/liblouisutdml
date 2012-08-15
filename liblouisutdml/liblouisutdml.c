@@ -119,10 +119,10 @@ processXmlDocument (const char *inputDoc, int length)
 	    ud->doc = xmlParseFile (inputDoc);
 	  if (ud->doc == NULL)
 	    {
-      lou_logPrint (
-      "Document could not be processed, probably  malformed");
-      cleanupLibxml ();
-      return 0;
+	      lou_logPrint
+		("Document could not be processed, probably  malformed");
+	      cleanupLibxml ();
+	      return 0;
 	    }
 	}
     }
@@ -130,13 +130,12 @@ processXmlDocument (const char *inputDoc, int length)
     ud->doc = xmlParseMemory (inputDoc, length);
   if (ud->doc == NULL)
     {
-      lou_logPrint (
-      "Document could not be processed, probably  malformed");
+      lou_logPrint ("Document could not be processed, probably  malformed");
       cleanupLibxml ();
       return 0;
     }
-  if (ud->format_for >= utd && ignore_case_comp (ud->doc->encoding, 
-  "UTF-8", 5) != 0)
+  if (ud->format_for >= utd && ignore_case_comp (ud->doc->encoding,
+						 "UTF-8", 5) != 0)
     {
       lou_logPrint ("This format requires UTF-8 encoding, not '%s'",
 		    ud->doc->encoding);
@@ -159,13 +158,13 @@ processXmlDocument (const char *inputDoc, int length)
       examine_document (rootElement);
       append_new_entries ();
       /* This will generate a new semantic-action file if none exists 
-      * and newEntries is  yes in the configuration file.
-      * Otherwise it generates a new_enhtries file.*/
+       * and newEntries is  yes in the configuration file.
+       * Otherwise it generates a new_enhtries file.*/
       if (!haveSemanticFile)
-      {
-      cleanupLibxml ();
-      return 0;
-      }
+	{
+	  cleanupLibxml ();
+	  return 0;
+	}
       if (!transcribe_document (rootElement))
 	{
 	  lou_logPrint ("Document could not be transcribed");
@@ -213,9 +212,9 @@ lbu_translateString (const char *configFileList,
   if (inbuf[k] != '<')
     {
       if (ud->format_for == utd)
-      k = utd_transcribe_text_string ();
+	k = utd_transcribe_text_string ();
       else
-      k = transcribe_text_string ();
+	k = transcribe_text_string ();
       *outlen = ud->outlen_so_far;
       lou_logEnd ();
       return k;
@@ -310,9 +309,9 @@ int
   else
     ud->outFile = stdout;
   if (ud->format_for == utd)
-  k = utd_transcribe_text_file ();
+    k = utd_transcribe_text_file ();
   else
-  k = transcribe_text_file ();
+    k = transcribe_text_file ();
   if (!k)
     {
       freeEverything ();
@@ -343,9 +342,9 @@ lbu_backTranslateString (const char *configFileList,
   ud->outlen = *outlen;
   ud->inFile = ud->outFile = NULL;
   if (ud->format_for == utd)
-  k = utd_back_translate_braille_string ();
+    k = utd_back_translate_braille_string ();
   else
-  k = back_translate_braille_string ();
+    k = back_translate_braille_string ();
   if (!k)
     {
       freeEverything ();
@@ -393,9 +392,9 @@ int
   else
     ud->outFile = stdout;
   if (ud->format_for == utd)
-  k = utd_back_translate_file ();
+    k = utd_back_translate_file ();
   else
-  k = back_translate_file ();
+    k = back_translate_file ();
   if (!k)
     {
       freeEverything ();

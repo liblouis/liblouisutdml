@@ -72,8 +72,8 @@ convert_utd ()
     return 0;
   switch (ud->format_for)
     {
-    case bible:
-      utd2bible (rootElement);
+    case dsbible:
+      utd2dsBible (rootElement);
       break;
     case brf:
       utd2brf (rootElement);
@@ -82,7 +82,7 @@ convert_utd ()
       utd2transinxml (rootElement);
       break;
     case pef:
-    utd2pef (rootElement);
+      utd2pef (rootElement);
       break;
     case volumes:
     case volumesPef:
@@ -115,29 +115,29 @@ pass2_conv ()
   if (!haveSemanticFile)
     return 0;
   ud->format_for = utd;
-  ud->top = -1;
+  ud->top = 0;
+  ud->stack[0] = no;
   ud->style_top = -1;
   ud->text_length = 0;
   ud->translated_length = 0;
-      child = rootElement->children;
-      while (child)
+  child = rootElement->children;
+  while (child)
+    {
+      switch (child->type)
 	{
-	  switch (child->type)
-	    {
-	    case XML_ELEMENT_NODE:
-	      transcribe_paragraph (child, 0);
-	      break;
-	    case XML_TEXT_NODE:
-	      insert_text (child);
-	      break;
-	    case XML_CDATA_SECTION_NODE:
-	      transcribe_cdataSection (child);
-	      break;
-	    default:
-	      break;
-	    }
-	  child = child->next;
+	case XML_ELEMENT_NODE:
+	  transcribe_paragraph (child, 0);
+	  break;
+	case XML_TEXT_NODE:
+	  insert_text (child);
+	  break;
+	case XML_CDATA_SECTION_NODE:
+	  transcribe_cdataSection (child);
+	  break;
+	default:
+	  break;
 	}
-  end_document ();
+      child = child->next;
+    }
   return 1;
 }

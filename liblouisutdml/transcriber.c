@@ -896,7 +896,7 @@ do_attrtotext (xmlNode *node)
 {
   char attrValue[MAXNAMELEN];
   strcpy (attrValue, get_attr_value (node));
-  if (ud->orig_format_for == bible)
+  if (ud->orig_format_for == dsbible)
   { /* Enbncode verse numbers */
   int k;
   for (k = 0; attrValue[k]; k++)
