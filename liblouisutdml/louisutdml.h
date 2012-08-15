@@ -130,7 +130,7 @@ typedef enum
   brf,
   volumesPef,
   volumesBrf,
-  bible
+  dsbible
 } FormatFor;
 
 typedef enum
@@ -398,4 +398,5 @@ int utd_transcribe_text_file ();
 int utd_transcribe_text_string ();
 int utd_back_translate_braille_string ();
 int utd_back_translate_file ();
+int pass2_conv ();
 #endif /*louisutdml_h */

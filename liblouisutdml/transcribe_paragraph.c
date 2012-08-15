@@ -363,7 +363,11 @@ transcribe_paragraph (xmlNode * node, int action)
 	    transcribe_paragraph (child, 1);
 	  break;
 	case XML_TEXT_NODE:
+	  /*Is there already a <brl> node?*/
+	  if (!(ud->format_for == utd && child->next != NULL
+	      && strcmp ((char *) child->next->name, "brl") == 0))
 	  insert_text (child);
+	  /*Is there now a <brl>node?*/
 	  if (ud->format_for == utd && child->next != NULL
 	      && strcmp ((char *) child->next->name, "brl") == 0)
 	    child = child->next;	/*skip <brl> node */
