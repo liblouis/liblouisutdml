@@ -7,7 +7,7 @@ basedir=".">
 </target>
 <target name="compile" depends="init">
 <javac srcdir="${src}" destdir="${build}"
-includeantruntime="false">
+includeantruntime="false" source="1.6" target="1.6">
 </javac>
 </target>
 <target name="dist" depends="compile">
