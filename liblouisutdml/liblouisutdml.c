@@ -201,6 +201,8 @@ lbu_translateString (const char *configFileList,
   if (!read_configuration_file
       (configFileList, logFileName, settingsString, mode))
     return 0;
+  if (inbuf == NULL || outbuf == NULL || outlen == NULL)
+    return 0;
   ud->inbuf = inbuf;
   ud->inlen = inlen;
   ud->outbuf = outbuf;
@@ -255,6 +257,8 @@ int
   if (!read_configuration_file
       (configFileList, logFileName, settingsString, mode))
     return 0;
+  if (inFileName == NULL || outFileName == NULL)
+    return 0;
   if (strcmp (outFileName, "stdout"))
     {
       if (!(ud->outFile = fopen (outFileName, "wb")))
@@ -285,6 +289,8 @@ int
   widechar outbuf[2 * BUFSIZE];
   if (!read_configuration_file
       (configFileList, logFileName, settingsString, mode))
+    return 0;
+  if (inFileName == NULL || outFileName == NULL)
     return 0;
   ud->outbuf = outbuf;
   ud->outlen = (sizeof (outbuf) / CHARSIZE) - 4;
@@ -336,6 +342,8 @@ lbu_backTranslateString (const char *configFileList,
   if (!read_configuration_file
       (configFileList, logFileName, settingsString, mode))
     return 0;
+  if (inbuf == NULL || outbuf == NULL || outlen == NULL)
+    return 0;
   ud->inbuf = inbuf;
   ud->inlen = inlen;
   ud->outbuf = outbuf;
@@ -368,6 +376,8 @@ int
   widechar outbuf[2 * BUFSIZE];
   if (!read_configuration_file
       (configFileList, logFileName, settingsString, mode))
+    return 0;
+  if (inFileName == NULL || outFileName == NULL)
     return 0;
   ud->outbuf = outbuf;
   ud->outlen = (sizeof (outbuf) / CHARSIZE) - 4;
@@ -413,6 +423,9 @@ static char *writeablePathPtr = NULL;
 char *EXPORT_CALL
 lbu_setWriteablePath (const char *path)
 {
+  writeablePathPtr = NULL;
+  if (path == NULL)
+    return NULL;
   strcpy (writeablePath, path);
   writeablePathPtr = writeablePath;
   return writeablePathPtr;
@@ -433,6 +446,8 @@ lbu_charToDots (const char *tableList, const unsigned char *inbuf,
   int wcLength;
   int utf8Length;
   int result = 0;
+  if (tableList == NULL || inbuf == NULL || outbuf == NULL)
+    return 0;
   lou_logFile (logFile);
   interBuf = malloc (length * CHARSIZE);
   utf8Length = length;
@@ -459,6 +474,8 @@ lbu_dotsToChar (const char *tableList, const unsigned char *inbuf,
   int wcLength;
   int utf8Length;
   int result = 0;
+  if (tableList == NULL || inbuf == NULL || outbuf == NULL)
+    return 0;
   lou_logFile (logFile);
   interBuf = malloc (length * CHARSIZE);
   utf8Length = length;
