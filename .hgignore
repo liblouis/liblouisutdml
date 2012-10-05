@@ -1,0 +1,47 @@
+# use glob syntax.
+syntax: glob
+
+*~
+*.orig
+*.o
+*.la
+*.lo
+
+.deps
+
+**Makefile
+**Makefile.in
+
+aclocal.m4
+autom4te.cache
+
+config.log
+config.status
+configure
+
+doc/liblouisutdml.html
+doc/liblouisutdml.info
+doc/liblouisutdml.txt
+doc/stamp-vti
+doc/version.texi
+
+INSTALL
+
+liblouisutdml.pc
+liblouisutdml/config.h
+liblouisutdml/stamp-h1
+
+libtool
+
+m4/libtool.m4
+m4/ltoptions.m4
+m4/ltsugar.m4
+m4/ltversion.m4
+m4/lt~obsolete.m4
+
+# Java
+**/*.class
+
+# Eclipse
+.cproject
+.project
