@@ -8,6 +8,7 @@ syntax: glob
 *.lo
 
 .deps
+.libs
 
 **Makefile
 **Makefile.in
@@ -34,6 +35,8 @@ doc/liblouisutdml.txt
 doc/stamp-vti
 doc/version.texi
 
+gnulib/unistd.h
+
 INSTALL
 
 liblouisutdml.pc
@@ -43,11 +46,18 @@ liblouisutdml/stamp-h1
 
 libtool
 
+man/file2brl.1
+
 m4/libtool.m4
 m4/ltoptions.m4
 m4/ltsugar.m4
 m4/ltversion.m4
 m4/lt~obsolete.m4
+
+tests/testTranslateString
+tests/tripleTrans
+
+tools/file2brl
 
 # Java
 **/*.class
