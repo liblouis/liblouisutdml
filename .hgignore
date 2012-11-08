@@ -35,6 +35,8 @@ doc/liblouisutdml.txt
 doc/stamp-vti
 doc/version.texi
 
+file2brl.temp
+
 gnulib/unistd.h
 
 INSTALL
