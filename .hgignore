@@ -44,6 +44,8 @@ liblouisutdml/config.h
 liblouisutdml/config.h.in
 liblouisutdml/stamp-h1
 
+liblouisutdml-*.tar.gz
+
 libtool
 
 man/file2brl.1
