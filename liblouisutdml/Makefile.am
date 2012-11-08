@@ -17,7 +17,8 @@ liblouisutdml_la_LDFLAGS =	\
 	-version-info \
 	$(LIBLOUISUTDML_CURRENT):$(LIBLOUISUTDML_REVISION):$(LIBLOUISUTDML_AGE) \
 	-no-undefined \
-	$(BASE_DEPENDENCIES_LIBS)
+	$(BASE_DEPENDENCIES_LIBS) \
+	$(LTLIBINTL) 
 
 liblouisutdml_la_SOURCES =			\
 	../java/Jliblouisutdml.h \
