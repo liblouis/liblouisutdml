@@ -81,8 +81,8 @@ static void
 freeEverything ()
 {
   lou_logEnd ();
-  lbu_free ();
   cleanupLibxml ();
+  lbu_free ();
 }
 
 static int
@@ -321,6 +321,7 @@ int
   if (!k)
     {
       freeEverything ();
+      return 0;
     }
   if (ud->inFile != stdin)
     fclose (ud->inFile);
@@ -356,6 +357,7 @@ lbu_backTranslateString (const char *configFileList,
   if (!k)
     {
       freeEverything ();
+      return 0;
     }
   *outlen = ud->outlen_so_far;
   lou_logEnd ();
@@ -408,6 +410,7 @@ int
   if (!k)
     {
       freeEverything ();
+      return 0;
     }
   if (ud->inFile != stdin)
     fclose (ud->inFile);
