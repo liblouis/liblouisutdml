@@ -1,9 +1,3 @@
-2012-11-08  Christian Egli  <christian.egli@sbs.ch>
-
-	* gnulib: Upgrade to a newer gnulib version
-
-	* .hgignore: Ignore generated and temporary files
-
 2010-01-06  Christian Egli  <christian.egli@sbszh.ch>
 
 	* man/Makefile.am (pdf2brl.1): Automatically generate man pages
