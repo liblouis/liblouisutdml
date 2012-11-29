@@ -44,6 +44,7 @@ static const struct option longopts[] = {
   {"text", no_argument, NULL, 'T'},
   {"log-file", no_argument, NULL, 'l'},
   {"config-setting", required_argument, NULL, 'C'},
+  {"writeable-path", required_argument, NULL, 'w'},
   {NULL, 0, NULL, 0}
 };
 
@@ -80,7 +81,9 @@ is not specified the output is sent to stdout.\n\n", stdout);
   -C, --config-setting    specify particular configuration settings\n\
                           They override any settings that are specified in a\n\
                           config file\n\
-  -l, --log-file          write errors to file2brl.log instead of stderr\n", stdout);
+  -w  --writeable-path   path for temp files and log file\n\
+  -l, --log-file          write errors to file2brl.log instead of stderr\n", 
+  stdout);
 
   printf ("\n");
   printf ("\
@@ -95,7 +98,7 @@ main (int argc, char **argv)
   char *inputFileName = "stdin";
   char *outputFileName = "stdout";
   char tempFileName[MAXNAMELEN];
-  char *logFileName = NULL;
+  char logFileName[MAXNAMELEN];
   char whichProc = 0;
   char *configSettings = NULL;
   FILE *inputFile = NULL;
@@ -109,9 +112,10 @@ main (int argc, char **argv)
 
   int optc;
   set_program_name (argv[0]);
-
+  logFileName[0] = 0;
+  
   while ((optc =
-	  getopt_long (argc, argv, "hvf:brptlTC:", longopts, NULL)) != 
+	  getopt_long (argc, argv, "hvf:brptlwTC:", longopts, NULL)) != 
 	  -1)
     switch (optc)
       {
@@ -126,7 +130,7 @@ main (int argc, char **argv)
 	exit (EXIT_SUCCESS);
 	break;
       case 'l':
-	logFileName = "file2brl.log";
+	strcpy (logFileName, "file2brl.log");
 	break;
       case 't':
 	mode |= htmlDoc;
@@ -150,6 +154,9 @@ main (int argc, char **argv)
 	strcat (configSettings, optarg);
 	strcat (configSettings, "\n");
 	break;
+       case 'w':
+        lbu_setWriteablePath (optarg);
+        break;
       default:
 	fprintf (stderr, "Try `%s --help' for more information.\n",
 		 program_name);
@@ -181,6 +188,11 @@ main (int argc, char **argv)
 
   if (whichProc == 0)
     whichProc = '0';
+  if (logFileName[0] != 0)
+  {
+  strcpy (logFileName, lbu_getWriteablePath());
+  strcat (logFileName, "file2brl.log");
+  }
   if (configSettings != NULL)
     for (k = 0; configSettings[k]; k++)
       if (configSettings[k] == '=' && configSettings[k - 1] != ' ')
