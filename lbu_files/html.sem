@@ -53,7 +53,6 @@ no td,colspan
 no img,height
 no object,classid
 no object,width
-changetable span,lang
 no span,class
 no object,height
 no a,class
