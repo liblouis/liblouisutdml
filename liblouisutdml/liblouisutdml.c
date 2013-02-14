@@ -134,10 +134,16 @@ processXmlDocument (const char *inputDoc, int length)
       cleanupLibxml ();
       return 0;
     }
+  if (ud->doc->encoding == NULL)
+    {
+      lou_logPrint ("Encoding, preferably UTF-8,  must be specified");
+      cleanupLibxml ();
+      return 0;
+    }
   if (ud->format_for >= utd && ignore_case_comp (ud->doc->encoding,
 						 "UTF-8", 5) != 0)
     {
-      lou_logPrint ("This format requires UTF-8 encoding, not '%s'",
+      lou_logPrint ("UTDML requires UTF-8 encoding, not '%s'",
 		    ud->doc->encoding);
       cleanupLibxml ();
       return 0;

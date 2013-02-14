@@ -399,4 +399,5 @@ int utd_transcribe_text_string ();
 int utd_back_translate_braille_string ();
 int utd_back_translate_file ();
 int pass2_conv ();
+void memoryError ();
 #endif /*louisutdml_h */
