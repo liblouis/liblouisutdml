@@ -29,6 +29,7 @@
    Maintained by John J. Boyer john.boyer@jjb-software.com
    */
 
+#include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -38,6 +39,16 @@
 #include <louis.h>
 #include "louisutdml.h"
 #include "sem_names.h"
+#include <ctype.h>
+
+void
+memoryError ()
+{
+  fprintf (stderr,
+  "liblouisutdml: insufficient memory\n");
+  //"liblouisutdml: Insufficient memory: %s", strerror (errno), "\n");
+  exit (3);
+}
 
 typedef struct
 {
@@ -1226,11 +1237,8 @@ read_configuration_file (const char *configFileList, const char
   if (ud == NULL)
     {
       if (!(ud = malloc (sizeof (UserData))))
-	{
-	  lou_logPrint ("liblouisutdml: not enough memory for buffers");
-	  return 0;
-	}
-    }
+        memoryError ();
+        }
   memset (ud, 0, sizeof (UserData));
   ud->outbuf1_len = (sizeof (ud->outbuf1) / CHARSIZE) - 4;
   ud->outbuf2_len = (sizeof (ud->outbuf2) / CHARSIZE) - 4;

@@ -132,6 +132,8 @@ hashNew ()
 {
   HashTable *table;
   table = malloc (sizeof (HashTable));
+  if (!table)
+  memoryError ();
   memset (table, 0, sizeof (HashTable));
   table->curBucket = -1;
   return table;
@@ -236,8 +238,12 @@ hashInsert (HashTable * table, const unsigned char *key, int type, int
     return;
   i = semStringHash (key) % HASHSIZE;
   latestEntry = malloc (sizeof (HashEntry));
+  if (!latestEntry)
+  memoryError ();
   latestEntry->next = table->entries[i];
   latestEntry->key = malloc (strlen ((char *) key) + 2);
+  if (!latestEntry->key)
+  memoryError ();
   strcpy ((char *) latestEntry->key, (char *) key);
   latestEntry->type = type;
   latestEntry->semNum = semNum;
@@ -479,6 +485,8 @@ encodeInsertions (FileInfo * nested, xmlChar * insertions, int length)
     }
   insertsSize += inserts.numChars * CHARSIZE;
   insertsPtr = malloc (insertsSize);
+  if (!insertsPtr)
+  memoryError ();
   memcpy (insertsPtr, &inserts, insertsSize);
   return insertsPtr;
 }
@@ -554,6 +562,8 @@ countAttrValues (xmlChar * key)
   if (attrValueCounts == NULL)
     {
       attrValueCounts = malloc (NUMCOUNTS * sizeof (int));
+      if (!attrValueCounts)
+      memoryError ();
       attrValueCountsTable = hashNew ();
       curCount = 0;
     }
@@ -1397,6 +1407,8 @@ new_style (xmlChar * name)
   if (hashLookup (semanticTable, key) != notFound)
     return latestEntry->style;
   style = malloc (sizeof (StyleType));
+  if (!style)
+  memoryError ();
   memset (style, 0, sizeof (StyleType));
   style->newline_after = 1;
   hashInsert (semanticTable, key, styleEntry, 0, NULL, style, NULL);

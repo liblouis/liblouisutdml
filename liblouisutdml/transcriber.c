@@ -3829,7 +3829,8 @@ utd_back_translate_file ()
       pch = ch;
       if (ud->translated_length >= MAX_LENGTH)
 	formatBackBlock ();
-      ud->translated_buffer[ud->translated_length++] = ch;
+      if (ch >= 32)
+        ud->translated_buffer[ud->translated_length++] = ch;
     }
   formatBackBlock ();
   ud->text_length = ud->translated_length = 0;
@@ -3876,7 +3877,8 @@ utd_back_translate_braille_string ()
       pch = ch;
       if (ud->translated_length >= MAX_LENGTH)
 	formatBackBlock ();
-      ud->translated_buffer[ud->translated_length++] = ch;
+      if (ch >= 32)
+        ud->translated_buffer[ud->translated_length++] = ch;
     }
   formatBackBlock ();
   ud->text_length = ud->translated_length = 0;
