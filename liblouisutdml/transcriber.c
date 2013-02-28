@@ -5215,7 +5215,7 @@ utd_styleBody ()
   styleSpec->status = resumeBody;
   ud->translated_length = 0;
   ud->sync_text_length = 0;
-  ud->in_sync = 1;
+  ud->in_sync = ud->hyphenate;
   firstBrlNode = NULL;
   return 1;
 }
