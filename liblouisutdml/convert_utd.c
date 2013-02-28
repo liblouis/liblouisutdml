@@ -120,6 +120,8 @@ pass2_conv ()
   ud->style_top = -1;
   ud->text_length = 0;
   ud->translated_length = 0;
+  ud->sync_text_length = 0;
+  ud->in_sync = 1;
   child = rootElement->children;
   while (child)
     {

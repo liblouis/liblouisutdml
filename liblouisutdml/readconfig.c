@@ -718,6 +718,9 @@ compileConfig (FileInfo * nested)
   static const char *backFormats[] = {
     "plain", "0", "html", "1", NULL
   };
+  static const char *hyphenationModes[] = {
+      "no", "0", "yes", "1", "pre", "2", NULL
+  };
 
   static const char *formatFor[] = {
     "textDevice", "0",
@@ -833,7 +836,7 @@ compileConfig (FileInfo * nested)
 	    }
 	  break;
 	case 13:
-	  if ((k = checkValues (nested, yesNo)) != NOTFOUND)
+	  if ((k = checkValues (nested, hyphenationModes)) != NOTFOUND)
 	    ud->hyphenate = k;
 	  break;
 	case 14:

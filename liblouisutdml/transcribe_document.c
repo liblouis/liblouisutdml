@@ -43,6 +43,8 @@ transcribe_document (xmlNode * node)
   ud->style_top = -1;
   ud->text_length = 0;
   ud->translated_length = 0;
+  ud->sync_text_length = 0;
+  ud->in_sync = 1;
   if (!start_document ())
     return 0;
   push_sem_stack (node);
