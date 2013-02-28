@@ -240,7 +240,7 @@ make_contents (void)
 	  memcpy (ud->translated_buffer, currentHeading->headingChars,
 		  currentHeading->headingLength * CHARSIZE);
 	  ud->translated_length = currentHeading->headingLength;
-	  ud->in_sync = ud->hyphenate;
+	  ud->in_sync = 0;
 	  end_style (style);
 	  currentHeading = currentHeading->next;
 	}
