@@ -43,6 +43,7 @@ static int orphan_control = 0;
 static int orphan_control_pos = 0;
 static int orphan_control_status = 0;
 static int saved_text_length;
+static int saved_sync_text_length;
 static int saved_translated_length;
 static int saved_outbuf1_len_so_far;
 static int saved_outbuf2_len_so_far;
@@ -59,8 +60,9 @@ static int saved_lines_on_page;
 static int saved_line_spacing;
 static int saved_blank_lines;
 static int saved_fill_pages;
-static char saved_soft_hyphens[2 * BUFSIZE];
+static int saved_positions_array[2 * BUFSIZE];
 static widechar saved_text_buffer[2 * BUFSIZE];
+static widechar saved_sync_text_buffer[2 * BUFSIZE];
 static widechar saved_translated_buffer[2 * BUFSIZE];
 static widechar saved_outbuf1[2 * BUFSIZE];
 static widechar saved_outbuf2[2 * BUFSIZE];
@@ -78,6 +80,7 @@ static void
 saveState (void)
 {
   saved_text_length = ud->text_length;
+  saved_sync_text_length = ud->sync_text_length;
   saved_translated_length = ud->translated_length;
   saved_outbuf1_len_so_far = ud->outbuf1_len_so_far;
   saved_outbuf2_len_so_far = ud->outbuf2_len_so_far;
@@ -94,7 +97,9 @@ saveState (void)
   saved_line_spacing = ud->line_spacing;
   saved_blank_lines = ud->blank_lines;
   saved_fill_pages = ud->fill_pages;
+  memcpy (saved_positions_array, ud->positions_array, saved_translated_length * sizeof(int));
   widecharcpy (saved_text_buffer, ud->text_buffer, saved_text_length);
+  widecharcpy (saved_sync_text_buffer, ud->sync_text_buffer, saved_sync_text_length);
   widecharcpy (saved_translated_buffer, ud->translated_buffer,
 	       saved_translated_length);
   widecharcpy (saved_outbuf1, ud->outbuf1, saved_outbuf1_len_so_far);
@@ -112,13 +117,14 @@ saveState (void)
   widestrcpy (saved_print_page_number_last, ud->print_page_number_last);
   widestrcpy (saved_print_page_number, ud->print_page_number);
   widestrcpy (saved_braille_page_string, ud->braille_page_string);
-  savePointers ();
+  save_translated_buffer ();
 }
 
 static void
 restoreState (void)
 {
   ud->text_length = saved_text_length;
+  ud->sync_text_length = saved_sync_text_length;
   ud->translated_length = saved_translated_length;
   ud->outbuf1_len_so_far = saved_outbuf1_len_so_far;
   ud->outbuf2_len_so_far = saved_outbuf2_len_so_far;
@@ -135,7 +141,9 @@ restoreState (void)
   ud->line_spacing = saved_line_spacing;
   ud->blank_lines = saved_blank_lines;
   ud->fill_pages = saved_fill_pages;
+  memcpy (ud->positions_array, saved_positions_array, saved_translated_length * sizeof(int));
   widecharcpy (ud->text_buffer, saved_text_buffer, saved_text_length);
+  widecharcpy (ud->sync_text_buffer, saved_sync_text_buffer, saved_sync_text_length);
   widecharcpy (ud->translated_buffer, saved_translated_buffer,
 	       saved_translated_length);
   widecharcpy (ud->outbuf1, saved_outbuf1, saved_outbuf1_len_so_far);
@@ -153,7 +161,7 @@ restoreState (void)
   widestrcpy (ud->print_page_number_last, saved_print_page_number_last);
   widestrcpy (ud->print_page_number, saved_print_page_number);
   widestrcpy (ud->braille_page_string, saved_braille_page_string);
-  restorePointers ();
+  restore_translated_buffer ();
 }
 
 int

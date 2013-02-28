@@ -125,6 +125,7 @@ mathTrans ()
 			 &translatedLength,
 			 (char *) ud->typeform, NULL, NULL,
 			 NULL, NULL, dotsIO);
+      ud->in_sync = 0;
       memset (ud->typeform, 0, sizeof (ud->typeform));
       ud->text_length = 0;
       if (!k)

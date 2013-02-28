@@ -296,6 +296,9 @@ typedef struct
   int style_first_line_indent;
   char xml_header[2 * MAXNAMELEN];
   widechar text_buffer[2 * BUFSIZE];
+  int in_sync;
+  widechar sync_text_buffer[2 * BUFSIZE];
+  int sync_text_length;
   int positions_array[2 * BUFSIZE];
   widechar translated_buffer[2 * BUFSIZE];
   unsigned char typeform[2 * BUFSIZE];
