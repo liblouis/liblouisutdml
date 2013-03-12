@@ -1230,6 +1230,29 @@ get_sem_attr (xmlNode * node)
     return no;
 }
 
+unsigned char *
+get_sem_name (xmlNode * node)
+{
+  int k;
+  static char key[50];
+  HashEntry *nodeEntry = (HashEntry *) node->_private;
+  if (nodeEntry == NULL)
+    return "";
+  if (nodeEntry->macro != NULL)
+  {
+  char *macro = nodeEntry->macro;
+  for (k = 0; macro[k] != ','; k++);
+  k--;
+  strncpy (key, macro, k);
+  key[k + 1] = 0;
+  }
+  else if (nodeEntry->style != NULL)
+  strcpy (key, nodeEntry->style->name);
+  else
+  strcpy (key, semNames[nodeEntry->semNum]);
+  return &key;
+}
+
 StyleType *
 is_style (xmlNode * node)
 {
@@ -1406,10 +1429,11 @@ new_style (xmlChar * name)
   strcat (key, STYLESUF);
   if (hashLookup (semanticTable, key) != notFound)
     return latestEntry->style;
-  style = malloc (sizeof (StyleType));
+  style = malloc (sizeof (StyleType) + strlen (name) + 3);
   if (!style)
   memoryError ();
   memset (style, 0, sizeof (StyleType));
+  strcpy (style->name, name);
   style->newline_after = 1;
   hashInsert (semanticTable, key, styleEntry, 0, NULL, style, NULL);
   style->format = inherit;	/* inherit parent format by default */

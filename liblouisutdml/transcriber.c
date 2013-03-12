@@ -643,28 +643,27 @@ insert_utfwc (widechar * text, int length)
 #define SOFT_HYPHEN 0x00AD
 
 int
-remove_soft_hyphens (
-	const widechar * inbuf, const int inlen,
-	widechar * outbuf, int * outlen,
-	int * indices)
+remove_soft_hyphens (const widechar * inbuf, const int inlen,
+		     widechar * outbuf, int *outlen, int *indices)
 {
   int i, j;
   j = 0;
   for (i = 0; i < inlen; i++)
-    if (inbuf[i] != SOFT_HYPHEN) {
-      outbuf[j] = inbuf[i];
-      indices[j] = i;
-      j++; }
+    if (inbuf[i] != SOFT_HYPHEN)
+      {
+	outbuf[j] = inbuf[i];
+	indices[j] = i;
+	j++;
+      }
   *outlen = j;
   return (*outlen == inlen);
 }
 
 int
-translate_possibly_prehyphenated (
-	const char * table,
-	const widechar * inbuf, int * inlen,
-	widechar * outbuf, int * outlen,
-	char * typeform, int * indices, int mode)
+translate_possibly_prehyphenated (const char *table,
+				  const widechar * inbuf, int *inlen,
+				  widechar * outbuf, int *outlen,
+				  char *typeform, int *indices, int mode)
 {
   static widechar rmhyph_outbuf[2 * BUFSIZE];
   static int rmhyph_outlen;
@@ -672,20 +671,25 @@ translate_possibly_prehyphenated (
   static char translate_typeform[2 * BUFSIZE];
   static int translate_indices[2 * BUFSIZE];
   int k;
-  if (ud->hyphenate == 2) {
-    remove_soft_hyphens(inbuf, *inlen, rmhyph_outbuf, &rmhyph_outlen, rmhyph_indices);
-    if (typeform != NULL)
-      for (k = 0; k < rmhyph_outlen; k++)
-        translate_typeform[k] = typeform[rmhyph_indices[k]];
-    if (!lou_translate(table, rmhyph_outbuf, &rmhyph_outlen, outbuf, outlen,
-                       typeform == NULL ? NULL : translate_typeform, NULL, NULL,
-                       indices == NULL ? NULL : translate_indices, NULL, mode))
-      return 0;
-    if (indices != NULL)
-      for (k = 0; k < *outlen; k++)
-        indices[k] = rmhyph_indices[translate_indices[k]]; }
+  if (ud->hyphenate == 2)
+    {
+      remove_soft_hyphens (inbuf, *inlen, rmhyph_outbuf, &rmhyph_outlen,
+			   rmhyph_indices);
+      if (typeform != NULL)
+	for (k = 0; k < rmhyph_outlen; k++)
+	  translate_typeform[k] = typeform[rmhyph_indices[k]];
+      if (!lou_translate
+	  (table, rmhyph_outbuf, &rmhyph_outlen, outbuf, outlen,
+	   typeform == NULL ? NULL : translate_typeform, NULL, NULL,
+	   indices == NULL ? NULL : translate_indices, NULL, mode))
+	return 0;
+      if (indices != NULL)
+	for (k = 0; k < *outlen; k++)
+	  indices[k] = rmhyph_indices[translate_indices[k]];
+    }
   else
-    return lou_translate(table, inbuf, inlen, outbuf, outlen, typeform, NULL, NULL, indices, NULL, mode);
+    return lou_translate (table, inbuf, inlen, outbuf, outlen, typeform, NULL,
+			  NULL, indices, NULL, mode);
 }
 
 int
@@ -719,21 +723,28 @@ insert_translation (const char *table)
       ud->translated_buffer[ud->translated_length - 1] > 32)
     {
       ud->translated_buffer[ud->translated_length++] = 32;
-      if (ud->in_sync) {
-        ud->positions_array[ud->translated_length - 1] = ud->sync_text_length;
-        ud->sync_text_buffer[ud->sync_text_length++] = 32; }
+      if (ud->in_sync)
+	{
+	  ud->positions_array[ud->translated_length - 1] =
+	    ud->sync_text_length;
+	  ud->sync_text_buffer[ud->sync_text_length++] = 32;
+	}
     }
   translatedLength = MAX_TRANS_LENGTH - ud->translated_length;
   translationLength = ud->text_length;
   ud->text_buffer[ud->text_length++] = 32;
   ud->text_buffer[ud->text_length++] = 32;
-  k = translate_possibly_prehyphenated (
-	table,
-	&ud->text_buffer[0], &translationLength,
-	&ud->translated_buffer[ud->translated_length], &translatedLength, (char *)
-	&ud->typeform[0],
-	ud->in_sync ? &ud->positions_array[ud->translated_length] : NULL,
-	0);
+  k = translate_possibly_prehyphenated (table,
+					&ud->text_buffer[0],
+					&translationLength,
+					&ud->translated_buffer[ud->
+							       translated_length],
+					&translatedLength,
+					(char *) &ud->typeform[0],
+					ud->in_sync ? &ud->
+					positions_array[ud->
+							translated_length] :
+					NULL, 0);
   memset (ud->typeform, 0, sizeof (ud->typeform));
   ud->text_length = 0;
   if (!k)
@@ -744,9 +755,11 @@ insert_translation (const char *table)
   if (ud->in_sync)
     {
       if (ud->sync_text_length > 0)
-        for (k = 0; k < translationLength; k++)
-          ud->positions_array[ud->translated_length + k] += ud->sync_text_length;
-      memcpy(&ud->sync_text_buffer[ud->sync_text_length], ud->text_buffer, translationLength * CHARSIZE);
+	for (k = 0; k < translationLength; k++)
+	  ud->positions_array[ud->translated_length + k] +=
+	    ud->sync_text_length;
+      memcpy (&ud->sync_text_buffer[ud->sync_text_length], ud->text_buffer,
+	      translationLength * CHARSIZE);
       ud->sync_text_length += translationLength;
     }
   if ((ud->translated_length + translatedLength) < MAX_TRANS_LENGTH)
@@ -892,10 +905,11 @@ fillPage ()
     ud->lines_newpage[ud->lines_length] = 1;
   if (ud->fill_pages == 0 && ud->lines_on_page > 0)
     ud->fill_pages = 1;
-  if (ud->fill_pages) {
-    startLine ();
-    writeOutbuf ();
-  }
+  if (ud->fill_pages)
+    {
+      startLine ();
+      writeOutbuf ();
+    }
   return 1;
 }
 
@@ -942,10 +956,10 @@ handlePagenum (xmlChar * printPageNumber, int length)
   return 1;
 }
 
-static int utd_makePageSeparator (xmlChar *printPageNumber, int length);
+static int utd_makePageSeparator (xmlChar * printPageNumber, int length);
 
 void
-do_pagebreak (xmlNode *node)
+do_pagebreak (xmlNode * node)
 {
   xmlChar *number = get_attr_value (node);
   if (ud->format_for == utd)
@@ -955,28 +969,28 @@ do_pagebreak (xmlNode *node)
 }
 
 void
-do_attrtotext (xmlNode *node)
+do_attrtotext (xmlNode * node)
 {
   char attrValue[MAXNAMELEN];
   strcpy (attrValue, get_attr_value (node));
   if (ud->orig_format_for == dsbible)
-  { /* Enbncode verse numbers */
-  int k;
-  for (k = 0; attrValue[k]; k++)
-  attrValue[k] -= 32;
-  }
+    {				/* Enbncode verse numbers */
+      int k;
+      for (k = 0; attrValue[k]; k++)
+	attrValue[k] -= 32;
+    }
   insert_text_string (node, attrValue);
 }
-  
+
 void
-insert_text_string (xmlNode *node, xmlChar *str)
+insert_text_string (xmlNode * node, xmlChar * str)
 {
   xmlNode *newNode;
   if (ud->format_for == utd)
-  {
-  newNode = xmlNewNode (NULL, (xmlChar *) "brl");
-  link_brl_node (xmlAddNextSibling (node, newNode));
-  }
+    {
+      newNode = xmlNewNode (NULL, (xmlChar *) "brl");
+      link_brl_node (xmlAddNextSibling (node, newNode));
+    }
   insert_utf8 (str);
   if (ud->format_for == utd)
     ud->text_buffer[ud->text_length++] = ENDSEGMENT;
@@ -1008,7 +1022,8 @@ insert_text (xmlNode * node)
 	{
 	  for (k = 0; k < ud->text_length; k++)
 	    ud->positions_array[ud->translated_length + k] = k;
-	  memcpy(&ud->sync_text_buffer[ud->sync_text_length], ud->text_buffer, ud->text_length * CHARSIZE);
+	  memcpy (&ud->sync_text_buffer[ud->sync_text_length],
+		  ud->text_buffer, ud->text_length * CHARSIZE);
 	  ud->sync_text_length += ud->text_length;
 	}
       ud->translated_length += ud->text_length;
@@ -1755,19 +1770,23 @@ write_buffer (int from, int skip)
 
 static widechar *translatedBuffer;
 static int translatedLength;
-static int* positionsArray;
+static int *positionsArray;
 
 static widechar *saved_translatedBuffer;
 static int saved_translatedLength;
-static int* saved_positionsArray;
+static int *saved_positionsArray;
 
-void save_translated_buffer () {
+void
+save_translated_buffer ()
+{
   saved_translatedBuffer = translatedBuffer;
   saved_translatedLength = translatedLength;
   saved_positionsArray = positionsArray;
 }
 
-void restore_translated_buffer () {
+void
+restore_translated_buffer ()
+{
   translatedBuffer = saved_translatedBuffer;
   translatedLength = saved_translatedLength;
   positionsArray = saved_positionsArray;
@@ -1787,7 +1806,7 @@ hyphenatex (int lastBlank, int lineEnd)
   int wordLength;
   int textWordStart, textWordLength;
   int const textLength = ud->sync_text_length;
-  widechar * const textBuffer = ud->sync_text_buffer;
+  widechar *const textBuffer = ud->sync_text_buffer;
   char textHyphens[MAXNAMELEN];
   int breakAt = 0;
   int hyphenFound = 0;
@@ -1808,45 +1827,51 @@ hyphenatex (int lastBlank, int lineEnd)
     {
       textWordStart = positionsArray[wordStart];
       if (wordStart + wordLength >= translatedLength)
-        textWordLength = textLength - textWordStart;
+	textWordLength = textLength - textWordStart;
       else
-        textWordLength = positionsArray[wordStart + wordLength] - textWordStart;
-      if (textWordStart < 0 ||
-          textWordLength < 1 ||
-          textWordStart + textWordLength > textLength)
-        return 0;
+	textWordLength =
+	  positionsArray[wordStart + wordLength] - textWordStart;
+      if (textWordStart < 0 || textWordLength < 1
+	  || textWordStart + textWordLength > textLength)
+	return 0;
       switch (ud->hyphenate)
-        {
-          case 1:
-            if (!lou_hyphenate (ud->main_braille_table,
-                                &textBuffer[textWordStart], textWordLength,
-                                textHyphens, 0))
-              return 0;
-            break;
-          case 2:
-            textHyphens[0] = '0';
-            for (k = 1; k < textWordLength; k++)
-              textHyphens[k] = (textBuffer[textWordStart + k - 1] == SOFT_HYPHEN) ? '1' : '0';
-            break;
-          default:
-            return 0;
-        }
+	{
+	case 1:
+	  if (!lou_hyphenate (ud->main_braille_table,
+			      &textBuffer[textWordStart], textWordLength,
+			      textHyphens, 0))
+	    return 0;
+	  break;
+	case 2:
+	  textHyphens[0] = '0';
+	  for (k = 1; k < textWordLength; k++)
+	    textHyphens[k] =
+	      (textBuffer[textWordStart + k - 1] == SOFT_HYPHEN) ? '1' : '0';
+	  break;
+	default:
+	  return 0;
+	}
       for (k = 0; k < wordLength; k++)
-        hyphens[k] = textHyphens[positionsArray[wordStart + k] - textWordStart];
+	hyphens[k] =
+	  textHyphens[positionsArray[wordStart + k] - textWordStart];
     }
   else
     {
-      for (k = wordLength - MIN_SYLLABLE_LENGTH - 1; k >= MIN_SYLLABLE_LENGTH; k--)
-        if ((wordStart + k) < lineEnd && translatedBuffer[wordStart + k] == *ud->lit_hyphen) {
-          hyphens[k + 1] = '1';
-          hyphenFound = 1;
-          break; }
+      for (k = wordLength - MIN_SYLLABLE_LENGTH - 1; k >= MIN_SYLLABLE_LENGTH;
+	   k--)
+	if ((wordStart + k) < lineEnd
+	    && translatedBuffer[wordStart + k] == *ud->lit_hyphen)
+	  {
+	    hyphens[k + 1] = '1';
+	    hyphenFound = 1;
+	    break;
+	  }
       hyphens[wordLength] = 0;
       if (!hyphenFound)
-        if (!lou_hyphenate (ud->main_braille_table,
-                            &translatedBuffer[wordStart], wordLength,
-                            hyphens, 1))
-          return 0;
+	if (!lou_hyphenate (ud->main_braille_table,
+			    &translatedBuffer[wordStart], wordLength,
+			    hyphens, 1))
+	  return 0;
     }
   for (k = strlen (hyphens) - MIN_SYLLABLE_LENGTH; k > 0; k--)
     {
@@ -2639,8 +2664,8 @@ static int
 editTrans ()
 {
   int translationLength;
-  if (ud->needs_editing && !(ud->contents == 2) && !(ud->style_format 
-  == computerCoded) &&
+  if (ud->needs_editing && !(ud->contents == 2) && !(ud->style_format
+						     == computerCoded) &&
       *ud->edit_table_name && (ud->has_math || ud->has_chem || ud->has_music))
     {
       translationLength = ud->translated_length;
@@ -3756,8 +3781,24 @@ utd_transcribe_text_file ()
 int
 link_brl_node (xmlNode * node)
 {
+  xmlNode *prev;
+  xmlNode *semNode;
+  xmlChar *attrValue = NULL;
   if (node == NULL)
     return 0;
+  /* Add semantics attribute to node */
+  semNode = node->parent;
+  prev = node->prev;
+  if (prev == NULL)
+    attrValue = "";
+  else if (prev->type != XML_TEXT_NODE)
+    semNode = prev;
+  if (semNode->type != XML_ELEMENT_NODE)
+    attrValue = "";
+  if (attrValue == NULL)
+    attrValue = get_sem_name (semNode);
+  xmlNewProp (node, (xmlChar *) "semantics", (xmlChar *) attrValue);
+  /* Finished adding semantics attribute */
   if (firstBrlNode == NULL)
     {
       firstBrlNode = node;
@@ -3874,10 +3915,10 @@ makeDotsTextNode (xmlNode * node, const widechar * content, int length,
       else
 	memcpy (ud->text_buffer, content, length * CHARSIZE);
       if (!(ud->mode & louisDots))
-      for (inlen = 0; inlen < length; inlen++)
-	ud->text_buffer[inlen] = (ud->text_buffer[inlen] & 0x00ff) | 0x2800;
+	for (inlen = 0; inlen < length; inlen++)
+	  ud->text_buffer[inlen] = (ud->text_buffer[inlen] & 0x00ff) | 0x2800;
       else
-        inlen = length;
+	inlen = length;
     }
   outlen = maxContent;
   wc_string_to_utf8 (ud->text_buffer, &inlen, brlContent, &outlen);
@@ -4415,12 +4456,12 @@ assignIndices ()
 	 nextSegment < translatedLength)
     {
       if (hasAttrValue (curBrlNode, "modifiers", "notext"))
-      {
-      for (; translatedBuffer[curPos] != ENDSEGMENT && curPos < 
-      translatedLength; curPos++);
-      curBrlNode = curBrlNode->_private;
-      continue;
-      }
+	{
+	  for (; translatedBuffer[curPos] != ENDSEGMENT && curPos <
+	       translatedLength; curPos++);
+	  curBrlNode = curBrlNode->_private;
+	  continue;
+	}
       if (translatedBuffer[curPos] == ENDSEGMENT || nextSegment == 0)
 	{
 	  int indexPos = nextSegment;
@@ -4792,8 +4833,7 @@ utd_doOrdinaryText ()
 		{
 		  if (styleSpec->status == startBody)
 		    leadingBlanks =
-		      ud->style_left_margin + 
-		      ud->style_first_line_indent;
+		      ud->style_left_margin + ud->style_first_line_indent;
 		  else
 		    leadingBlanks = ud->style_left_margin;
 		  availableCells -= leadingBlanks;
@@ -5292,8 +5332,7 @@ paperHeight=%d \
 leftMargin=%d \
 rightMargin=%d \
 topMargin=%d \
-bottomMargin=%d", ud->braille_page_number, firstTableName, (int)ud->dpi, 
-ud->paper_width, ud->paper_height, ud->left_margin, ud->right_margin, ud->top_margin, ud->bottom_margin);
+bottomMargin=%d", ud->braille_page_number, firstTableName, (int) ud->dpi, ud->paper_width, ud->paper_height, ud->left_margin, ud->right_margin, ud->top_margin, ud->bottom_margin);
       xmlNewProp (newNode, (xmlChar *) "content", (xmlChar *) utilStringBuf);
       xmlAddChild (ud->head_node, newNode);
     }

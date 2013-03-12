@@ -221,6 +221,11 @@ free method is called.
 
   public native void free ();
 
+/**
+ * The following methods call liblouis functions. inbuf, outbuf and 
+ * typeform must be encoded in UTF-8. Thus it does not matter if 
+ * liblouis is compiled for 16-bit or 32-bit Unicodee.
+ */
 public native boolean louisTranslateString
   (String tableList,
    byte[]inbuf,
