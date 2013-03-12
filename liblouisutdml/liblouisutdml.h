@@ -156,6 +156,7 @@ found logFile will be empty. */
 /* Set/get  the path to which temporary files will be written */
 char *EXPORT_CALL lbu_setWriteablePath (const char *path);
 char *EXPORT_CALL lbu_getWriteablePath ();
+
 /* This function should be called at the end of the application to free
 all memory allocated by liblouisutdml or liblouis. */
 void EXPORT_CALL lbu_free (void);

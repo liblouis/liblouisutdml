@@ -85,6 +85,7 @@ typedef struct
   int newpage_after;
   int righthand_page;
   int newline_after;
+  char name[1];
 } StyleType;
 
 #ifdef _WIN32
@@ -403,4 +404,5 @@ int utd_back_translate_braille_string ();
 int utd_back_translate_file ();
 int pass2_conv ();
 void memoryError ();
+unsigned char *get_sem_name (xmlNode *node);
 #endif /*louisutdml_h */
