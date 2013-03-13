@@ -517,40 +517,10 @@ transcribe_paragraph (xmlNode * node, int action)
     switch (ud->stack[ud->top])
       {
       case runninghead:
-	if (ud->format_for == utd)
-	  {
-	    memcpy (ud->running_head, ud->text_buffer, ud->text_length *
-		    CHARSIZE);
-	    ud->running_head_length = ud->text_length;
-	  }
-	else
-	  {
-	    insert_translation (ud->main_braille_table);
-	    if (ud->translated_length > (ud->cells_per_line - 9))
-	      ud->running_head_length = ud->cells_per_line - 9;
-	    else
-	      ud->running_head_length = ud->translated_length;
-	    memcpy (&ud->running_head[0], &ud->translated_buffer[0],
-		    ud->running_head_length * CHARSIZE);
-	  }
+	do_runninghead ();
 	break;
       case footer:
-	if (ud->format_for == utd)
-	  {
-	    memcpy (ud->footer, ud->text_buffer, ud->text_length * 
-	    CHARSIZE);
-	    ud->footer_length = ud->text_length;
-	  }
-	else
-	  {
-	    insert_translation (ud->main_braille_table);
-	    if (ud->translated_length > (ud->cells_per_line - 9))
-	      ud->footer_length = ud->cells_per_line - 9;
-	    else
-	      ud->footer_length = ud->translated_length;
-	    memcpy (&ud->footer[0], &ud->translated_buffer[0],
-		    ud->footer_length * CHARSIZE);
-	  }
+	do_footer ();
 	break;
       default:
 	break;
