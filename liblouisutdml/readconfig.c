@@ -1061,6 +1061,8 @@ compileConfig (FileInfo * nested)
 	      "16",
 	      "newlineAfter",
 	      "17",
+	      "runningHead",
+	      "18",
 	      NULL
 	    };
 	    static const char *formats[] = {
@@ -1175,6 +1177,10 @@ compileConfig (FileInfo * nested)
 		  case 17:
 		    if ((k = checkValues (nested, yesNo)) != NOTFOUND)
 		      style->newline_after = k;
+		    break;
+		  case 18:
+		    if ((k = checkValues (nested, yesNo)) != NOTFOUND)
+		      style->runningHead = k;
 		    break;
 		  default:
 		    configureError (nested, "Program error in readconfig.c");

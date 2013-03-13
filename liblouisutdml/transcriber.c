@@ -3529,6 +3529,8 @@ end_style ()
   ud->style_left_margin = styleSpec->curLeftMargin;
   ud->style_right_margin = styleSpec->curRightMargin;
   ud->style_first_line_indent = styleSpec->curFirstLineIndent;
+  if (style->runningHead)
+    do_runninghead ();
   if (!(styleSpec->node && !styleSpec->node->children))
     {
       insert_translation (ud->main_braille_table);
