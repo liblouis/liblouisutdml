@@ -3823,24 +3823,8 @@ utd_transcribe_text_file ()
 int
 link_brl_node (xmlNode * node)
 {
-  xmlNode *prev;
-  xmlNode *semNode;
-  xmlChar *attrValue = NULL;
   if (node == NULL)
     return 0;
-  /* Add semantics attribute to node */
-  semNode = node->parent;
-  prev = node->prev;
-  if (prev == NULL)
-    attrValue = "";
-  else if (prev->type != XML_TEXT_NODE)
-    semNode = prev;
-  if (semNode->type != XML_ELEMENT_NODE)
-    attrValue = "";
-  if (attrValue == NULL)
-    attrValue = get_sem_name (semNode);
-  xmlNewProp (node, (xmlChar *) "semantics", (xmlChar *) attrValue);
-  /* Finished adding semantics attribute */
   if (firstBrlNode == NULL)
     {
       firstBrlNode = node;
