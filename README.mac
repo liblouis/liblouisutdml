@@ -30,15 +30,11 @@ default install in /usr/local/lib.
 3. Download the latest liblouisutdml tarball from
 
   http://code.google.com/p/liblouisutdml/downloads/list
-
-or svn; decompress it; switch to the liblouisutdml directory and run
+; decompress it; switch to the liblouisutdml directory and run
 
   ./configure; make; sudo make install
 
-This works on my mac, and so hopefully should work for you. Although I
-am still running 10.5 on a PPC, the standard installation shouldn't
-have changed that much.
-
+This works on my mac, and so hopefully should work for you.
 
 If you run into linking problems it might be that there are multiple
 versions of libxml2 installed. In that case uninstall all of the
