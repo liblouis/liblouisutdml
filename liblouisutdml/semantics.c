@@ -1241,15 +1241,21 @@ get_sem_name (xmlNode * node)
   if (nodeEntry->macro != NULL)
     {
       char *macro = nodeEntry->macro;
+      strcpy (key, "macro,");
       for (k = 0; macro[k] != ','; k++);
       k--;
-      strncpy (key, macro, k);
-      key[k + 1] = 0;
+      strncat (key, macro, k);
     }
   else if (nodeEntry->style != NULL)
-    strcpy (key, nodeEntry->style->name);
+  {
+  strcpy (key, "style,");
+    strcat (key, nodeEntry->style->name);
+    }
   else
-    strcpy (key, semNames[nodeEntry->semNum]);
+    {
+    strcpy (key, "action,");
+    strcat (key, semNames[nodeEntry->semNum]);
+    }
   return &key;
 }
 
