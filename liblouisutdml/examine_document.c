@@ -45,6 +45,12 @@ examine_document (xmlNode * node)
   if (node == NULL)
     return 0;
   ud->stack[++ud->top] = set_sem_attr (node);
+  if (ud->format_for == utd)
+  {
+  unsigned char *name = get_sem_name (node);
+  if (name[0] != 0)
+  xmlNewProp (node, (xmlChar *)"semantics", (xmlChar *)name);
+  }
   switch (ud->stack[ud->top])
     {
     case skip:
