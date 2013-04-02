@@ -25,7 +25,7 @@ reverse mroot ^<,^>,^}
 mrow mrow
 ms ms
 mspace mspace
-msqrt msqrt ^>,^}
+msqrt msqrt ^>,\*^}
 mstyle mstyle
 msub msub ,^;,^"
 msubsup msupsup ,^~,^~^~,^"
