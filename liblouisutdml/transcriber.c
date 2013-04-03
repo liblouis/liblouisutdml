@@ -665,27 +665,27 @@ translate_possibly_prehyphenated (const char *table,
 				  widechar * outbuf, int *outlen,
 				  char *typeform, int *indices, int mode)
 {
-  static widechar rmhyph_outbuf[2 * BUFSIZE];
-  static int rmhyph_outlen;
-  static int rmhyph_indices[2 * BUFSIZE];
-  static char translate_typeform[2 * BUFSIZE];
-  static int translate_indices[2 * BUFSIZE];
+  static widechar tmp_outbuf[2 * BUFSIZE];
+  static char tmp_typeform[2 * BUFSIZE];
+  static int tmp_indices_1[2 * BUFSIZE];
+  static int tmp_indices_2[2 * BUFSIZE];
+  int tmp_outlen;
   int k;
   if (ud->hyphenate == 2)
     {
-      remove_soft_hyphens (inbuf, *inlen, rmhyph_outbuf, &rmhyph_outlen,
-			   rmhyph_indices);
+      remove_soft_hyphens (inbuf, *inlen, tmp_outbuf, &tmp_outlen,
+			   tmp_indices_1);
       if (typeform != NULL)
-	for (k = 0; k < rmhyph_outlen; k++)
-	  translate_typeform[k] = typeform[rmhyph_indices[k]];
+	for (k = 0; k < tmp_outlen; k++)
+	  tmp_typeform[k] = typeform[tmp_indices_1[k]];
       if (!lou_translate
-	  (table, rmhyph_outbuf, &rmhyph_outlen, outbuf, outlen,
-	   typeform == NULL ? NULL : translate_typeform, NULL, NULL,
-	   indices == NULL ? NULL : translate_indices, NULL, mode))
+	  (table, tmp_outbuf, &tmp_outlen, outbuf, outlen,
+	   (typeform == NULL ? NULL : tmp_typeform), NULL, NULL,
+	   tmp_indices_2, NULL, mode))
 	return 0;
       if (indices != NULL)
 	for (k = 0; k < *outlen; k++)
-	  indices[k] = rmhyph_indices[translate_indices[k]];
+	  indices[k] = tmp_indices_1[tmp_indices_2[k]];
     }
   else
     return lou_translate (table, inbuf, inlen, outbuf, outlen, typeform, NULL,
