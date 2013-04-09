@@ -213,6 +213,8 @@ findTable (FileInfo * nested)
   if (ud->config_path != NULL)
     {
       strcpy (trialPath, ud->config_path);
+      if (trialPath[strlen (trialPath) -1] != ud->file_separator)
+        strcat (trialPath, pathEnd);
       strcat (trialPath, nested->value);
       if (stat (trialPath, &statInfo) != -1)
 	strcpy (filePath, trialPath);

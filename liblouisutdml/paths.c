@@ -85,7 +85,7 @@ set_paths (const char *configPath)
     {
 #ifdef _Win32
       strcpy (currentPath, dataPath);
-      strcat (currentPaath, "\\liblouis\\tables\\");
+      strcat (currentPath, "\\liblouis\\tables\\");
       if (!addPath (currentPath))
 	return 0;
       strcpy (currentPath, dataPath);
