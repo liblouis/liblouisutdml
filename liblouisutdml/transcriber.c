@@ -2706,7 +2706,8 @@ editTrans ()
   int translationLength;
   if (ud->needs_editing && !(ud->contents == 2) && !(ud->style_format
 						     == computerCoded) &&
-      *ud->edit_table_name && (ud->has_math || ud->has_chem || ud->has_music))
+      ud->edit_table_name != NULL && (ud->has_math || ud->has_chem || 
+      ud->has_music))
     {
       translationLength = ud->translated_length;
       translatedLength = MAX_TRANS_LENGTH;
