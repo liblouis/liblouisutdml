@@ -1256,7 +1256,7 @@ get_sem_name (xmlNode * node)
     strcpy (key, "action,");
     strcat (key, semNames[nodeEntry->semNum]);
     }
-  return &key;
+  return key;
 }
 
 StyleType *
