@@ -854,21 +854,51 @@ compileConfig (FileInfo * nested)
 	  break;
 	case 18:
 	  ud->contracted_table_name = findTable (nested);
+	  if (ud->contracted_table_name == NULL)
+	  {
+	  configureError (nested, "invalid literaryTextTable");
+	  return 0;
+	  }
 	  break;
 	case 19:
 	  ud->edit_table_name = findTable (nested);
+	  if (ud->edit_table_name == NULL)
+	  {
+	  configureError (nested, "invalid editTable");
+	  return 0;
+	  }
 	  break;
 	case 20:
 	  ud->uncontracted_table_name = findTable (nested);
+	  if (ud->uncontracted_table_name == NULL)
+	  {
+	  configureError (nested, "invalid uncontractedTableName");
+	  return 0;
+	  }
 	  break;
 	case 21:
 	  ud->compbrl_table_name = findTable (nested);
+	  if (ud->compbrl_table_name == NULL)
+	  {
+	  configureError (nested, "invalid compbrlTableName");
+	  return 0;
+	  }
 	  break;
 	case 22:
 	  ud->mathtext_table_name = findTable (nested);
+	  if (ud->mathtext_table_name == NULL)
+	  {
+	  configureError (nested, "invalid mathtextTableName");
+	  return 0;
+	  }
 	  break;
 	case 23:
 	  ud->mathexpr_table_name = findTable (nested);
+	  if (ud->mathexpr_table_name == NULL)
+	  {
+	  configureError (nested, "invalid mathexprTableName");
+	  return 0;
+	  }
 	  break;
 	case 24:
 	  topMargin = atof (nested->value);
