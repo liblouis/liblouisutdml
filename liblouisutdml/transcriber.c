@@ -4880,7 +4880,7 @@ utd_doOrdinaryText ()
 	  if (cellsToWrite == availableCells)
 	    newLineNeeded = 1;
 	  if (dots != ENDSEGMENT && lastSpace != 0)
-	    cellsToWrite = lastSpace;
+	    cellsToWrite = lastSpace + 1;
 	  cellsOnLine += cellsToWrite;
 	  availableCells -= cellsToWrite;
 	  insertTextFragment (&translatedBuffer[charactersWritten],
