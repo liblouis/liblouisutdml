@@ -75,6 +75,7 @@ static double rightMargin;
 static double topMargin;
 static double bottomMargin;
 static int errorCount = 0;
+static int fatalErrorCount = 0;
 
 static void
 configureError (FileInfo * nested, char *format, ...)
@@ -235,6 +236,7 @@ findTable (FileInfo * nested)
   if (trialPath[0] == 0)
     {
       configureError (nested, "Table '%s' cannot be found.", nested->value);
+      fatalErrorCount++;
       return NULL;
     }
   return alloc_string_if_not (trialPath);
@@ -1267,6 +1269,7 @@ read_configuration_file (const char *configFileList, const char
   int listLength;
   int currentListPos = 0;
   errorCount = 0;
+  fatalErrorCount = 0;
   /*Process logFileName later, after writeablePath is set */
   paperWidth = 0;
   paperHeight = 0;
@@ -1275,6 +1278,11 @@ read_configuration_file (const char *configFileList, const char
   topMargin = 0;
   bottomMargin = 0;
   destroy_semantic_table ();
+  if (fatalErrorCount)
+    {
+      configureError (NULL, "%d fatal errors found", fatalErrorCount);
+      return 0;
+    }
   if (ud == NULL)
     {
       if (!(ud = malloc (sizeof (UserData))))
