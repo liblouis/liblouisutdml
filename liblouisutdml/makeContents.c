@@ -57,6 +57,10 @@ static widechar saved_printPageNumberFirst[MAXNUMLEN];
 static widechar saved_printPageNumberLast[MAXNUMLEN];
 static BrlPageNumFormat saved_braillePageNumberFormat;
 static StyleRecord *styleSpec;
+static SaveHeading *saved_firstHeading;
+static SaveHeading *saved_lastHeading;
+
+static void free_headings (SaveHeading *start);
 
 int
 initialize_contents (void)
@@ -72,7 +76,9 @@ initialize_contents (void)
   saved_braillePageNumber = ud->braille_page_number;
   ud->contents = 1;
   firstHeading = NULL;
-  lastHeading = &heading;
+  lastHeading = NULL;
+  saved_lastHeading = NULL;
+  saved_firstHeading = NULL;
   saved_outFile = ud->outFile;
   strcpy (tempFileName, lbu_getWriteablePath ());
   strcat (tempFileName, "lbx_body.temp");
@@ -162,7 +168,8 @@ finish_heading (sem_act action)
   headingSize += heading.headingLength * CHARSIZE;
   headingPtr = malloc (headingSize);
   memcpy (headingPtr, &heading, headingSize);
-  lastHeading->next = headingPtr;
+  if (lastHeading != NULL)
+    lastHeading->next = headingPtr;
   lastHeading = headingPtr;
   if (firstHeading == NULL)
     firstHeading = headingPtr;
@@ -247,14 +254,8 @@ make_contents (void)
       do_newpage ();
       ud->prelim_pages = ud->braille_page_number;
       ud->braille_page_number = saved_braillePageNumber;
-      /*Free headings */
-      currentHeading = firstHeading;
-      while (currentHeading->next != NULL)
-	{
-	  lastHeading = currentHeading;
-	  currentHeading = currentHeading->next;
-	  free (lastHeading);
-	}
+      free_headings (firstHeading);
+      firstHeading = NULL;
       ud->contents = saved_udContents;
       ud->braille_page_number = old_braillePageNumber;
     }
@@ -273,4 +274,33 @@ make_contents (void)
   while (bytesRead != 0);
   fclose (tempFile);
   return 1;
+}
+
+void
+contents_save_state ()
+{
+  saved_firstHeading = firstHeading;
+  saved_lastHeading = lastHeading;
+}
+
+void
+contents_restore_state ()
+{
+  firstHeading = saved_firstHeading;
+  lastHeading = saved_lastHeading;
+  if (lastHeading != NULL) {
+    free_headings (lastHeading->next);
+    lastHeading->next = NULL; }
+}
+
+static void
+free_headings (SaveHeading *start)
+{
+  SaveHeading *current;
+  SaveHeading *next;
+  if (start == NULL) return;
+  current = start;
+  while ((next = current->next) != NULL) {
+    free(current);
+    current = next; }
 }
