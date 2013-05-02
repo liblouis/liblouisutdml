@@ -118,6 +118,7 @@ saveState (void)
   widestrcpy (saved_print_page_number, ud->print_page_number);
   widestrcpy (saved_braille_page_string, ud->braille_page_string);
   save_translated_buffer ();
+  contents_save_state ();
 }
 
 static void
@@ -162,6 +163,7 @@ restoreState (void)
   widestrcpy (ud->print_page_number, saved_print_page_number);
   widestrcpy (ud->braille_page_string, saved_braille_page_string);
   restore_translated_buffer ();
+  contents_restore_state ();
 }
 
 int
