@@ -406,6 +406,6 @@ int utd_back_translate_file ();
 int pass2_conv ();
 void memoryError ();
 unsigned char *get_sem_name (xmlNode *node);
-void do_runninghead ();
-void do_footer ();
+void do_runninghead (xmlNode *node);
+void do_footer (xmlNode *node);
 #endif /*louisutdml_h */

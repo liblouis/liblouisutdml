@@ -959,44 +959,78 @@ handlePagenum (xmlChar * printPageNumber, int length)
 
 static int utd_makePageSeparator (xmlChar * printPageNumber, int length);
 
-void
-do_runninghead ()
+static void
+setRunningheadString (widechar * chars, int length)
 {
-  if (ud->format_for == utd)
-    {
-      memcpy (ud->running_head, ud->text_buffer, ud->text_length * CHARSIZE);
-      ud->running_head_length = ud->text_length;
-    }
-  else
-    {
-      insert_translation (ud->main_braille_table);
-      if (ud->translated_length > (ud->cells_per_line - 9))
-	ud->running_head_length = ud->cells_per_line - 9;
-      else
-	ud->running_head_length = ud->translated_length;
-      memcpy (&ud->running_head[0], &ud->translated_buffer[0],
-	      ud->running_head_length * CHARSIZE);
-    }
+  ud->running_head_length = minimum (length, ud->cells_per_line - 9);
+  memcpy (ud->running_head, chars, ud->running_head_length * CHARSIZE);
+}
+
+static void
+setFooterString(widechar * chars, int length)
+{
+  ud->footer_length = minimum (length, ud->cells_per_line - 9);
+  memcpy (ud->footer, chars, ud->footer_length * CHARSIZE);
 }
 
 void
-do_footer ()
+do_runninghead (xmlNode * node)
 {
-  if (ud->format_for == utd)
+  static widechar translationBuffer[MAX_TRANS_LENGTH];
+  static int translationLength;
+  static widechar translatedBuffer[MAX_TRANS_LENGTH];
+  static int translatedLength;
+  int textLength;
+  xmlNode * text = node->children;
+  if (text && text->type == XML_TEXT_NODE)
     {
-      memcpy (ud->footer, ud->text_buffer, ud->text_length * CHARSIZE);
-      ud->footer_length = ud->text_length;
+      textLength = strlen ((char *) text->content);
+      if (ud->format_for == utd)
+        utf8ToWc (text->content, &textLength, translatedBuffer, &translatedLength);
+      else
+        {
+          translationLength = MAX_TRANS_LENGTH;
+          translatedLength = MAX_TRANS_LENGTH;
+          for (; textLength > 0 && text->content[textLength - 1] <= 32; textLength--) {}
+          utf8ToWc (text->content, &textLength, translationBuffer, &translationLength);
+          lou_translateString (ud->main_braille_table, translationBuffer,
+                               &translationLength, translatedBuffer,
+                               &translatedLength, NULL, NULL, 0);
+        }
+      setRunningheadString (translatedBuffer, translatedLength);
     }
   else
+    setRunningheadString (translatedBuffer, 0);
+}
+
+void
+do_footer (xmlNode * node)
+{
+  static widechar translationBuffer[MAX_TRANS_LENGTH];
+  static int translationLength;
+  static widechar translatedBuffer[MAX_TRANS_LENGTH];
+  static int translatedLength;
+  int textLength;
+  xmlNode * text = node->children;
+  if (text && text->type == XML_TEXT_NODE)
     {
-      insert_translation (ud->main_braille_table);
-      if (ud->translated_length > (ud->cells_per_line - 9))
-	ud->footer_length = ud->cells_per_line - 9;
+      textLength = strlen ((char *) text->content);
+      if (ud->format_for == utd)
+        utf8ToWc (text->content, &textLength, translatedBuffer, &translatedLength);
       else
-	ud->footer_length = ud->translated_length;
-      memcpy (&ud->footer[0], &ud->translated_buffer[0],
-	      ud->footer_length * CHARSIZE);
+        {
+          translationLength = MAX_TRANS_LENGTH;
+          translatedLength = MAX_TRANS_LENGTH;
+          for (; textLength > 0 && text->content[textLength - 1] <= 32; textLength--) {}
+          utf8ToWc (text->content, &textLength, translationBuffer, &translationLength);
+          lou_translateString (ud->main_braille_table, translationBuffer,
+                               &translationLength, translatedBuffer,
+                               &translatedLength, NULL, NULL, 0);
+        }
+      setFooterString (translatedBuffer, translatedLength);
     }
+  else
+    setFooterString (translatedBuffer, 0);
 }
 
 void
@@ -1072,6 +1106,9 @@ insert_text (xmlNode * node)
       return;
     case pagenum:
       handlePagenum (node->content, length);
+      return;
+    case runninghead:
+    case footer:
       return;
     default:
       break;
@@ -3537,7 +3574,12 @@ end_style ()
   ud->style_right_margin = styleSpec->curRightMargin;
   ud->style_first_line_indent = styleSpec->curFirstLineIndent;
   if (style->runningHead)
-    do_runninghead ();
+    {
+      if (ud->format_for == utd)
+        setRunningheadString (ud->text_buffer, ud->text_length);
+      else
+        setRunningheadString (ud->translated_buffer, ud->translated_length);
+    }
   if (!(styleSpec->node && !styleSpec->node->children))
     {
       insert_translation (ud->main_braille_table);

@@ -1652,10 +1652,10 @@ doSemanticActions ()
       do_pagenum ();
       break;
     case runninghead:
-      do_runninghead ();
+      do_runninghead (macroNode);
       break;
     case footer:
-      do_footer ();
+      do_footer (macroNode);
       break;
     default:
       macroError ("semantic action %s is not supported in a macro",

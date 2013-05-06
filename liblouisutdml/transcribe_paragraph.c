@@ -294,6 +294,12 @@ transcribe_paragraph (xmlNode * node, int action)
     case pagenum:
       do_pagenum ();
       break;
+    case runninghead:
+      do_runninghead (node);
+      break;
+    case footer:
+      do_footer (node);
+      break;
     default:
       break;
     }
@@ -515,18 +521,6 @@ transcribe_paragraph (xmlNode * node, int action)
   else
   if (style)
     end_style ();
-  else
-    switch (ud->stack[ud->top])
-      {
-      case runninghead:
-	do_runninghead ();
-	break;
-      case footer:
-	do_footer ();
-	break;
-      default:
-	break;
-      }
   if (action != 0)
     pop_sem_stack ();
   else
