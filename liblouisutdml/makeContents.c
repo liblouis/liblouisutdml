@@ -55,6 +55,12 @@ static int saved_braillePageNumber;
 static widechar saved_printPageNumber[MAXNUMLEN];
 static widechar saved_printPageNumberFirst[MAXNUMLEN];
 static widechar saved_printPageNumberLast[MAXNUMLEN];
+static widechar saved_pageSeparatorNumberFirst[MAXNUMLEN];
+static widechar saved_pageSeparatorNumberLast[MAXNUMLEN];
+static int saved_runningHeadLength;
+static int saved_footerLength;
+static widechar saved_runningHead[MAXNAMELEN / 2];
+static widechar saved_footer[MAXNAMELEN / 2];
 static BrlPageNumFormat saved_braillePageNumberFormat;
 static StyleRecord *styleSpec;
 static SaveHeading *saved_firstHeading;
@@ -67,9 +73,15 @@ initialize_contents (void)
 {
 
   saved_braillePageNumberFormat = ud->brl_page_num_format;
-  widestrcpy (saved_printPageNumber, ud->print_page_number, -1);
-  widestrcpy (saved_printPageNumberFirst, ud->print_page_number_first, -1);
-  widestrcpy (saved_printPageNumberLast, ud->print_page_number_last, -1);
+  widestrcpy (saved_printPageNumber, ud->print_page_number);
+  widestrcpy (saved_printPageNumberFirst, ud->print_page_number_first);
+  widestrcpy (saved_printPageNumberLast, ud->print_page_number_last);
+  widestrcpy (saved_pageSeparatorNumberFirst, ud->page_separator_number_first);
+  widestrcpy (saved_pageSeparatorNumberLast, ud->page_separator_number_last);
+  saved_runningHeadLength = ud->running_head_length;
+  saved_footerLength = ud->footer_length;
+  widecharcpy (saved_runningHead, ud->running_head, ud->running_head_length);
+  widecharcpy (saved_footer, ud->footer, ud->footer_length);
   ud->after_contents = 1;
   saved_udContents = ud->contents;
   saved_linesOnPage = ud->lines_on_page;
@@ -196,10 +208,15 @@ make_contents (void)
       styleSpec = &ud->style_stack[ud->style_top];
       styleSpec->curBrlNumFormat = saved_braillePageNumberFormat;
       ud->brl_page_num_format = saved_braillePageNumberFormat;
-      widestrcpy (ud->print_page_number, saved_printPageNumber, -1);
-      widestrcpy (ud->print_page_number_first, saved_printPageNumberFirst,
-		  -1);
-      widestrcpy (ud->print_page_number_last, saved_printPageNumberLast, -1);
+      widestrcpy (ud->print_page_number, saved_printPageNumber);
+      widestrcpy (ud->print_page_number_first, saved_printPageNumberFirst);
+      widestrcpy (ud->print_page_number_last, saved_printPageNumberLast);
+      widestrcpy (ud->page_separator_number_first, saved_pageSeparatorNumberFirst);
+      widestrcpy (ud->page_separator_number_last, saved_pageSeparatorNumberLast);
+      ud->running_head_length = saved_runningHeadLength;
+      ud->footer_length = saved_footerLength;
+      widecharcpy (ud->running_head, saved_runningHead, ud->running_head_length);
+      widecharcpy (ud->footer, saved_footer, ud->footer_length);
       do_newpage ();
       ud->contents = 2;
       currentHeading = firstHeading;
