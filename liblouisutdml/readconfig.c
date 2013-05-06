@@ -1314,6 +1314,7 @@ read_configuration_file (const char *configFileList, const char
   ud->input_encoding = utf8;
   ud->output_encoding = ascii8;
   *ud->print_page_number = '_';
+  *ud->print_page_number_first = '_';
   ud->string_escape = ',';
 #ifdef _WIN32
   ud->file_separator = '\\';

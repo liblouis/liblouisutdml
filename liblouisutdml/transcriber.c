@@ -900,7 +900,7 @@ static int
 fillPage ()
 {
   if (!ud->braille_pages)
-    return 1;
+    return 0;
   if (ud->outbuf3_enabled && ud->lines_length <= MAXLINES)
     ud->lines_newpage[ud->lines_length] = 1;
   if (ud->fill_pages == 0 && ud->lines_on_page > 0)
@@ -909,15 +909,16 @@ fillPage ()
     {
       startLine ();
       writeOutbuf ();
+      return 1;
     }
-  return 1;
+  return 0;
 }
 
 static int
 fillPageForce ()
 {
   if (!ud->braille_pages)
-    return 1;
+    return 0;
   if (ud->outbuf3_enabled && ud->lines_length <= MAXLINES)
     ud->lines_newpage[ud->lines_length] = 1;
   ud->fill_pages++;
@@ -1407,6 +1408,8 @@ static void
 continuePrintPageNumber ()
 {
   int k;
+  if (!ud->braille_pages)
+    return;
   if (ud->print_page_number[0] == '_')
     {
     }
@@ -2810,10 +2813,13 @@ styleBody ()
     }
   if (action == contentsheader && ud->contents != 2)
     {
-      fillPage ();
+      if (!fillPage ())
+        {
+          addPagesToPrintPageNumber();
+          continuePrintPageNumber();
+        }
       write_buffer (3, 0);
       ud->outbuf3_enabled = 0;
-
       initialize_contents ();
       start_heading (action, translatedBuffer, translatedLength);
       finish_heading (action);
