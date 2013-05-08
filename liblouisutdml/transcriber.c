@@ -1075,13 +1075,14 @@ insert_text_string (xmlNode * node, xmlChar * str)
 void
 insert_text (xmlNode * node)
 {
-  int length;
+  int length = strlen ((char *) node->content);
   int wcLength;
   int k;
-  for (length = strlen ((char *) node->content); length > 0 &&
-       node->content[length - 1] <= 32; length--);
-  if (length <= 0)
+  for (k = length; k > 0 && node->content[k - 1] <= 32; k--);
+  if (k <= 0)
     return;
+  if (k < length)
+    length = k + 1; /*Keep last whitespace*/
   if (ud->format_for == utd)
     return utd_insert_text (node, length);
   switch (ud->stack[ud->top])
