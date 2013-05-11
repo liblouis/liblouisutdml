@@ -967,7 +967,7 @@ setRunningheadString (widechar * chars, int length)
 }
 
 static void
-setFooterString(widechar * chars, int length)
+setFooterString (widechar * chars, int length)
 {
   ud->footer_length = minimum (length, ud->cells_per_line - 9);
   memcpy (ud->footer, chars, ud->footer_length * CHARSIZE);
@@ -981,22 +981,27 @@ do_runninghead (xmlNode * node)
   static widechar translatedBuffer[MAX_TRANS_LENGTH];
   static int translatedLength;
   int textLength;
-  xmlNode * text = node->children;
+  xmlNode *text = node->children;
   if (text && text->type == XML_TEXT_NODE)
     {
       textLength = strlen ((char *) text->content);
       if (ud->format_for == utd)
-        utf8ToWc (text->content, &textLength, translatedBuffer, &translatedLength);
+	utf8ToWc (text->content, &textLength, translatedBuffer,
+		  &translatedLength);
       else
-        {
-          translationLength = MAX_TRANS_LENGTH;
-          translatedLength = MAX_TRANS_LENGTH;
-          for (; textLength > 0 && text->content[textLength - 1] <= 32; textLength--) {}
-          utf8ToWc (text->content, &textLength, translationBuffer, &translationLength);
-          lou_translateString (ud->main_braille_table, translationBuffer,
-                               &translationLength, translatedBuffer,
-                               &translatedLength, NULL, NULL, 0);
-        }
+	{
+	  translationLength = MAX_TRANS_LENGTH;
+	  translatedLength = MAX_TRANS_LENGTH;
+	  for (; textLength > 0 && text->content[textLength - 1] <= 32;
+	       textLength--)
+	    {
+	    }
+	  utf8ToWc (text->content, &textLength, translationBuffer,
+		    &translationLength);
+	  lou_translateString (ud->main_braille_table, translationBuffer,
+			       &translationLength, translatedBuffer,
+			       &translatedLength, NULL, NULL, 0);
+	}
       setRunningheadString (translatedBuffer, translatedLength);
     }
   else
@@ -1011,22 +1016,27 @@ do_footer (xmlNode * node)
   static widechar translatedBuffer[MAX_TRANS_LENGTH];
   static int translatedLength;
   int textLength;
-  xmlNode * text = node->children;
+  xmlNode *text = node->children;
   if (text && text->type == XML_TEXT_NODE)
     {
       textLength = strlen ((char *) text->content);
       if (ud->format_for == utd)
-        utf8ToWc (text->content, &textLength, translatedBuffer, &translatedLength);
+	utf8ToWc (text->content, &textLength, translatedBuffer,
+		  &translatedLength);
       else
-        {
-          translationLength = MAX_TRANS_LENGTH;
-          translatedLength = MAX_TRANS_LENGTH;
-          for (; textLength > 0 && text->content[textLength - 1] <= 32; textLength--) {}
-          utf8ToWc (text->content, &textLength, translationBuffer, &translationLength);
-          lou_translateString (ud->main_braille_table, translationBuffer,
-                               &translationLength, translatedBuffer,
-                               &translatedLength, NULL, NULL, 0);
-        }
+	{
+	  translationLength = MAX_TRANS_LENGTH;
+	  translatedLength = MAX_TRANS_LENGTH;
+	  for (; textLength > 0 && text->content[textLength - 1] <= 32;
+	       textLength--)
+	    {
+	    }
+	  utf8ToWc (text->content, &textLength, translationBuffer,
+		    &translationLength);
+	  lou_translateString (ud->main_braille_table, translationBuffer,
+			       &translationLength, translatedBuffer,
+			       &translatedLength, NULL, NULL, 0);
+	}
       setFooterString (translatedBuffer, translatedLength);
     }
   else
@@ -1082,7 +1092,7 @@ insert_text (xmlNode * node)
   if (k <= 0)
     return;
   if (k < length)
-    length = k + 1; /*Keep last whitespace*/
+    length = k + 1;		/*Keep last whitespace */
   if (ud->format_for == utd)
     return utd_insert_text (node, length);
   switch (ud->stack[ud->top])
@@ -2747,8 +2757,8 @@ editTrans ()
   int translationLength;
   if (ud->needs_editing && !(ud->contents == 2) && !(ud->style_format
 						     == computerCoded) &&
-      ud->edit_table_name != NULL && (ud->has_math || ud->has_chem || 
-      ud->has_music))
+      ud->edit_table_name != NULL && (ud->has_math || ud->has_chem ||
+				      ud->has_music))
     {
       translationLength = ud->translated_length;
       translatedLength = MAX_TRANS_LENGTH;
@@ -2852,10 +2862,10 @@ styleBody ()
   if (action == contentsheader && ud->contents != 2)
     {
       if (!fillPage ())
-        {
-          addPagesToPrintPageNumber();
-          continuePrintPageNumber();
-        }
+	{
+	  addPagesToPrintPageNumber ();
+	  continuePrintPageNumber ();
+	}
       write_buffer (3, 0);
       ud->outbuf3_enabled = 0;
       initialize_contents ();
@@ -3577,9 +3587,9 @@ end_style ()
   if (style->runningHead)
     {
       if (ud->format_for == utd)
-        setRunningheadString (ud->text_buffer, ud->text_length);
+	setRunningheadString (ud->text_buffer, ud->text_length);
       else
-        setRunningheadString (ud->translated_buffer, ud->translated_length);
+	setRunningheadString (ud->translated_buffer, ud->translated_length);
     }
   if (!(styleSpec->node && !styleSpec->node->children))
     {
@@ -3643,7 +3653,6 @@ static int
 utd_start ()
 {
   ud->braille_pages = 1;
-  ud->paragraphs = 1;
   firstPage = 1;
   postponedStart = 0;
   brlContent = (xmlChar *) ud->outbuf1;
@@ -4567,6 +4576,35 @@ assignIndices ()
 }
 
 static int
+assignTranslations ()
+{
+  int nextSegment = 0;
+  int curPos = 0;
+  xmlNode *curBrlNode;
+  if (firstBrlNode == NULL)
+    return 0;
+  curBrlNode = firstBrlNode;
+  while (curPos < translatedLength && curBrlNode != NULL &&
+	 nextSegment < translatedLength)
+    {
+      if (translatedBuffer[curPos] == ENDSEGMENT || nextSegment == 0)
+	{
+	  int nextPos = nextSegment;
+	  while (translatedBuffer[nextPos] != ENDSEGMENT && nextPos <
+		 translatedLength)
+	    nextPos++;
+	  makeDotsTextNode (curBrlNode, translatedBuffer[curPos],
+			    nextPos - curPos, 0);
+	  if (curBrlNode && curBrlNode->_private != NULL)
+	    curBrlNode = curBrlNode->_private;
+	  curPos = nextPos;
+	}
+      nextSegment = curPos + 1;
+    }
+  return 1;
+}
+
+static int
 makeNewpage (xmlNode * parent)
 {
   char number[MAXNUMLEN];
@@ -5240,6 +5278,8 @@ utd_startStyle ()
       ud->vert_line_pos = ud->page_top;
       return 1;
     }
+  if (!ud->paragraphs)
+    return 1;
   if ((style->lines_before ||
        style->newpage_before || style->righthand_page)
       && styleSpec->node != NULL)
@@ -5286,49 +5326,54 @@ utd_styleBody ()
   if (!utd_editTrans ())
     return 0;
   assignIndices ();
-  cellsOnLine = 0;
-  action = style->action;
-  if (action == contentsheader && ud->contents != 2)
+  if (!ud->paragraphs)
+    assignTranslations ();
+  else
     {
-      initialize_contents ();
-      start_heading (action, translatedBuffer, translatedLength);
-      finish_heading (action);
-      ud->text_length = ud->translated_length = ud->sync_text_length = 0;
-      ud->in_sync = ud->hyphenate;
-      return 1;
+      cellsOnLine = 0;
+      action = style->action;
+      if (action == contentsheader && ud->contents != 2)
+	{
+	  initialize_contents ();
+	  start_heading (action, translatedBuffer, translatedLength);
+	  finish_heading (action);
+	  ud->text_length = ud->translated_length = ud->sync_text_length = 0;
+	  ud->in_sync = ud->hyphenate;
+	  return 1;
+	}
+      if (ud->contents == 1)
+	{
+	  if (ud->braille_page_number_at
+	      && (action == heading1 || action == heading2
+		  || action == heading3 || action == heading4))
+	    getBraillePageString ();
+	  start_heading (action, translatedBuffer, translatedLength);
+	}
+      switch (style->format)
+	{
+	case centered:
+	case rightJustified:
+	case leftJustified:
+	default:
+	  utd_doOrdinaryText ();
+	  break;
+	case alignColumnsLeft:
+	case alignColumnsRight:
+	  utd_doAlignColumns ();
+	  break;
+	case listColumns:
+	  utd_doListColumns ();
+	  break;
+	case computerCoded:
+	  utd_doComputerCode ();
+	  break;
+	case contents:
+	  break;
+	}
+      if (ud->contents == 1)
+	finish_heading (action);
+      styleSpec->status = resumeBody;
     }
-  if (ud->contents == 1)
-    {
-      if (ud->braille_page_number_at
-	  && (action == heading1 || action == heading2
-	      || action == heading3 || action == heading4))
-	getBraillePageString ();
-      start_heading (action, translatedBuffer, translatedLength);
-    }
-  switch (style->format)
-    {
-    case centered:
-    case rightJustified:
-    case leftJustified:
-    default:
-      utd_doOrdinaryText ();
-      break;
-    case alignColumnsLeft:
-    case alignColumnsRight:
-      utd_doAlignColumns ();
-      break;
-    case listColumns:
-      utd_doListColumns ();
-      break;
-    case computerCoded:
-      utd_doComputerCode ();
-      break;
-    case contents:
-      break;
-    }
-  if (ud->contents == 1)
-    finish_heading (action);
-  styleSpec->status = resumeBody;
   ud->translated_length = 0;
   ud->sync_text_length = 0;
   ud->in_sync = ud->hyphenate;
@@ -5340,6 +5385,8 @@ static int
 utd_finishStyle ()
 {
   PageStatus curPageStatus = checkPageStatus ();
+  if (!ud->paragraphs)
+    return 1;
   if (style->newpage_after)
     utd_fillPage ();
   else if (style->lines_after > 0)
