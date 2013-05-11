@@ -4593,8 +4593,8 @@ assignTranslations ()
 	  while (translatedBuffer[nextPos] != ENDSEGMENT && nextPos <
 		 translatedLength)
 	    nextPos++;
-	  makeDotsTextNode (curBrlNode, translatedBuffer[curPos],
-			    nextPos - curPos, 0);
+	  makeDotsTextNode (curBrlNode, &translatedBuffer[nextSegment],
+			    nextPos - nextSegment, 0);
 	  if (curBrlNode && curBrlNode->_private != NULL)
 	    curBrlNode = curBrlNode->_private;
 	  curPos = nextPos;

@@ -1397,7 +1397,6 @@ read_configuration_file (const char *configFileList, const char
   if (ud->format_for == utd)
     {
       ud->braille_pages = 1;
-      ud->paragraphs = 1;
       ud->paper_width = (int) (paperWidth * ud->dpi);
       ud->paper_height = (int) (paperHeight * ud->dpi);
       ud->left_margin = (int) (leftMargin * ud->dpi);
