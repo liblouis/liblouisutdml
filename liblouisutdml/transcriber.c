@@ -3697,12 +3697,18 @@ makeDaisyDoc ()
   xmlSetGenericErrorFunc (ctxt, libxml_errors);
   doc = xmlParseMemory (starter, strlen (starter));
   rootNode = xmlDocGetRootElement (doc);
+  xmlNewProp (rootNode, (xmlChar *) "semantics", (xmlChar *) "action,no");
   newNode = xmlNewNode (NULL, (xmlChar *) "head");
   ud->head_node = xmlAddChild (rootNode, newNode);
+  xmlNewProp (ud->head_node, (xmlChar *) "semantics", (xmlChar *)
+	      "action,markhead");
   newNode = xmlNewNode (NULL, (xmlChar *) "body");
   bodyNode = xmlAddChild (rootNode, newNode);
+  xmlNewProp (bodyNode, (xmlChar *) "semantics", (xmlChar *)
+	      "style,document");
   newNode = xmlNewNode (NULL, (xmlChar *) "section");
   sectionNode = xmlAddChild (bodyNode, newNode);
+  xmlNewProp (sectionNode, (xmlChar *) "semantics", (xmlChar *) "action,no");
   ud->doc = doc;
   return sectionNode;
 }
@@ -4023,6 +4029,7 @@ formatBackBlock ()
   if (ud->translated_length <= 0)
     return 1;
   newBlock = xmlNewNode (NULL, (xmlChar *) "p");
+  xmlNewProp (newBlock, (xmlChar *) "semantics", (xmlChar *) "style,para");
   curBrl = xmlNewNode (NULL, (xmlChar *) "brl");
   makeDotsTextNode (curBrl, ud->translated_buffer, ud->translated_length, 1);
   ud->translated_length = ud->sync_text_length = 0;
