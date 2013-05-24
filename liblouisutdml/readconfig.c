@@ -363,9 +363,9 @@ parseLine (FileInfo * nested)
 {
   char *curchar = NULL;
   int ch = 0;
-  nested->action = NULL;
-  nested->value = NULL;
-  nested->value2 = NULL;
+  nested->action = "";
+  nested->value = "";
+  nested->value2 = "";
   while (getLine (nested))
     {
       nested->lineNumber++;
@@ -380,7 +380,7 @@ parseLine (FileInfo * nested)
       while (((ch = *curchar++) <= 32 || ch == '=') && ch != 0);
       if (ch == 0)
 	{
-	  nested->value = NULL;
+	  nested->value = "";
 	  return 1;
 	}
       else
