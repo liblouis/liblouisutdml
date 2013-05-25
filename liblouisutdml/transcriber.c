@@ -3588,12 +3588,7 @@ end_style ()
     {
       insert_translation (ud->main_braille_table);
       if (style->runningHead)
-        {
-      if (ud->format_for == utd)
-	setRunningheadString (ud->text_buffer, ud->text_length);
-      else
 	setRunningheadString (ud->translated_buffer, ud->translated_length);
-    }
       styleBody ();
       if (!ud->after_contents)
 	finishStyle ();
