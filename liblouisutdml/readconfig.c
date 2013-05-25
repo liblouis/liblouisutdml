@@ -419,7 +419,7 @@ parseLine (FileInfo * nested)
 	  nested->value2[nested->value2Length] = 0;
 	}
       else
-	nested->value2 = NULL;
+	nested->value2 = "";
       return 1;
     }
   return 0;
@@ -560,7 +560,7 @@ checkSubActions (FileInfo * nested, const char **mainActions, const char
   int subAction;
   mainActionNumber = NOTFOUND;
   subAction = checkActions (nested, subActions);
-  if (subAction != NOTFOUND && nested->value == NULL)
+  if (subAction != NOTFOUND && nested->value == "")
     {
       configureError (nested, "column 2 is required");
       return NOTFOUND;
@@ -916,7 +916,7 @@ compileConfig (FileInfo * nested)
 	  strcpy (ud->xml_header, nested->value);
 	  break;
 	case 26:
-	  if (nested->value == NULL)
+	  if (nested->value == "")
 	    break;
 	  if (!entities)
 	    strcat (ud->xml_header, "<!DOCTYPE entities [\n");
@@ -943,7 +943,7 @@ compileConfig (FileInfo * nested)
 	    static const char *actions[] = {
 	      NULL
 	    };
-	    if (nested->value == NULL)
+	    if (nested->value == "")
 	      configureError (nested, "a file name in column 2 is required");
 	    else
 	      config_compileSettings (nested->value);
@@ -967,7 +967,7 @@ compileConfig (FileInfo * nested)
 	    ud->contents = k;
 	  break;
 	case 34:
-	  if (nested->value == NULL)
+	  if (nested->value == "")
 	    ud->line_fill = ' ';
 	  else
 	    ud->line_fill = nested->value[0];
@@ -1135,7 +1135,7 @@ compileConfig (FileInfo * nested)
 	    };
 	    StyleType *style;
 	    sem_act styleAction;
-	    if (nested->value == NULL)
+	    if (nested->value == "")
 	      {
 		configureError (nested,
 				"no style name given in second column");
