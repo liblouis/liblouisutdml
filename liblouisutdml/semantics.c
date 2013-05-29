@@ -862,6 +862,12 @@ getALine (FileInfo * nested)
 static int numEntries = 0;
 
 static int
+endcompilefile ()
+{
+int nothing = 0;
+}
+
+static int
 sem_compileFile (const char *fileName)
 {
   /*Compile an input file */
@@ -908,6 +914,7 @@ sem_compileFile (const char *fileName)
       return 0;
     }
   numEntries += nested.numEntries;
+endcompilefile ();
   return 1;
 }
 
@@ -1650,12 +1657,6 @@ doSemanticActions ()
       break;
     case pagenum:
       do_pagenum ();
-      break;
-    case runninghead:
-      do_runninghead (macroNode);
-      break;
-    case footer:
-      do_footer (macroNode);
       break;
     default:
       macroError ("semantic action %s is not supported in a macro",
