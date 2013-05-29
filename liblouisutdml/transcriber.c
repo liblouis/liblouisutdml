@@ -959,88 +959,18 @@ handlePagenum (xmlChar * printPageNumber, int length)
 
 static int utd_makePageSeparator (xmlChar * printPageNumber, int length);
 
-static void
-setRunningheadString (widechar * chars, int length)
+void
+set_runninghead_string (widechar * chars, int length)
 {
   ud->running_head_length = minimum (length, ud->cells_per_line - 9);
   memcpy (ud->running_head, chars, ud->running_head_length * CHARSIZE);
 }
 
-static void
-setFooterString (widechar * chars, int length)
+void
+set_footer_string (widechar * chars, int length)
 {
   ud->footer_length = minimum (length, ud->cells_per_line - 9);
   memcpy (ud->footer, chars, ud->footer_length * CHARSIZE);
-}
-
-void
-do_runninghead (xmlNode * node)
-{
-  static widechar translationBuffer[MAX_TRANS_LENGTH];
-  static int translationLength;
-  static widechar translatedBuffer[MAX_TRANS_LENGTH];
-  static int translatedLength;
-  int textLength;
-  xmlNode *text = node->children;
-  if (text && text->type == XML_TEXT_NODE)
-    {
-      textLength = strlen ((char *) text->content);
-      if (ud->format_for == utd)
-	utf8ToWc (text->content, &textLength, translatedBuffer,
-		  &translatedLength);
-      else
-	{
-	  translationLength = MAX_TRANS_LENGTH;
-	  translatedLength = MAX_TRANS_LENGTH;
-	  for (; textLength > 0 && text->content[textLength - 1] <= 32;
-	       textLength--)
-	    {
-	    }
-	  utf8ToWc (text->content, &textLength, translationBuffer,
-		    &translationLength);
-	  lou_translateString (ud->main_braille_table, translationBuffer,
-			       &translationLength, translatedBuffer,
-			       &translatedLength, NULL, NULL, 0);
-	}
-      setRunningheadString (translatedBuffer, translatedLength);
-    }
-  else
-    setRunningheadString (translatedBuffer, 0);
-}
-
-void
-do_footer (xmlNode * node)
-{
-  static widechar translationBuffer[MAX_TRANS_LENGTH];
-  static int translationLength;
-  static widechar translatedBuffer[MAX_TRANS_LENGTH];
-  static int translatedLength;
-  int textLength;
-  xmlNode *text = node->children;
-  if (text && text->type == XML_TEXT_NODE)
-    {
-      textLength = strlen ((char *) text->content);
-      if (ud->format_for == utd)
-	utf8ToWc (text->content, &textLength, translatedBuffer,
-		  &translatedLength);
-      else
-	{
-	  translationLength = MAX_TRANS_LENGTH;
-	  translatedLength = MAX_TRANS_LENGTH;
-	  for (; textLength > 0 && text->content[textLength - 1] <= 32;
-	       textLength--)
-	    {
-	    }
-	  utf8ToWc (text->content, &textLength, translationBuffer,
-		    &translationLength);
-	  lou_translateString (ud->main_braille_table, translationBuffer,
-			       &translationLength, translatedBuffer,
-			       &translatedLength, NULL, NULL, 0);
-	}
-      setFooterString (translatedBuffer, translatedLength);
-    }
-  else
-    setFooterString (translatedBuffer, 0);
 }
 
 void
@@ -1117,9 +1047,6 @@ insert_text (xmlNode * node)
       return;
     case pagenum:
       handlePagenum (node->content, length);
-      return;
-    case runninghead:
-    case footer:
       return;
     default:
       break;
@@ -3588,7 +3515,8 @@ end_style ()
     {
       insert_translation (ud->main_braille_table);
       if (style->runningHead)
-	setRunningheadString (ud->translated_buffer, ud->translated_length);
+	set_runninghead_string (ud->translated_buffer, 
+	ud->translated_length);
       styleBody ();
       if (!ud->after_contents)
 	finishStyle ();

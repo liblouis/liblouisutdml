@@ -85,7 +85,7 @@ saveState (void)
   saved_outbuf1_len_so_far = ud->outbuf1_len_so_far;
   saved_outbuf2_len_so_far = ud->outbuf2_len_so_far;
   saved_running_head_length = ud->running_head_length;
-  saved_footer_length = ud->footer_length;	
+  saved_footer_length = ud->footer_length;
   saved_style_left_margin = ud->style_left_margin;
   saved_style_right_margin = ud->style_right_margin;
   saved_style_first_line_indent = ud->style_first_line_indent;
@@ -97,9 +97,11 @@ saveState (void)
   saved_line_spacing = ud->line_spacing;
   saved_blank_lines = ud->blank_lines;
   saved_fill_pages = ud->fill_pages;
-  memcpy (saved_positions_array, ud->positions_array, saved_translated_length * sizeof(int));
+  memcpy (saved_positions_array, ud->positions_array,
+	  saved_translated_length * sizeof (int));
   widecharcpy (saved_text_buffer, ud->text_buffer, saved_text_length);
-  widecharcpy (saved_sync_text_buffer, ud->sync_text_buffer, saved_sync_text_length);
+  widecharcpy (saved_sync_text_buffer, ud->sync_text_buffer,
+	       saved_sync_text_length);
   widecharcpy (saved_translated_buffer, ud->translated_buffer,
 	       saved_translated_length);
   widecharcpy (saved_outbuf1, ud->outbuf1, saved_outbuf1_len_so_far);
@@ -130,7 +132,7 @@ restoreState (void)
   ud->outbuf1_len_so_far = saved_outbuf1_len_so_far;
   ud->outbuf2_len_so_far = saved_outbuf2_len_so_far;
   ud->running_head_length = saved_running_head_length;
-  ud->footer_length = saved_footer_length;	
+  ud->footer_length = saved_footer_length;
   ud->style_left_margin = saved_style_left_margin;
   ud->style_right_margin = saved_style_right_margin;
   ud->style_first_line_indent = saved_style_first_line_indent;
@@ -142,9 +144,11 @@ restoreState (void)
   ud->line_spacing = saved_line_spacing;
   ud->blank_lines = saved_blank_lines;
   ud->fill_pages = saved_fill_pages;
-  memcpy (ud->positions_array, saved_positions_array, saved_translated_length * sizeof(int));
+  memcpy (ud->positions_array, saved_positions_array,
+	  saved_translated_length * sizeof (int));
   widecharcpy (ud->text_buffer, saved_text_buffer, saved_text_length);
-  widecharcpy (ud->sync_text_buffer, saved_sync_text_buffer, saved_sync_text_length);
+  widecharcpy (ud->sync_text_buffer, saved_sync_text_buffer,
+	       saved_sync_text_length);
   widecharcpy (ud->translated_buffer, saved_translated_buffer,
 	       saved_translated_length);
   widecharcpy (ud->outbuf1, saved_outbuf1, saved_outbuf1_len_so_far);
@@ -212,7 +216,7 @@ transcribe_paragraph (xmlNode * node, int action)
 	  return 0;
 	}
       if (action != 0)
-        pop_sem_stack ();
+	pop_sem_stack ();
       return 1;
     case htmllink:
       if (ud->format_for != browser)
@@ -236,13 +240,13 @@ transcribe_paragraph (xmlNode * node, int action)
     case pagebreak:
       do_pagebreak (node);
       if (action != 0)
-        pop_sem_stack ();
+	pop_sem_stack ();
       return 1;
     case attrtotext:
       do_attrtotext (node);
       if (action != 0)
-        pop_sem_stack ();
-      return 1;  
+	pop_sem_stack ();
+      return 1;
     case blankline:
       do_blankline ();
       if (action != 0)
@@ -255,6 +259,11 @@ transcribe_paragraph (xmlNode * node, int action)
       return 1;
     case softreturn:
       do_softreturn ();
+      if (action != 0)
+	pop_sem_stack ();
+      return 1;
+    case newpage:
+      do_newpage ();
       if (action != 0)
 	pop_sem_stack ();
       return 1;
@@ -294,22 +303,15 @@ transcribe_paragraph (xmlNode * node, int action)
     case pagenum:
       do_pagenum ();
       break;
-    case runninghead:
-      do_runninghead (node);
-      break;
-    case footer:
-      do_footer (node);
-      break;
     default:
       break;
     }
   if (is_macro (node))
-  {
-  haveMacro = 1;
-  start_macro (node);
-  }
-  else
-  if ((style = is_style (node)) != NULL)
+    {
+      haveMacro = 1;
+      start_macro (node);
+    }
+  else if ((style = is_style (node)) != NULL)
     start_style (style, node);
   child = node->children;
   while (child)
@@ -379,11 +381,11 @@ transcribe_paragraph (xmlNode * node, int action)
 	    transcribe_paragraph (child, 1);
 	  break;
 	case XML_TEXT_NODE:
-	  /*Is there already a <brl> node?*/
+	  /*Is there already a <brl> node? */
 	  if (!(ud->format_for == utd && child->next != NULL
-	      && strcmp ((char *) child->next->name, "brl") == 0))
-	  insert_text (child);
-	  /*Is there now a <brl>node?*/
+		&& strcmp ((char *) child->next->name, "brl") == 0))
+	    insert_text (child);
+	  /*Is there now a <brl>node? */
 	  if (ud->format_for == utd && child->next != NULL
 	      && strcmp ((char *) child->next->name, "brl") == 0)
 	    child = child->next;	/*skip <brl> node */
@@ -518,9 +520,24 @@ transcribe_paragraph (xmlNode * node, int action)
   insert_code (node, -1);
   if (haveMacro)
     end_macro ();
-  else
-  if (style)
+  else if (style)
     end_style ();
+  else
+    switch (ud->stack[ud->top])
+      {
+      case runninghead:
+	insert_translation (ud->main_braille_table);
+	set_runninghead_string (ud->translated_buffer, ud->translated_length);
+	ud->translated_length = 0;
+	break;
+      case footer:
+	insert_translation (ud->main_braille_table);
+	set_footer_string (ud->translated_buffer, ud->translated_length);
+	ud->translated_length = 0;
+	break;
+      default:
+	break;
+      }
   if (action != 0)
     pop_sem_stack ();
   else
