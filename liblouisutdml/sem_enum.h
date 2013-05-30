@@ -139,7 +139,8 @@ typedef enum
   utdnewpage,
   utdnewline,
   utdbrlonly,
-  utdgraphic,
+  utddispimg,
+  utdinlnimg,
   /* End marker */
   end_all
 }

@@ -41,7 +41,7 @@ static int finishDocument ();
 static int doUtdbrlonly (xmlNode * node, int action);
 static int doUtdnewpage (xmlNode * node);
 static int doUtdnewline (xmlNode * node);
-static int doUtdgraphic (xmlNode * node);
+static int doUtddispimg (xmlNode * node);
 static int firstPage;
 static int firstLineOnPage;
 static int startOfLastLine;
@@ -147,7 +147,7 @@ finishDocument ()
 }
 
 static int
-doUtdgraphic (xmlNode *node)
+doUtddispimg (xmlNode *node)
 {
   return 1;
 }
@@ -237,7 +237,7 @@ doUtdbrlonly (xmlNode * node, int action)
       if (action != 0)
 	pop_sem_stack ();
       return 1;
-    case utdgraphic:
+    case utddispimg:
       transcribe_graphic (node, 0);
       if (action != 0)
 	pop_sem_stack ();
@@ -348,7 +348,7 @@ dsBibleDoBrlNode (xmlNode * node, int action)
       if (action != 0)
 	pop_sem_stack ();
       return 1;
-    case utdgraphic:
+    case utddispimg:
       transcribe_graphic (node, 0);
       if (action != 0)
 	pop_sem_stack ();
