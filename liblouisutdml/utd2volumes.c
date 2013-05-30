@@ -41,7 +41,7 @@ static int finishDocument ();
 static int doUtdbrlonly (xmlNode * node, int action);
 static int doUtdnewpage (xmlNode * node);
 static int doUtdnewline (xmlNode * node);
-static int doUtdgraphic (xmlNode * node);
+static int doUtddispimg (xmlNode * node);
 static int firstPage;
 static int firstLineOnPage;
 
@@ -152,7 +152,7 @@ doUtdbrlonly (xmlNode * node, int action)
       if (action != 0)
 	pop_sem_stack ();
       return 1;
-    case utdgraphic:
+    case utddispimg:
       transcribe_graphic (node, 0);
       if (action != 0)
 	pop_sem_stack ();
@@ -252,7 +252,7 @@ volumesDoBrlNode (xmlNode * node, int action)
       if (action != 0)
 	pop_sem_stack ();
       return 1;
-    case utdgraphic:
+    case utddispimg:
       transcribe_graphic (node, 0);
       if (action != 0)
 	pop_sem_stack ();

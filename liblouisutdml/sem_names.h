@@ -100,7 +100,8 @@ static const char *semNames[] = {
   "utdnewpage",
   "utdnewline",
   "utdbrlonly",
-  "utdgraphic",
+  "utddispimg",
+  "utdinlnimg",
   "end_all",
 NULL
 };

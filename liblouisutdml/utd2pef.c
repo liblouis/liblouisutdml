@@ -199,7 +199,7 @@ walkSubTree (xmlNode * node, int action)
 	  if (action != firstCall)
 	    pop_sem_stack ();
 	  return 1;
-	case utdgraphic:
+	case utddispimg:
 	  transcribe_graphic (node, firstCall);
 	  if (action != firstCall)
 	    pop_sem_stack ();
