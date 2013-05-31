@@ -150,7 +150,7 @@ no thead
 no dfn
 para sidebar
 no annoref
-no br
+softreturn br
 no line
 no dd
 no dl
