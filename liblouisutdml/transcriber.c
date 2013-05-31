@@ -5362,6 +5362,8 @@ static int
 utd_finish ()
 {
   xmlNode *newNode;
+  if (ud->paragraphs)
+  {
   newNode = xmlNewNode (NULL, (xmlChar *) "brl");
   brlNode = xmlAddChild (documentNode, newNode);
   if (ud->style_top < 0)
@@ -5373,6 +5375,7 @@ utd_finish ()
   if (style == NULL)
     style = lookup_style ("para");
   utd_fillPage ();
+  }
   if (ud->head_node)
     {
       newNode = xmlNewNode (NULL, (xmlChar *) "meta");
