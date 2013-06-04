@@ -287,6 +287,12 @@ transcribe_paragraph (xmlNode * node, int action)
       if (action != 0)
 	pop_sem_stack ();
       return 1;
+    case utddispimg:
+    case utdinlnimg:
+      do_utdxxxximg (node);
+      if (action != 0)
+	pop_sem_stack ();
+      return 1;
     case chemistry:
       transcribe_chemistry (node, 0);
       if (action != 0)

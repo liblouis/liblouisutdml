@@ -91,6 +91,12 @@ transcribe_document (xmlNode * node)
       pop_sem_stack ();
       childrenDone = 1;
       break;
+    case utddispimg:
+    case utdinlnimg:
+    do_utdxxxximg (node);
+      pop_sem_stack ();
+      childrenDone = 1;
+      break;
     case chemistry:
       transcribe_chemistry (node, 0);
       pop_sem_stack ();

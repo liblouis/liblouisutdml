@@ -408,4 +408,5 @@ void memoryError ();
 unsigned char *get_sem_name (xmlNode *node);
 void set_runninghead_string (widechar *chars, int length);
 void set_footer_string (widechar *chars, int length);
+void do_utdxxxximg (xmlNode *node);
 #endif /*louisutdml_h */
