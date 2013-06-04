@@ -3515,8 +3515,7 @@ end_style ()
     {
       insert_translation (ud->main_braille_table);
       if (style->runningHead)
-	set_runninghead_string (ud->translated_buffer, 
-	ud->translated_length);
+	set_runninghead_string (ud->translated_buffer, ud->translated_length);
       styleBody ();
       if (!ud->after_contents)
 	finishStyle ();
@@ -5334,6 +5333,54 @@ utd_finishStyle ()
 }
 
 void
+do_utdxxxximg (xmlNode * node)
+{
+  sem_act action;
+  char *cwidth;
+  char *cheight;
+  xmlChar *src;
+  int width;
+  int height;
+  int maxWidth;
+  int maxHeight;
+  xmlNode *curBrl;
+  if (node == NULL)
+    return;
+  action = ud->stack[ud->top];
+  cwidth = xmlGetProp (node, (xmlChar *) "twidth");
+  cheight = xmlGetProp (node, (xmlChar *) "twidth");
+  src = xmlGetProp (node, (xmlChar *) "tsrc");
+  if (cwidth == NULL || cheight == NULL || src == NULL)
+    return;
+  width = atoi (cwidth);
+  height = atoi (cheight);
+  maxWidth = ud->page_right - ud->page_left;
+  curBrl = xmlNewNode (NULL, (xmlChar *) "brl");
+  link_brl_node (xmlAddNextSibling (node, curBrl));
+  xmlNewProp (brlNode, (xmlChar *) "img", src);
+  if (action == utddispimg)
+    {
+      if (!ud->paragraphs)
+	return;
+      maxHeight = ud->page_bottom - ud->page_top - (2 * ud->wide_line);
+      /* Don't use first and last lines on page. */
+      if ((ud->vert_line_pos + height) > maxHeight)
+	do_righthandpage ();
+      makeNewline (brlNode, 0);
+      lineWidth += height;
+      makeNewline (brlNode, 0);
+    }
+  else if (action == utdinlnimg)
+    {
+      if (height > (ud->wide_line - 2) || (width > maxWidth))
+	return;
+//  horizLinePos += width;
+    }
+  else
+    return;
+}
+
+void
 output_xml (xmlDoc * doc)
 {
   if (ud->outFile)
@@ -5363,19 +5410,19 @@ utd_finish ()
 {
   xmlNode *newNode;
   if (ud->paragraphs)
-  {
-  newNode = xmlNewNode (NULL, (xmlChar *) "brl");
-  brlNode = xmlAddChild (documentNode, newNode);
-  if (ud->style_top < 0)
-    ud->style_top = 0;
-  if (ud->text_length != 0)
-    insert_translation (ud->main_braille_table);
-  if (ud->translated_length != 0)
-    write_paragraph (para, NULL);
-  if (style == NULL)
-    style = lookup_style ("para");
-  utd_fillPage ();
-  }
+    {
+      newNode = xmlNewNode (NULL, (xmlChar *) "brl");
+      brlNode = xmlAddChild (documentNode, newNode);
+      if (ud->style_top < 0)
+	ud->style_top = 0;
+      if (ud->text_length != 0)
+	insert_translation (ud->main_braille_table);
+      if (ud->translated_length != 0)
+	write_paragraph (para, NULL);
+      if (style == NULL)
+	style = lookup_style ("para");
+      utd_fillPage ();
+    }
   if (ud->head_node)
     {
       newNode = xmlNewNode (NULL, (xmlChar *) "meta");
