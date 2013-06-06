@@ -158,8 +158,8 @@ no covertitle
 no dt
 no tfoot
 no title
-no hd
-para abbr
+heading4 hd
+no abbr
 no level5
 no cite
 no address
