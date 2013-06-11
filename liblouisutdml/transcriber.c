@@ -4613,7 +4613,11 @@ utd_insert_text (xmlNode * node, int length)
   int k;
   newNode = xmlNewNode (NULL, (xmlChar *) "brl");
   if ((ud->text_length + length) > MAX_TEXT_LENGTH)
-    return;
+    {
+      length = MAX_TEXT_LENGTH - ud->text_length;
+      if (length <= 0)
+        return;
+    }
   link_brl_node (xmlAddNextSibling (node, newNode));
   switch (ud->stack[ud->top])
     {
