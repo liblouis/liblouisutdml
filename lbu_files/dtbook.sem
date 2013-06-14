@@ -4,6 +4,8 @@
 # This file was produced by liblouisxml and is considered part of
 # the code, licensed under the GNU Lesser or Library Public License.
 
+# Use this file only for formatFor textDevice (default)
+
 # You must edit this file as explained in the documentation to get
 # proper output.
 
@@ -55,7 +57,7 @@ italicx span,class,italic \s
 boldx b
 no dtbook,version,2005-3
 no w
-notranslate acronym
+no acronym
 no sent
 no caption
 no table
@@ -100,8 +102,6 @@ no w,class,num-word
 no level2,class,contents
 code code,class,display
 no level2,class,preface
-heading3 h3
-heading4 h4
 heading4 h5
 heading4 h6
 italicx em \s
@@ -144,7 +144,6 @@ no samp,space
 no table,cellpadding
 no a,href
 no table,rules
-no table,border
 no table,width
 no thead,valign
 no a,external
@@ -196,7 +195,6 @@ no level6,class
 no a,name
 no h3,class
 no level5,class
-no h5,class
 no book,class
 no h2,class
 no level3,class

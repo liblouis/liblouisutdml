@@ -6,6 +6,8 @@ lbu_files_DATA = \
 	sample-utd.cfg \
 	transinxml.cfg \
 	brf.cfg \
+	nimas.cfg \
+	nimas.sem \
 	viewxml.cfg \
 	viewxml.ctb \
 	volumes.cfg \
