@@ -759,7 +759,8 @@ insert_translation (const char *table)
 	  ud->positions_array[ud->translated_length + k] +=
 	    ud->sync_text_length;
       memcpy (&ud->sync_text_buffer[ud->sync_text_length], ud->text_buffer,
-	      translationLength * CHARSIZE);
+	      translationLength * 
+	      CHARSIZE);
       ud->sync_text_length += translationLength;
     }
   if ((ud->translated_length + translatedLength) < MAX_TRANS_LENGTH)
@@ -957,7 +958,7 @@ handlePagenum (xmlChar * printPageNumber, int length)
   return 1;
 }
 
-static int utd_makePageSeparator (xmlChar * printPageNumber, int length);
+static int utd_makePageSeparator (widechar * printPageNumber, int length);
 
 void
 set_runninghead_string (widechar * chars, int length)
@@ -4273,10 +4274,10 @@ insertPageNumber (int howMany)
 static int utd_fillPage ();
 
 static int
-utd_makePageSeparator (xmlChar * printPageNumber, int length)
+utd_makePageSeparator (widechar * printPageNumber, int length)
 {
   ShortBrlOnlyStrings sb;
-  int k;
+  int k, kk;
   char setup[MAXNUMLEN];
   PageStatus curPageStatus = checkPageStatus ();
   if (!ud->print_pages || !*printPageNumber)
@@ -4284,7 +4285,10 @@ utd_makePageSeparator (xmlChar * printPageNumber, int length)
   strcpy (setup, "-");
   if (!(printPageNumber[0] >= '0' && printPageNumber[0] <= '9'))
     strcat (setup, ud->letsign);
-  strcat (setup, printPageNumber);
+  kk = strlen (setup);
+  for (k = 0; k < length; k++)
+    setup[kk++] = printPageNumber[k];
+  setup[kk] = 0;
   length = strlen (setup);
   memset (&sb, 0, sizeof (sb));
   setOrigTextChar (&sb, setup, length);
@@ -4608,27 +4612,30 @@ utd_insert_translation (const char *table)
 static void
 utd_insert_text (xmlNode * node, int length)
 {
-  int wcLength;
+  int charsDone;
   xmlNode *newNode;
+  int outSize;
   int k;
-  if ((ud->text_length + length) > MAX_TEXT_LENGTH)
-    {
-      length = MAX_TEXT_LENGTH - ud->text_length;
-      if (length <= 0)
-        return;
-    }
+  if (ud->text_length >= MAX_TEXT_LENGTH)
+    return;
+  charsDone = length;
+  outSize = MAX_TEXT_LENGTH - ud->text_length;
+  ud->old_text_length = ud->text_length;
+  utf8ToWc (node->content, &charsDone,
+	    &ud->text_buffer[ud->text_length], &outSize);
+  ud->text_length += outSize;
   newNode = xmlNewNode (NULL, (xmlChar *) "brl");
   link_brl_node (xmlAddNextSibling (node, newNode));
   switch (ud->stack[ud->top])
     {
     case notranslate:
       utd_insert_translation (ud->main_braille_table);
-      insert_utf8 (node->content);
       if ((ud->translated_length + ud->text_length) > MAX_TRANS_LENGTH)
 	ud->text_length = MAX_TRANS_LENGTH - ud->translated_length;
-      lou_charToDots (ud->main_braille_table, ud->text_buffer,
+      lou_charToDots (ud->main_braille_table,
+		      &ud->text_buffer[ud->old_text_length],
 		      &ud->translated_buffer[ud->translated_length],
-		      ud->text_length, ud->louis_mode);
+		      ud->text_length - ud->old_text_length, ud->louis_mode);
       for (k = 0; k < ud->text_length; k++)
 	indices[ud->translated_length + k] = k;
       ud->translated_length += ud->text_length;
@@ -4637,42 +4644,39 @@ utd_insert_text (xmlNode * node, int length)
       ud->in_sync = 0;
       return;
     case pagenum:
-      if (!ud->print_pages)
-	return;
-      fineFormat ();
-      utd_makePageSeparator (node->content, length);
+      if (ud->print_pages)
+	{
+          fineFormat ();
+          utd_makePageSeparator (&ud->text_buffer[ud->old_text_length],
+			     ud->text_length - ud->old_text_length);
+        }
+      ud->text_length = ud->old_text_length;
       return;
-    default:
-      break;
-    }
-  ud->old_text_length = ud->text_length;
-  wcLength = insert_utf8 (node->content);
-  ud->text_buffer[ud->text_length++] = ENDSEGMENT;
-  switch (ud->stack[ud->top])
-    {
     case italicx:
       if (!(ud->emphasis & italic))
 	break;
-      memset (&ud->typeform[ud->old_text_length], italic, wcLength);
+      memset (&ud->typeform[ud->old_text_length], italic, outSize);
       break;
     case underlinex:
       if (!(ud->emphasis & underline))
 	break;
-      memset (&ud->typeform[ud->old_text_length], underline, wcLength);
+      memset (&ud->typeform[ud->old_text_length], underline, outSize);
       break;
     case boldx:
       if (!(ud->emphasis & bold))
 	break;
-      memset (&ud->typeform[ud->old_text_length], bold, wcLength);
+      memset (&ud->typeform[ud->old_text_length], bold, outSize);
       break;
     case compbrl:
       if (!(ud->emphasis & computer_braille))
 	break;
-      memset (&ud->typeform[ud->old_text_length], computer_braille, wcLength);
+      memset (&ud->typeform[ud->old_text_length], computer_braille, 
+      outSize);
       break;
     default:
       break;
     }
+  ud->text_buffer[ud->text_length++] = ENDSEGMENT;
   return;
 }
 
