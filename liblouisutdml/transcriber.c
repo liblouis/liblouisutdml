@@ -502,6 +502,8 @@ utf8ToWc (const unsigned char *utf8str, int *inSize, widechar *
       ch = utf8str[in++] & 0xff;
       if (ch < 128 || ud->input_encoding == ascii8)
 	{
+	  if (ch < 32)
+	    ch = 32;
 	  utfwcstr[out++] = (widechar) ch;
 	  if (out >= *outSize)
 	    {
