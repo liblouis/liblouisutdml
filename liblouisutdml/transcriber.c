@@ -960,7 +960,7 @@ handlePagenum (xmlChar * printPageNumber, int length)
   return 1;
 }
 
-static int utd_makePageSeparator (widechar * printPageNumber, int length);
+static int utd_makePageSeparator (char * printPageNumber, int length);
 
 void
 set_runninghead_string (widechar * chars, int length)
@@ -4276,7 +4276,7 @@ insertPageNumber (int howMany)
 static int utd_fillPage ();
 
 static int
-utd_makePageSeparator (widechar * printPageNumber, int length)
+utd_makePageSeparator (char * printPageNumber, int length)
 {
   ShortBrlOnlyStrings sb;
   int k, kk;
@@ -4648,9 +4648,13 @@ utd_insert_text (xmlNode * node, int length)
     case pagenum:
       if (ud->print_pages)
 	{
+          char printPageNumber[MAXNUMLEN + 1];
+          for (k = 0; k < outSize && k < MAXNUMLEN; k++)
+            printPageNumber[k] = ud->text_buffer[ud->old_text_length 
+            + k];
+          ud->text_length = ud->old_text_length;
           fineFormat ();
-          utd_makePageSeparator (&ud->text_buffer[ud->old_text_length],
-			     ud->text_length - ud->old_text_length);
+          utd_makePageSeparator (printPageNumber, k);
         }
       ud->text_length = ud->old_text_length;
       return;
