@@ -1422,7 +1422,8 @@ read_configuration_file (const char *configFileList, const char
 	  return 0;
 	}
       ud->cells_per_line = (ud->page_right - ud->page_left) / ud->cell_width;
-      ud->lines_on_page = (ud->page_bottom - ud->page_top) / ud->normal_line;
+      ud->lines_per_page = (ud->page_bottom - ud->page_top) / 
+      ud->normal_line;
       ud->back_text = textDevice;
       ud->back_line_length = 70;
     }
