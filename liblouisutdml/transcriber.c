@@ -4131,7 +4131,7 @@ checkPageStatus ()
   int remaining;
   if (ud->vert_line_pos < ud->page_top)
     ud->vert_line_pos = ud->page_top;
-  if (ud->vert_line_pos == ud->page_top)
+  if (ud->vert_line_pos == ud->page_top && ud->lines_on_page == 0)
     return topOfPage;
   remaining = ud->page_bottom - ud->vert_line_pos;
   if (remaining < ud->normal_line)
@@ -4309,7 +4309,6 @@ utd_makePageSeparator (char * printPageNumber, int length)
   makeBrlOnlyNode ();
   makeNewline (brlOnlyNode, 0);
   addBrlOnly (brlOnlyNode, &sb);
-  makeNewline (brlOnlyNode, 0);
   return 1;
 }
 
@@ -4547,6 +4546,7 @@ makeNewpage (xmlNode * parent)
   sprintf (number, "%d", ud->braille_page_number);
   xmlNewProp (newNode, (xmlChar *) "brlnumber", (xmlChar *) number);
   newpageNode = xmlAddChild (parent, newNode);
+  ud->lines_on_page = 0;
   return 1;
 }
 
@@ -4561,6 +4561,7 @@ makeNewline (xmlNode * parent, int start)
   xmlAddChild (parent, newNode);
   ud->vert_line_pos += lineWidth;
   lineWidth = ud->normal_line;
+  ud->lines_on_page++;
   return 1;
 }
 
@@ -4652,12 +4653,10 @@ utd_insert_text (xmlNode * node, int length)
           for (k = 0; k < outSize && k < MAXNUMLEN; k++)
             printPageNumber[k] = ud->text_buffer[ud->old_text_length 
             + k];
-          ud->text_length = ud->old_text_length;
-          fineFormat ();
           utd_makePageSeparator (printPageNumber, k);
         }
       ud->text_length = ud->old_text_length;
-      return;
+      break;
     case italicx:
       if (!(ud->emphasis & italic))
 	break;
@@ -4692,6 +4691,7 @@ setNewlineNode ()
 {
   xmlNode *newNode = xmlNewNode (NULL, (xmlChar *) "newline");
   newlineNode = xmlAddChild (brlNode, newNode);
+  ud->lines_on_page++;
   return 1;
 }
 
