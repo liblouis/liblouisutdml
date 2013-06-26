@@ -120,7 +120,8 @@ processXmlDocument (const char *inputDoc, int length)
 	  if (ud->doc == NULL)
 	    {
 	      lou_logPrint
-		("Document could not be processed, probably  malformed");
+		("Document could not be processed; may be \
+malformed or contain illegal characters");
 	      cleanupLibxml ();
 	      return 0;
 	    }
