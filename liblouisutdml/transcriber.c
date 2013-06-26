@@ -4134,7 +4134,8 @@ checkPageStatus ()
   if (ud->vert_line_pos == ud->page_top && ud->lines_on_page == 0)
     return topOfPage;
   remaining = ud->page_bottom - ud->vert_line_pos;
-  if (remaining < ud->normal_line)
+  if (remaining < ud->normal_line || ud->lines_on_page >= 
+  ud->lines_per_page)
     return bottomOfPage;
   if (remaining >= ud->normal_line && remaining < (3 * ud->normal_line / 2))
     return lastLine;
