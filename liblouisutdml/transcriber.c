@@ -4629,7 +4629,6 @@ utd_insert_text (xmlNode * node, int length)
 	    &ud->text_buffer[ud->text_length], &outSize);
   ud->text_length += outSize;
   newNode = xmlNewNode (NULL, (xmlChar *) "brl");
-  link_brl_node (xmlAddNextSibling (node, newNode));
   switch (ud->stack[ud->top])
     {
     case notranslate:
@@ -4654,10 +4653,11 @@ utd_insert_text (xmlNode * node, int length)
           for (k = 0; k < outSize && k < MAXNUMLEN; k++)
             printPageNumber[k] = ud->text_buffer[ud->old_text_length 
             + k];
+          brlNode = xmlAddNextSibling (node, newNode);
           utd_makePageSeparator (printPageNumber, k);
         }
       ud->text_length = ud->old_text_length;
-      break;
+      return;
     case italicx:
       if (!(ud->emphasis & italic))
 	break;
@@ -4682,6 +4682,7 @@ utd_insert_text (xmlNode * node, int length)
     default:
       break;
     }
+  link_brl_node (xmlAddNextSibling (node, newNode));
   ud->text_buffer[ud->text_length++] = ENDSEGMENT;
   return;
 }
