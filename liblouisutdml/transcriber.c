@@ -123,6 +123,8 @@ static int utd_finish ();
 static int utd_insert_translation (const char *table);
 static void utd_insert_text (xmlNode * node, int length);
 static int utd_makeBlankLines (int number, int beforeAfter);
+static void utd_pagebreak (xmlNode *node, char *printPageNumber, int     
+    length);
 static int utd_startStyle ();
 static int utd_styleBody ();
 static int utd_finishStyle ();
@@ -981,7 +983,7 @@ do_pagebreak (xmlNode * node)
 {
   xmlChar *number = get_attr_value (node);
   if (ud->format_for == utd)
-    utd_makePageSeparator (number, strlen (number));
+    utd_pagebreak (node, number, strlen (number));
   else
     handlePagenum (number, strlen (number));
 }
@@ -4311,6 +4313,14 @@ utd_makePageSeparator (char * printPageNumber, int length)
   makeNewline (brlOnlyNode, 0);
   addBrlOnly (brlOnlyNode, &sb);
   return 1;
+}
+
+static void
+utd_pagebreak (xmlNode *node, char *printPageNumber, int length)
+{
+  xmlNode *newNode = xmlNewNode (NULL, (xmlChar *) "brl");
+  brlNode = xmlAddNextSibling (node, newNode);
+  utd_makePageSeparator (printPageNumber, length);
 }
 
 static int
