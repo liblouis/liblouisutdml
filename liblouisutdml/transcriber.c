@@ -4475,6 +4475,7 @@ static int
 assignIndices ()
 {
   int nextSegment = 0;
+  int firstIndex = 0;
   int curPos = 0;
   xmlNode *curBrlNode;
   if (indices == NULL)
@@ -4495,8 +4496,9 @@ assignIndices ()
       if (translatedBuffer[curPos] == ENDSEGMENT || nextSegment == 0)
 	{
 	  int indexPos = nextSegment;
-	  int firstIndex = indices[indexPos];
 	  int kk = 0;
+          if (translatedBuffer[curPos] == ENDSEGMENT)
+            firstIndex = indices[curPos] + 1;
 	  while (translatedBuffer[indexPos] != ENDSEGMENT && indexPos <
 		 translatedLength)
 	    {
