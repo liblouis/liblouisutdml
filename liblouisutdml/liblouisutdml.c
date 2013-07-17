@@ -518,6 +518,7 @@ lbu_free ()
 {
 /* Free all memory used by liblouisutdml. You MUST call this function at 
 * the END of your application.*/
+  lou_logEnd ();
   lou_free ();
   destroy_semantic_table ();
   if (ud != NULL)
