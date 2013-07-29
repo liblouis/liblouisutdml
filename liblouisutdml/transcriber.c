@@ -1567,22 +1567,22 @@ startLine ()
 static int
 centerHeadFoot (widechar * toCenter, int length)
 {
-  int leadingBlanks;
-  int trailingBlanks;
-  int numCells = ud->cells_per_line - pageNumberLength;
-  if (length > numCells)
-    length = numCells - 4;
-  leadingBlanks = (numCells - length) / 2;
-  trailingBlanks = numCells - leadingBlanks - length;
-  if (!insertCharacters (blanks, leadingBlanks))
-    return 0;
-  if (!insertWidechars (toCenter, length))
-    return 0;
-  if (!insertCharacters (blanks, trailingBlanks))
-    return 0;
-  if (!insertWidechars (pageNumberString, pageNumberLength))
-    return 0;
-  return 1;
+   int leadingBlanks;
+   int trailingBlanks;
+   int numCells = ud->cells_per_line - (pageNumberLength*2);
+   if (length > numCells)
+     length = numCells - 4;
+   leadingBlanks = ((numCells - length) / 2) + pageNumberLength;
+   trailingBlanks = numCells - leadingBlanks - length + pageNumberLength;
+   if (!insertCharacters (blanks, leadingBlanks))
+     return 0;
+   if (!insertWidechars (toCenter, length))
+     return 0;
+   if (!insertCharacters (blanks, trailingBlanks))
+     return 0;
+   if (!insertWidechars (pageNumberString, pageNumberLength))
+     return 0;
+   return 1;
 }
 
 static int
