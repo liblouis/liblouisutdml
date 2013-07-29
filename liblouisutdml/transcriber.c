@@ -123,8 +123,7 @@ static int utd_finish ();
 static int utd_insert_translation (const char *table);
 static void utd_insert_text (xmlNode * node, int length);
 static int utd_makeBlankLines (int number, int beforeAfter);
-static void utd_pagebreak (xmlNode *node, char *printPageNumber, int     
-    length);
+static void utd_pagebreak (xmlNode * node, char *printPageNumber, int length);
 static int utd_startStyle ();
 static int utd_styleBody ();
 static int utd_finishStyle ();
@@ -761,8 +760,7 @@ insert_translation (const char *table)
 	  ud->positions_array[ud->translated_length + k] +=
 	    ud->sync_text_length;
       memcpy (&ud->sync_text_buffer[ud->sync_text_length], ud->text_buffer,
-	      translationLength * 
-	      CHARSIZE);
+	      translationLength * CHARSIZE);
       ud->sync_text_length += translationLength;
     }
   if ((ud->translated_length + translatedLength) < MAX_TRANS_LENGTH)
@@ -950,8 +948,15 @@ handlePagenum (xmlChar * printPageNumber, int length)
 			    &translationLength, translatedBuffer,
 			    &translatedLength, NULL, NULL, 0))
     return 0;
-  widecharcpy (ud->print_page_number, translatedBuffer, translatedLength);
-  ud->print_page_number[0] = ' ';
+  if (translatedBuffer[0] != ' ')
+    {
+      /* Translation dropped leading space */
+      ud->print_page_number[0] = ' ';
+      widecharcpy (&ud->print_page_number[1], translatedBuffer,
+		   translatedLength);
+    }
+  else
+    widecharcpy (ud->print_page_number, translatedBuffer, translatedLength);
   if (!ud->page_separator_number_first[0] ||
       ud->page_separator_number_first[0] == '_' || ud->ignore_empty_pages)
     widestrcpy (ud->page_separator_number_first, ud->print_page_number);
@@ -960,7 +965,7 @@ handlePagenum (xmlChar * printPageNumber, int length)
   return 1;
 }
 
-static int utd_makePageSeparator (char * printPageNumber, int length);
+static int utd_makePageSeparator (char *printPageNumber, int length);
 
 void
 set_runninghead_string (widechar * chars, int length)
@@ -4134,8 +4139,7 @@ checkPageStatus ()
   if (ud->vert_line_pos == ud->page_top && ud->lines_on_page == 0)
     return topOfPage;
   remaining = ud->page_bottom - ud->vert_line_pos;
-  if (remaining < ud->normal_line || ud->lines_on_page >= 
-  ud->lines_per_page)
+  if (remaining < ud->normal_line || ud->lines_on_page >= ud->lines_per_page)
     return bottomOfPage;
   if (remaining >= ud->normal_line && remaining < (3 * ud->normal_line / 2))
     return lastLine;
@@ -4277,7 +4281,7 @@ insertPageNumber (int howMany)
 static int utd_fillPage ();
 
 static int
-utd_makePageSeparator (char * printPageNumber, int length)
+utd_makePageSeparator (char *printPageNumber, int length)
 {
   ShortBrlOnlyStrings sb;
   int k, kk;
@@ -4314,7 +4318,7 @@ utd_makePageSeparator (char * printPageNumber, int length)
 }
 
 static void
-utd_pagebreak (xmlNode *node, char *printPageNumber, int length)
+utd_pagebreak (xmlNode * node, char *printPageNumber, int length)
 {
   xmlNode *newNode = xmlNewNode (NULL, (xmlChar *) "brl");
   brlNode = xmlAddNextSibling (node, newNode);
@@ -4495,8 +4499,8 @@ assignIndices ()
 	{
 	  int indexPos = nextSegment;
 	  int kk = 0;
-          if (translatedBuffer[curPos] == ENDSEGMENT)
-            firstIndex = indices[curPos] + 1;
+	  if (translatedBuffer[curPos] == ENDSEGMENT)
+	    firstIndex = indices[curPos] + 1;
 	  while (translatedBuffer[indexPos] != ENDSEGMENT && indexPos <
 		 translatedLength)
 	    {
@@ -4659,13 +4663,12 @@ utd_insert_text (xmlNode * node, int length)
     case pagenum:
       if (ud->print_pages)
 	{
-          char printPageNumber[MAXNUMLEN + 1];
-          for (k = 0; k < outSize && k < MAXNUMLEN; k++)
-            printPageNumber[k] = ud->text_buffer[ud->old_text_length 
-            + k];
-          brlNode = xmlAddNextSibling (node, newNode);
-          utd_makePageSeparator (printPageNumber, k);
-        }
+	  char printPageNumber[MAXNUMLEN + 1];
+	  for (k = 0; k < outSize && k < MAXNUMLEN; k++)
+	    printPageNumber[k] = ud->text_buffer[ud->old_text_length + k];
+	  brlNode = xmlAddNextSibling (node, newNode);
+	  utd_makePageSeparator (printPageNumber, k);
+	}
       ud->text_length = ud->old_text_length;
       return;
     case italicx:
@@ -4686,8 +4689,7 @@ utd_insert_text (xmlNode * node, int length)
     case compbrl:
       if (!(ud->emphasis & computer_braille))
 	break;
-      memset (&ud->typeform[ud->old_text_length], computer_braille, 
-      outSize);
+      memset (&ud->typeform[ud->old_text_length], computer_braille, outSize);
       break;
     default:
       break;
