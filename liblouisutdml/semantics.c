@@ -1665,7 +1665,7 @@ compileMacro ()
   xmlChar compiledMacro[4 * MAXNAMELEN];
   int unPos = 0;
   int pos = 0;
-  memset (compiledMacro, sizeof (compiledMacro), 0);
+  memset (compiledMacro, 0, sizeof (compiledMacro));
   while (unPos < macroLength)
     {
       if (isalpha (macro[unPos]))
