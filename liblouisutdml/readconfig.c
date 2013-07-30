@@ -134,19 +134,29 @@ file_exists (const char *completePath)
 }
 
 int
-find_file (const char *fileList, char *filePath)
+find_file (const char *fileName, char *filePath)
 {
   struct stat statInfo;
   char trialPath[MAXNAMELEN];
-  int commaPos;			/*for file lists */
   int listLength;
   int k;
   int currentListPos = 0;
+  int nameLength = strlen (fileName);
   int pathLength;
   filePath[0] = 0;
-  for (commaPos = 0; fileList[commaPos] && fileList[commaPos] != ',';
-       commaPos++);
-/*Process path list*/
+  for (k = 0; k < nameLength && fileName[k] != ud->file_separator; k++);
+  if (k != nameLength)
+    {
+      /* This name contains a path */
+      if (stat (fileName, &statInfo) != -1)
+	{
+	  strcpy (filePath, fileName);
+	  return 1;
+	}
+      else
+	return 0;
+    }
+  /*Process path list */
   listLength = strlen (ud->path_list);
   for (k = 0; k < listLength; k++)
     if (ud->path_list[k] == ',')
@@ -157,10 +167,10 @@ find_file (const char *fileList, char *filePath)
       if (trialPath[strlen (trialPath) - 1] != ud->file_separator)
 	strcat (trialPath, pathEnd);
       pathLength = strlen (trialPath);
-      strncat (trialPath, (char *) fileList, commaPos);
+      strcat (trialPath,  fileName);
       if (stat (trialPath, &statInfo) != -1)
 	{
-	  strcpy (&trialPath[pathLength], fileList);
+	  strcpy (&trialPath[pathLength], fileName);
 	  strcpy (filePath, trialPath);
 	  return 1;
 	}
@@ -172,10 +182,10 @@ find_file (const char *fileList, char *filePath)
       if (trialPath[strlen (trialPath) - 1] != ud->file_separator)
 	strcat (trialPath, pathEnd);
       pathLength = strlen (trialPath);
-      strncat (trialPath, (char *) fileList, commaPos);
+      strcat (trialPath,  fileName);
       if (stat (trialPath, &statInfo) != -1)
 	{
-	  strcpy (&trialPath[pathLength], fileList);
+	  strcpy (&trialPath[pathLength], fileName);
 	  strcpy (filePath, trialPath);
 	  return 1;
 	}
@@ -191,10 +201,10 @@ find_file (const char *fileList, char *filePath)
 	  if (trialPath[strlen (trialPath) - 1] != ud->file_separator)
 	    strcat (trialPath, pathEnd);
 	  pathLength = strlen (trialPath);
-	  strncat (trialPath, (char *) fileList, commaPos);
+	  strcat (trialPath,  fileName);
 	  if (stat (trialPath, &statInfo) != -1)
 	    {
-	      strcpy (&trialPath[pathLength], fileList);
+	      strcpy (&trialPath[pathLength], fileName);
 	      strcpy (filePath, trialPath);
 	      return 1;
 	    }
