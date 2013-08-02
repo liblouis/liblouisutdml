@@ -4493,6 +4493,7 @@ assignIndices ()
 	  for (; translatedBuffer[curPos] != ENDSEGMENT && curPos <
 	       translatedLength; curPos++);
 	  curBrlNode = curBrlNode->_private;
+	  nextSegment = curPos + 1;
 	  continue;
 	}
       if (translatedBuffer[curPos] == ENDSEGMENT || nextSegment == 0)
@@ -4705,7 +4706,6 @@ setNewlineNode ()
 {
   xmlNode *newNode = xmlNewNode (NULL, (xmlChar *) "newline");
   newlineNode = xmlAddChild (brlNode, newNode);
-  ud->lines_on_page++;
   return 1;
 }
 
@@ -4786,7 +4786,8 @@ utd_startLine ()
 	    }
 	  availableCells = ud->cells_per_line - pageNumber.transTextLength;
 	}
-      else if (curPageStatus == lastLine)
+      else if (curPageStatus == lastLine || curPageStatus == 
+      bottomOfPage)
 	{
 	  if (ud->footer_length > 0 ||
 	      (style->skip_number_lines && pageNumber.transTextLength > 0))
@@ -4819,6 +4820,7 @@ utd_finishLine (int leadingBlanks, int length)
 	{
 	  utd_startLine ();
 	  ud->vert_line_pos += ud->normal_line;
+	  ud->lines_on_page++;
 	  setNewlineProp (0);
 	}
       if (cellsOnLine > 0 && pageNumber.transTextLength > 0)
@@ -4843,7 +4845,8 @@ utd_finishLine (int leadingBlanks, int length)
 		}
 	    }
 	}
-      else if (curPageStatus == lastLine)
+      else if (curPageStatus == lastLine || curPageStatus == 
+      bottomOfPage)
 	{
 	  if (ud->footer_length > 0)
 	    centerHeadFoot (ud->footer, ud->footer_length);
@@ -4851,9 +4854,10 @@ utd_finishLine (int leadingBlanks, int length)
 	    {
 	      if (pageNumber.transTextLength)
 		{
-		  int k = ud->cells_per_line - pageNumber.transTextLength;
-		  horizLinePos = k * ud->cell_width;
-		  if (!insertPageNumber (k))
+		  horizLinePos = (ud->cells_per_line - 
+		  pageNumber.transTextLength)
+		   * ud->cell_width + ud->page_left;
+		  if (!insertPageNumber (0))
 		    return 0;
 		}
 	    }
@@ -4861,6 +4865,7 @@ utd_finishLine (int leadingBlanks, int length)
     }
   setNewlineProp (horizLinePos);
   ud->vert_line_pos += lineWidth;
+  ud->lines_on_page++;
   curPageStatus = checkPageStatus ();
   if (curPageStatus == bottomOfPage)
     {
