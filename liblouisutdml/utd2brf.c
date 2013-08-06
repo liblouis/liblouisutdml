@@ -41,7 +41,6 @@ static int finishDocument ();
 static int doUtdbrlonly (xmlNode * node, int action);
 static int doUtdnewpage (xmlNode * node);
 static int doUtdnewline (xmlNode * node);
-static int doUtddispimg (xmlNode * node);
 static int firstPage;
 static int firstLineOnPage;
 
@@ -61,11 +60,13 @@ utd2brf (xmlNode * node)
 static int
 beginDocument ()
 {
+  return 1;
 }
 
 static int
 finishDocument ()
 {
+  return 1;
 }
 
 static int
@@ -121,6 +122,7 @@ doDotsText (xmlNode * node)
 {
   ud->text_length = 0;
   insert_utf8 (node->content);
+  for (; ud->text_buffer[ud->text_length] <= 32; ud->text_length--);
   if (!lou_dotsToChar (ud->main_braille_table, ud->text_buffer,
 		       &ud->outbuf1[ud->outbuf1_len_so_far],
 		       ud->text_length, 0))
