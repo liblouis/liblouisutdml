@@ -86,6 +86,7 @@ typedef struct
   int righthand_page;
   int newline_after;
   int runningHead;
+  sem_act emphasis;
   char name[1];
 } StyleType;
 
