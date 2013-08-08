@@ -970,14 +970,18 @@ static int utd_makePageSeparator (char *printPageNumber, int length);
 void
 set_runninghead_string (widechar * chars, int length)
 {
-  ud->running_head_length = minimum (length, ud->cells_per_line - 9);
+  if (length > (sizeof (ud->running_head) / CHARSIZE))
+    length = sizeof (ud->running_head) / CHARSIZE - 4;
+  ud->running_head_length = length;
   memcpy (ud->running_head, chars, ud->running_head_length * CHARSIZE);
 }
 
 void
 set_footer_string (widechar * chars, int length)
 {
-  ud->footer_length = minimum (length, ud->cells_per_line - 9);
+  if (length > (sizeof (ud->footer) / CHARSIZE))
+    length = sizeof (ud->footer) / CHARSIZE - 4;
+  ud->footer_length = length;
   memcpy (ud->footer, chars, ud->footer_length * CHARSIZE);
 }
 
@@ -1575,7 +1579,7 @@ centerHeadFoot (widechar * toCenter, int length)
   if (length > numCells)
     {
       int k;
-      length = numCells - 4;
+      length = numCells - 2;
       for (k = length; toCenter[k] != ' ' && k >= 0; k--);
       if (k > 0)
 	length = k - 1;
@@ -1586,10 +1590,13 @@ centerHeadFoot (widechar * toCenter, int length)
     return 0;
   if (!insertWidechars (toCenter, length))
     return 0;
-  if (!insertCharacters (blanks, trailingBlanks))
-    return 0;
-  if (!insertWidechars (pageNumberString, pageNumberLength))
-    return 0;
+  if (pageNumberLength > 0)
+    {
+      if (!insertCharacters (blanks, trailingBlanks))
+	return 0;
+      if (!insertWidechars (pageNumberString, pageNumberLength))
+	return 0;
+    }
   return 1;
 }
 
