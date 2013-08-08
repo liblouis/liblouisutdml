@@ -1299,11 +1299,7 @@ sem_act
 push_sem_stack (xmlNode * node)
 {
   if (ud->top > (STACKSIZE - 2) || ud->top < -1)
-    {
-      ud->top = 1;
-      ud->stack[ud->top] = no;
-      return no;
-    }
+    ud->top = 1;
   return (ud->stack[++ud->top] = get_sem_attr (node));
 }
 
@@ -1327,8 +1323,6 @@ pop_sem_stack ()
   ud->top--;
   if (ud->top > -1)
     return ud->stack[ud->top];
-  ud->top = 1;
-  ud->stack[ud->top] = no;
   return no;
 }
 
