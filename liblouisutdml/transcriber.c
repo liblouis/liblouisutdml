@@ -1567,22 +1567,28 @@ startLine ()
 static int
 centerHeadFoot (widechar * toCenter, int length)
 {
-   int leadingBlanks;
-   int trailingBlanks;
-   int numCells = ud->cells_per_line - (pageNumberLength*2);
-   if (length > numCells)
-     length = numCells - 4;
-   leadingBlanks = ((numCells - length) / 2) + pageNumberLength;
-   trailingBlanks = numCells - leadingBlanks - length + pageNumberLength;
-   if (!insertCharacters (blanks, leadingBlanks))
-     return 0;
-   if (!insertWidechars (toCenter, length))
-     return 0;
-   if (!insertCharacters (blanks, trailingBlanks))
-     return 0;
-   if (!insertWidechars (pageNumberString, pageNumberLength))
-     return 0;
-   return 1;
+  int leadingBlanks;
+  int trailingBlanks;
+  int numCells = ud->cells_per_line - pageNumberLength;
+  if (length > numCells)
+    {
+      int k;
+      length = numCells - 4;
+      for (k = length; toCenter[k] != ' ' && k >= 0; k--);
+      if (k > 0)
+	length = k - 1;
+    }
+  leadingBlanks = (numCells - length) / 2;
+  trailingBlanks = numCells - leadingBlanks - length;
+  if (!insertCharacters (blanks, leadingBlanks))
+    return 0;
+  if (!insertWidechars (toCenter, length))
+    return 0;
+  if (!insertCharacters (blanks, trailingBlanks))
+    return 0;
+  if (!insertWidechars (pageNumberString, pageNumberLength))
+    return 0;
+  return 1;
 }
 
 static int
@@ -4139,8 +4145,8 @@ checkPageStatus ()
   remaining = ud->page_bottom - ud->vert_line_pos;
   if (remaining < ud->normal_line || ud->lines_on_page >= ud->lines_per_page)
     return bottomOfPage;
-  if ((ud->lines_on_page + 1) >= ud->lines_per_page || remaining == 
-  ud->normal_line)
+  if ((ud->lines_on_page + 1) >= ud->lines_per_page || remaining ==
+      ud->normal_line)
     return lastLine;
   if (remaining > (2 * ud->normal_line) && remaining < (3 * ud->normal_line))
     return nearBottom;
@@ -4785,8 +4791,7 @@ utd_startLine ()
 	    }
 	  availableCells = ud->cells_per_line - pageNumber.transTextLength;
 	}
-      else if (curPageStatus == lastLine || curPageStatus == 
-      bottomOfPage)
+      else if (curPageStatus == lastLine || curPageStatus == bottomOfPage)
 	{
 	  if (ud->footer_length > 0 ||
 	      (style->skip_number_lines && pageNumber.transTextLength > 0))
@@ -4844,8 +4849,7 @@ utd_finishLine (int leadingBlanks, int length)
 		}
 	    }
 	}
-      else if (curPageStatus == lastLine || curPageStatus == 
-      bottomOfPage)
+      else if (curPageStatus == lastLine || curPageStatus == bottomOfPage)
 	{
 	  if (ud->footer_length > 0)
 	    centerHeadFoot (ud->footer, ud->footer_length);
@@ -4853,9 +4857,9 @@ utd_finishLine (int leadingBlanks, int length)
 	    {
 	      if (pageNumber.transTextLength)
 		{
-		  horizLinePos = (ud->cells_per_line - 
-		  pageNumber.transTextLength)
-		   * ud->cell_width + ud->page_left;
+		  horizLinePos = (ud->cells_per_line -
+				  pageNumber.transTextLength)
+		    * ud->cell_width + ud->page_left;
 		  if (!insertPageNumber (0))
 		    return 0;
 		}
