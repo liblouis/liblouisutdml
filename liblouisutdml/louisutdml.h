@@ -332,6 +332,7 @@ int compile_semantic_table (xmlNode * rootElement);
 sem_act set_sem_attr (xmlNode * node);
 sem_act get_sem_attr (xmlNode * node);
 sem_act push_sem_stack (xmlNode * node);
+sem_act push_action (sem_act action);
 sem_act pop_sem_stack ();
 void destroy_semantic_table ();
 void append_new_entries ();

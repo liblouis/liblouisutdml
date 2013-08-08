@@ -1247,14 +1247,14 @@ get_sem_name (xmlNode * node)
       strncat (key, macro, k);
     }
   else if (nodeEntry->style != NULL)
-  {
-  strcpy (key, "style,");
-    strcat (key, nodeEntry->style->name);
+    {
+      strcpy (key, "style,");
+      strcat (key, nodeEntry->style->name);
     }
   else
     {
-    strcpy (key, "action,");
-    strcat (key, semNames[nodeEntry->semNum]);
+      strcpy (key, "action,");
+      strcat (key, semNames[nodeEntry->semNum]);
     }
   return key;
 }
@@ -1305,6 +1305,14 @@ push_sem_stack (xmlNode * node)
       return no;
     }
   return (ud->stack[++ud->top] = get_sem_attr (node));
+}
+
+sem_act
+push_action (sem_act action)
+{
+  if (ud->top > (STACKSIZE - 2) || ud->top < -1)
+    ud->top = 1;
+  return (ud->stack[++ud->top] = action);
 }
 
 sem_act
@@ -1650,6 +1658,18 @@ doSemanticActions ()
       break;
     case pagenum:
       do_pagenum ();
+      break;
+    case italicx:
+      push_action (italicx);
+      break;
+    case boldx:
+      push_action (boldx);
+      break;
+    case underlinex:
+      push_action (underlinex);
+      break;
+    case compbrl:
+      push_action (compbrl);
       break;
     default:
       macroError ("semantic action %s is not supported in a macro",
