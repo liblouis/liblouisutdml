@@ -1107,6 +1107,8 @@ compileConfig (FileInfo * nested)
 	      "17",
 	      "runningHead",
 	      "18",
+	      "emphasis",
+	      "19",
 	      NULL
 	    };
 	    static const char *formats[] = {
@@ -1226,6 +1228,17 @@ compileConfig (FileInfo * nested)
 		    if ((k = checkValues (nested, yesNo)) != NOTFOUND)
 		      style->runningHead = k;
 		    break;
+		  case 19:
+		  {
+		  sem_act action = find_semantic_number (nested->value);
+		  if (action == italicx || action == boldx || action == 
+		  underlinex || action == compbrl)
+		  style->emphasis = action;
+		  else
+		  configureError (nested, "invalid emphasis '%s'", 
+		  nested->value);
+		  }
+		  break;
 		  default:
 		    configureError (nested, "Program error in readconfig.c");
 		    continue;

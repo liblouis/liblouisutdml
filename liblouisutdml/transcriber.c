@@ -1031,6 +1031,8 @@ insert_text (xmlNode * node)
     return;
   if (k < length)
     length = k + 1;		/*Keep last whitespace */
+  if (style->emphasis)
+    push_action (style->emphasis);
   if (ud->format_for == utd)
     return utd_insert_text (node, length);
   switch (ud->stack[ud->top])
