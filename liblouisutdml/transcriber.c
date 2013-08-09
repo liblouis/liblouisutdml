@@ -1575,17 +1575,17 @@ centerHeadFoot (widechar * toCenter, int length)
 {
   int leadingBlanks;
   int trailingBlanks;
-  int numCells = ud->cells_per_line - pageNumberLength;
+  int numCells = ud->cells_per_line - (2 * pageNumberLength);
   if (length > numCells)
     {
       int k;
-      length = numCells - 2;
+      length = numCells;
       for (k = length; toCenter[k] != ' ' && k >= 0; k--);
       if (k > 0)
-	length = k - 1;
+	length = k;
     }
-  leadingBlanks = (numCells - length) / 2;
-  trailingBlanks = numCells - leadingBlanks - length;
+  leadingBlanks = ((numCells - length) / 2) + pageNumberLength;
+  trailingBlanks = numCells - leadingBlanks - length + pageNumberLength;
   if (!insertCharacters (blanks, leadingBlanks))
     return 0;
   if (!insertWidechars (toCenter, length))
