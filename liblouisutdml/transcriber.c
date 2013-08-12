@@ -4488,58 +4488,6 @@ hasAttrValue (xmlNode * node, char *attrName, char *value)
 }
 
 static int
-assignIndices ()
-{
-  int nextSegment = 0;
-  int firstIndex = 0;
-  int curPos = 0;
-  xmlNode *curBrlNode;
-  if (indices == NULL)
-    return 1;
-  if (firstBrlNode == NULL)
-    return 0;
-  curBrlNode = firstBrlNode;
-  while (curPos < translatedLength && curBrlNode != NULL &&
-	 nextSegment < translatedLength)
-    {
-      if (hasAttrValue (curBrlNode, "modifiers", "notext"))
-	{
-	  for (; translatedBuffer[curPos] != ENDSEGMENT && curPos <
-	       translatedLength; curPos++);
-	  curBrlNode = curBrlNode->_private;
-	  nextSegment = curPos + 1;
-	  continue;
-	}
-      if (translatedBuffer[curPos] == ENDSEGMENT || nextSegment == 0)
-	{
-	  int indexPos = nextSegment;
-	  int kk = 0;
-	  if (translatedBuffer[curPos] == ENDSEGMENT)
-	    firstIndex = indices[curPos] + 1;
-	  while (translatedBuffer[indexPos] != ENDSEGMENT && indexPos <
-		 translatedLength)
-	    {
-	      char pos[MAXNUMLEN];
-	      int posLen;
-	      posLen = sprintf (pos, "%d ", indices[indexPos] - firstIndex);
-	      strcpy (&utilStringBuf[kk], pos);
-	      kk += posLen;
-	      indexPos++;
-	    }
-	  utilStringBuf[--kk] = 0;
-	  if (xmlGetProp (curBrlNode, (xmlChar *) "index") == NULL)
-	    xmlNewProp (curBrlNode, (xmlChar *) "index", (xmlChar *)
-			utilStringBuf);
-	  if (curBrlNode && curBrlNode->_private != NULL)
-	    curBrlNode = curBrlNode->_private;
-	  curPos = indexPos;
-	}
-      nextSegment = curPos + 1;
-    }
-  return 1;
-}
-
-static int
 assignTranslations ()
 {
   int nextSegment = 0;
@@ -4595,11 +4543,61 @@ makeNewline (xmlNode * parent, int start)
   return 1;
 }
 
+static xmlNode *startNode;
+
+static int
+assignIndices (xmlNode *startNode, int startPos)
+{
+  int nextSegment = startPos;
+  int firstIndex;
+  int curPos = startPos;
+  xmlNode *curBrlNode;
+  if (indices == NULL)
+    return 1;
+  if (startNode == NULL)
+    return 0;
+  curBrlNode = startNode;
+  firstIndex = indices[startPos];
+  while (curPos < ud->translated_length && curBrlNode != NULL &&
+	 nextSegment < ud->translated_length)
+    {
+      if (ud->translated_buffer[curPos] == ENDSEGMENT || nextSegment == 
+      startPos)
+	{
+	  int indexPos = nextSegment;
+	  int kk = 0;
+	  if (ud->translated_buffer[curPos] == ENDSEGMENT)
+	    firstIndex = indices[curPos + 1];
+	  while (ud->translated_buffer[indexPos] != ENDSEGMENT && 
+	  indexPos <
+		 ud->translated_length)
+	    {
+	      char pos[MAXNUMLEN];
+	      int posLen;
+	      posLen = sprintf (pos, "%d ", indices[indexPos] - firstIndex);
+	      strcpy (&utilStringBuf[kk], pos);
+	      kk += posLen;
+	      indexPos++;
+	    }
+	  utilStringBuf[--kk] = 0;
+	  if (xmlGetProp (curBrlNode, (xmlChar *) "index") == NULL)
+	    xmlNewProp (curBrlNode, (xmlChar *) "index", (xmlChar *)
+			utilStringBuf);
+	  if (curBrlNode && curBrlNode->_private != NULL)
+	    curBrlNode = curBrlNode->_private;
+	  curPos = indexPos;
+	}
+      nextSegment = curPos + 1;
+    }
+  return 1;
+}
+
 static int
 utd_insert_translation (const char *table)
 {
   int translationLength;
   int translatedLength;
+  int oldUdTranslatedLength = ud->translated_length;
   int k;
   int *setIndices;
   if (table != currentTable)
@@ -4639,6 +4637,7 @@ utd_insert_translation (const char *table)
     ud->translated_length += translatedLength;
   else
     ud->translated_length = MAX_TRANS_LENGTH;
+  assignIndices (startNode, oldUdTranslatedLength);
   return 1;
 }
 
@@ -4709,6 +4708,12 @@ utd_insert_text (xmlNode * node, int length)
     default:
       break;
     }
+  if (ud->old_text_length == 0)
+  {
+  startNode = xmlAddNextSibling (node, newNode);
+  link_brl_node (startNode);
+  }
+  else
   link_brl_node (xmlAddNextSibling (node, newNode));
   ud->text_buffer[ud->text_length++] = ENDSEGMENT;
   return;
@@ -5301,7 +5306,6 @@ utd_styleBody ()
   sem_act action;
   if (!utd_editTrans ())
     return 0;
-  assignIndices ();
   if (!ud->paragraphs)
     assignTranslations ();
   else
