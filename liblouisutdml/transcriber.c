@@ -1038,7 +1038,7 @@ setEmphasis ()
 	  if (!(ud->emphasis & bold))
 	    break;
 	  for (k = ud->old_text_length; k < ud->text_length; k++)
-	    ud->typeform[k] |= boldx;
+	    ud->typeform[k] |= bold;
 	  break;
 	case compbrl:
 	  if (!(ud->emphasis & computer_braille))
@@ -1049,7 +1049,8 @@ setEmphasis ()
 	default:
 	  break;
 	}
-      top--;
+      //top--;
+      top = -1; /*to be removed when liblouis fixed*/
     }
   return;
 }
@@ -4566,7 +4567,7 @@ makeNewline (xmlNode * parent, int start)
 static xmlNode *startNode;
 
 static int
-assignIndices (xmlNode *startNode, int startPos)
+assignIndices (xmlNode * startNode, int startPos)
 {
   int nextSegment = startPos;
   int firstIndex;
@@ -4581,16 +4582,15 @@ assignIndices (xmlNode *startNode, int startPos)
   while (curPos < ud->translated_length && curBrlNode != NULL &&
 	 nextSegment < ud->translated_length)
     {
-      if (ud->translated_buffer[curPos] == ENDSEGMENT || nextSegment == 
-      startPos)
+      if (ud->translated_buffer[curPos] == ENDSEGMENT || nextSegment ==
+	  startPos)
 	{
 	  int indexPos = nextSegment;
 	  int kk = 0;
 	  if (ud->translated_buffer[curPos] == ENDSEGMENT)
 	    firstIndex = indices[curPos + 1];
-	  while (ud->translated_buffer[indexPos] != ENDSEGMENT && 
-	  indexPos <
-		 ud->translated_length)
+	  while (ud->translated_buffer[indexPos] != ENDSEGMENT &&
+		 indexPos < ud->translated_length)
 	    {
 	      char pos[MAXNUMLEN];
 	      int posLen;
@@ -4710,12 +4710,12 @@ utd_insert_text (xmlNode * node, int length)
       break;
     }
   if (ud->old_text_length == 0)
-  {
-  startNode = xmlAddNextSibling (node, newNode);
-  link_brl_node (startNode);
-  }
+    {
+      startNode = xmlAddNextSibling (node, newNode);
+      link_brl_node (startNode);
+    }
   else
-  link_brl_node (xmlAddNextSibling (node, newNode));
+    link_brl_node (xmlAddNextSibling (node, newNode));
   ud->text_buffer[ud->text_length++] = ENDSEGMENT;
   return;
 }
