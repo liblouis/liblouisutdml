@@ -236,7 +236,9 @@ transcribe_paragraph (xmlNode * node, int action)
       do_boxline (node);
       if (action != 0)
 	pop_sem_stack ();
+    if (node->children == NULL)
       return 1;
+    break;
     case pagebreak:
       do_pagebreak (node);
       if (action != 0)
@@ -261,17 +263,23 @@ transcribe_paragraph (xmlNode * node, int action)
       do_softreturn ();
       if (action != 0)
 	pop_sem_stack ();
+    if (node->children == NULL)
       return 1;
+    break;
     case newpage:
       do_newpage ();
       if (action != 0)
 	pop_sem_stack ();
+    if (node->children == NULL)
       return 1;
+    break;
     case righthandpage:
       do_righthandpage ();
       if (action != 0)
 	pop_sem_stack ();
+    if (node->children == NULL)
       return 1;
+    break;
     case code:
       transcribe_computerCode (node, 0);
       if (action != 0)
@@ -305,7 +313,9 @@ transcribe_paragraph (xmlNode * node, int action)
       return 1;
     case changetable:
       change_table (node);
+    if (node->children == NULL)
       return 1;
+    break;
     case pagenum:
       do_pagenum ();
       break;

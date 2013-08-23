@@ -1014,8 +1014,8 @@ setEmphasis ()
 {
   int k;
   int top = ud->top;
-  memset (&ud->typeform[ud->old_text_length], ud->text_length -
-	  ud->old_text_length, 0);
+  memset (&ud->typeform[ud->old_text_length], 0, ud->text_length -
+	  ud->old_text_length);
   while (top >= 0 && (ud->stack[top] == italicx || ud->stack[top] == boldx
 		      || ud->stack[top] == underlinex
 		      || ud->stack[top] == compbrl))
@@ -4425,7 +4425,7 @@ utd_getPageNumber ()
   PageStatus curPageStatus;
   int braillePageNumber = 0;
   int printPageNumber = 0;
-  pageNumber.transTextLength = 0;
+  memset (&pageNumber, 0, sizeof (pageNumber));
   curPageStatus = checkPageStatus ();
   if (curPageStatus == midPage)
     return 1;
