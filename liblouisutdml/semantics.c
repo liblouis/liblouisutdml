@@ -1295,19 +1295,33 @@ get_attr_value (xmlNode * node)
   return xmlGetProp (node, attrName);
 }
 
+void
+shortenStack ()
+{
+  int k;
+  int kk = 0;
+  for (k = ud->top / 2; k <= ud->top; k++)
+    ud->stack[kk++] = ud->stack[k];
+  ud->top = kk - 1;
+}
+
 sem_act
 push_sem_stack (xmlNode * node)
 {
-  if (ud->top > (STACKSIZE - 2) || ud->top < -1)
-    ud->top = 1;
+  if (ud->top < -1)
+    ud->top = -1;
+  if (ud->top > (STACKSIZE - 3))
+    shortenStack ();
   return (ud->stack[++ud->top] = get_sem_attr (node));
 }
 
 sem_act
 push_action (sem_act action)
 {
-  if (ud->top > (STACKSIZE - 2) || ud->top < -1)
-    ud->top = 1;
+  if (ud->top < -1)
+    ud->top = -1;
+  if (ud->top > (STACKSIZE - 3))
+    shortenStack ();
   return (ud->stack[++ud->top] = action);
 }
 
@@ -1316,8 +1330,8 @@ pop_sem_stack ()
 {
   if (ud->top < 0)
     {
-      ud->top = 1;
-      ud->stack[ud->top] = no;
+      ud->top = -1;
+      ud->stack[++ud->top] = no;
       return no;
     }
   ud->top--;
@@ -1325,7 +1339,6 @@ pop_sem_stack ()
     return ud->stack[ud->top];
   return no;
 }
-
 
 static void
 addNewEntries (const xmlChar * newEntry)

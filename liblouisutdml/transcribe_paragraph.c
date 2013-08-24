@@ -202,7 +202,7 @@ transcribe_paragraph (xmlNode * node, int action)
     case skip:
       if (action != 0)
 	pop_sem_stack ();
-      return 0;
+      return 1;
     case markhead:
       ud->head_node = node;
       pop_sem_stack ();
@@ -215,9 +215,9 @@ transcribe_paragraph (xmlNode * node, int action)
 	  lou_logPrint ("Cannot open main table %s", ud->main_braille_table);
 	  return 0;
 	}
-      if (action != 0)
-	pop_sem_stack ();
+    if (node->children == NULL)
       return 1;
+    break;
     case htmllink:
       if (ud->format_for != browser)
 	break;
@@ -234,49 +234,39 @@ transcribe_paragraph (xmlNode * node, int action)
       return 1;
     case boxline:
       do_boxline (node);
-      if (action != 0)
-	pop_sem_stack ();
     if (node->children == NULL)
       return 1;
     break;
     case pagebreak:
       do_pagebreak (node);
-      if (action != 0)
-	pop_sem_stack ();
       return 1;
     case attrtotext:
       do_attrtotext (node);
-      if (action != 0)
-	pop_sem_stack ();
+    if (node->children == NULL)
       return 1;
+    break;
     case blankline:
       do_blankline ();
-      if (action != 0)
-	pop_sem_stack ();
+    if (node->children == NULL)
       return 1;
+    break;
     case linespacing:
       do_linespacing (node);
-      if (action != 0)
-	pop_sem_stack ();
+    if (node->children == NULL)
       return 1;
+    break;
     case softreturn:
       do_softreturn ();
-      if (action != 0)
-	pop_sem_stack ();
     if (node->children == NULL)
       return 1;
     break;
     case newpage:
       do_newpage ();
-      if (action != 0)
-	pop_sem_stack ();
     if (node->children == NULL)
       return 1;
     break;
     case righthandpage:
       do_righthandpage ();
-      if (action != 0)
-	pop_sem_stack ();
     if (node->children == NULL)
       return 1;
     break;
