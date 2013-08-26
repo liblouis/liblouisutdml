@@ -33,6 +33,14 @@
 #include <string.h>
 #include "louisutdml.h"
 
+extern void widecharcpy (widechar * to, const widechar * from, int length);
+extern void widestrcpy (widechar * to, const widechar * from);
+extern void unsignedcharcpy (char * to, const char * from, int length);
+extern void save_translated_buffer (void);
+extern void restore_translated_buffer (void);
+extern void contents_save_state (void);
+extern void contents_restore_state (void);
+
 static int dont_split = 0;
 static int dont_split_status = 0;
 static int keep_with_next = 0;
