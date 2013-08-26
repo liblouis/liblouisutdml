@@ -36,6 +36,9 @@
 
 #define MAXHEADINGSIZE 4 * MAXNAMELEN
 
+extern void widecharcpy (widechar * to, const widechar * from, int length);
+extern void widestrcpy (widechar * to, const widechar * from);
+
 typedef struct
 {
   void *next;
