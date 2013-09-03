@@ -299,43 +299,49 @@ main (int argc, char **argv)
     switch (whichProc)
       {
       case 'b':
-	lbu_backTranslateFile (configFileList, tempFileName,
-			       outputFileName, logFileName, configSettings,
-			       mode);
+	if (!lbu_backTranslateFile (configFileList, tempFileName,
+				    outputFileName, logFileName, configSettings,
+				    mode))
+	  exit (EXIT_FAILURE);
 	break;
       case 'r':
 	{
 	  char temp2FileName[MAXNAMELEN];
 	  strcpy (temp2FileName, lbu_getWriteablePath ());
 	  strcat (temp2FileName, "file2brl2.temp");
-	  if ((lbu_backTranslateFile (configFileList, tempFileName,
+	  if (!lbu_backTranslateFile (configFileList, tempFileName,
 				      temp2FileName, logFileName,
-				      configSettings, mode)) != 1)
+				      configSettings, mode))
 	    exit (EXIT_FAILURE);
 	  if (ud->back_text == html)
-	    lbu_translateFile (configFileList, temp2FileName,
-			       outputFileName, logFileName, configSettings,
-			       mode);
+	    if (!lbu_translateFile (configFileList, temp2FileName,
+				    outputFileName, logFileName, configSettings,
+				    mode))
+	      exit (EXIT_FAILURE);
 	  else
-	    lbu_translateTextFile (configFileList, temp2FileName,
-				   outputFileName, logFileName,
-				   configSettings, mode);
+	    if (!lbu_translateTextFile (configFileList, temp2FileName,
+					outputFileName, logFileName,
+					configSettings, mode))
+	      exit (EXIT_FAILURE);
 	}
 	break;
       case 'p':
-	lbu_translateTextFile (configFileList, tempFileName,
-			       outputFileName, logFileName, configSettings,
-			       mode);
+	if (!lbu_translateTextFile (configFileList, tempFileName,
+				    outputFileName, logFileName, configSettings,
+				    mode))
+	  exit (EXIT_FAILURE);
 	break;
       case 'T':
-	lbu_translateTextFile (configFileList, tempFileName,
-			       outputFileName,
-			       logFileName, configSettings, mode);
+	if (!lbu_translateTextFile (configFileList, tempFileName,
+				    outputFileName,
+				    logFileName, configSettings, mode))
+	  exit (EXIT_FAILURE);
 	break;
       case 't':
       case '0':
-	lbu_translateFile (configFileList, tempFileName, outputFileName,
-			   logFileName, configSettings, mode);
+	if (!lbu_translateFile (configFileList, tempFileName, outputFileName,
+				logFileName, configSettings, mode))
+	  exit (EXIT_FAILURE);
 	break;
       default:
 	lou_logPrint ("Program bug %c\n", whichProc);
