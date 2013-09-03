@@ -1,0 +1,5 @@
+root           &xpath(/*)
+pagenum        &xpath(//print-page)
+runninghead    &xpath(//running-header)
+footer         &xpath(//running-footer)
+page           &xpath(//page)
