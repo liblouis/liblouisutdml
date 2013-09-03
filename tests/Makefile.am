@@ -14,9 +14,22 @@ AM_CFLAGS =	\
 AM_LDFLAGS =	\
 	$(BASE_DEPENDENCIES_LDFLAGS)
 
-bin_PROGRAMS = \
+check_PROGRAMS = \
 	testTranslateString\
 	tripleTrans
 
+dist_check_SCRIPTS = run_test_suite.sh
+
 testTranslateString_SOURCES = testTranslateString.c
 tripleTrans_SOURCES = tripleTrans.c
+
+XFAIL_TESTS =					\
+	testTranslateString
+
+TESTS =                   \
+	$(check_PROGRAMS)     \
+	$(dist_check_SCRIPTS)
+
+TESTS_ENVIRONMENT =                                                         \
+	LD_LIBRARY_PATH=$(abs_top_srcdir)/liblouisutdml/.libs:$$LD_LIBRARY_PATH \
+	PATH=$(abs_top_srcdir)/tools:$$PATH
