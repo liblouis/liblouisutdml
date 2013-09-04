@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doc>
+  <page>
+    <print-page>#a</print-page>
+    <p>foo</p>
+    <print-page>#b</print-page>
+    <p>bar</p>
+  </page>
+</doc>
+

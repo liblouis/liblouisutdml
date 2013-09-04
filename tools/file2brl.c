@@ -115,7 +115,7 @@ main (int argc, char **argv)
   logFileName[0] = 0;
   
   while ((optc =
-	  getopt_long (argc, argv, "hvf:brptlwTC:", longopts, NULL)) != 
+	  getopt_long (argc, argv, "hvf:brptlw:TC:", longopts, NULL)) != 
 	  -1)
     switch (optc)
       {
