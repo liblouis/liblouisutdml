@@ -118,11 +118,11 @@ insertCharacters (const char *text, int length)
 }
 
 static int
-doDotsText (xmlNode * node)
+brf_doDotsText (xmlNode * node)
 {
   ud->text_length = 0;
   insert_utf8 (node->content);
-  for (; ud->text_buffer[ud->text_length] <= 32; ud->text_length--);
+  for (; ud->text_buffer[ud->text_length] == 0x2800; ud->text_length--);
   if (!lou_dotsToChar (ud->main_braille_table, ud->text_buffer,
 		       &ud->outbuf1[ud->outbuf1_len_so_far],
 		       ud->text_length, 0))
@@ -173,7 +173,7 @@ doUtdbrlonly (xmlNode * node, int action)
 	  doUtdbrlonly (child, 1);
 	  break;
 	case XML_TEXT_NODE:
-	  doDotsText (child);
+	  brf_doDotsText (child);
 	  break;
 	default:
 	  break;
@@ -273,7 +273,7 @@ brfDoBrlNode (xmlNode * node, int action)
 	  brfDoBrlNode (child, 1);
 	  break;
 	case XML_TEXT_NODE:
-	  doDotsText (child);
+	  brf_doDotsText (child);
 	  break;
 	default:
 	  break;
