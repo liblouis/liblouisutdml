@@ -53,6 +53,8 @@ m4/lt~obsolete.m4
 
 tests/testTranslateString
 tests/tripleTrans
+tests/**/output.txt
+tests/**/error.log
 
 tools/file2brl
 

@@ -43,7 +43,7 @@ for test_dir in test_suite/test_* ; do
 	if [ -e README -a $verbose -ne 0 ]; then
 		echo "$(cat README | fold -sw 77 | sed 's/.*/   &/' )"
 	fi
-	file2brl -f ./styles.cfg input.xml output.txt 2>/dev/null
+	file2brl -f ./styles.cfg input.xml output.txt 2>error.log
 	if [ $? -ne 0 ]; then
 		error=$(( error + 1 ))
 		if [ $colors -ne 0 ]; then
@@ -52,6 +52,7 @@ for test_dir in test_suite/test_* ; do
 			echo "   ERROR"
 		fi
 	else
+		rm -f error.log
 		diff -q expected.txt output.txt >/dev/null
 		if [ $? -ne 0 ]; then
 			if [ -e xfail ]; then
