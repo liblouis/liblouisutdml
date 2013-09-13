@@ -641,7 +641,8 @@ insert_utfwc (widechar * text, int length)
   return length;
 }
 
-#define SOFT_HYPHEN 0x00AD
+#define SHY 0x00AD
+#define ZWSP 0x200B
 
 int
 remove_soft_hyphens (const widechar * inbuf, const int inlen,
@@ -650,7 +651,7 @@ remove_soft_hyphens (const widechar * inbuf, const int inlen,
   int i, j;
   j = 0;
   for (i = 0; i < inlen; i++)
-    if (inbuf[i] != SOFT_HYPHEN)
+    if (inbuf[i] != SHY && inbuf[i] != ZWSP)
       {
 	outbuf[j] = inbuf[i];
 	indices[j] = i;
@@ -1854,37 +1855,72 @@ restore_translated_buffer ()
   positionsArray = saved_positionsArray;
 }
 
+/**
+ * hyphenatex
+ * 
+ * Find out where to break the current line so that the first word that
+ * doesn't fit entirely on the line is hyphenated correctly. The word in
+ * question will not be split if it results in parts smaller than
+ * MIN_SYLLABLE_LENGTH, if the word is smaller than MIN_WORD_LENGTH, or if
+ * less than MIN_NEXT_LINE characters remain on the next line.
+ * 
+ * Two situations can occur:
+ * - If the text buffer and the translated buffer are in sync (i.e. positions
+ *   in the text buffer can be derived from positions in the translated
+ *   buffer), the word being split is looked up in the text buffer, then it's
+ *   hyphenated (if not already pre-hyphenated), and finally from the hyphen
+ *   positions the valid break points in the translated buffer are derived.
+ * - If the buffers are not in sync, the possible break points are computed by
+ *   hyphenating the braille word (using back-translation).
+ * 
+ * The last break point that still fits on the line is returned. Break points
+ * that don't require a hyphen character to be inserted are chosen over break
+ * points that do. If no suitable break point can be found, zero is returned.
+ * 
+ * @param lastBlank      The position of the last whitespace character before
+ *                       lineEnd.
+ * @param lineEnd        The position of the last character that could fit on
+ *                       the current line.
+ * @return               Non-zero if a suitable break point was found.
+ * @return *breakAt      The position where the line should be broken.
+ * @return *insertHyphen Non-zero if a hyphen character needs to be inserted
+ *                       after the break point.
+ */
 static int
-hyphenatex (int lastBlank, int lineEnd)
+hyphenatex (int lastBlank, int lineEnd, int *breakAt, int *insertHyphen)
 {
 
 #define MIN_SYLLABLE_LENGTH 2
 #define MIN_WORD_LENGTH 5
 #define MIN_NEXT_LINE 12
 
-  char hyphens[MAXNAMELEN];
   int k;
+  char hyphens[MAXNAMELEN];
+  char textHyphens[MAXNAMELEN];
   int wordStart = lastBlank + 1;
   int wordLength;
   int textWordStart, textWordLength;
   int const textLength = ud->sync_text_length;
   widechar *const textBuffer = ud->sync_text_buffer;
-  char textHyphens[MAXNAMELEN];
-  int breakAt = 0;
-  int hyphenFound = 0;
-  if (!ud->hyphenate)
+  
+  if (ud->hyphenate != 1 && ud->hyphenate != 2)
     return 0;
+  
+  // Don't break if not enough characters remain on next line
   if ((translatedLength - wordStart) < MIN_NEXT_LINE)
     return 0;
+  
+  // Find word boundaries
   for (wordLength = wordStart; wordLength < translatedLength; wordLength++)
     if (translatedBuffer[wordLength] == ' ')
       break;
   wordLength -= wordStart;
+  
+  // Don't break if word is too short or too long
   if (wordLength < MIN_WORD_LENGTH || wordLength > ud->cells_per_line)
     return 0;
-  for (k = 0; k < wordLength; k++)
-    hyphens[k] = '0';
-  hyphens[wordLength] = 0;
+  
+  // Find the word boundaries in the text buffer
   if (ud->in_sync)
     {
       textWordStart = positionsArray[wordStart];
@@ -1896,6 +1932,43 @@ hyphenatex (int lastBlank, int lineEnd)
       if (textWordStart < 0 || textWordLength < 1
 	  || textWordStart + textWordLength > textLength)
 	return 0;
+    }
+  
+  // First look for break points that don't require a hyphen character to be
+  // inserted
+  *insertHyphen = 0;
+  
+  for (k = minimum(lineEnd - wordStart, wordLength - MIN_SYLLABLE_LENGTH);
+       k > MIN_SYLLABLE_LENGTH;
+       k--)
+    {
+      if (ud->in_sync && ud->hyphenate == 2)
+	{
+	  if (textBuffer[positionsArray[wordStart + k] - 1] == ZWSP)
+	    {
+	      *breakAt = wordStart + k;
+	      return 1;
+	    }
+	}
+      else
+	{
+	  if(translatedBuffer[wordStart + k - 1] == *ud->lit_hyphen)
+	    {
+	      *breakAt = wordStart + k;
+	      return 1;
+	    }
+	}
+    }
+  
+  // Then look for other break points
+  *insertHyphen = 1;
+  
+  for (k = 0; k <= wordLength; k++)
+    hyphens[k] = '0';
+  
+  // Derive hyphen positions in translated buffer from those in text buffer
+  if (ud->in_sync)
+    {
       switch (ud->hyphenate)
 	{
 	case 1:
@@ -1908,45 +1981,30 @@ hyphenatex (int lastBlank, int lineEnd)
 	  textHyphens[0] = '0';
 	  for (k = 1; k < textWordLength; k++)
 	    textHyphens[k] =
-	      (textBuffer[textWordStart + k - 1] == SOFT_HYPHEN) ? '1' : '0';
+	      (textBuffer[textWordStart + k - 1] == SHY) ? '1' : '0';
 	  break;
-	default:
-	  return 0;
 	}
-      for (k = 0; k < wordLength; k++)
-	hyphens[k] =
-	  textHyphens[positionsArray[wordStart + k] - textWordStart];
+      for (k = 1; k < wordLength; k++)
+        hyphens[k] =
+          textHyphens[positionsArray[wordStart + k] - textWordStart];
     }
-  else
-    {
-      for (k = wordLength - MIN_SYLLABLE_LENGTH - 1; k >= MIN_SYLLABLE_LENGTH;
-	   k--)
-	if ((wordStart + k) < lineEnd
-	    && translatedBuffer[wordStart + k] == *ud->lit_hyphen)
-	  {
-	    hyphens[k + 1] = '1';
-	    hyphenFound = 1;
-	    break;
-	  }
-      hyphens[wordLength] = 0;
-      if (!hyphenFound)
-	if (!lou_hyphenate (ud->main_braille_table,
-			    &translatedBuffer[wordStart], wordLength,
-			    hyphens, 1))
-	  return 0;
-    }
-  for (k = strlen (hyphens) - MIN_SYLLABLE_LENGTH; k > 0; k--)
-    {
-      breakAt = wordStart + k;
-      if (hyphens[k] == '1' &&
-	  (breakAt < lineEnd
-	   || (breakAt == lineEnd
-	       && translatedBuffer[breakAt - 1] == *ud->lit_hyphen)))
-	break;
-    }
-  if (k < MIN_SYLLABLE_LENGTH)
+  
+  // Otherwise, use back-translation
+  else if (!lou_hyphenate (ud->main_braille_table,
+			   &translatedBuffer[wordStart], wordLength,
+			   hyphens, 1))
     return 0;
-  return breakAt;
+  
+  for (k = minimum(lineEnd - wordStart, wordLength - MIN_SYLLABLE_LENGTH) - 1;
+       k > MIN_SYLLABLE_LENGTH;
+       k--)
+    if (hyphens[k] == '1')
+      {
+	*breakAt = wordStart + k;
+	return 1;
+      }
+  
+  return 0;
 }
 
 #define escapeChar 0x1b
@@ -2164,6 +2222,7 @@ doListColumns ()
 	    {
 	      int wordTooLong = 0;
 	      int breakAt = 0;
+	      int insertHyphen = 0;
 	      int leadingBlanks = 0;
 	      availableCells = startLine ();
 	      if (styleSpec->status == startBody)
@@ -2193,15 +2252,12 @@ doListColumns ()
 		      cellsToWrite = availableCells - 1;
 		      wordTooLong = 1;
 		    }
-		  else
-		    {
-		      if (ud->hyphenate)
-			breakAt =
-			  hyphenatex (charactersWritten + cellsToWrite,
-				      charactersWritten + availableCells);
-		      if (breakAt)
-			cellsToWrite = breakAt - charactersWritten;
-		    }
+		  else if (ud->hyphenate)
+		    if (hyphenatex (charactersWritten + cellsToWrite,
+				    charactersWritten + availableCells,
+				    &breakAt,
+				    &insertHyphen))
+		      cellsToWrite = breakAt - charactersWritten;
 		}
 	      for (k = charactersWritten;
 		   k < (charactersWritten + cellsToWrite); k++)
@@ -2213,13 +2269,9 @@ doListColumns ()
 	      charactersWritten += cellsToWrite;
 	      if (thisRow[charactersWritten] == ' ')
 		charactersWritten++;
-	      if ((breakAt && thisRow[breakAt - 1] != *ud->lit_hyphen)
-		  || wordTooLong)
-		{
-		  if (!insertDubChars
-		      (ud->lit_hyphen, strlen (ud->lit_hyphen)))
-		    return 0;
-		}
+	      if ((breakAt && insertHyphen) || wordTooLong)
+		if (!insertDubChars (ud->lit_hyphen, strlen (ud->lit_hyphen)))
+		  return 0;
 	      finishLine ();
 	    }
 	}
@@ -2260,6 +2312,7 @@ doListLines ()
 	  {
 	    int wordTooLong = 0;
 	    int breakAt = 0;
+	    int insertHyphen = 0;
 	    int leadingBlanks = 0;
 	    availableCells = startLine ();
 	    if (styleSpec->status == startBody)
@@ -2289,15 +2342,12 @@ doListLines ()
 		    cellsToWrite = availableCells - 1;
 		    wordTooLong = 1;
 		  }
-		else
-		  {
-		    if (ud->hyphenate)
-		      breakAt =
-			hyphenatex (charactersWritten + cellsToWrite,
-				    charactersWritten + availableCells);
-		    if (breakAt)
-		      cellsToWrite = breakAt - charactersWritten;
-		  }
+		else if (ud->hyphenate)
+		  if (hyphenatex (charactersWritten + cellsToWrite,
+				  charactersWritten + availableCells,
+				  &breakAt,
+				  &insertHyphen))
+		    cellsToWrite = breakAt - charactersWritten;
 	      }
 	    for (k = charactersWritten;
 		 k < (charactersWritten + cellsToWrite); k++)
@@ -2308,12 +2358,9 @@ doListLines ()
 	    charactersWritten += cellsToWrite;
 	    if (thisLine[charactersWritten] == ' ')
 	      charactersWritten++;
-	    if ((breakAt && thisLine[breakAt - 1] != *ud->lit_hyphen)
-		|| wordTooLong)
-	      {
-		if (!insertDubChars (ud->lit_hyphen, strlen (ud->lit_hyphen)))
-		  return 0;
-	      }
+	    if ((breakAt && insertHyphen) || wordTooLong)
+	      if (!insertDubChars (ud->lit_hyphen, strlen (ud->lit_hyphen)))
+		return 0;
 	    finishLine ();
 	  }
       }
@@ -2379,6 +2426,7 @@ doLeftJustify ()
     {
       int wordTooLong = 0;
       int breakAt = 0;
+      int insertHyphen;
       int leadingBlanks = 0;
       int trailingBlanks = 0;
       availableCells = startLine ();
@@ -2410,15 +2458,12 @@ doLeftJustify ()
 	      cellsToWrite = availableCells - 1;
 	      wordTooLong = 1;
 	    }
-	  else
-	    {
-	      if (ud->hyphenate)
-		breakAt =
-		  hyphenatex (charactersWritten + cellsToWrite,
-			      charactersWritten + availableCells);
-	      if (breakAt)
-		cellsToWrite = breakAt - charactersWritten;
-	    }
+	  else if (ud->hyphenate)
+	    if (hyphenatex (charactersWritten + cellsToWrite,
+			    charactersWritten + availableCells,
+			    &breakAt,
+			    &insertHyphen))
+	      cellsToWrite = breakAt - charactersWritten;
 	}
       for (k = charactersWritten; k < (charactersWritten + cellsToWrite); k++)
 	if (translatedBuffer[k] == 0xa0)	/*unbreakable space */
@@ -2429,12 +2474,9 @@ doLeftJustify ()
       charactersWritten += cellsToWrite;
       if (translatedBuffer[charactersWritten] == ' ')
 	charactersWritten++;
-      if ((breakAt && translatedBuffer[breakAt - 1] != *ud->lit_hyphen)
-	  || wordTooLong)
-	{
-	  if (!insertDubChars (ud->lit_hyphen, strlen (ud->lit_hyphen)))
-	    return 0;
-	}
+      if ((breakAt && insertHyphen) || wordTooLong)
+	if (!insertDubChars (ud->lit_hyphen, strlen (ud->lit_hyphen)))
+	  return 0;
       finishLine ();
     }
   return 1;
@@ -2482,6 +2524,7 @@ doContents ()
     {
       int wordTooLong = 0;
       int breakAt = 0;
+      int insertHyphen = 0;
       availableCells = startLine ();
       if (styleSpec->status == startBody)
 	{
@@ -2511,12 +2554,12 @@ doContents ()
 	      cellsToWrite = 0;
 	    }
 	  if (ud->hyphenate)
-	    breakAt = hyphenatex (charactersWritten + cellsToWrite,
-				  charactersWritten + availableCells -
-				  minSpaceAfterNotLastWord);
-	  if (breakAt)
-	    cellsToWrite = breakAt - charactersWritten;
-	  else if (wordTooLong)
+	    if (hyphenatex (charactersWritten + cellsToWrite,
+			    charactersWritten + availableCells -
+			    minSpaceAfterNotLastWord,
+			    &breakAt, &insertHyphen))
+	      cellsToWrite = breakAt - charactersWritten;
+	  if (!breakAt && wordTooLong)
 	    {
 	      cellsToWrite = availableCells - minSpaceAfterNotLastWord - 1;
 	      if (cellsToWrite <= 0)
@@ -2532,12 +2575,9 @@ doContents ()
       charactersWritten += cellsToWrite;
       if (translatedBuffer[charactersWritten] == ' ')
 	charactersWritten++;
-      if ((breakAt && translatedBuffer[breakAt - 1] != *ud->lit_hyphen)
-	  || wordTooLong)
-	{
-	  if (!insertDubChars (ud->lit_hyphen, strlen (ud->lit_hyphen)))
-	    return 0;
-	}
+      if ((breakAt && insertHyphen) || wordTooLong)
+	if (!insertDubChars (ud->lit_hyphen, strlen (ud->lit_hyphen)))
+	  return 0;
       if (charactersWritten < untilLastWord)
 	finishLine ();
       else
@@ -2577,15 +2617,18 @@ doContents ()
 	 (availableCells - minSpaceAfterLastWord - numbersLength))
     {
       int breakAt = 0;
+      int insertHyphen = 0;
       if (ud->hyphenate)
 	{
 	  if (((numbersStart - 1) - charactersWritten) >
 	      (availableCells - minSpaceAfterNotLastWord))
-	    breakAt = hyphenatex (charactersWritten,
-				  charactersWritten + (availableCells -
-						       minSpaceAfterNotLastWord));
+	    hyphenatex (charactersWritten,
+			charactersWritten + availableCells -
+			minSpaceAfterNotLastWord,
+			&breakAt, &insertHyphen);
 	  else
-	    breakAt = hyphenatex (charactersWritten, numbersStart - 1);
+	    hyphenatex (charactersWritten, numbersStart - 1,
+			&breakAt, &insertHyphen);
 	}
       if (breakAt || lastWordNewRule)
 	{
@@ -2606,8 +2649,7 @@ doContents ()
 	      (&translatedBuffer[charactersWritten], cellsToWrite))
 	    return 0;
 	  charactersWritten += cellsToWrite;
-	  if ((breakAt && translatedBuffer[breakAt - 1] != *ud->lit_hyphen)
-	      || lastWordNewRule)
+	  if ((breakAt && insertHyphen) || lastWordNewRule)
 	    if (!insertDubChars (ud->lit_hyphen, strlen (ud->lit_hyphen)))
 	      return 0;
 	}

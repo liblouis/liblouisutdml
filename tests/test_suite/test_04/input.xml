@@ -6,4 +6,10 @@
   <page>
     foo&#xAD;bar foo&#xAD;bar foo&#xAD;bar foo&#xAD;bar
   </page>
+  <page>
+    foo&#xAD;bar foo&#xAD;bar foo-&#xAD;bar foo&#xAD;bar
+  </page>
+  <page>
+    foo&#xAD;bar foo&#xAD;bar foo-&#x200B;bar foo&#xAD;bar
+  </page>
 </doc>
