@@ -34,11 +34,11 @@
 #include "louisutdml.h"
 
 static int findBrlNodes (xmlNode * node);
-static int brfDoBrlNode (xmlNode * node, int action);
+static int brf_doBrlNode (xmlNode * node, int action);
 static int beginDocument ();
-static int finishBrlNode ();
+static int brf_finishBrlNode ();
 static int finishDocument ();
-static int doUtdbrlonly (xmlNode * node, int action);
+static int brf_doUtdbrlonly (xmlNode * node, int action);
 static int doUtdnewpage (xmlNode * node);
 static int doUtdnewline (xmlNode * node);
 static int firstPage;
@@ -81,7 +81,7 @@ findBrlNodes (xmlNode * node)
     case utdmeta:
       return 1;
     case utdbrl:
-      brfDoBrlNode (node, 0);
+      brf_doBrlNode (node, 0);
       pop_sem_stack ();
       return 1;
     default:
@@ -109,7 +109,7 @@ findBrlNodes (xmlNode * node)
 static char *blanks =
   "                                                            ";
 static int
-insertCharacters (const char *text, int length)
+brf_insertCharacters (const char *text, int length)
 {
   int k;
   for (k = 0; k < length; k++)
@@ -132,13 +132,11 @@ brf_doDotsText (xmlNode * node)
 }
 
 static int
-doUtdbrlonly (xmlNode * node, int action)
+brf_doUtdbrlonly (xmlNode * node, int action)
 {
   xmlNode *child;
   if (node == NULL)
     return 0;
-  if (ud->top == 0)
-    action = 1;
   if (action != 0)
     push_sem_stack (node);
   switch (ud->stack[ud->top])
@@ -170,10 +168,13 @@ doUtdbrlonly (xmlNode * node, int action)
       switch (child->type)
 	{
 	case XML_ELEMENT_NODE:
-	  doUtdbrlonly (child, 1);
+	  brf_doUtdbrlonly (child, 1);
 	  break;
 	case XML_TEXT_NODE:
-	  brf_doDotsText (child);
+	  if (ud->stack[ud->top] == utdbrlonly)
+	  /* print text */
+	  break;
+   brf_doDotsText (child);
 	  break;
 	default:
 	  break;
@@ -197,8 +198,8 @@ doUtdnewpage (xmlNode * node)
       firstPage = 0;
       return 1;
     }
-  insertCharacters (ud->lineEnd, strlen (ud->lineEnd));
-  insertCharacters (ud->pageEnd, strlen (ud->pageEnd));
+  brf_insertCharacters (ud->lineEnd, strlen (ud->lineEnd));
+  brf_insertCharacters (ud->pageEnd, strlen (ud->pageEnd));
   return 1;
 }
 
@@ -210,19 +211,19 @@ doUtdnewline (xmlNode * node)
   int leadingBlanks;
   int linepos;
   if (!firstLineOnPage)
-    insertCharacters (ud->lineEnd, strlen (ud->lineEnd));
+    brf_insertCharacters (ud->lineEnd, strlen (ud->lineEnd));
   xy = (char *) xmlGetProp (node, (xmlChar *) "xy");
   for (k = 0; xy[k] != ','; k++);
   leadingBlanks = (atoi (xy) - ud->left_margin) / ud->cell_width;
   linepos = (atoi (&xy[k + 1]) - ud->page_top) / ud->normal_line;
-  insertCharacters (blanks, leadingBlanks);
+  brf_insertCharacters (blanks, leadingBlanks);
   if (firstLineOnPage)
     firstLineOnPage = 0;
   return 1;
 }
 
 int
-brfDoBrlNode (xmlNode * node, int action)
+brf_doBrlNode (xmlNode * node, int action)
 {
   xmlNode *child;
   if (node == NULL)
@@ -239,7 +240,7 @@ brfDoBrlNode (xmlNode * node, int action)
       pop_sem_stack ();
       break;
     case utdbrlonly:
-      doUtdbrlonly (node, 0);
+      brf_doUtdbrlonly (node, 0);
       if (action != 0)
 	pop_sem_stack ();
       return 1;
@@ -270,7 +271,7 @@ brfDoBrlNode (xmlNode * node, int action)
       switch (child->type)
 	{
 	case XML_ELEMENT_NODE:
-	  brfDoBrlNode (child, 1);
+	  brf_doBrlNode (child, 1);
 	  break;
 	case XML_TEXT_NODE:
 	  brf_doDotsText (child);
@@ -285,12 +286,12 @@ brfDoBrlNode (xmlNode * node, int action)
       pop_sem_stack ();
       return 1;
     }
-  finishBrlNode ();
+  brf_finishBrlNode ();
   return 1;
 }
 
 static int
-finishBrlNode ()
+brf_finishBrlNode ()
 {
   if (ud->outbuf1_len_so_far == 0)
     return 1;
