@@ -33,16 +33,18 @@
 #include <string.h>
 #include "louisutdml.h"
 
+static int beginDocument ();
 static int findBrlNodes (xmlNode * node);
 static int brf_doBrlNode (xmlNode * node, int action);
-static int beginDocument ();
 static int brf_finishBrlNode ();
-static int finishDocument ();
 static int brf_doUtdbrlonly (xmlNode * node, int action);
 static int doUtdnewpage (xmlNode * node);
 static int doUtdnewline (xmlNode * node);
+static int finishDocument ();
+
 static int firstPage;
 static int firstLineOnPage;
+static int prevLinePos;
 
 int
 utd2brf (xmlNode * node)
@@ -122,7 +124,6 @@ brf_doDotsText (xmlNode * node)
 {
   ud->text_length = 0;
   insert_utf8 (node->content);
-  for (; ud->text_buffer[ud->text_length] == 0x2800; ud->text_length--);
   if (!lou_dotsToChar (ud->main_braille_table, ud->text_buffer,
 		       &ud->outbuf1[ud->outbuf1_len_so_far],
 		       ud->text_length, 0))
@@ -186,12 +187,12 @@ brf_doUtdbrlonly (xmlNode * node, int action)
   return 1;
 }
 
-static int lastLinepos;
+static int lastlinePos;
 
 static int
 doUtdnewpage (xmlNode * node)
 {
-  lastLinepos = ud->page_top;
+  lastlinePos = ud->page_top;
   firstLineOnPage = 1;
   if (firstPage)
     {
@@ -209,16 +210,22 @@ doUtdnewline (xmlNode * node)
   char *xy;
   int k;
   int leadingBlanks;
-  int linepos;
-  if (!firstLineOnPage)
+  int linePos;
+  if (ud->outbuf1_len_so_far > 0)
+    for (; ud->outbuf1[ud->outbuf1_len_so_far - 1] <= ' '; 
+    ud->outbuf1_len_so_far--);
+  if (firstLineOnPage)
+  {
+  prevLinePos = ud->page_top;
+  firstLineOnPage = 0;
+  }
+  else
     brf_insertCharacters (ud->lineEnd, strlen (ud->lineEnd));
   xy = (char *) xmlGetProp (node, (xmlChar *) "xy");
   for (k = 0; xy[k] != ','; k++);
   leadingBlanks = (atoi (xy) - ud->left_margin) / ud->cell_width;
-  linepos = (atoi (&xy[k + 1]) - ud->page_top) / ud->normal_line;
+  linePos = (atoi (&xy[k + 1]) - ud->page_top) / ud->normal_line;
   brf_insertCharacters (blanks, leadingBlanks);
-  if (firstLineOnPage)
-    firstLineOnPage = 0;
   return 1;
 }
 
