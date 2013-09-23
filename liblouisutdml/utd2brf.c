@@ -173,9 +173,9 @@ brf_doUtdbrlonly (xmlNode * node, int action)
 	  break;
 	case XML_TEXT_NODE:
 	  if (ud->stack[ud->top] == utdbrlonly)
-	  /* print text */
-	  break;
-   brf_doDotsText (child);
+	    /* print text */
+	    break;
+	  brf_doDotsText (child);
 	  break;
 	default:
 	  break;
@@ -212,19 +212,21 @@ doUtdnewline (xmlNode * node)
   int leadingBlanks;
   int linePos;
   if (ud->outbuf1_len_so_far > 0)
-    for (; ud->outbuf1[ud->outbuf1_len_so_far - 1] <= ' '; 
-    ud->outbuf1_len_so_far--);
+    for (; ud->outbuf1[ud->outbuf1_len_so_far - 1] <= ' ';
+	 ud->outbuf1_len_so_far--);
   if (firstLineOnPage)
-  {
-  prevLinePos = ud->page_top;
-  firstLineOnPage = 0;
-  }
-  else
-    brf_insertCharacters (ud->lineEnd, strlen (ud->lineEnd));
+    {
+      prevLinePos = ud->page_top;
+      firstLineOnPage = 0;
+    }
   xy = (char *) xmlGetProp (node, (xmlChar *) "xy");
   for (k = 0; xy[k] != ','; k++);
   leadingBlanks = (atoi (xy) - ud->left_margin) / ud->cell_width;
-  linePos = (atoi (&xy[k + 1]) - ud->page_top) / ud->normal_line;
+  linePos = atoi (&xy[k + 1]);
+  /* The following will need modification for wide lines and graphics. */
+  for (k = prevLinePos; k < linePos; k += ud->normal_line)
+    brf_insertCharacters (ud->lineEnd, strlen (ud->lineEnd));
+  prevLinePos = linePos;
   brf_insertCharacters (blanks, leadingBlanks);
   return 1;
 }
