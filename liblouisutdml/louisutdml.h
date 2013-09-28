@@ -217,7 +217,6 @@ typedef struct
   int internet_access;
   int new_entries;
   int doc_new_entries;
-  const char *main_braille_table;
   const char *inbuf;
   int inlen;
   widechar *outbuf;
@@ -280,6 +279,7 @@ typedef struct
   const char *mathtext_table_name;
   const char *mathexpr_table_name;
   const char *edit_table_name;
+  const char *main_braille_table;
   const char *semantic_files;
   const char *converter_sem;
   const char *pass2_conv_sem;

@@ -33,14 +33,14 @@
 #include <string.h>
 #include "louisutdml.h"
 
-static int beginDocument ();
-static int findBrlNodes (xmlNode * node);
+static int brf_beginDocument ();
+static int brf_findBrlNodes (xmlNode * node);
 static int brf_doBrlNode (xmlNode * node, int action);
 static int brf_finishBrlNode ();
 static int brf_doUtdbrlonly (xmlNode * node, int action);
-static int doUtdnewpage (xmlNode * node);
-static int doUtdnewline (xmlNode * node);
-static int finishDocument ();
+static int brf_doUtdnewpage (xmlNode * node);
+static int brf_doUtdnewline (xmlNode * node);
+static int brf_finishDocument ();
 
 static int firstPage;
 static int firstLineOnPage;
@@ -53,26 +53,26 @@ utd2brf (xmlNode * node)
   ud->style_top = -1;
   firstPage = 1;
   firstLineOnPage = 1;
-  beginDocument ();
-  findBrlNodes (node);
-  finishDocument ();
+  brf_beginDocument ();
+  brf_findBrlNodes (node);
+  brf_finishDocument ();
   return 1;
 }
 
 static int
-beginDocument ()
+brf_beginDocument ()
 {
   return 1;
 }
 
 static int
-finishDocument ()
+brf_finishDocument ()
 {
   return 1;
 }
 
 static int
-findBrlNodes (xmlNode * node)
+brf_findBrlNodes (xmlNode * node)
 {
   xmlNode *child;
   if (node == NULL)
@@ -95,7 +95,7 @@ findBrlNodes (xmlNode * node)
       switch (child->type)
 	{
 	case XML_ELEMENT_NODE:
-	  findBrlNodes (child);
+	  brf_findBrlNodes (child);
 	  break;
 	case XML_TEXT_NODE:
 	  break;
@@ -114,6 +114,8 @@ static int
 brf_insertCharacters (const char *text, int length)
 {
   int k;
+  if ((ud->outbuf1_len_so_far + length) > ud->outbuf1_len)
+    return 0;
   for (k = 0; k < length; k++)
     ud->outbuf1[ud->outbuf1_len_so_far++] = text[k];
   return 1;
@@ -124,6 +126,8 @@ brf_doDotsText (xmlNode * node)
 {
   ud->text_length = 0;
   insert_utf8 (node->content);
+  if ((ud->outbuf1_len_so_far + ud->text_length) > ud->outbuf1_len)
+    brf_finishBrlNode ();
   if (!lou_dotsToChar (ud->main_braille_table, ud->text_buffer,
 		       &ud->outbuf1[ud->outbuf1_len_so_far],
 		       ud->text_length, 0))
@@ -143,12 +147,12 @@ brf_doUtdbrlonly (xmlNode * node, int action)
   switch (ud->stack[ud->top])
     {
     case utdnewpage:
-      doUtdnewpage (node);
+      brf_doUtdnewpage (node);
       if (action != 0)
 	pop_sem_stack ();
       return 1;
     case utdnewline:
-      doUtdnewline (node);
+      brf_doUtdnewline (node);
       if (action != 0)
 	pop_sem_stack ();
       return 1;
@@ -159,7 +163,7 @@ brf_doUtdbrlonly (xmlNode * node, int action)
       return 1;
     case changetable:
       change_table (node);
-      return 1;
+      break;
     default:
       break;
     }
@@ -187,12 +191,9 @@ brf_doUtdbrlonly (xmlNode * node, int action)
   return 1;
 }
 
-static int lastlinePos;
-
 static int
-doUtdnewpage (xmlNode * node)
+brf_doUtdnewpage (xmlNode * node)
 {
-  lastlinePos = ud->page_top;
   firstLineOnPage = 1;
   if (firstPage)
     {
@@ -205,7 +206,7 @@ doUtdnewpage (xmlNode * node)
 }
 
 static int
-doUtdnewline (xmlNode * node)
+brf_doUtdnewline (xmlNode * node)
 {
   char *xy;
   int k;
@@ -223,6 +224,8 @@ doUtdnewline (xmlNode * node)
   for (k = 0; xy[k] != ','; k++);
   leadingBlanks = (atoi (xy) - ud->left_margin) / ud->cell_width;
   linePos = atoi (&xy[k + 1]);
+  if (linePos > ud->page_bottom)
+    linePos = ud->page_bottom;
   /* The following will need modification for wide lines and graphics. */
   for (k = prevLinePos; k < linePos; k += ud->normal_line)
     brf_insertCharacters (ud->lineEnd, strlen (ud->lineEnd));
@@ -254,12 +257,12 @@ brf_doBrlNode (xmlNode * node, int action)
 	pop_sem_stack ();
       return 1;
     case utdnewpage:
-      doUtdnewpage (node);
+      brf_doUtdnewpage (node);
       if (action != 0)
 	pop_sem_stack ();
       return 1;
     case utdnewline:
-      doUtdnewline (node);
+      brf_doUtdnewline (node);
       if (action != 0)
 	pop_sem_stack ();
       return 1;
@@ -270,7 +273,7 @@ brf_doBrlNode (xmlNode * node, int action)
       return 1;
     case changetable:
       change_table (node);
-      return 1;
+      break;
     default:
       break;
     }
@@ -305,5 +308,6 @@ brf_finishBrlNode ()
   if (ud->outbuf1_len_so_far == 0)
     return 1;
   write_buffer (1, 0);
+  ud->outbuf1_len_so_far = 0;
   return 1;
 }
