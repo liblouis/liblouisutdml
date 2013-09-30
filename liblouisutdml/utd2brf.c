@@ -36,7 +36,7 @@
 static int brf_beginDocument ();
 static int brf_findBrlNodes (xmlNode * node);
 static int brf_doBrlNode (xmlNode * node, int action);
-static int brf_finishBrlNode ();
+static int brf_saveBuffer ();
 static int brf_doUtdbrlonly (xmlNode * node, int action);
 static int brf_doUtdnewpage (xmlNode * node);
 static int brf_doUtdnewline (xmlNode * node);
@@ -127,7 +127,7 @@ brf_doDotsText (xmlNode * node)
   ud->text_length = 0;
   insert_utf8 (node->content);
   if ((ud->outbuf1_len_so_far + ud->text_length) > ud->outbuf1_len)
-    brf_finishBrlNode ();
+    brf_saveBuffer ();
   if (!lou_dotsToChar (ud->main_braille_table, ud->text_buffer,
 		       &ud->outbuf1[ud->outbuf1_len_so_far],
 		       ud->text_length, 0))
@@ -200,8 +200,12 @@ brf_doUtdnewpage (xmlNode * node)
       firstPage = 0;
       return 1;
     }
+  if (ud->outbuf1_len_so_far > 0)
+    for (; ud->outbuf1[ud->outbuf1_len_so_far - 1] <= ' ';
+	 ud->outbuf1_len_so_far--);
   brf_insertCharacters (ud->lineEnd, strlen (ud->lineEnd));
   brf_insertCharacters (ud->pageEnd, strlen (ud->pageEnd));
+  brf_saveBuffer ();
   return 1;
 }
 
@@ -223,7 +227,11 @@ brf_doUtdnewline (xmlNode * node)
   xy = (char *) xmlGetProp (node, (xmlChar *) "xy");
   for (k = 0; xy[k] != ','; k++);
   leadingBlanks = (atoi (xy) - ud->left_margin) / ud->cell_width;
+  if (leadingBlanks < 0 || leadingBlanks > ud->cells_per_line)
+    leadingBlanks = 0;
   linePos = atoi (&xy[k + 1]);
+  if (linePos < ud->page_top)
+    linePos = ud->page_top;
   if (linePos > ud->page_bottom)
     linePos = ud->page_bottom;
   /* The following will need modification for wide lines and graphics. */
@@ -249,8 +257,9 @@ brf_doBrlNode (xmlNode * node, int action)
     case markhead:
       if (ud->head_node == NULL)
 	ud->head_node = node;
-      pop_sem_stack ();
-      break;
+      if (action != 0)
+        pop_sem_stack ();
+      return 1;
     case utdbrlonly:
       brf_doUtdbrlonly (node, 0);
       if (action != 0)
@@ -298,14 +307,14 @@ brf_doBrlNode (xmlNode * node, int action)
       pop_sem_stack ();
       return 1;
     }
-  brf_finishBrlNode ();
+  brf_saveBuffer ();
   return 1;
 }
 
 static int
-brf_finishBrlNode ()
+brf_saveBuffer ()
 {
-  if (ud->outbuf1_len_so_far == 0)
+  if (ud->outbuf1_len_so_far <= 0)
     return 1;
   write_buffer (1, 0);
   ud->outbuf1_len_so_far = 0;
