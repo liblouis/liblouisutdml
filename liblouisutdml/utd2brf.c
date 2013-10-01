@@ -114,7 +114,8 @@ static int
 brf_insertCharacters (const char *text, int length)
 {
   int k;
-  if ((ud->outbuf1_len_so_far + length) > ud->outbuf1_len)
+  if (length <= 0 || (ud->outbuf1_len_so_far + length) > 
+  ud->outbuf1_len)
     return 0;
   for (k = 0; k < length; k++)
     ud->outbuf1[ud->outbuf1_len_so_far++] = text[k];
@@ -200,8 +201,8 @@ brf_doUtdnewpage (xmlNode * node)
       firstPage = 0;
       return 1;
     }
-  if (ud->outbuf1_len_so_far > 0)
-    for (; ud->outbuf1[ud->outbuf1_len_so_far - 1] <= ' ';
+    for (; ud->outbuf1_len_so_far > 0 
+    && ud->outbuf1[ud->outbuf1_len_so_far - 1] <= ' ';
 	 ud->outbuf1_len_so_far--);
   brf_insertCharacters (ud->lineEnd, strlen (ud->lineEnd));
   brf_insertCharacters (ud->pageEnd, strlen (ud->pageEnd));
@@ -216,8 +217,8 @@ brf_doUtdnewline (xmlNode * node)
   int k;
   int leadingBlanks;
   int linePos;
-  if (ud->outbuf1_len_so_far > 0)
-    for (; ud->outbuf1[ud->outbuf1_len_so_far - 1] <= ' ';
+    for (; ud->outbuf1_len_so_far > 0 
+    && ud->outbuf1[ud->outbuf1_len_so_far - 1] <= ' ';
 	 ud->outbuf1_len_so_far--);
   if (firstLineOnPage)
     {
@@ -225,10 +226,11 @@ brf_doUtdnewline (xmlNode * node)
       firstLineOnPage = 0;
     }
   xy = (char *) xmlGetProp (node, (xmlChar *) "xy");
-  for (k = 0; xy[k] != ','; k++);
-  leadingBlanks = (atoi (xy) - ud->left_margin) / ud->cell_width;
+  k = atoi (xy);
+  leadingBlanks = (k - ud->left_margin) / ud->cell_width;
   if (leadingBlanks < 0 || leadingBlanks > ud->cells_per_line)
     leadingBlanks = 0;
+  for (k = 0; xy[k] != ','; k++);
   linePos = atoi (&xy[k + 1]);
   if (linePos < ud->page_top)
     linePos = ud->page_top;
