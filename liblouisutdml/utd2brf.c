@@ -114,8 +114,7 @@ static int
 brf_insertCharacters (const char *text, int length)
 {
   int k;
-  if (length <= 0 || (ud->outbuf1_len_so_far + length) > 
-  ud->outbuf1_len)
+  if (length <= 0 || (ud->outbuf1_len_so_far + length) > ud->outbuf1_len)
     return 0;
   for (k = 0; k < length; k++)
     ud->outbuf1[ud->outbuf1_len_so_far++] = text[k];
@@ -201,9 +200,9 @@ brf_doUtdnewpage (xmlNode * node)
       firstPage = 0;
       return 1;
     }
-    for (; ud->outbuf1_len_so_far > 0 
-    && ud->outbuf1[ud->outbuf1_len_so_far - 1] <= ' ';
-	 ud->outbuf1_len_so_far--);
+  for (; ud->outbuf1_len_so_far > 0
+       && ud->outbuf1[ud->outbuf1_len_so_far - 1] == ' ';
+       ud->outbuf1_len_so_far--);
   brf_insertCharacters (ud->lineEnd, strlen (ud->lineEnd));
   brf_insertCharacters (ud->pageEnd, strlen (ud->pageEnd));
   brf_saveBuffer ();
@@ -217,9 +216,9 @@ brf_doUtdnewline (xmlNode * node)
   int k;
   int leadingBlanks;
   int linePos;
-    for (; ud->outbuf1_len_so_far > 0 
-    && ud->outbuf1[ud->outbuf1_len_so_far - 1] <= ' ';
-	 ud->outbuf1_len_so_far--);
+  for (; ud->outbuf1_len_so_far > 0
+       && ud->outbuf1[ud->outbuf1_len_so_far - 1] == ' ';
+       ud->outbuf1_len_so_far--);
   if (firstLineOnPage)
     {
       prevLinePos = ud->page_top;
@@ -260,7 +259,7 @@ brf_doBrlNode (xmlNode * node, int action)
       if (ud->head_node == NULL)
 	ud->head_node = node;
       if (action != 0)
-        pop_sem_stack ();
+	pop_sem_stack ();
       return 1;
     case utdbrlonly:
       brf_doUtdbrlonly (node, 0);
