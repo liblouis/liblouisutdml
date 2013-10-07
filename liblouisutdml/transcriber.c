@@ -4894,7 +4894,8 @@ utd_finishLine (int leadingBlanks, int length)
       else if (curPageStatus == topOfPage)
 	{
 	  if (ud->running_head_length > 0)
-	    centerHeadFoot (ud->running_head, ud->running_head_length);
+	    utd_centerHeadFoot (ud->running_head, 
+	    ud->running_head_length);
 	  else
 	    {
 	      if (pageNumber.transTextLength)
@@ -4909,7 +4910,7 @@ utd_finishLine (int leadingBlanks, int length)
       else if (curPageStatus == lastLine || curPageStatus == bottomOfPage)
 	{
 	  if (ud->footer_length > 0)
-	    centerHeadFoot (ud->footer, ud->footer_length);
+	    utd_centerHeadFoot (ud->footer, ud->footer_length);
 	  else
 	    {
 	      if (pageNumber.transTextLength)
