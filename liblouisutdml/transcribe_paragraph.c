@@ -203,6 +203,8 @@ transcribe_paragraph (xmlNode * node, int action)
   switch (ud->stack[ud->top])
     {
     case no:
+      if (ud->format_for == utd)
+        break;
       if (ud->text_length > 0 && ud->text_length < MAX_LENGTH &&
 	  ud->text_buffer[ud->text_length - 1] > 32)
 	ud->text_buffer[ud->text_length++] = 32;
