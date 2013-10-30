@@ -23,7 +23,7 @@ skip LastPrinted
 no listDef
 no noProof
 no hdr
-no body
+document body
 no compat
 no tblCellMar
 no pPr
@@ -92,7 +92,7 @@ subsection sub-section
 no t
 skip annotation
 no ilvl
-document wordDocument
+no wordDocument
 no Lines
 italicx i
 no pitch
