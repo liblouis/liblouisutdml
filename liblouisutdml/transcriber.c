@@ -3535,7 +3535,6 @@ do_linespacing (xmlNode * node)
 int
 start_style (StyleType * curStyle, xmlNode * node)
 {
-  ud->needs_editing = 0;
   if (curStyle == NULL)
     curStyle = lookup_style ("para");
   if (prevStyle == NULL)
@@ -3554,6 +3553,7 @@ start_style (StyleType * curStyle, xmlNode * node)
       ud->style_first_line_indent = styleSpec->curFirstLineIndent;
       styleBody ();
     }
+  ud->needs_editing = 0;
   if (ud->style_top < (STACKSIZE - 2))
     ud->style_top++;
   styleSpec = &ud->style_stack[ud->style_top];
