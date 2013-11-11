@@ -7,7 +7,7 @@
    Copyright (C) 2004, 2005, 2006
    ViewPlus Technologies, Inc. www.viewplus.com
    and
-   JJB Software, Inc. www.jjb-software.com
+   abilitiessoft, Inc. www.abilitiessoft.com
    All rights reserved
 
    This file is free software; you can redistribute it and/or modify it
@@ -26,7 +26,7 @@
    the Free Software Foundation, 51 Franklin Street, Fifth Floor,
    Boston, MA 02110-1301, USA.
 
-   Maintained by John J. Boyer john.boyer@jjb-software.com
+   Maintained by John J. Boyer john.boyer@abiliriessoft.com
    */
 
 #include <stdio.h>
@@ -77,7 +77,14 @@ transcribe_computerCode (xmlNode * node, int action)
 	    computerCodeEmptyElement (child, 1);
 	  break;
 	case XML_TEXT_NODE:
-	  insert_utf8 (child->content);
+	  /*Is there already a <brl> node? */
+	  if (!(ud->format_for == utd && child->next != NULL
+		&& strcmp ((char *) child->next->name, "brl") == 0))
+	    insert_text (child);
+	  /*Is there now a <brl>node? */
+	  if (ud->format_for == utd && child->next != NULL
+	      && strcmp ((char *) child->next->name, "brl") == 0)
+	    child = child->next;	/*skip <brl> node */
 	  break;
 	case XML_CDATA_SECTION_NODE:
 	  transcribe_cdataSection (child);
