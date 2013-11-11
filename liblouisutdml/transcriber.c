@@ -1045,7 +1045,7 @@ setEmphasis ()
 	  if (!(ud->emphasis & computer_braille))
 	    break;
 	  for (k = ud->old_text_length; k < ud->text_length; k++)
-	    ud->typeform[k] |= compbrl;
+	    ud->typeform[k] |= computer_braille;
 	  break;
 	default:
 	  break;
