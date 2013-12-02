@@ -35,7 +35,7 @@
 
 static int mathTrans ();
 static void mathText (xmlNode * node, int action);
-static xmlNode *mathRoot;
+static xmlNode *curLink;
 
 int
 transcribe_math (xmlNode * node, int action)
@@ -48,7 +48,7 @@ transcribe_math (xmlNode * node, int action)
   if (action == 0)
     {
       insert_translation (ud->main_braille_table);
-      mathRoot = node;
+      curLink = node;
     }
   else
     push_sem_stack (node);
@@ -64,7 +64,10 @@ transcribe_math (xmlNode * node, int action)
       break;
     }
   if ((style = is_style (node)) != NULL)
+    {
+    mathTrans ();
     start_style (style, node);
+    }
   child = node->children;
   while (child)
     {
@@ -105,6 +108,8 @@ mathTrans ()
   int translationLength;
   int translatedLength;
   int k;
+  if (ud->text_length == 0)
+    return 1;
   ud->needs_editing = 1;
   translatedLength = MAX_TRANS_LENGTH - ud->translated_length;
   translationLength = ud->text_length;
@@ -113,8 +118,9 @@ mathTrans ()
       xmlNode *curBrlNode;
       xmlNode *newNode = xmlNewNode (NULL, (xmlChar *) "brl");
       xmlSetProp (newNode, (xmlChar *) "modifiers", (xmlChar *) "notext");
-      curBrlNode = xmlAddNextSibling (mathRoot, newNode);
+      curBrlNode = xmlAddNextSibling (curLink, newNode);
       link_brl_node (curBrlNode);
+      curLink = curBrlNode;
       ud->text_buffer[ud->text_length++] = ENDSEGMENT;
       translationLength++;
       k = lou_translate (ud->mathexpr_table_name,
