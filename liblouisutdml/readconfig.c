@@ -711,7 +711,8 @@ compileConfig (FileInfo * nested)
     "55",
     "mode",
     "56",
-// available    "57",
+    "pageNumberTable",
+    "57",
 // available     "58",
 // available    "59",
     "macro",
@@ -909,6 +910,14 @@ compileConfig (FileInfo * nested)
 	  if (ud->mathexpr_table_name == NULL)
 	  {
 	  configureError (nested, "invalid mathexprTableName");
+	  return 0;
+	  }
+	  break;
+	case 57:
+	  ud->pagenum_table_name = findTable (nested);
+	  if (ud->pagenum_table_name == NULL)
+	  {
+	  configureError (nested, "invalid pageNumberTable");
 	  return 0;
 	  }
 	  break;

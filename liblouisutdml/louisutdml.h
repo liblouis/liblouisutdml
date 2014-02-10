@@ -278,6 +278,7 @@ typedef struct
   const char *compbrl_table_name;
   const char *mathtext_table_name;
   const char *mathexpr_table_name;
+  const char *pagenum_table_name;
   const char *edit_table_name;
   const char *main_braille_table;
   const char *semantic_files;
