@@ -1124,6 +1124,7 @@ getBraillePageString ()
   widechar translationBuffer[MAXNUMLEN];
   int translationLength;
   int translatedLength = MAXNUMLEN;
+  static widechar * pagenumTable;
   if (!ud->number_braille_pages)
     {
       pageNumberLength = 0;
@@ -1150,7 +1151,10 @@ getBraillePageString ()
     }
   for (k = 0; k < translationLength; k++)
     translationBuffer[k] = brlPageString[k];
-  if (!lou_translateString (ud->main_braille_table, translationBuffer,
+  pagenumTable = ud->pagenum_table_name;
+  if (pagenumTable == NULL)
+      pagenumTable = ud->main_braille_table;
+  if (!lou_translateString (pagenumTable, translationBuffer,
 			    &translationLength, ud->braille_page_string,
 			    &translatedLength, NULL, NULL, 0))
     return 0;
