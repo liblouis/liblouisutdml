@@ -35,7 +35,7 @@
 
 extern void widecharcpy (widechar * to, const widechar * from, int length);
 extern void widestrcpy (widechar * to, const widechar * from);
-extern void unsignedcharcpy (char * to, const char * from, int length);
+extern void unsignedcharcpy (char *to, const char *from, int length);
 extern void save_translated_buffer (void);
 extern void restore_translated_buffer (void);
 extern void contents_save_state (void);
@@ -204,7 +204,7 @@ transcribe_paragraph (xmlNode * node, int action)
     {
     case no:
       if (ud->format_for == utd)
-        break;
+	break;
       if (ud->text_length > 0 && ud->text_length < MAX_LENGTH &&
 	  ud->text_buffer[ud->text_length - 1] > 32)
 	ud->text_buffer[ud->text_length++] = 32;
@@ -225,9 +225,9 @@ transcribe_paragraph (xmlNode * node, int action)
 	  lou_logPrint ("Cannot open main table %s", ud->main_braille_table);
 	  return 0;
 	}
-    if (node->children == NULL)
-      return 1;
-    break;
+      if (node->children == NULL)
+	return 1;
+      break;
     case htmllink:
       if (ud->format_for != browser)
 	break;
@@ -244,42 +244,42 @@ transcribe_paragraph (xmlNode * node, int action)
       return 1;
     case boxline:
       do_boxline (node);
-    if (node->children == NULL)
-      return 1;
-    break;
+      if (node->children == NULL)
+	return 1;
+      break;
     case pagebreak:
       do_pagebreak (node);
       return 1;
     case attrtotext:
       do_attrtotext (node);
-    if (node->children == NULL)
-      return 1;
-    break;
+      if (node->children == NULL)
+	return 1;
+      break;
     case blankline:
       do_blankline ();
-    if (node->children == NULL)
-      return 1;
-    break;
+      if (node->children == NULL)
+	return 1;
+      break;
     case linespacing:
       do_linespacing (node);
-    if (node->children == NULL)
-      return 1;
-    break;
+      if (node->children == NULL)
+	return 1;
+      break;
     case softreturn:
       do_softreturn ();
-    if (node->children == NULL)
-      return 1;
-    break;
+      if (node->children == NULL)
+	return 1;
+      break;
     case newpage:
       do_newpage ();
-    if (node->children == NULL)
-      return 1;
-    break;
+      if (node->children == NULL)
+	return 1;
+      break;
     case righthandpage:
       do_righthandpage ();
-    if (node->children == NULL)
-      return 1;
-    break;
+      if (node->children == NULL)
+	return 1;
+      break;
     case code:
       transcribe_computerCode (node, 0);
       if (action != 0)
@@ -313,9 +313,9 @@ transcribe_paragraph (xmlNode * node, int action)
       return 1;
     case changetable:
       change_table (node);
-    if (node->children == NULL)
-      return 1;
-    break;
+      if (node->children == NULL)
+	return 1;
+      break;
     case pagenum:
       do_pagenum ();
       break;
@@ -328,7 +328,15 @@ transcribe_paragraph (xmlNode * node, int action)
       start_macro (node);
     }
   else if ((style = is_style (node)) != NULL)
-    start_style (style, node);
+    {
+      if (node->children == NULL)
+	{
+	  if (action != 0)
+	    pop_sem_stack ();
+	  return 0;
+	}
+      start_style (style, node);
+    }
   child = node->children;
   while (child)
     {
