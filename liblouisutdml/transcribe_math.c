@@ -50,7 +50,10 @@ transcribe_math (xmlNode * node, int action)
     {
       insert_translation (ud->main_braille_table);
       curLink = node;
-      mathCreateBrlNode ();
+      if (ud->format_for == utd)
+        {
+          mathCreateBrlNode ();
+        }
     }
   else
     push_sem_stack (node);
