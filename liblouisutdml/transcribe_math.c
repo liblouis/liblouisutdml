@@ -34,6 +34,7 @@
 #include "louisutdml.h"
 
 static int mathTrans ();
+static void mathCreateBrlNode ();
 static void mathText (xmlNode * node, int action);
 static xmlNode *curLink;
 
@@ -49,6 +50,7 @@ transcribe_math (xmlNode * node, int action)
     {
       insert_translation (ud->main_braille_table);
       curLink = node;
+      mathCreateBrlNode ();
     }
   else
     push_sem_stack (node);
@@ -115,12 +117,12 @@ mathTrans ()
   translationLength = ud->text_length;
   if (ud->format_for == utd)
     {
-      xmlNode *curBrlNode;
-      xmlNode *newNode = xmlNewNode (NULL, (xmlChar *) "brl");
-      xmlSetProp (newNode, (xmlChar *) "modifiers", (xmlChar *) "notext");
-      curBrlNode = xmlAddNextSibling (curLink, newNode);
-      link_brl_node (curBrlNode);
-      curLink = curBrlNode;
+      // xmlNode *curBrlNode;
+      // xmlNode *newNode = xmlNewNode (NULL, (xmlChar *) "brl");
+      // xmlSetProp (newNode, (xmlChar *) "modifiers", (xmlChar *) "notext");
+      // curBrlNode = xmlAddNextSibling (curLink, newNode);
+      // link_brl_node (curBrlNode);
+      // curLink = curBrlNode;
       ud->text_buffer[ud->text_length++] = ENDSEGMENT;
       translationLength++;
       k = lou_translate (ud->mathexpr_table_name,
@@ -154,4 +156,15 @@ static void
 mathText (xmlNode * node, int action)
 {
     insert_utf8 (node->content);
+}
+
+static void
+mathCreateBrlNode ()
+{
+  xmlNode *curBrlNode;
+  xmlNode *newNode = xmlNewNode (NULL, (xmlChar *) "brl");
+  xmlSetProp (newNode, (xmlChar *) "modifiers", (xmlChar *) "notext");
+  curBrlNode = xmlAddNextSibling (curLink, newNode);
+  link_brl_node (curBrlNode);
+  curLink = curBrlNode;
 }
