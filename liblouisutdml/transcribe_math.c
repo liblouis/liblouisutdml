@@ -120,12 +120,6 @@ mathTrans ()
   translationLength = ud->text_length;
   if (ud->format_for == utd)
     {
-      // xmlNode *curBrlNode;
-      // xmlNode *newNode = xmlNewNode (NULL, (xmlChar *) "brl");
-      // xmlSetProp (newNode, (xmlChar *) "modifiers", (xmlChar *) "notext");
-      // curBrlNode = xmlAddNextSibling (curLink, newNode);
-      // link_brl_node (curBrlNode);
-      // curLink = curBrlNode;
       ud->text_buffer[ud->text_length++] = ENDSEGMENT;
       translationLength++;
       k = lou_translate (ud->mathexpr_table_name,
