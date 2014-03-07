@@ -1,5 +1,11 @@
 liblouisxml NEWS -- history of user-visible changes.
 
+* Noteworthy changes in release 2.6.0 (????-??-??)
+** New features
+** Bug fixes
+- fixed a problem with duplicate semantics attributes 
+- solve multiple brl nodes after math nodes
+
 * Noteworthy changes in release 2.1.0 (2009-11-23)
 
 The main focus for this release has been the addition of user-defined
