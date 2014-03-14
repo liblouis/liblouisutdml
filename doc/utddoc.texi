@@ -1,0 +1,207 @@
+@section Universal Tactile Document Markup Language (UTDML)
+
+Universal Tactile Document Markup Language (UTDML) is  a way of adding 
+braille 
+translations, information synchronizing braille and print, and tactile 
+graphics to an original xml document, while preserving the structure and 
+text of that document. This is done by using a number of new xml 
+elements and attributes. It is best shown by examples.
+
+The first example shows a short xml document designed to show how 
+UTDML operates. Note that, though it looks like a Daisy xml file, it is 
+not, and would not validate. liblouisutdml, by default, requires only 
+that 
+an xml document be well-formed. It will perform validation if 
+requested. The verse which this example contains is not intended as a 
+serious poetic effort, but it is intended as a reflection of the hacker 
+mentality.
+
+@example
+<dtbook>
+<head/>
+<book>
+<list>
+<li>Mary had a little code</li>
+<li><em>That overflowed the stack;</em></li>
+<li>And everywhere that Mary went</li>
+<li>She simply <em>had</em> to hack.</li>
+</list>
+</book>
+</dtbook>
+@end example
+
+The next example was derived from the first in two steps. The files
+needed for these steps are in the @file{lbu_files} directory. First a
+UTDML file was produced by aplying @file{makeutd.cfg} (via the
+@command{file2brl} command). The essential feature of this file is that
+it has the configuration setting @code{formatFor utd}. The result is a
+file that contains the UTDML tags and Unicode braille encoded as UTF-8.
+This is not very readable, so anotgher step was necessary.
+@file{viewxml.cfg} was then applied to the result. 
+This file uses a
+special liblouis table to produce readable text showing everything in
+the UTDML file. The Unicode braille is shown in hexadecimal form, as
+liblouis usually shows unknown characters.
+
+@example
+  x<?xml version="1.0"
+encoding="UTF8"
+standalone="yes"?> <dtbook>
+<head> <meta name="utd"
+content="braillePageNumber=2,to-
+pMargin=10,leftMargin=20,cellsP-
+erLine=32,linesPerPage=25"/>
+</head> <book> <brl> <newpage
+number="1"/> </brl> <list>
+<li>Mary had a little code<brl
+index="0,0,1,3,4,5,5,8,9,10,11,-
+11,17,18,19,20,21"> <newline
+xy="20,10"/>'\x2820' '\x280d'
+'\x281c' '\x283d' '\x2800'
+'\x2838' '\x2813' '\x2800'
+'\x2801' '\x2800' '\x2807'
+'\x2807' '\x2800' '\x2809'
+'\x2815' '\x2819' '\x2811'</brl>
+</li> <li> <em>That overflowed
+the stack;<brl
+index="0,1,1,1,1,5,6,7,8,10,11,-
+12,14,16,17,20,21,21,23,24,25,2-
+6"> <newline
+xy="20,18"/>'\x2828' '\x2828'
+'\x2820' '\x281e' '\x2800'
+'\x2815' '\x2827' '\x283b'
+'\x280b' '\x2807' '\x282a'
+'\x282b' '\x2800' '\x282e'
+'\x2800' '\x2828' '\x280c'
+'\x2801' '\x2809' '\x2805'
+'\x2806'</brl> </em> </li>
+<li>And everywhere that Mary
+went<brl
+index="0,0,3,4,4,8,9,9,14,15,19-
+,20,20,21,23,24,25,26,28">
+<newline xy="20,26"/>'\x2820'
+'\x282f' '\x2800' '\x2810'
+'\x2811' '\x283d' '\x2810'
+'\x2831' '\x2800' '\x281e'
+'\x2800' '\x2820' '\x280d'
+'\x281c' '\x283d' '\x2800'
+'\x283a' '\x2822' '\x281e'</brl>
+</li> <li>She simply <brl
+index="0,0,2,3,4,5,6,7,8,9,10">
+<newline xy="20,34"/>'\x2820'
+'\x2829' '\x2811' '\x2800'
+'\x280e' '\x280a' '\x280d'
+'\x280f' '\x2807' '\x283d'
+'\x2800'</brl> <em>had<brl
+index="0,1,1,1">'\x2800'
+'\x2828' '\x2838' '\x2813'</brl>
+</em> to hack.<brl
+index="0,2,5,6,7,8,9">'\x2800'
+'\x2816' '\x2813' '\x2801'
+'\x2809' '\x2805' '\x2832'</brl>
+</li> </list> <brl> <newline
+xy="155,210"/> <span
+class="brlonly">'\x2800'
+'\x2800' '\x2800' '\x283c'
+'\x2801'</span> <newpage
+number="2"/> </brl> </book>
+</dtbook>
+@end example
+
+An analysiis of the example will show the main features of UTDML.
+
+The @code{<?xml} processing instruction was added by liblouisutdml to 
+prooduce a well-formed xml document. it is not part of UTDML.
+
+In the first example the @code{<head>} element is empty. UTDML has added a 
+@code{<meta>} sub-element with @code{name="utd"} and @code{content} 
+attributes. The value of the latter id a list of confiburation settings 
+and their values.
+
+The tag @code{<book>} has been assigned the document style in
+@file{dtbook.sem}. UTDML therefore adds the first @code{<brl>} node.  It
+has no @code{index} attribute, since it contains no braille to be
+synchronized with the print text, but does congain braille formatting
+information. It contains a @code{<newpage>} node with the attribute
+@code{number="1"}. A @code{<newpage>} node must precede the first
+@code{<newline>} node on a page, of which more below.
+
+Next we have the first line of the verse in the first example, followed 
+immediately by a @code{<brl>} node. This one, however, has an 
+@code{index} attribute. The value of this attribute shows the position 
+in the input text corresponding to each position in the braille 
+translation. The translation itself follows, but first we have 
+@code{<newline xy="20,10"/>}. The attribute name suggests the standard 
+variable names for points in a plane, in this case the left end of the 
+line. The attribute value is reminiscent of the standard notation for 
+the coordinates of such points. The x value is 10, since this is the 
+first line on the page and it is down from the top by the value of the 
+configuration setting @code{topMargin}. Line coordinates are expressed 
+in "half-dot" units, one unit being .05 inch. The y-coordinate of this 
+line is 20, which is the value of @code{leftMargin} in the file 
+@file{makeutd.cfg}. If the line were indented it would have a 
+y-coordinate of the left margin plus 5 times the number of braille cells 
+of the indentation. The next @code{newline} in this example has an 
+x-coordinate of 18, since the spacing between lines is 8 half-dots. If a 
+line contains cells with dots 7 or 8 the next line is spaced 10 
+half-dots.
+
+Following the @code<newline xy="20,10"/>} are a number of strings within 
+single quotes which give the braille translation in US English Grade 2. 
+This is Unicode braille, which gives the dot patterns. In the UTDML file 
+it is encoded in UTF-8. It was rendered readable by using a special 
+liblouis table.
+
+The verse in the first example has its second line emphasized. This can 
+be seen within the @code{<brl>} tag for that line. This is even clearer 
+when considering the fourth line of the verse, where the word @samp{had} 
+is emphasized. This is on the UTDML line @code{<newline xy="24,20"/>}. 
+Here there is a separate @code{<brl>} element for the emphasized word.
+
+The last @code{<newline>} element in the example has co-ordinates 
+@code{220,155}. This is because it is the last line on the page. Note 
+that it is within a @code{<brl>} tag that has no @code{indexx} 
+attribute, as is the following @code{<newpage>} tag. The aforementioned 
+@code{<newline xy="220,155"/>} is followed by a page number. The line is 
+indented enough to put the page number right at the end. This is because 
+there is nothing else on this line. If there were, the text would 
+precede the page number. This page number is enclosed in the tag 
+@code{<span class="brlonly">}, which indicates that it is not part of 
+the original text.
+
+Following this, and still inside the @code{<brl>} tag is a second 
+@code{<newpage>} tag indicating a page number of 2.
+
+Finally, the example concludes with the original @code{</book>} and 
+@code{</dtbook>} tags.
+
+From the above example it can be seen that the characteristics of a UTDML 
+document are:
+
+The structure and text of the original document are preserved.
+
+@code{<brl>} nodes are added to contain braille translation, formatting 
+and synchronization information.
+
+Usually @code{<brl>} nodes follow text nodes in the original document, 
+but they may occur in other places where braille formatting or 
+braill-only information is needed. In such cases they will not have an 
+@code{index} attribute to give synchronization information with the 
+print text.
+
+An extra @code{<meta>} tag is added to the @code{<head>} element, giving 
+information about the braille poortions of the document. An xml file 
+that is to be augmented with UTDML must therefore have a @code{<head>} 
+element or equivalent, but it may be empty.
+
+These examples do not show the handling of tactile graphics or of 
+braille that has been modified by a transcriber. The latter will be 
+handled by @code{<span class="locked">} tags within @code{<brl>} tags. 
+The exact way in which tactile graphics will be handled is still being 
+decided.
+
+UTDML should handle plain mathematical equations, but the places where 
+math and text meet still need work. Matrices may not give good results.
+
+The table of contents generator and handling of computer code still need 
+to be implemented for UTDML.
