@@ -103,9 +103,10 @@ Fifth Floor, Boston, MA 02110-1301, USA.
 * Semantic Action Index::
 * Function Index::
 * Program Index::
+* Concept Index::
 
 @detailmenu
---- The Detailed Node Listing ---
+ --- The Detailed Node Listing ---
 
 Transcribing Documents
 
@@ -130,6 +131,12 @@ Connecting with the xml Document - Semantic-Action Files
 * Semantic Actions in detail::
 * Pseudo-actions::
 * Using XPath Expressions::
+
+Pseudo-actions
+
+* include::
+* newentries::
+* namespaces::
 
 Special Features
 
@@ -454,7 +461,7 @@ with the root element @code{doc}. The file @file{doc.sem} is fairly
 complete, so the output of @command{file2brl} contains much of the
 formatting, including emphasis, of the original rtf file.
 
-@node Transcribing PDF files with pdf2brl, , Transcribing RTF files with rtf2brl, Transcribing Documents
+@node Transcribing PDF files with pdf2brl,  , Transcribing RTF files with rtf2brl, Transcribing Documents
 @section Transcribing PDF files with pdf2brl
 @pindex pdf2brl
 
@@ -845,7 +852,7 @@ with the minutiae of semantic-action files.
 
 @end table
 
-@node style, , xml, Customization Configuring liblouisutdml
+@node style,  , xml, Customization Configuring liblouisutdml
 @section style
 
 The following sections all deal with styles. Each style has its own
@@ -1889,6 +1896,13 @@ These actions affect the processing of semantic-action files. They are
 not connected with any tag in the document. They are executed when they
 are encountered in the processing of semantic-action files.
 
+@menu
+* include::
+* newentries::
+* namespaces::
+@end menu
+
+@node include, newentries, Pseudo-actions, Pseudo-actions
 @subsection include
 
 @example
@@ -1899,6 +1913,7 @@ filename must be the name of a semantic action file. The file is
 compiled as though it were part of the file containing the
 @code{include} entry. Included files may include other files.
 
+@node newentries, namespaces, include, Pseudo-actions
 @subsection newentries
 
 @example
@@ -1911,40 +1926,67 @@ produced. This affects only documents processed with this
 semantic-action file. The configuration setting @code{newEntries}
 affects all documents.
 
+@node namespaces,  , newentries, Pseudo-actions
 @subsection namespaces
+@cindex Namespaces
 
 @example
 namespaces dtb=http://www.daisy.org/z3986/2005/dtbook/
 @end example
 
 This pseudo-action is used to declare namespaces used in XPath
-expressions. (See following section). The format is @samp{namespaces
-prefix1=url1,prefix2=url2,...}. The list of namespaces may not contain
-blanks.
+expressions. (@pxref{Using XPath Expressions}). The format is
+@samp{namespaces prefix1=url1,prefix2=url2,...}. The list of
+namespaces may not contain blanks.
 
-@node Using XPath Expressions, , Pseudo-actions, Connecting with the xml Document
+@node Using XPath Expressions,  , Pseudo-actions, Connecting with the xml Document
 @section Using XPath Expressions
+@cindex XPath Expressions
 
+The second column of a semantic action may contain a XPath expression
+for matching nodes. When an XPath expression is to be used the second
+column should be of the format: @samp{&xpath(<expression>)} where
+@samp{<expression>} is the XPath expression to match nodes.
+
+When constructing your XPath expressions you may wish to consider the
+following facts:
+
+@itemize @bullet
+@item 
+The XPath expression may contain brackets but they must match
+
+@item
+liblouisutdml performs XPath matching from the document root, so you
+most likely want all XPath expressions to begin with double slash
+(@samp{//}).
+
+@item
+If the source document uses namespaces for the nodes you wish to match
+then you must define the namespace in the semantic action file
+(@pxref{namespaces}) and then prefix the node with the namespace (eg.
+for a namespace with alias @samp{xhtml} and node with name @samp{p},
+this would be @samp{xhtml:p})
+
+@item
+You should be careful to not create XPath expressions which give
+overlapping nodeset results. When liblouisutdml finds a match for a
+node it assigns the semantic action to that node and this will not be
+changed subsequently. Note that this is unlike XSLT, where for each
+matcher a priority is calculated from the XPath expression while in
+liblouisutdml it is unpredictable which rule will win.
+
+@end itemize
+
+As with other types of semantic actions, you may define arguments in
+the third column of a semantic action using XPath expressions.
 
 @example
-para &xpath(h4)
+para &xpath(//h4)
 @end example
 
 This example causes any element with the name @samp{h4} to be given the
 semantic action @code{para}, no matter what other assignments may be
-made to it. In general, XPath expressions are entered in the second
-column with the syntax @code{&xpath(...)}. That is, the XPath
-expression is placed within parentheses following @code{&xpath}. It may
-contain parentheses itself, as long as they match. The third column may
-contain arguments, as with any line in a semantic-action file. XPath
-expressions are not processed in any particular order. Care should be
-taken that the node sets which they find do not overlap. If a node is in
-a node set found by a particular XPath expression it will be given the
-semantic-action and arguments associated with that expression. This will
-not be changed subsequently.
-
-The @samp{&funcname(...)} notation may be used for other features, such
-as XPointer, in the future.
+made to it.
 
 @node Special Features, Special Formats, Connecting with the xml Document, Top
 @chapter Special Features
@@ -2086,7 +2128,7 @@ specified by the configuration. outfile should have the extension
 part of the above example specifies a configuration setting, which of
 course can also be specified in a configuration file.
 
-@node CDATA Sections, , Browser-Friendly Output, Special Features
+@node CDATA Sections,  , Browser-Friendly Output, Special Features
 @section @code{CDATA} Sections
 
 A @code{cdata} section may be given the semantic actions @code{skip},
@@ -2207,7 +2249,7 @@ Coleridge's "Rime of the Ancient Mariner":
 Note that when stanzas follow each other liblouisutdml will produce only
 one blank line between them, not two.
 
-@node Dividing a Book Into Volumes, , Poetry, Special Formats
+@node Dividing a Book Into Volumes,  , Poetry, Special Formats
 @section Dividing a Book Into Volumes
 
 Details are still under development. However, this much can be said.
@@ -2750,7 +2792,7 @@ parameter specifies whether or not the library is to be initialized
 with new configuration information, as described in the section on
 @code{lbu_translateString} (@pxref{lbu_translateString}).
 
-@node lbu_free, , lbu_backTranslateFile, Programming with liblouisutdml
+@node lbu_free,  , lbu_backTranslateFile, Programming with liblouisutdml
 @section lbu_free
 
 @findex lbu_free
@@ -3828,7 +3870,7 @@ no mfrac
 no mstyle,scriptlevel,-1
 @end example
 
-@node Files for BAUK Maths (ukmaths), , nemeth.sem, Example files
+@node Files for BAUK Maths (ukmaths),  , nemeth.sem, Example files
 @section Files for BAUK Maths (ukmaths)
 
 @menu
@@ -4157,7 +4199,7 @@ pass3 @@16[%lownum1-10]@@12456 *
 pass3 @{mfrac[@@3456%upnum1-10%lownum1-10]@}mfrac *
 @end example
 
-@node ukmaths_edit.ctb, , ukmaths.ctb, Files for BAUK Maths (ukmaths)
+@node ukmaths_edit.ctb,  , ukmaths.ctb, Files for BAUK Maths (ukmaths)
 @subsection @file{ukmaths_edit.ctb}
 
 @example
@@ -4230,10 +4272,15 @@ pass2 @@1b-12-4-4 @@4
 
 @printindex fn
 
-@node Program Index, , Function Index, Top
+@node Program Index, Concept Index, Function Index, Top
 @unnumbered Program Index
 
 @printindex pg
+
+@node Concept Index,  , Program Index, Top
+@unnumbered Concept Index
+
+@printindex cp
 
 @bye
 
