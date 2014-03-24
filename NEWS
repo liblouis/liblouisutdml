@@ -5,6 +5,8 @@ liblouisxml NEWS -- history of user-visible changes.
 ** Bug fixes
 - fixed a problem with duplicate semantics attributes 
 - solve multiple brl nodes after math nodes
+- Improve the documentation on XPath expressions. Thanks to Michael
+  Whapples.
 
 * Noteworthy changes in release 2.1.0 (2009-11-23)
 
