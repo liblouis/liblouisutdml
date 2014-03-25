@@ -966,7 +966,7 @@ handlePagenum (xmlChar * printPageNumber, int length)
   return 1;
 }
 
-static int utd_makePageSeparator (char *printPageNumber, int length);
+static int utd_makePageSeparator (xmlNode *node, char *printPageNumber, int length);
 
 void
 set_runninghead_string (widechar * chars, int length)
@@ -4355,11 +4355,12 @@ insertPageNumber (int howMany)
 static int utd_fillPage ();
 
 static int
-utd_makePageSeparator (char *printPageNumber, int length)
+utd_makePageSeparator (xmlNode *node, char *printPageNumber, int length)
 {
   ShortBrlOnlyStrings sb;
   int k, kk;
   char setup[MAXNUMLEN];
+  xmlNode *newNode = xmlNewNode (NULL, (xmlChar *) "brl");
   PageStatus curPageStatus = checkPageStatus ();
   if (!ud->print_pages || !*printPageNumber)
     return 1;
@@ -4378,6 +4379,7 @@ utd_makePageSeparator (char *printPageNumber, int length)
   translateShortBrlOnly (&sb);
   if (curPageStatus == topOfPage)
     return 1;
+  brlNode = xmlAddNextSibling (node, newNode);
   addPrefixes (&sb, HYPHEN, '-', ud->cells_per_line - sb.transTextLength);
   ud->print_page_number[0] = 'a';
   if (curPageStatus == nearBottom)
@@ -4394,9 +4396,7 @@ utd_makePageSeparator (char *printPageNumber, int length)
 static void
 utd_pagebreak (xmlNode * node, char *printPageNumber, int length)
 {
-  xmlNode *newNode = xmlNewNode (NULL, (xmlChar *) "brl");
-  brlNode = xmlAddNextSibling (node, newNode);
-  utd_makePageSeparator (printPageNumber, length);
+  utd_makePageSeparator (node, printPageNumber, length);
 }
 
 static int
@@ -4737,10 +4737,11 @@ utd_insert_text (xmlNode * node, int length)
       if (ud->print_pages)
 	{
 	  char printPageNumber[MAXNUMLEN + 1];
+	  if (!ud->paragraphs)
+	   break;
 	  for (k = 0; k < outSize && k < MAXNUMLEN; k++)
 	    printPageNumber[k] = ud->text_buffer[ud->old_text_length + k];
-	  brlNode = xmlAddNextSibling (node, newNode);
-	  utd_makePageSeparator (printPageNumber, k);
+	  utd_makePageSeparator (node, printPageNumber, k);
 	}
       ud->text_length = ud->old_text_length;
       return;
