@@ -1,0 +1,4 @@
+root           &xpath(/*)
+page           &xpath(//page)
+p              &xpath(//p)
+section        &xpath(//section)

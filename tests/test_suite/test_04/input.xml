@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doc>
+  <page>
+    foobar foobar foobar foobar
+  </page>
+  <page>
+    foo&#xAD;bar foo&#xAD;bar foo&#xAD;bar foo&#xAD;bar
+  </page>
+  <page>
+    foo&#xAD;bar foo&#xAD;bar foo-&#xAD;bar foo&#xAD;bar
+  </page>
+  <page>
+    foo&#xAD;bar foo&#xAD;bar foo-&#x200B;bar foo&#xAD;bar
+  </page>
+</doc>
