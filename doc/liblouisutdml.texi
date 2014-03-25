@@ -1963,17 +1963,20 @@ most likely want all XPath expressions to begin with double slash
 @item
 If the source document uses namespaces for the nodes you wish to match
 then you must define the namespace in the semantic action file
-(@pxref{namespaces}) and then prefix the node with the namespace (eg.
+(@pxref{namespaces}) and then prefix the node with the namespace (e.g.
 for a namespace with alias @samp{xhtml} and node with name @samp{p},
 this would be @samp{xhtml:p})
 
 @item
 You should be careful to not create XPath expressions which give
-overlapping nodeset results. When liblouisutdml finds a match for a
+overlapping node set results. When liblouisutdml finds a match for a
 node it assigns the semantic action to that node and this will not be
 changed subsequently. Note that this is unlike XSLT, where for each
 matcher a priority is calculated from the XPath expression while in
 liblouisutdml it is unpredictable which rule will win.
+
+@item
+XPath expressions take precedence over ordinary semantic-fie entries.
 
 @end itemize
 
