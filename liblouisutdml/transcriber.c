@@ -5147,6 +5147,11 @@ utd_doAlignColumns ()
 	      numRows++;
 	      if (rowEnd == 0)
 		rowEnd = colLength;
+	      // Protect against first row being short on entries
+	      if (colNum > numCols)
+		{
+		  numCols = colNum;
+		}
 	      colLength = 0;
 	      colNum = 0;
 	      bufPos++;
