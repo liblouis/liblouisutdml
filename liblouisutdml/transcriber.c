@@ -5204,11 +5204,18 @@ utd_doAlignColumns ()
       rowLength = 0;
       if (style->format == alignColumnsLeft)
 	{
-	  for (colNum = 0; colNum < numCols; colNum++)
+	  // Remember end of row escape sequence needs parsing
+	  for (colNum = 0; colNum <= numCols; colNum++)
 	    {
 	      while (rowLength < MAXROWSIZE
 		     && translatedBuffer[bufPos] != ESCAPE)
 		rowBuf[rowLength++] = translatedBuffer[bufPos++];
+	      // Check for end of row
+	      if (translatedBuffer[bufPos + 1] == RDOTS)
+	        {
+		  // Pad when not enough columns
+		  colNum = numCols;
+		}
 	      bufPos += 2;
 	      if (colNum < (numCols - 1))
 		{
@@ -5216,13 +5223,13 @@ utd_doAlignColumns ()
 			 colSize[colNum + 1])
 		    rowBuf[rowLength++] = ' ';
 		}
-	      else
-		{
-		  while (rowLength < MAXROWSIZE
-			 && translatedBuffer[bufPos] != ESCAPE)
-		    rowBuf[rowLength++] = translatedBuffer[bufPos++];
-		  bufPos += 2;	/*actual end of row */
-		}
+              // else
+		// {
+		  // while (rowLength < MAXROWSIZE
+			// && translatedBuffer[bufPos] != ESCAPE)
+		    // rowBuf[rowLength++] = translatedBuffer[bufPos++];
+		  // bufPos += 2;	/*actual end of row */
+		// }
 	    }
 	}
       else
