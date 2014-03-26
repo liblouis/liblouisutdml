@@ -5223,13 +5223,6 @@ utd_doAlignColumns ()
 			 colSize[colNum + 1])
 		    rowBuf[rowLength++] = ' ';
 		}
-              // else
-		// {
-		  // while (rowLength < MAXROWSIZE
-			// && translatedBuffer[bufPos] != ESCAPE)
-		    // rowBuf[rowLength++] = translatedBuffer[bufPos++];
-		  // bufPos += 2;	/*actual end of row */
-		// }
 	    }
 	}
       else
