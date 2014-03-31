@@ -5332,7 +5332,7 @@ utd_editTrans ()
       translatedLength = MAX_TRANS_LENGTH;
       if (!lou_translate
 	  (ud->edit_table_name, ud->text_buffer, &translationLength,
-	   ud->translated_buffer, &translatedLength, NULL, NULL, NULL,
+	   ud->translated_buffer, &ud->translated_length, NULL, NULL, NULL,
 	   NULL, NULL, dotsIO))
 	{
 	  lou_logPrint
