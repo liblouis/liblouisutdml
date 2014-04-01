@@ -5342,8 +5342,12 @@ utd_editTrans ()
 	  return 0;
 	}
     }
+  else
+    {
+      translatedLength = ud->translated_length;
+    }
   translatedBuffer = ud->translated_buffer;
- return 1;
+  return 1;
 }
 
 static int
