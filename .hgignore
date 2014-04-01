@@ -39,6 +39,11 @@ doc/version.texi
 file2brl.temp
 
 gnulib/unistd.h
+gnulib/arg-nonnull.h
+gnulib/c++defs.h
+gnulib/stdlib.h
+gnulib/sys/types.h
+gnulib/warn-on-use.h
 
 INSTALL
 
