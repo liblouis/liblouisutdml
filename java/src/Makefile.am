@@ -1,2 +1,2 @@
-subdirs = org
+SUBDIRS = org
 

@@ -1,2 +1,2 @@
-subdirs = liblouis
+SUBDIRS = liblouis
 
