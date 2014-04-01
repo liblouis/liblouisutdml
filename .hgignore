@@ -20,6 +20,16 @@ config.log
 config.status
 configure
 
+build-aux/config.guess
+build-aux/config.sub
+build-aux/install-sh
+build-aux/missing
+build-aux/mdate-sh
+build-aux/texinfo.tex
+build-aux/depcomp
+build-aux/ltmain.sh
+build-aux/test-driver
+
 doc/liblouisutdml.html
 doc/liblouisutdml.info
 doc/liblouisutdml.txt
@@ -53,6 +63,8 @@ m4/lt~obsolete.m4
 
 tests/testTranslateString
 tests/tripleTrans
+tests/*.log
+tests/*.trs
 tests/**/output.txt
 tests/**/error.log
 
