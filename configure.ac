@@ -51,13 +51,14 @@ AM_CONDITIONAL([HAVE_HELP2MAN], [test x$HELP2MAN = xhelp2man])
 
 AC_PATH_PROG(PKG_CONFIG, pkg-config)
 
-PKG_CHECK_MODULES(BASE_DEPENDENCIES, [liblouis, libxml-2.0])
+PKG_CHECK_MODULES(BASE_DEPENDENCIES, [liblouis >= 2.5.1, libxml-2.0])
 
 # Checks for libraries.
 
 # Checks for header files.
 AC_HEADER_STDC
-AC_CHECK_HEADERS([stdlib.h string.h jni.h])
+AC_CHECK_HEADERS([stdlib.h string.h])
+AC_CHECK_HEADERS([jni.h],[found_jni_h=yes;])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
@@ -75,8 +76,25 @@ case $host in
  ;;
 esac
 
+# Disable building the Java bindings on request
+AC_ARG_ENABLE(
+	[java_bindings], 
+	[  --disable-java-bindings Do not build Java bindings],
+	[case "${enableval}" in
+	      yes) java_bindings=true ;;
+	      no)  java_bindings=false ;;
+	      *) AC_MSG_ERROR([bad value ${enableval} for --enable-java-bindings]) ;;
+	esac],[java_bindings=true])
+AM_CONDITIONAL([JAVA_BINDINGS], [test x$java_bindings = xtrue])
+AC_MSG_CHECKING([whether Java bindings should be built])
+AC_MSG_RESULT($java_bindings)
+
+if test x$java_bindings == xtrue -a x$found_jni_h != xyes ; then
+    AC_MSG_ERROR([Please make sure to install jni properly when enabling the Java bindings.])
+fi
+
 AC_CONFIG_FILES([Makefile
-	 gnulib/Makefile
+	gnulib/Makefile
 	doc/Makefile
 	java/Makefile
 	java/src/Makefile
@@ -85,12 +103,12 @@ AC_CONFIG_FILES([Makefile
 	man/Makefile
 	lbu_files/Makefile
 	liblouisutdml/Makefile
-	 liblouisutdml.pc
+	liblouisutdml.pc
 	tests/Makefile
 	tools/Makefile
 	windows/Makefile
 	windows/include/Makefile
-	 m4/Makefile])
+	m4/Makefile])
 
 AC_OUTPUT
 
