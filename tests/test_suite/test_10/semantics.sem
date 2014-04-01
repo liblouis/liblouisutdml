@@ -1,0 +1,6 @@
+root      &xpath(/*)
+verse     &xpath(//verse)
+lngroup   &xpath(//lngroup)
+ln        &xpath(//ln)
+line      &xpath(//line)
+
