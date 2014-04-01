@@ -1,0 +1,4 @@
+root           &xpath(/*)
+pagenum        &xpath(//print-page)
+page           &xpath(//page)
+p              &xpath(//p)

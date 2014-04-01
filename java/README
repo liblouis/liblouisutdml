@@ -1,0 +1,8 @@
+The Java part of the bindings is not built by deffault. If you have ant 
+installed you can simply type "ant" in this directory to get a jar file. 
+If not, you can use the basic Java procedures.
+
+The C part of the bindings is compiled into the library. If you get an 
+error saying that jni.h cannot be found, install the Java extension for 
+your C compiler. 
+
