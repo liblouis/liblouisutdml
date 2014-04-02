@@ -1,5 +1,5 @@
-INCLUDES =		\
-	-I$(top_srcdir)/liblouisutdml \
+AM_CPPFLAGS =					\
+	-I$(top_srcdir)/liblouisutdml		\
 	-I$(top_srcdir)/gnulib
 
 LDADD = \
