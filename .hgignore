@@ -10,6 +10,8 @@ syntax: glob
 .deps
 .libs
 
+TAGS
+
 **Makefile
 **Makefile.in
 
