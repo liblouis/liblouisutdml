@@ -33,17 +33,25 @@ fail=0
 xfail=0
 xpass=0
 
-TESTS_DIR=$(cd $(dirname "$0"); pwd)
-cd "$TESTS_DIR"
+if [ -n "$TESTS_DIR" ]; then
+    TESTS_DIR=$(cd $(dirname "$0"); pwd)
+    cd "$TESTS_DIR"
+fi
 
-for test_dir in test_suite/test_* ; do
+# Create a temporary directory $tmp_dir in $TMPDIR (default /tmp).
+: ${TMPDIR=/tmp}
+{
+    tmp_dir=`(umask 077 && mktemp -d "$TMPDIR/fooXXXXXX") 2>/dev/null` && test -d "$tmp_dir"
+} || exit $?
+
+for test_dir in $TESTS_DIR/test_suite/test_* ; do
 	tests=$(( tests + 1 ))
-	cd "$TESTS_DIR/$test_dir"
+	cd "$test_dir"
 	echo "Running $(basename $test_dir)..."
 	if [ -e README -a $verbose -ne 0 ]; then
 		echo "$(cat README | fold -sw 77 | sed 's/.*/   &/' )"
 	fi
-	file2brl -f ./styles.cfg input.xml output.txt 2>error.log
+	file2brl -w $tmp_dir -f ./styles.cfg input.xml $tmp_dir/output.txt 
 	if [ $? -ne 0 ]; then
 		error=$(( error + 1 ))
 		if [ $colors -ne 0 ]; then
@@ -52,8 +60,7 @@ for test_dir in test_suite/test_* ; do
 			echo "   ERROR"
 		fi
 	else
-		rm -f error.log
-		diff -q expected.txt output.txt >/dev/null
+		diff -q expected.txt $tmp_dir/output.txt >/dev/null
 		if [ $? -ne 0 ]; then
 			if [ -e xfail ]; then
 				xfail=$(( xfail + 1 ))
@@ -80,7 +87,7 @@ for test_dir in test_suite/test_* ; do
 				fi
 			else
 				pass=$(( pass + 1 ))
-				rm output.txt
+				rm $tmp_dir/output.txt
 				if [ $colors -ne 0 ]; then
 					echo "   \033[1m\033[92mPASS\033[0m\033[0m"
 				else
@@ -90,6 +97,7 @@ for test_dir in test_suite/test_* ; do
 		fi
 	fi
 	rm -f file2brl.temp
+	rm -rf $tmp
 done
 
 echo ""
