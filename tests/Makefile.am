@@ -1,7 +1,7 @@
 SUBDIRS = test_suite
 
-INCLUDES =		\
-	-I$(top_srcdir)/liblouisutdml \
+AM_CPPFLAGS =					\
+	-I$(top_srcdir)/liblouisutdml		\
 	-I$(top_srcdir)/gnulib
 
 LDADD = \
@@ -32,7 +32,7 @@ TESTS =                   \
 	$(check_PROGRAMS)     \
 	$(dist_check_SCRIPTS)
 
-TESTS_ENVIRONMENT =								\
-	TESTS_DIR=$(top_srcdir)							\
+TESTS_ENVIRONMENT =									\
+	TESTS_DIR=$(top_srcdir)								\
 	LD_LIBRARY_PATH=$(abs_top_builddir)/liblouisutdml/.libs:$$LD_LIBRARY_PATH	\
 	PATH=$(abs_top_builddir)/tools:$$PATH

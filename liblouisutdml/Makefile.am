@@ -1,7 +1,8 @@
-INCLUDES =		\
-	-I$(top_srcdir) \
-	-DLBU_PATH=\"$(datadir)/liblouisutdml/lbu_files/\" \
+AM_CPPFLAGS =							\
+	-I$(top_srcdir)						\
+	-DLBU_PATH=\"$(datadir)/liblouisutdml/lbu_files/\"	\
 	-DLIBLOUIS_TABLES_PATH=\"$(datadir)/liblouis/tables/\"
+
 liblouisutdmlincludedir = $(includedir)/liblouisutdml
 
 liblouisutdmlinclude_HEADERS = \
