@@ -79,18 +79,18 @@ esac
 # Disable building the Java bindings on request
 AC_ARG_ENABLE(
 	[java_bindings], 
-	[  --disable-java-bindings Do not build Java bindings],
+	[  --disable-java-bindings do not build the Java bindings],
 	[case "${enableval}" in
-	      yes) java_bindings=true ;;
-	      no)  java_bindings=false ;;
-	      *) AC_MSG_ERROR([bad value ${enableval} for --enable-java-bindings]) ;;
-	esac],[java_bindings=true])
-AM_CONDITIONAL([JAVA_BINDINGS], [test x$java_bindings = xtrue])
+	      yes) java_bindings=yes ;;
+	      no)  java_bindings=no ;;
+	      *) AC_MSG_ERROR([bad value ${enableval} for --disable-java-bindings]) ;;
+	esac],[java_bindings=yes])
+AM_CONDITIONAL([JAVA_BINDINGS], [test x$java_bindings == xyes])
 AC_MSG_CHECKING([whether Java bindings should be built])
 AC_MSG_RESULT($java_bindings)
 
-if test x$java_bindings == xtrue -a x$found_jni_h != xyes ; then
-    AC_MSG_ERROR([Please make sure to install jni properly when enabling the Java bindings.])
+if test x$java_bindings == xyes -a x$found_jni_h != xyes ; then
+    AC_MSG_ERROR([Please install jni properly or disable the Java bindings with --disable-java-bindings.])
 fi
 
 AC_CONFIG_FILES([Makefile
@@ -105,6 +105,20 @@ AC_CONFIG_FILES([Makefile
 	liblouisutdml/Makefile
 	liblouisutdml.pc
 	tests/Makefile
+	tests/test_suite/Makefile
+	tests/test_suite/test_01/Makefile
+	tests/test_suite/test_02/Makefile
+	tests/test_suite/test_03/Makefile
+	tests/test_suite/test_04/Makefile
+	tests/test_suite/test_05/Makefile
+	tests/test_suite/test_06/Makefile
+	tests/test_suite/test_07/Makefile
+	tests/test_suite/test_08/Makefile
+	tests/test_suite/test_09/Makefile
+	tests/test_suite/test_10/Makefile
+	tests/test_suite/test_11/Makefile
+	tests/test_suite/test_12/Makefile
+	tests/test_suite/test_13/Makefile
 	tools/Makefile
 	windows/Makefile
 	windows/include/Makefile
