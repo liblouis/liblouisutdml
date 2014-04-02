@@ -2,11 +2,14 @@ liblouisxml NEWS -- history of user-visible changes.
 
 * Noteworthy changes in release 2.6.0 (????-??-??)
 ** New features
+- Added an extensive test suite which tests liblouisutml under various
+  circumstances.
+- Add a configure option to disable the Java bindings.
 ** Bug fixes
 - fixed a problem with duplicate semantics attributes 
 - solve multiple brl nodes after math nodes
-- Improve the documentation on XPath expressions. Thanks to Michael
-  Whapples.
+- Improve the documentation on XPath expressions.
+- Fixed numerous problems in the build system.
 
 * Noteworthy changes in release 2.1.0 (2009-11-23)
 
