@@ -1,3 +1,5 @@
+SUBDIRS = test_suite
+
 INCLUDES =		\
 	-I$(top_srcdir)/liblouisutdml \
 	-I$(top_srcdir)/gnulib
@@ -30,6 +32,7 @@ TESTS =                   \
 	$(check_PROGRAMS)     \
 	$(dist_check_SCRIPTS)
 
-TESTS_ENVIRONMENT =                                                         \
-	LD_LIBRARY_PATH=$(abs_top_srcdir)/liblouisutdml/.libs:$$LD_LIBRARY_PATH \
-	PATH=$(abs_top_srcdir)/tools:$$PATH
+TESTS_ENVIRONMENT =								\
+	TESTS_DIR=$(top_srcdir)							\
+	LD_LIBRARY_PATH=$(abs_top_builddir)/liblouisutdml/.libs:$$LD_LIBRARY_PATH	\
+	PATH=$(abs_top_builddir)/tools:$$PATH
