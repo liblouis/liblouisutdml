@@ -743,15 +743,6 @@ This setting specifies the length of lines in back-translated files,
 whether in plain-text or html. This is mainly for human readability.
 Lines may sometimes be somewhat longer.
 
-@setting{interline, no}
-This setting specifies whether interlining is desired. If it is set to
-@samp{yes}, the first line in the output will be a braille
-translation, the next line will be its back-translation according to
-the interlineBackTable. Back-translation is used instead of simply
-presenting the print original because a braille line may contain
-additional information, such as leading blanks, print or braille page
-numbers, print page separator lines, etc.
-
 @anchor{lineFill setting}
 @setting{lineFill, '}
 This setting defines the fill character that will be used before the
@@ -795,12 +786,6 @@ This is the table used to translate mathematical expressions.
 When the output includes both mathematics and text there may be errors
 where one type of translation directly follows another. The editTable
 removes these errors.
-
-@setting{interlineBackTable, en-us-interline.ctb}
-This setting specifies the table to be used for back-translation when
-interlining is turned on. It must be tailored for this purpose, since
-an ordinary forward-translation table may contain entries that do not
-handle the additional information in braille lines correctly.
 
 @end table
 
