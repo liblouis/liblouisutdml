@@ -525,7 +525,10 @@ utf8ToWc (const unsigned char *utf8str, int *inSize, widechar *
 	  utf32 = (utf32 << 6) + (utf8str[in++] & 0x3f);
 	}
       if (CHARSIZE == 2 && utf32 > 0xffff)
-	utf32 = 0xfffd;
+	{
+	  utf32 = 0xfffd;
+	  lou_logPrint("Warning: Character 0x%.4x out of range, substituting with u+fffd", utf32);
+	}
       utfwcstr[out++] = (widechar) utf32;
       if (out >= *outSize)
 	{
