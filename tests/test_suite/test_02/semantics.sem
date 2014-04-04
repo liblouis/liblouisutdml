@@ -1,0 +1,4 @@
+root           &xpath(/*)
+page           &xpath(//page)
+footer         &xpath(//running-footer)
+
