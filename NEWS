@@ -1,0 +1,110 @@
+liblouisxml NEWS -- history of user-visible changes.
+
+* Noteworthy changes in release 2.6.0 (????-??-??)
+** New features
+- Added an extensive test suite which tests liblouisutml under various
+  circumstances.
+- Add a configure option to disable the Java bindings.
+** Bug fixes
+- fixed a problem with duplicate semantics attributes 
+- solve multiple brl nodes after math nodes
+- Improve the documentation on XPath expressions.
+- Fixed numerous problems in the build system.
+
+* Noteworthy changes in release 2.1.0 (2009-11-23)
+
+The main focus for this release has been the addition of user-defined
+styles with the associated documentation overhaul. Also there is a new
+tool rtf2brl and all the tools now have man pages.
+
+** New features
+*** Styles
+    - User-defined styles
+    - styles can be nested in a document
+    - Persistent style settings
+    - roman page numbering
+
+*** Semantic action
+    - "newentries no" semantic action
+    - "linespacing" semantic action
+
+*** rtf2brl
+    There is a new tool to generate Braille from rtf.
+
+*** man pages
+    All tools accept the --version and --help options and are
+    documented in man pages. The tools are now licensed with GPL.
+
+** Bug fixes
+   - The version number is now displayed correctly.
+
+* Noteworthy changes in release 2.0.0 (2009-08-21)
+
+This release contains support for UK and Marburg math and the usual
+assortment of bug fixes.
+
+** New features
+- Beta version of UK Maths
+- Alpha version of Marburg math
+- rpm spec file
+
+** Bug fixes
+- Updated semantic files
+- Documentation fixes
+- Fix for building static libs
+
+* Noteworthy changes in release 1.9.1 (2009-04-21)
+
+** Bug fixes
+
+- Fix the table of contents generator
+- Improved the documentation 
+
+* Noteworthy changes in release 1.9.0 (2009-03-04)
+
+This release contains some new semantic actions and some major
+documentation updates.
+
+** New features
+
+*** configfile and configstring semantic actions
+The configfile, configstring and configtweak semantic actions enable
+the configuration of liblouisxml to be changed according to the
+contents of the document being transcribed.
+
+*** Documentation up-to-date
+The documentation is brought up-to-date. Specifically the semantic
+actions are now described in detail. Also there is now documentation
+about the table of contents feature.
+
+** Bug fixes
+
+- Fix a problem with -p option in xml2brl
+- New paths.c which finds where the program is under Windows
+- Added build instructions for Windows and Mac
+- Fix a buffer overflow in table of contents generation
+
+** Changes in behavior
+
+None
+
+* Noteworthy changes in release 1.8.0 (2009-02-01)
+
+This is the first release of liblouisxml from the Google code page. It
+is a bug fix release to work with the latest release of liblouis.
+
+** New features
+
+No new user visible features
+
+** Bug fixes
+
+Search for liblouis tables under /usr/share now.
+
+** Changes in behavior
+
+None
+
+Local variables:
+mode: org
+end:

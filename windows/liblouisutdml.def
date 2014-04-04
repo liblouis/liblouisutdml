@@ -1,0 +1,16 @@
+LIBRARY liblouisutdml
+
+EXPORTS
+	lbu_version
+	lbu_initialize
+	lbu_translateString
+	lbu_backTranslateString
+	lbu_translateFile
+	lbu_translateTextFile
+	lbu_backTranslateFile
+	lbu_charToDots
+	lbu_dotsToChar
+	lbu_checkTable
+	lbu_setWriteablePath
+	lbu_free
+

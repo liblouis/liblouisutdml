@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doc>
+  <verse role="poem">
+    <lngroup>
+      <ln>foobar</ln>
+      <ln>foobar</ln>
+    </lngroup>
+  </verse>
+</doc>
