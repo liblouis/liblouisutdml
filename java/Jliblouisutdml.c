@@ -1227,3 +1227,71 @@ JNIEXPORT void JNICALL Java_org_liblouis_liblouisutdml_logEnd
 {
   lou_logEnd ();
 }
+
+static JavaVM *jvm;
+static jobject logCBFunc;
+static void javaLogCallbackFunc(int level, const char *message)
+{
+  JNIEnv *env;
+  jint rs = (*jvm)->AttachCurrentThread(jvm, &env, NULL);
+  jstring jstrMsg;
+  if (rs != JNI_OK)
+  {
+    return;
+  }
+  jclass cls = (*env)->GetObjectClass(env, logCBFunc);
+  jmethodID mid = (*env)->GetMethodID(env, cls, "logMessage", "(ILjava/lang/String;)V");
+  if (mid == 0)
+  {
+    return;
+  }
+  jstrMsg = (*env)->NewStringUTF(env, message);
+  (*env)->CallVoidMethod(env, logCBFunc, mid, level, jstrMsg);
+}
+/*
+ * Class:     org_liblouis_liblouisutdml
+ * Method:    registerLogCallback
+ * Signature: (Lorg/liblouis/LogCallback;)V
+ */
+JNIEXPORT void JNICALL Java_org_liblouis_liblouisutdml_registerLogCallback
+  (JNIEnv * env, jobject this, jobject cb)
+{
+  // if not previously set, set the JVM pointer
+  if (jvm == NULL)
+  {
+    jint rs = (*env)->GetJavaVM(env, &jvm);
+    if (rs != JNI_OK)
+    {
+      return;
+    }
+  }
+  // Remove any existing global reference to callbacks
+  if (logCBFunc != NULL)
+  {
+    (*env)->DeleteGlobalRef(env, logCBFunc);
+    logCBFunc = NULL;
+  }
+  if (cb != NULL)
+  {
+    logCBFunc = (*env)->NewGlobalRef(env, cb);
+  }
+  if (logCBFunc != NULL)
+  {
+    lou_registerLogCallback(javaLogCallbackFunc);
+  }
+  else
+  {
+    lou_registerLogCallback(0);
+  }
+}
+
+/*
+ * Class:    org_liblouis_liblouisutdml
+ * Method:   setLogLevel
+ *Signature: (I)V
+ */
+JNIEXPORT void JNICALL Java_org_liblouis_liblouisutdml_setLogLevel
+  (JNIEnv * env, jobject this, jint level)
+{
+  lou_setLogLevel(level);
+}
