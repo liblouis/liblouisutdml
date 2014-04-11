@@ -29,6 +29,20 @@ extern "C" {
 #define org_liblouis_liblouisutdml_HtmlDoc 536870912L
 #undef org_liblouis_liblouisutdml_notUC
 #define org_liblouis_liblouisutdml_notUC 268435456L
+#undef org_liblouis_liblouisutdml_LOG_ALL
+#define org_liblouis_liblouisutdml_LOG_ALL -2147483648L
+#undef org_liblouis_liblouisutdml_LOG_DEBUG
+#define org_liblouis_liblouisutdml_LOG_DEBUG 10000L
+#undef org_liblouis_liblouisutdml_LOG_INFO
+#define org_liblouis_liblouisutdml_LOG_INFO 20000L
+#undef org_liblouis_liblouisutdml_LOG_WARN
+#define org_liblouis_liblouisutdml_LOG_WARN 30000L
+#undef org_liblouis_liblouisutdml_LOG_ERROR
+#define org_liblouis_liblouisutdml_LOG_ERROR 40000L
+#undef org_liblouis_liblouisutdml_LOG_FATAL
+#define org_liblouis_liblouisutdml_LOG_FATAL 50000L
+#undef org_liblouis_liblouisutdml_LOG_OFF
+#define org_liblouis_liblouisutdml_LOG_OFF 2147483647L
 /*
  * Class:     org_liblouis_liblouisutdml
  * Method:    initialize
@@ -220,6 +234,22 @@ JNIEXPORT void JNICALL Java_org_liblouis_liblouisutdml_logMessage
  */
 JNIEXPORT void JNICALL Java_org_liblouis_liblouisutdml_logEnd
   (JNIEnv *, jobject);
+
+/*
+ * Class:     org_liblouis_liblouisutdml
+ * Method:    registerLogCallback
+ * Signature: (Lorg/liblouis/LogCallback;)V
+ */
+JNIEXPORT void JNICALL Java_org_liblouis_liblouisutdml_registerLogCallback
+  (JNIEnv *, jobject, jobject);
+
+/*
+ * Class:     org_liblouis_liblouisutdml
+ * Method:    setLogLevel
+ * Signature: (I)V
+ */
+JNIEXPORT void JNICALL Java_org_liblouis_liblouisutdml_setLogLevel
+  (JNIEnv *, jobject, jint);
 
 #ifdef __cplusplus
 }
