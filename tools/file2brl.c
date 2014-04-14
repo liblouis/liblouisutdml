@@ -42,6 +42,7 @@ static const struct option longopts[] = {
   {"poorly-formatted", no_argument, NULL, 'p'},
   {"html", no_argument, NULL, 't'},
   {"text", no_argument, NULL, 'T'},
+  {"paragraph-line", no_argument, NULL, 'P'},
   {"log-file", no_argument, NULL, 'l'},
   {"config-setting", required_argument, NULL, 'C'},
   {"writeable-path", required_argument, NULL, 'w'},
@@ -115,7 +116,7 @@ main (int argc, char **argv)
   logFileName[0] = 0;
   
   while ((optc =
-	  getopt_long (argc, argv, "hvf:brptlw:TC:", longopts, NULL)) != 
+	  getopt_long (argc, argv, "hvf:brpPtlw:TC:", longopts, NULL)) != 
 	  -1)
     switch (optc)
       {
@@ -140,6 +141,7 @@ main (int argc, char **argv)
 	break;
       case 'b':
       case 'p':
+      case 'P':
       case 'r':
       case 'T':
       case '0':
@@ -282,6 +284,8 @@ main (int argc, char **argv)
 	      fprintf (tempFile, "%s\n", ud->xml_header);
 	  }
 	if (pch == '>' && ch == '<')
+	  fputc (10, tempFile);
+	if (whichProc == 'P' && ch == 10 && pch != 10)
 	  fputc (10, tempFile);
 	fputc (ch, tempFile);
 	pch = ch;
