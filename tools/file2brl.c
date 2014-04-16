@@ -77,13 +77,16 @@ is not specified the output is sent to stdout.\n\n", stdout);
   -b, --backward      	  backward translation\n\
   -r, --reformat      	  reformat a braille file\n\
   -T, --text		  Treat as text even if xml\n\
-  -p, --poorly-formatted  translate a poorly formatted file\n\
   -t, --html              html document, not xhtml\n\
+  -p, --poorly-formatted  translate a poorly formatted file\n\
+  -P, --paragraph-line    treat each block of text ending in a newline\n\
+                          as a paragraph. If there are two newline characters\n\
+                          a blank line will be inserted before the next paragraph\n\
   -C, --config-setting    specify particular configuration settings\n\
                           They override any settings that are specified in a\n\
                           config file\n\
-  -w  --writeable-path   path for temp files and log file\n\
-  -l, --log-file          write errors to file2brl.log instead of stderr\n", 
+  -w  --writeable-path    path for temp files and log file\n\
+  -l, --log-file          write errors to file2brl.log instead of stderr\n",
   stdout);
 
   printf ("\n");

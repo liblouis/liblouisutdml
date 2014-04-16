@@ -271,13 +271,6 @@ describing usage and exit.
 This option causes @command{file2brl} to display the version
 information and exit.
 
-@item -l
-@itemx --log-file
-This option will cause @command{file2brl} and liblouisutdml to print
-error messages to @file{file2brl.log} instead of stderr. The file will
-be in the current directory. This option is particularly useful if
-@command{file2brl} is called by a GUI script or Web application.
-
 @item -f configfile
 @itemx --config-file configfile
 This specifies the configuration file which tells @command{file2brl}
@@ -292,17 +285,6 @@ a path on which to look for files that it needs (@pxref{Files and
 Paths}). If no pathname is given the standard paths are searched and
 finally the current directory. To make @command{file2brl} search the
 current directory first, precede the file name with @code{./}.
-
-@item -Csetting=value
-@itemx --config-setting setting=value
-This option enables you to specify configuration settings on the
-command line instead of changing the configuration file. You can use
-as many @option{-C} options as you wish. Any settings can be specified
-except those having to do with styles. @xref{Configuration Settings
-Index}, for a list of available settings. These must be specified in
-configuration files. The settings may be in any order. They override
-any settings in @file{liblouisutdml.ini} or in the configuration file used
-by @command{file2brl}.
 
 @item -b
 @itemx --backward
@@ -329,15 +311,9 @@ example, from 40 to 32 cells. It is also an excellent way to check the
 accuracy of liblouis tables. The original page numbers at the tops and
 bottoms of pages are discarded, and new ones are generated.
 
-@item -p
-@itemx --poorly-formatted
-Poorly formatted input translation. Infile is any text file such as may
-have been obtained by extracting the text in a pdf file. The input
-file may also be an xml or html file which is so poorly formatted that
-better braille can be obtained by ignoring the formatting.
-@command{file2brl} tries to guess paragraph breaks. The output is
-generally reasonably formatted, that is, with reasonable paragraph
-breaks.
+@item -T
+@item  --text
+Consider the document to be a text file, even if it is xml or html.
 
 @item -t
 @itemx --html
@@ -349,9 +325,44 @@ goes directly to the html parser. See also the @code{formatFor}
 configuration (@pxref{formatFor setting}) file setting, which enables
 you to format the braille output for viewing in a browser.
 
-@item -T
-@item  --text
-Consider the document to be a text file, even if it is xml or html.
+@item -p
+@itemx --poorly-formatted
+Poorly formatted input translation. Infile is any text file such as may
+have been obtained by extracting the text in a pdf file. The input
+file may also be an xml or html file which is so poorly formatted that
+better braille can be obtained by ignoring the formatting.
+@command{file2brl} tries to guess paragraph breaks. The output is
+generally reasonably formatted, that is, with reasonable paragraph
+breaks.
+
+@item -P
+@itemx --paragraph-line
+Treat each block of text ending in a newline as a paragraph. If there
+are two newline characters a blank line will be inserted before the
+next paragraph.
+
+@item -Csetting=value
+@itemx --config-setting setting=value
+This option enables you to specify configuration settings on the
+command line instead of changing the configuration file. You can use
+as many @option{-C} options as you wish. Any settings can be specified
+except those having to do with styles. @xref{Configuration Settings
+Index}, for a list of available settings. These must be specified in
+configuration files. The settings may be in any order. They override
+any settings in @file{liblouisutdml.ini} or in the configuration file used
+by @command{file2brl}.
+
+@item -w
+@itemx --writeable-path
+This option enables you to specify where the log file and other
+temporary files will be written.
+
+@item -l
+@itemx --log-file
+This option will cause @command{file2brl} and liblouisutdml to print
+error messages to @file{file2brl.log} instead of stderr. The file will
+be in the current directory. This option is particularly useful if
+@command{file2brl} is called by a GUI script or Web application.
 
 @item infile
 This is the name of the input file containing the material to be
