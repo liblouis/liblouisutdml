@@ -35,6 +35,8 @@ build-aux/test-driver
 doc/liblouisutdml.html
 doc/liblouisutdml.info
 doc/liblouisutdml.txt
+doc/liblouisutdml.pdf
+doc/liblouisutdml.t2p
 doc/stamp-vti
 doc/version.texi
 
