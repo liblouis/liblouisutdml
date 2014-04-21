@@ -1235,12 +1235,14 @@ static void javaLogCallbackFunc(int level, const char *message)
   JNIEnv *env;
   jint rs = (*jvm)->AttachCurrentThread(jvm, &env, NULL);
   jstring jstrMsg;
+  jclass cls;
+  jmethodID mid;
   if (rs != JNI_OK)
   {
     return;
   }
-  jclass cls = (*env)->GetObjectClass(env, logCBFunc);
-  jmethodID mid = (*env)->GetMethodID(env, cls, "logMessage", "(ILjava/lang/String;)V");
+  cls = (*env)->GetObjectClass(env, logCBFunc);
+  mid = (*env)->GetMethodID(env, cls, "logMessage", "(ILjava/lang/String;)V");
   if (mid == 0)
   {
     return;
