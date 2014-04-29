@@ -148,7 +148,7 @@ start_document ()
     firstTableName = ud->main_braille_table = ud->contracted_table_name;
   if (!(firstTableHeader = lou_getTable (ud->main_braille_table)))
     {
-      lou_logPrint ("Cannot open main table %s", ud->main_braille_table);
+      lou_log (LOG_ERROR, "Cannot open main table %s", ud->main_braille_table);
       return 0;
     }
   if (ud->has_contentsheader)
@@ -527,7 +527,7 @@ utf8ToWc (const unsigned char *utf8str, int *inSize, widechar *
       if (CHARSIZE == 2 && utf32 > 0xffff)
 	{
 	  utf32 = 0xfffd;
-	  lou_logPrint("Warning: Character 0x%.4x out of range, substituting with u+fffd", utf32);
+	  lou_log(LOG_WARN, "Warning: Character 0x%.4x out of range, substituting with u+fffd", utf32);
 	}
       utfwcstr[out++] = (widechar) utf32;
       if (out >= *outSize)
@@ -703,6 +703,7 @@ insert_translation (const char *table)
   int translationLength;
   int translatedLength;
   int k;
+  lou_log(LOG_INFO, "Begin insert_translation");
   if (style->translation_table != NULL)
     table = style->translation_table;
   if (table == NULL)
@@ -754,7 +755,7 @@ insert_translation (const char *table)
   ud->text_length = 0;
   if (!k)
     {
-      lou_logPrint ("Cannot find table %s", table);
+      lou_log (LOG_ERROR, "Cannot find table %s", table);
       return 0;
     }
   if (ud->in_sync)
@@ -3542,6 +3543,7 @@ do_linespacing (xmlNode * node)
 int
 start_style (StyleType * curStyle, xmlNode * node)
 {
+  lou_log(LOG_INFO, "Starting style");
   if (curStyle == NULL)
     curStyle = lookup_style ("para");
   if (prevStyle == NULL)
@@ -3628,7 +3630,6 @@ end_style ()
   ud->needs_editing = 0;
   return 1;
 }
-
 
 /* Routines for Unified Tactile Ducument Markup Language (UTDML) */
 
@@ -3730,13 +3731,13 @@ processDaisyDoc ()
   int haveSemanticFile;
   if (ud->doc == NULL)
     {
-      lou_logPrint ("Document could not be processed");
+      lou_log (LOG_FATAL, "Document could not be processed");
       return 0;
     }
   rootElement = xmlDocGetRootElement (ud->doc);
   if (rootElement == NULL)
     {
-      lou_logPrint ("Document is empty");
+      lou_log (LOG_FATAL, "Document is empty");
       return 0;
     }
   haveSemanticFile = compile_semantic_table (rootElement);
@@ -3761,7 +3762,7 @@ makeDaisyDoc but not
 * procesDaisyDoc. */
   if (ud->doc == NULL)
     {
-      lou_logPrint ("Document could not be processed");
+      lou_log (LOG_FATAL, "Document could not be processed");
       return 0;
     }
   xmlFreeDoc (ud->doc);
@@ -3994,6 +3995,7 @@ makeDotsTextNode (xmlNode * node, const widechar * content, int length,
 {
   xmlNode *textNode;
   int inlen, outlen;
+  lou_log(LOG_INFO, "Making dots node");
   if (length <= 0)
     return 1;
   if (ud->mode & notUC)
@@ -4022,8 +4024,10 @@ makeDotsTextNode (xmlNode * node, const widechar * content, int length,
     }
   outlen = maxContent;
   wc_string_to_utf8 (ud->text_buffer, &inlen, brlContent, &outlen);
+  lou_log(LOG_INFO, "brlContent=%s", brlContent);
   textNode = xmlNewText (brlContent);
   xmlAddChild (node, textNode);
+  lou_log(LOG_INFO, "Finished making dots node");
   return 1;
 }
 
@@ -4192,6 +4196,7 @@ checkTextFragment (widechar * text, int length)
 static int
 insertTextFragment (widechar * content, int length)
 {
+  lou_log(LOG_INFO, "Inserting text fragment");
   if (length <= 0)
     return 1;
   checkTextFragment (content, length);
@@ -4615,6 +4620,7 @@ assignIndices (xmlNode * startNode, int startPos)
   int firstIndex;
   int curPos = startPos;
   xmlNode *curBrlNode;
+  lou_log(LOG_INFO, "Begin assignIndices");
   if (indices == NULL)
     return 1;
   if (startNode == NULL)
@@ -4641,8 +4647,10 @@ assignIndices (xmlNode * startNode, int startPos)
 	      kk += posLen;
 	      indexPos++;
 	    }
+          lou_log(LOG_INFO, "indexPos=%d", indexPos);
 	  utilStringBuf[--kk] = 0;
-	  if (xmlGetProp (curBrlNode, (xmlChar *) "index") == NULL)
+          lou_log(LOG_INFO, "utilStringBuf=%s", utilStringBuf);
+	  if (xmlGetProp (curBrlNode, (xmlChar *) "index") == NULL && indexPos > 0)
 	    xmlNewProp (curBrlNode, (xmlChar *) "index", (xmlChar *)
 			utilStringBuf);
 	  if (curBrlNode && curBrlNode->_private != NULL)
@@ -4651,6 +4659,7 @@ assignIndices (xmlNode * startNode, int startPos)
 	}
       nextSegment = curPos + 1;
     }
+  lou_log(LOG_INFO, "Finish assignIndices");
   return 1;
 }
 
@@ -4662,6 +4671,7 @@ utd_insert_translation (const char *table)
   int oldUdTranslatedLength = ud->translated_length;
   int k;
   int *setIndices;
+  lou_log(LOG_INFO, "Begin utd_insert_translation");
   if (table != currentTable)
     {
       for (k = strlen (table); k >= 0; k--)
@@ -4691,7 +4701,7 @@ utd_insert_translation (const char *table)
   ud->text_length = 0;
   if (!k)
     {
-      lou_logPrint ("Could not open table %s", table);
+      lou_log (LOG_ERROR, "Could not open table %s", table);
       table = NULL;
       return 0;
     }
@@ -4700,6 +4710,7 @@ utd_insert_translation (const char *table)
   else
     ud->translated_length = MAX_TRANS_LENGTH;
   assignIndices (startNode, oldUdTranslatedLength);
+  lou_log(LOG_INFO, "Finish utd_insert_translation");
   return 1;
 }
 
@@ -4959,6 +4970,7 @@ utd_doOrdinaryText ()
   int charactersWritten = 0;
   int newLineNeeded = 1;
   brlNode = firstBrlNode;
+  lou_log(LOG_INFO, "Do ordinary text");
   while (brlNode)
     {
       do
@@ -5027,7 +5039,6 @@ utd_doOrdinaryText ()
   brlNode = prevBrlNode;	/*for utd_finishStyle */
   return 1;
 }
-
 static int
 utd_makeBlankLines (int number, int beforeAfter)
 {
@@ -5073,6 +5084,7 @@ utd_doComputerCode ()
   int cellsToWrite = 0;
   int availableCells = 0;
   int k;
+  lou_log(LOG_INFO, "Doing computer code");
   while (translatedBuffer[charactersWritten] == CR)
     charactersWritten++;
   while (charactersWritten < translatedLength)
@@ -5097,8 +5109,7 @@ utd_doComputerCode ()
       if (translatedBuffer[charactersWritten + cellsToWrite] == CR)
 	translatedBuffer[charactersWritten + cellsToWrite] = SPACE;
       if (!insertTextFragment
-	  (&translatedBuffer[charactersWritten], cellsToWrite))
-	return 0;
+	  (&translatedBuffer[charactersWritten], cellsToWrite))	return 0;
       charactersWritten += cellsToWrite;
       if (translatedBuffer[charactersWritten] == SPACE)
 	charactersWritten++;
@@ -5128,6 +5139,7 @@ utd_doAlignColumns ()
   int k;
   unsigned int ch;
   int rowEnd = 0;
+  lou_log(LOG_INFO, "Aliging columns");
   for (bufPos = 0; bufPos < translatedLength; bufPos++)
     if (translatedBuffer[bufPos] == ESCAPE)
       break;
@@ -5338,8 +5350,8 @@ utd_editTrans ()
 	   ud->translated_buffer, &translatedLength, NULL, NULL, NULL,
 	   NULL, NULL, dotsIO))
 	{
-	  lou_logPrint
-	    ("edit table '%s' could not be found or contains errors",
+	  lou_log
+	    (LOG_FATAL, "edit table '%s' could not be found or contains errors",
 	     ud->edit_table_name);
 	  ud->edit_table_name = NULL;
 	  return 0;
@@ -5357,6 +5369,7 @@ static int
 utd_styleBody ()
 {
   sem_act action;
+  lou_log(LOG_INFO, "Begin styleBody");
   if (!utd_editTrans ())
     return 0;
   if (!ud->paragraphs)
@@ -5496,7 +5509,7 @@ output_xml (xmlDoc * doc)
       xmlDocDumpMemory (doc, &dumpLoc, &dumpSize);
       if (dumpSize > (CHARSIZE * ud->outlen))
 	{
-	  lou_logPrint ("output buffer too small");
+	  lou_log (LOG_ERROR, "output buffer too small");
 	  ud->outlen_so_far = 0;
 	}
       else
