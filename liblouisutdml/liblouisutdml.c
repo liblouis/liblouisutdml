@@ -58,7 +58,7 @@ libxml_errors (void *ctx ATTRIBUTE_UNUSED, const char *msg, ...)
   memset (buffer, 0, sizeof (buffer));
   vsnprintf (buffer, sizeof (buffer) - 4, msg, args);
   va_end (args);
-  lou_logPrint ("%s", buffer);
+  lou_log (LOG_ERROR, "%s", buffer);
 }
 
 static xmlParserCtxt *ctxt;
@@ -119,8 +119,8 @@ processXmlDocument (const char *inputDoc, int length)
 	    ud->doc = xmlParseFile (inputDoc);
 	  if (ud->doc == NULL)
 	    {
-	      lou_logPrint
-		("Document could not be processed; may be \
+	      lou_log
+		(LOG_FATAL, "Document could not be processed; may be \
 malformed or contain illegal characters");
 	      cleanupLibxml ();
 	      return 0;
@@ -131,20 +131,20 @@ malformed or contain illegal characters");
     ud->doc = xmlParseMemory (inputDoc, length);
   if (ud->doc == NULL)
     {
-      lou_logPrint ("Document could not be processed, probably  malformed");
+      lou_log (LOG_FATAL, "Document could not be processed, probably  malformed");
       cleanupLibxml ();
       return 0;
     }
   if (ud->doc->encoding == NULL)
     {
-      lou_logPrint ("Encoding, preferably UTF-8,  must be specified");
+      lou_log (LOG_ERROR, "Encoding, preferably UTF-8,  must be specified");
       cleanupLibxml ();
       return 0;
     }
   if (ud->format_for >= utd && ignore_case_comp (ud->doc->encoding,
 						 "UTF-8", 5) != 0)
     {
-      lou_logPrint ("UTDML requires UTF-8 encoding, not '%s'",
+      lou_log (LOG_ERROR, "UTDML requires UTF-8 encoding, not '%s'",
 		    ud->doc->encoding);
       cleanupLibxml ();
       return 0;
@@ -152,7 +152,7 @@ malformed or contain illegal characters");
   rootElement = xmlDocGetRootElement (ud->doc);
   if (rootElement == NULL)
     {
-      lou_logPrint ("Document is empty");
+      lou_log (LOG_ERROR, "Document is empty");
       cleanupLibxml ();
       return 0;
     }
@@ -174,7 +174,7 @@ malformed or contain illegal characters");
 	}
       if (!transcribe_document (rootElement))
 	{
-	  lou_logPrint ("Document could not be transcribed");
+	  lou_log (LOG_ERROR, "Document could not be transcribed");
 	  cleanupLibxml ();
 	  return 0;
 	}
@@ -235,7 +235,7 @@ lbu_translateString (const char *configFileList,
       inlen += strlen (ud->xml_header);
       if (!(xmlInbuf = malloc (inlen + 4)))
 	{
-	  lou_logPrint ("Not enough memory");
+	  lou_log (LOG_FATAL, "Not enough memory");
 	  return 0;
 	}
       strcpy (xmlInbuf, ud->xml_header);
@@ -270,7 +270,7 @@ int
     {
       if (!(ud->outFile = fopen (outFileName, "wb")))
 	{
-	  lou_logPrint ("Can't open output file %s.", outFileName);
+	  lou_log (LOG_ERROR, "Can't open output file %s.", outFileName);
 	  return 0;
 	}
     }
@@ -305,7 +305,7 @@ int
     {
       if (!(ud->inFile = fopen (inFileName, "rb")))
 	{
-	  lou_logPrint ("Can't open input file %s.", inFileName);
+	  lou_log (LOG_ERROR, "Can't open input file %s.", inFileName);
 	  return 0;
 	}
     }
@@ -315,7 +315,7 @@ int
     {
       if (!(ud->outFile = fopen (outFileName, "wb")))
 	{
-	  lou_logPrint ("Can't open output file %s.", outFileName);
+	  lou_log (LOG_ERROR, "Can't open output file %s.", outFileName);
 	  return 0;
 	}
     }
@@ -394,7 +394,7 @@ int
     {
       if (!(ud->inFile = fopen (inFileName, "rb")))
 	{
-	  lou_logPrint ("Can't open input file %s.", inFileName);
+	  lou_log (LOG_ERROR, "Can't open input file %s.", inFileName);
 	  return 0;
 	}
     }
@@ -404,7 +404,7 @@ int
     {
       if (!(ud->outFile = fopen (outFileName, "wb")))
 	{
-	  lou_logPrint ("Can't open output file %s.", outFileName);
+	  lou_log (LOG_ERROR, "Can't open output file %s.", outFileName);
 	  return 0;
 	}
     }
