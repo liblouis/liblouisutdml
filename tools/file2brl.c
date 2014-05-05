@@ -211,7 +211,7 @@ main (int argc, char **argv)
     {
       if (!(inputFile = fopen (inputFileName, "r")))
 	{
-	  lou_logPrint ("Can't open input file %s.\n", inputFileName);
+	  lou_log (LOG_FATAL, "Can't open input file %s.\n", inputFileName);
 	  exit (EXIT_FAILURE);
 	}
     }
@@ -222,7 +222,7 @@ main (int argc, char **argv)
   strcat (tempFileName, "file2brl.temp");
   if (!(tempFile = fopen (tempFileName, "w")))
     {
-      lou_logPrint ("Can't open temporary file.\n");
+      lou_log (LOG_FATAL, "Can't open temporary file.\n");
       exit (EXIT_FAILURE);
     }
   if (whichProc == 'p')
@@ -351,7 +351,7 @@ main (int argc, char **argv)
 	  exit (EXIT_FAILURE);
 	break;
       default:
-	lou_logPrint ("Program bug %c\n", whichProc);
+	lou_log (LOG_FATAL, "Program bug %c\n", whichProc);
 	break;
       }
   lbu_free ();
