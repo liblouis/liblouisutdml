@@ -135,7 +135,7 @@ mathTrans ()
       ud->text_length = 0;
       if (!k)
 	{
-	  lou_logPrint ("Could not open table %s", ud->mathexpr_table_name);
+	  lou_log (LOG_ERROR, "Could not open table %s", ud->mathexpr_table_name);
 	  ud->mathexpr_table_name = NULL;
 	  return 0;
 	}
