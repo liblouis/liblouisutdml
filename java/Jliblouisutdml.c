@@ -40,9 +40,10 @@ JNIEXPORT void JNICALL Java_org_liblouis_liblouisutdml_initialize
   (JNIEnv *env, jclass class, jstring dataPath, jstring
 writeablePath, jstring logfile)
 {
-  jbyte *dataPathX = NULL;
+  const jbyte *dataPathX = NULL;
   const jbyte *writeablePathX = NULL;
   const jbyte *logfileX = NULL;
+  char *tmpDataPath;
   dataPathX = (*env)->GetStringUTFChars (env, dataPath, NULL);
   if (dataPathX == NULL)
     goto release;
@@ -52,7 +53,9 @@ writeablePath, jstring logfile)
   logfileX = (*env)->GetStringUTFChars (env, logfile, NULL);
   if (logfileX == NULL)
     goto release;
-  lou_setDataPath (dataPathX);
+  tmpDataPath = strdup(dataPathX);
+  lou_setDataPath (tmpDataPath);
+  free(tmpDataPath);
   lbu_setWriteablePath (writeablePathX);
   read_configuration_file (NULL, logfileX, NULL, 0);
 release:
