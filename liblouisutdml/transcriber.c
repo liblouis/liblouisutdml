@@ -1089,7 +1089,10 @@ insert_text (xmlNode * node)
   if (style->emphasis)
     push_action (style->emphasis);
   if (ud->format_for == utd)
-    return utd_insert_text (node, length);
+    {
+      utd_insert_text (node, length);
+      return;
+    }
   switch (ud->stack[ud->top])
     {
     case notranslate:
@@ -4005,7 +4008,15 @@ makeDotsTextNode (xmlNode * node, const widechar * content, int length,
       if (kind)
 	memcpy (ud->outbuf1, content, length * CHARSIZE);
       else
-	lou_dotsToChar (currentTable, content, ud->outbuf1, length, 0);
+        {
+          widechar *tmpContent = malloc(sizeof(content));
+          if (tmpContent)
+            {
+              memcpy(tmpContent, content, sizeof(content));
+              lou_dotsToChar (currentTable, tmpContent, ud->outbuf1, length, 0);
+              free(tmpContent);
+            }
+        }
       inlen = 0;
       for (k = 0; k < length; k++)
 	ud->text_buffer[inlen++] = ud->outbuf1[k];
