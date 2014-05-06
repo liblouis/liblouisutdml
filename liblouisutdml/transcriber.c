@@ -1128,7 +1128,7 @@ getBraillePageString ()
   widechar translationBuffer[MAXNUMLEN];
   int translationLength;
   int translatedLength = MAXNUMLEN;
-  static widechar * pagenumTable;
+  static const char * pagenumTable;
   if (!ud->number_braille_pages)
     {
       pageNumberLength = 0;
