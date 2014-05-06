@@ -238,5 +238,6 @@ walkSubTree (xmlNode * node, int action)
 static int
 endSubTree ()
 {
+  return 1;
 }
 
