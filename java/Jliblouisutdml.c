@@ -1233,7 +1233,7 @@ static jobject logCBFunc;
 static void javaLogCallbackFunc(int level, const char *message)
 {
   JNIEnv *env;
-  jint rs = (*jvm)->AttachCurrentThread(jvm, &env, NULL);
+  jint rs = (*jvm)->AttachCurrentThread(jvm, (void **)&env, NULL);
   jstring jstrMsg;
   jclass cls;
   jmethodID mid;
