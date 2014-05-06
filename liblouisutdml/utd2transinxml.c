@@ -61,6 +61,7 @@ utd2transinxml (xmlNode * node)
 static int
 beginDocument ()
 {
+  return 1;
 }
 
 static int
