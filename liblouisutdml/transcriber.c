@@ -691,6 +691,7 @@ translate_possibly_prehyphenated (const char *table,
       if (indices != NULL)
 	for (k = 0; k < *outlen; k++)
 	  indices[k] = tmp_indices_1[tmp_indices_2[k]];
+      return 1;
     }
   else
     return lou_translate (table, inbuf, inlen, outbuf, outlen, typeform, NULL,
@@ -3643,7 +3644,7 @@ end_style ()
 #define EDOTS (B16 | B1 |  B5)
 #define RDOTS (B16 | B1 | B2 | B3 | B5)
 
-static char *currentTable;
+static const char *currentTable;
 static char currentTableName[MAXNAMELEN];
 static int firstPage;
 static int postponedStart;
