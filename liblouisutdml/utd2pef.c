@@ -53,11 +53,13 @@ utd2pef (xmlNode * node)
 static int
 beginDocument ()
 {
+  return 1;
 }
 
 static int
 finishDocument ()
 {
+  return 1;
 }
 
 static int
