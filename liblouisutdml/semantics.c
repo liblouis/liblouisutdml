@@ -1794,6 +1794,7 @@ executeMacro ()
 	end_style ();
       macro = NULL;
     }
+  return 1;
 }
 
 int

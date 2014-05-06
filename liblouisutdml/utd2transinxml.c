@@ -68,6 +68,7 @@ static int
 finishDocument ()
 {
   output_xml (ud->doc);
+  return 1;
 }
 
 static xmlNode *curBrlNode;
