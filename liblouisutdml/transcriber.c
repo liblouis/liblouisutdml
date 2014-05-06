@@ -4009,10 +4009,10 @@ makeDotsTextNode (xmlNode * node, const widechar * content, int length,
 	memcpy (ud->outbuf1, content, length * CHARSIZE);
       else
         {
-          widechar *tmpContent = malloc(sizeof(content));
+          widechar *tmpContent = malloc(sizeof(widechar) * length);
           if (tmpContent)
             {
-              memcpy(tmpContent, content, sizeof(content));
+              memcpy(tmpContent, content, sizeof(widechar) * length);
               lou_dotsToChar (currentTable, tmpContent, ud->outbuf1, length, 0);
               free(tmpContent);
             }
