@@ -4329,6 +4329,7 @@ addPrefixes (ShortBrlOnlyStrings * sbstr, widechar dots, widechar
 	break;
     }
   sbstr->prefixedOrigTextLength = k;
+  return 1;
 }
 
 static int
