@@ -221,14 +221,6 @@ JNIEXPORT void JNICALL Java_org_liblouis_liblouisutdml_setLogFile
 
 /*
  * Class:     org_liblouis_liblouisutdml
- * Method:    logMessage
- * Signature: (Ljava/lang/String;)V
- */
-JNIEXPORT void JNICALL Java_org_liblouis_liblouisutdml_logMessage
-  (JNIEnv *, jobject, jstring);
-
-/*
- * Class:     org_liblouis_liblouisutdml
  * Method:    logEnd
  * Signature: ()V
  */
