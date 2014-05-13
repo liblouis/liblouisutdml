@@ -264,8 +264,6 @@ logFileName, int mode);
 
 public native void setLogFile (String fileName);
 
-public native void logMessage (String message);
-
 public native void logEnd();
 
 public native void registerLogCallback(LogCallback cb);
