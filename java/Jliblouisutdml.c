@@ -1204,8 +1204,6 @@ JNIEXPORT void JNICALL Java_org_liblouis_liblouisutdml_setLogFile
   (*env)->ReleaseStringUTFChars (env, logFile, logf);
 }
 
-}
-
 /*
  * Class:     org_liblouis_liblouisutdml
  * Method:    logEnd
