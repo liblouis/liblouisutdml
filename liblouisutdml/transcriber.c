@@ -2966,6 +2966,7 @@ int
 write_paragraph (sem_act action, xmlNode * node)
 {
   StyleType *holdStyle;
+  lou_log(LOG_INFO, "Begin write_paragraph");
   if (!((ud->text_length > 0 || ud->translated_length > 0) &&
 	ud->style_top >= 0))
     return 1;
@@ -3004,6 +3005,7 @@ write_paragraph (sem_act action, xmlNode * node)
   styleBody ();
   end_style ();
   ud->needs_editing = 0;
+  lou_log(LOG_INFO, "Finish write_paragraph");
   return 1;
 }
 
@@ -3547,7 +3549,7 @@ do_linespacing (xmlNode * node)
 int
 start_style (StyleType * curStyle, xmlNode * node)
 {
-  lou_log(LOG_INFO, "Starting style");
+  lou_log(LOG_INFO, "Begin start_style");
   if (curStyle == NULL)
     curStyle = lookup_style ("para");
   if (prevStyle == NULL)
@@ -3597,12 +3599,14 @@ start_style (StyleType * curStyle, xmlNode * node)
     return 1;
   startStyle ();
   styleSpec->status = startBody;
+  lou_log(LOG_INFO, "Finish start_style");
   return 1;
 }
 
 int
 end_style ()
 {
+  lou_log(LOG_INFO, "Begin end_style");
   styleSpec = &ud->style_stack[ud->style_top];
   style = styleSpec->style;
   ud->brl_page_num_format = styleSpec->curBrlNumFormat;
@@ -3632,6 +3636,7 @@ end_style ()
   ud->style_right_margin = styleSpec->curRightMargin;
   ud->style_first_line_indent = styleSpec->curFirstLineIndent;
   ud->needs_editing = 0;
+  lou_log(LOG_INFO, "Finish end_style");
   return 1;
 }
 
@@ -4983,9 +4988,10 @@ utd_doOrdinaryText ()
   int charactersWritten = 0;
   int newLineNeeded = 1;
   brlNode = firstBrlNode;
-  lou_log(LOG_INFO, "Do ordinary text");
+  lou_log(LOG_INFO, "Begin utd_doOrdinaryText");
   while (brlNode)
     {
+      lou_log(LOG_DEBUG, "Finding brlNode content");
       do
 	{
 	  if (newLineNeeded)
@@ -5050,6 +5056,7 @@ utd_doOrdinaryText ()
       prevBrlNode->_private = NULL;
     }
   brlNode = prevBrlNode;	/*for utd_finishStyle */
+  lou_log(LOG_INFO, "Finish utd_doOrdinaryText");
   return 1;
 }
 static int
@@ -5382,7 +5389,7 @@ static int
 utd_styleBody ()
 {
   sem_act action;
-  lou_log(LOG_INFO, "Begin styleBody");
+  lou_log(LOG_INFO, "Begin utd_styleBody");
   if (!utd_editTrans ())
     return 0;
   if (!ud->paragraphs)
@@ -5437,6 +5444,7 @@ utd_styleBody ()
   ud->sync_text_length = 0;
   ud->in_sync = ud->hyphenate;
   firstBrlNode = NULL;
+  lou_log(LOG_INFO, "Finish utd_styleBody");
   return 1;
 }
 
