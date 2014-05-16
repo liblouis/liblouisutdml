@@ -5452,8 +5452,8 @@ utd_styleBody ()
 static int
 utd_finishStyle ()
 {
-  lou_log(LOG_INFO, "Begin utd_finishStyle");
   PageStatus curPageStatus = checkPageStatus ();
+  lou_log(LOG_INFO, "Begin utd_finishStyle");
   if (!ud->paragraphs)
     return 1;
   if (style->newpage_after)
