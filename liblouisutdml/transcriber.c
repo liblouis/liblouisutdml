@@ -4004,7 +4004,7 @@ makeDotsTextNode (xmlNode * node, const widechar * content, int length,
 {
   xmlNode *textNode;
   int inlen, outlen;
-  lou_log(LOG_INFO, "Making dots node");
+  lou_log(LOG_INFO, "Begin makeDotsTextNode");
   if (length <= 0)
     return 1;
   if (ud->mode & notUC)
@@ -4044,7 +4044,7 @@ makeDotsTextNode (xmlNode * node, const widechar * content, int length,
   lou_log(LOG_INFO, "brlContent=%s", brlContent);
   textNode = xmlNewText (brlContent);
   xmlAddChild (node, textNode);
-  lou_log(LOG_INFO, "Finished making dots node");
+  lou_log(LOG_INFO, "Finished makeDotsTextNode");
   return 1;
 }
 
@@ -5159,7 +5159,7 @@ utd_doAlignColumns ()
   int k;
   unsigned int ch;
   int rowEnd = 0;
-  lou_log(LOG_INFO, "Aliging columns");
+  lou_log(LOG_INFO, "Begin utd_doAlignColumns");
   for (bufPos = 0; bufPos < translatedLength; bufPos++)
     if (translatedBuffer[bufPos] == ESCAPE)
       break;
@@ -5321,6 +5321,7 @@ utd_doAlignColumns ()
 	  utd_finishLine (0, cellsToWrite);
 	}
     }
+  lou_log(LOG_INFO, "Finish utd_doAlignColumns");
   return 1;
 }
 
@@ -5451,6 +5452,7 @@ utd_styleBody ()
 static int
 utd_finishStyle ()
 {
+  lou_log(LOG_INFO, "Begin utd_finishStyle");
   PageStatus curPageStatus = checkPageStatus ();
   if (!ud->paragraphs)
     return 1;
@@ -5467,6 +5469,7 @@ utd_finishStyle ()
 	}
     }
   brlNode = firstBrlNode = NULL;
+  lou_log(LOG_INFO, "Finish utd_finishStyle");
   return 1;
 }
 
