@@ -44,10 +44,12 @@ transcribe_math (xmlNode * node, int action)
   StyleType *style;
   xmlNode *child;
   int branchCount = 0;
+  lou_log(LOG_INFO, "Begin transcribe_math");
   if (node == NULL)
     return 0;
   if (action == 0)
     {
+      lou_log(LOG_DEBUG, "Math node action==0");
       insert_translation (ud->main_braille_table);
       curLink = node;
       if (ud->format_for == utd)
@@ -56,13 +58,18 @@ transcribe_math (xmlNode * node, int action)
         }
     }
   else
-    push_sem_stack (node);
+    {
+      lou_log(LOG_DEBUG, "Math node action!=0");
+      push_sem_stack (node);
+    }
   switch (ud->stack[ud->top])
     {
     case skip:
+      lou_log(LOG_DEBUG, "Math node skip");
       pop_sem_stack ();
       return 1;
     case reverse:
+      lou_log(LOG_DEBUG, "Math node reverse");
       do_reverse (node);
       break;
     default:
@@ -70,8 +77,9 @@ transcribe_math (xmlNode * node, int action)
     }
   if ((style = is_style (node)) != NULL)
     {
-    mathTrans ();
-    start_style (style, node);
+      lou_log(LOG_DEBUG, "Math node start style");
+      mathTrans ();
+      start_style (style, node);
     }
   child = node->children;
   while (child)
@@ -98,12 +106,14 @@ transcribe_math (xmlNode * node, int action)
   insert_code (node, -1);
   if (style)
     {
+      lou_log(LOG_DEBUG, "Math node end style");
       mathTrans ();
       end_style ();
     }
   pop_sem_stack ();
   if (action == 0)
     mathTrans ();
+  lou_log(LOG_INFO, "Finish transcribe_math");
   return 1;
 }
 
