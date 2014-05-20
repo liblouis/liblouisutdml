@@ -97,10 +97,10 @@ processXmlDocument (const char *inputDoc, int length)
   if (!libxml2_initialized)
     {
       libxml2_initialized = 1;
-      LIBXML_TEST_VERSION xmlKeepBlanksDefault (0);
+//      LIBXML_TEST_VERSION xmlKeepBlanksDefault (0);
       xmlSubstituteEntitiesDefault (1);
       xmlThrDefIndentTreeOutput (1);
-      xmlThrDefKeepBlanksDefaultValue (0);
+//      xmlThrDefKeepBlanksDefaultValue (0);
       xmlThrDefLineNumbersDefaultValue (1);
     }
   ud->doc = NULL;
