@@ -1081,14 +1081,14 @@ insert_text (xmlNode * node)
 {
   int length = strlen ((char *) node->content);
   int k;
-  int stripSpace = 0;
+  // int stripSpace = 0;
   lou_log(LOG_INFO, "Begin insert_text: node->content=%s", node->content);
-  for (k = length; k > 0 && node->content[k - 1] <= 32; k--)
+  for (k = length; k > 0 && node->content[k - 1] <= 32; k--);
     // We want to track if the node only contains space 0x20 characters
-    if (node->content[k - 1] != 32)
-      stripSpace = 1;
-  if (stripSpace == 0)
-    k = length; // We want to keep the spaces
+    // if (node->content[k - 1] != 32)
+    //   stripSpace = 1;
+  // if (stripSpace == 0)
+  //   k = length; // We want to keep the spaces
   if (k <= 0)
     return;
   if (k < length)
