@@ -12,5 +12,9 @@ EXPORTS
 	lbu_dotsToChar
 	lbu_checkTable
 	lbu_setWriteablePath
+	lbu_registerLogCallback
+	lbu_setLogLevel
+	lbu_logFile
+ lbu_logEnd
 	lbu_free
 
