@@ -222,7 +222,7 @@ transcribe_paragraph (xmlNode * node, int action)
       ud->main_braille_table = ud->contracted_table_name;
       if (!lou_getTable (ud->main_braille_table))
 	{
-	  lou_log (LOG_ERROR, "Cannot open main table %s", ud->main_braille_table);
+	  logMessage (LOG_ERROR, "Cannot open main table %s", ud->main_braille_table);
 	  return 0;
 	}
       if (node->children == NULL)

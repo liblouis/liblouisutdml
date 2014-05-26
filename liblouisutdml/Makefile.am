@@ -24,32 +24,33 @@ liblouisutdml_la_LDFLAGS =	\
 	-no-undefined \
 	$(BASE_DEPENDENCIES_LIBS)
 
-liblouisutdml_la_SOURCES =			\
-	change_table.c				\
-	makeContents.c				\
-	examine_document.c			\
-	liblouisutdml.c				\
-	liblouisutdml.h				\
-	louisutdml.h				\
-	paths.c					\
-	readconfig.c				\
-	semantics.c				\
-	sem_enum.h				\
-	sem_names.h				\
-	transcribe_cdataSection.c		\
-	transcribe_chemistry.c			\
-	transcribe_computerCode.c		\
-	transcribe_document.c			\
-	transcribe_graphic.c			\
-	transcribe_math.c			\
-	transcribe_music.c			\
-	transcribe_paragraph.c			\
-	convert_utd.c				\
-	utd2transinxml.c			\
-	utd2dsbible.c				\
-	utd2brf.c				\
-	utd2pef.c				\
-	utd2volumes.c				\
+liblouisutdml_la_SOURCES = \
+	change_table.c \
+	makeContents.c \
+	examine_document.c \
+	liblouisutdml.c \
+	liblouisutdml.h \
+	logging.c \
+	louisutdml.h \
+	paths.c \
+	readconfig.c \
+	semantics.c \
+	sem_enum.h \
+	sem_names.h \
+	transcribe_cdataSection.c \
+	transcribe_chemistry.c \
+	transcribe_computerCode.c \
+	transcribe_document.c \
+	transcribe_graphic.c \
+	transcribe_math.c \
+	transcribe_music.c \
+	transcribe_paragraph.c \
+	convert_utd.c \
+	utd2transinxml.c \
+	utd2dsbible.c \
+	utd2brf.c \
+	utd2pef.c \
+	utd2volumes.c \
 	transcriber.c
 
 if JAVA_BINDINGS

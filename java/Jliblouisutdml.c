@@ -752,7 +752,7 @@ JNIEXPORT jboolean JNICALL Java_org_liblouis_liblouisutdml_file2brl
 		  k++;
 		  break;
 		default:
-		  lou_logPrint ("invalid argument '%s'", curArg);
+		  logMessage (LOG_ERROR, "invalid argument '%s'", curArg);
 		  return JNI_FALSE;
 		}
 	      continue;
@@ -772,7 +772,7 @@ JNIEXPORT jboolean JNICALL Java_org_liblouis_liblouisutdml_file2brl
 		}
 	      else
 		{
-		  lou_logPrint ("extra operand: '%s'\n",
+		  logMessage (LOG_ERROR, "extra operand: '%s'\n",
 				getArg (env, obj, args, k + 2));
 		  return JNI_FALSE;
 		}
@@ -799,7 +799,7 @@ configSettings, 0))
     {
       if (!(inputFile = fopen (inputFileName, "rb")))
 	{
-	  lou_logPrint ("Can't open input file '%s'.\n", inputFileName);
+	  logMessage (LOG_ERROR, "Can't open input file '%s'.\n", inputFileName);
 	  lou_logEnd ();
 	  return JNI_FALSE;
 	}
@@ -811,7 +811,7 @@ configSettings, 0))
   strcat (tempFileName, "file2brl.temp");
   if (!(tempFile = fopen (tempFileName, "wb")))
     {
-      lou_logPrint ("Can't open temporary file.\n");
+      logMessage (LOG_ERROR, "Can't open temporary file.\n");
       lou_logEnd ();
       return JNI_FALSE;
     }
@@ -929,7 +929,7 @@ configSettings, 0))
 			   NULL, mode);
 	break;
       default:
-	lou_logPrint ("Program bug %c\n", whichProc);
+	logMessage (LOG_ERROR, "Program bug %c\n", whichProc);
 	break;
       }
   if (configSettings != NULL)

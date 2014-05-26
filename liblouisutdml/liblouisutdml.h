@@ -157,6 +157,14 @@ found logFile will be empty. */
 char *EXPORT_CALL lbu_setWriteablePath (const char *path);
 char *EXPORT_CALL lbu_getWriteablePath ();
 
+void EXPORT_CALL lbu_registerLogCallback(logcallback callback);
+
+void EXPORT_CALL lbu_setLogLevel(logLevels level);
+
+void EXPORT_CALL lbu_logFile(const char *fileName);
+
+void EXPORT_CALL lbu_logEnd();
+
 /* This function should be called at the end of the application to free
 all memory allocated by liblouisutdml or liblouis. */
 void EXPORT_CALL lbu_free (void);
