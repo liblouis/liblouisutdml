@@ -90,9 +90,9 @@ configureError (FileInfo * nested, char *format, ...)
 #endif
   va_end (arguments);
   if (nested)
-    lou_log (LOG_ERROR, "%s:%d: %s", nested->fileName, nested->lineNumber, buffer);
+    logMessage (LOG_ERROR, "%s:%d: %s", nested->fileName, nested->lineNumber, buffer);
   else
-    lou_log (LOG_ERROR, "%s", buffer);
+    logMessage (LOG_ERROR, "%s", buffer);
   errorCount++;
 }
 
@@ -1448,7 +1448,7 @@ read_configuration_file (const char *configFileList, const char
     {
       if (ud->page_right <= 0 || ud->page_bottom <= 0)
 	{
-	  lou_log
+	  logMessage
 	    (LOG_ERROR, "For UTDML paper witdth and paper height must be specified.");
 	  lbu_free ();
 	  return 0;
