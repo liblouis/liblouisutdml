@@ -1200,7 +1200,7 @@ JNIEXPORT void JNICALL Java_org_liblouis_liblouisutdml_setLogFile
   logf = (*env)->GetStringUTFChars (env, logFile, NULL);
   if (logf == NULL)
     return;
-  lou_logFile (logf);
+  lbu_logFile (logf);
   (*env)->ReleaseStringUTFChars (env, logFile, logf);
 }
 
@@ -1212,7 +1212,7 @@ JNIEXPORT void JNICALL Java_org_liblouis_liblouisutdml_setLogFile
 JNIEXPORT void JNICALL Java_org_liblouis_liblouisutdml_logEnd
   (JNIEnv * env, jobject this)
 {
-  lou_logEnd ();
+  lbu_logEnd ();
 }
 
 static JavaVM *jvm;
@@ -1266,11 +1266,13 @@ JNIEXPORT void JNICALL Java_org_liblouis_liblouisutdml_registerLogCallback
   }
   if (logCBFunc != NULL)
   {
+    lbu_registerLogCallback(javaLogCallbackFunc);
     lou_registerLogCallback(javaLogCallbackFunc);
   }
   else
   {
-    lou_registerLogCallback(0);
+    lbu_registerLogCallback(NULL);
+    lou_registerLogCallback(NULL);
   }
 }
 
@@ -1282,5 +1284,5 @@ JNIEXPORT void JNICALL Java_org_liblouis_liblouisutdml_registerLogCallback
 JNIEXPORT void JNICALL Java_org_liblouis_liblouisutdml_setLogLevel
   (JNIEnv * env, jobject this, jint level)
 {
-  lou_setLogLevel(level);
+  lbu_setLogLevel(level);
 }
