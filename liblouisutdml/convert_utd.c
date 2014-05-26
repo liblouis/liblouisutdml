@@ -57,7 +57,7 @@ convert_utd ()
   int haveSemanticFile;
   if (rootElement == NULL)
     {
-      lou_log (LOG_ERROR, "Document is empty");
+      logMessage (LOG_ERROR, "Document is empty");
       return 0;
     }
   clean_semantic_table ();
@@ -103,7 +103,7 @@ pass2_conv ()
   xmlNode *child;
   if (rootElement == NULL)
     {
-      lou_log (LOG_ERROR, "Document is empty");
+      logMessage (LOG_ERROR, "Document is empty");
       return 0;
     }
   clean_semantic_table ();

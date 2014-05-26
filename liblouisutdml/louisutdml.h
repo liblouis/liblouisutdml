@@ -413,4 +413,8 @@ unsigned char *get_sem_name (xmlNode *node);
 void set_runninghead_string (widechar *chars, int length);
 void set_footer_string (widechar *chars, int length);
 void do_utdxxxximg (xmlNode *node);
+
+void logWidecharBuf(logLevels level, const char *msg, const widechar *wbuf, int wlen);
+
+void logMessage(logLevels level, const char *format, ...);
 #endif /*louisutdml_h */

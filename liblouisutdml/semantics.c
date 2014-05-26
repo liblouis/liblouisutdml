@@ -104,9 +104,9 @@ semanticError (FileInfo * nested, char *format, ...)
 #endif
   va_end (arguments);
   if (nested)
-    lou_log (LOG_ERROR, "%s:%d: %s", nested->fileName, nested->lineNumber, buffer);
+    logMessage (LOG_ERROR, "%s:%d: %s", nested->fileName, nested->lineNumber, buffer);
   else
-    lou_log (LOG_ERROR, "%s", buffer);
+    logMessage (LOG_ERROR, "%s", buffer);
   errorCount++;
 }
 
@@ -1410,10 +1410,10 @@ append_new_entries ()
     }
   fclose (semOut);
   if (haveSemanticFile)
-    lou_log (LOG_WARN, "%d new entries appended to '%s%s'.", numEntries,
+    logMessage (LOG_WARN, "%d new entries appended to '%s%s'.", numEntries,
 		  filePrefix, firstFileName);
   else
-    lou_log (LOG_WARN, "%d entries written to new semantic-action file '%s%s'.",
+    logMessage (LOG_WARN, "%d entries written to new semantic-action file '%s%s'.",
 		  numEntries, filePrefix, firstFileName);
   moreEntries = 0;
 }
@@ -1508,7 +1508,7 @@ macroError (char *format, ...)
   vsnprintf (buffer, sizeof (buffer), format, arguments);
 #endif
   va_end (arguments);
-  lou_log (LOG_ERROR, "Macro %s: %s", macroName, buffer);
+  logMessage (LOG_ERROR, "Macro %s: %s", macroName, buffer);
 }
 
 char *
@@ -1616,7 +1616,7 @@ doSemanticActions ()
       ud->main_braille_table = ud->contracted_table_name;
       if (!lou_getTable (ud->main_braille_table))
 	{
-	  lou_log (LOG_ERROR, "Cannot open main table %s", ud->main_braille_table);
+	  logMessage (LOG_ERROR, "Cannot open main table %s", ud->main_braille_table);
 	  return 0;
 	}
       break;
