@@ -204,9 +204,11 @@ Java_org_liblouis_liblouisutdml_backTranslateString (JNIEnv * env,
   if (inbufX == NULL)
     goto release;
   inlen = (*env)->GetArrayLength (env, inbuf);
+  logMessage(LOG_DEBUG, "inlen=%d", inlen);
   if (outbuf == NULL)
     goto release;
   (*env)->GetIntArrayRegion (env, outlen, 0, 1, &outlenX);
+  logMessage(LOG_DEBUG, "outlenX=%d", outlenX);
   if (outlenX == EMPTY)
     goto release;
   if (logFile != NULL)
@@ -228,14 +230,17 @@ Java_org_liblouis_liblouisutdml_backTranslateString (JNIEnv * env,
     {
       int wcLength;
       int utf8Length;
+      logMessage(LOG_DEBUG, "After backTranslate outlenX=%d", outlenX);
       if (ud->format_for == utd)
 	{
+          logMessage(LOG_DEBUG, "Preparing to return UTD");
 	  (*env)->SetByteArrayRegion (env, outbuf, 0, outlenX,
 				      (jbyte *) outbufX);
 	  utf8Length = outlenX;
 	}
       else
 	{
+          logMessage(LOG_DEBUG, "Preparing to return non-UTD");
 	  wcLength = outlenX;
 	  utf8Length = outlenX;
           outbufY = (jbyte *)malloc(utf8Length);

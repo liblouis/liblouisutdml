@@ -3053,6 +3053,7 @@ makeParagraph ()
   int charactersWritten = 0;
   int pieceStart;
   int k;
+  logMessage(LOG_INFO, "Begin makeParagraph");
   while (ud->text_length > 0 && ud->text_buffer[ud->text_length - 1] <=
 	 32 && ud->text_buffer[ud->text_length - 1] != escapeChar)
     ud->text_length--;
@@ -3072,6 +3073,7 @@ makeParagraph ()
       translationLength++;
     }
   translatedLength = MAX_TRANS_LENGTH;
+  logMessage(LOG_DEBUG, "About to perform back translation");
   if (!lou_backTranslateString (ud->main_braille_table,
 				ud->text_buffer, &translationLength,
 				&ud->translated_buffer[0],
@@ -3171,6 +3173,7 @@ makeParagraph ()
     return 0;
   writeOutbuf ();
   ud->text_length = 0;
+  logMessage(LOG_INFO, "Finish makeParagraph");
   return 1;
 }
 
@@ -3245,6 +3248,7 @@ back_translate_braille_string ()
   int newPage = 0;
   char *htmlStart = "<html><head><title>No Title</title></head><body>";
   char *htmlEnd = "</body></html>";
+  logMessage(LOG_INFO, "Begin back_translate_braille_string");
   if (ud->format_for == utd)
     return utd_back_translate_braille_string ();
   if (!start_document ())
@@ -3315,6 +3319,7 @@ back_translate_braille_string ()
       writeOutbuf ();
       ud->output_encoding = ascii8;
     }
+  logMessage(LOG_INFO, "Finish back_translate_braille_string");
   return 1;
 }
 
@@ -4144,6 +4149,7 @@ utd_back_translate_braille_string ()
   int pch = 0;
   int leadingBlanks = 0;
   int k;
+  logMessage(LOG_INFO, "Begin utd_back_trranslate_braille_string");
   ud->main_braille_table = ud->contracted_table_name;
   if (!lou_getTable (ud->main_braille_table))
     return 0;
@@ -4183,6 +4189,7 @@ utd_back_translate_braille_string ()
   ud->in_sync = ud->hyphenate;
   utd_finish ();
   freeDaisyDoc ();
+  logMessage(LOG_INFO, "Finish utd_back_translate_braille_string");
   return 1;
 }
 
