@@ -347,7 +347,7 @@ lbu_backTranslateString (const char *configFileList,
 			 *settingsString, unsigned int mode)
 {
   int k;
-  logMessage(LOG_INFO, "Begin lbu_backTranslateString");
+  logMessage(LOG_INFO, "Begin lbu_backTranslateString: inbuf=%s", inbuf);
   if (!read_configuration_file
       (configFileList, logFileName, settingsString, mode))
     return 0;
@@ -359,7 +359,10 @@ lbu_backTranslateString (const char *configFileList,
   ud->outlen = *outlen;
   ud->inFile = ud->outFile = NULL;
   if (ud->format_for == utd)
+  {
+    logMessage(LOG_DEBUG, "ud->format_for=utd");
     k = utd_back_translate_braille_string ();
+  }
   else
     k = back_translate_braille_string ();
   if (!k)
