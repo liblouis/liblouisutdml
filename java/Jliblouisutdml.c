@@ -238,8 +238,10 @@ Java_org_liblouis_liblouisutdml_backTranslateString (JNIEnv * env,
 	{
 	  wcLength = outlenX;
 	  utf8Length = outlenX;
+          outbufY = (jbyte *)malloc(utf8Length);
 	  wc_string_to_utf8 (outbufX, &wcLength, outbufY, &utf8Length);
 	  (*env)->SetByteArrayRegion (env, outbuf, 0, utf8Length, outbufY);
+          free(outbufY);
 	}
       (*env)->SetIntArrayRegion (env, outlen, 0, 1, &utf8Length);
     }
@@ -249,7 +251,7 @@ release:
   if (inbufX != NULL)
     (*env)->ReleaseByteArrayElements (env, inbuf, inbufX, 0);
   if (outbufX != NULL)
-    free (inbufX);
+    free (outbufX);
   if (logf != NULL)
     (*env)->ReleaseStringUTFChars (env, logFile, logf);
   if (settings != NULL)
