@@ -417,6 +417,9 @@ wc_string_to_utf8 (const widechar * inStr, int *inSize, unsigned char *outstr,
   int numBytes;
   unsigned int utf32;
   int k;
+  logMessage(LOG_INFO, "Begin wc_string_to_utf8: inSize=%d, outSize=%d", *inSize, *outSize);
+  logWidecharBuf(LOG_INFO, "inStr=", inStr, *inSize);
+  logMessage(LOG_DEBUG, "inStr=%d, outstr=%d", inStr, outstr);
   while (in < *inSize)
     {
       utf32 = inStr[in++];
@@ -443,15 +446,24 @@ wc_string_to_utf8 (const widechar * inStr, int *inSize, unsigned char *outstr,
 	    {
 	      *inSize = in;
 	      *outSize = out;
+              logMessage(LOG_INFO, "Finish wc_string_to_utf8 due to not enough memory in outstr");
 	      return 1;
 	    }
 	}
+      logMessage(LOG_DEBUG, "Adding UTF8 character to output");
       for (k = 0; k < utf8Length; k++)
-	outstr[out++] = utf8Str[k];
+      {
+        logMessage(LOG_DEBUG, "out=%d, k=%d, utf8Str[%d]=%c", out, k, k, utf8Str[k]);
+        outstr[out++] = utf8Str[k];
+      }
+      logMessage(LOG_DEBUG, "Moving to next character");
     }
-  outstr[out++] = 0;
+  // We normally want to null terminate the string but should not if it will not fit in allocated memory
+  if (out < *outSize)
+    outstr[out++] = 0;
   *inSize = in;
   *outSize = out;
+  logMessage(LOG_INFO, "Finish wc_string_to_utf8: outstr=%s, outSize=%d", outstr, *outSize);
   return 1;
 }
 
