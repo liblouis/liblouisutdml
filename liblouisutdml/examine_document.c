@@ -41,7 +41,7 @@ int
 examine_document (xmlNode * node)
 {
 /*Examine the parse tree, add semantic attributes and set indicators.*/
-  logMessage(LOG_INFO, "Begin examine_document: node->name=%s", node->name);
+  logMessage(LOG_INFO, "Begin examine_document: node->name=%s", (char *)node->name);
   xmlNode *child;
   if (node == NULL)
     return 0;
