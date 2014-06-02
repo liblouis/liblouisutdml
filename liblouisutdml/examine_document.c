@@ -41,6 +41,7 @@ int
 examine_document (xmlNode * node)
 {
 /*Examine the parse tree, add semantic attributes and set indicators.*/
+  logMessage(LOG_INFO, "Begin examine_document: node->name=%s", node->name);
   xmlNode *child;
   if (node == NULL)
     return 0;
@@ -111,6 +112,7 @@ static void
 examText (xmlNode * node)
 /*We may want to examine text content in the future*/
 {
+  logMessage(LOG_INFO, "Begin examText: node->content=%s", node->content);
   switch (ud->stack[ud->top])
     {
     case pagenum:
