@@ -3958,6 +3958,7 @@ backTranslateBlock (xmlNode * curBlock, xmlNode * curBrl)
   int goodTrans;
   int pos;
   int k, kk;
+  logMessage(LOG_INFO, "Begin backTranslateBlock");
   if (curBlock == NULL || curBrl == NULL)
     return 1;
   ud->text_length = 0;
@@ -4019,6 +4020,7 @@ backTranslateBlock (xmlNode * curBlock, xmlNode * curBrl)
       utilStringBuf[--kk] = 0;
       xmlNewProp (addBrl, (xmlChar *) "index", (xmlChar *) utilStringBuf);
     }
+  logMessage(LOG_INFO, "Finish backTranslateBlock");
   return 1;
 }
 
@@ -4080,6 +4082,7 @@ formatBackBlock ()
   xmlNode *newBlock;
   xmlNode *curBrl;
   int k;
+  logMessage(LOG_INFO, "Begin formatBackBlock");
   if (ud->translated_length <= 0)
     return 1;
   newBlock = xmlNewNode (NULL, (xmlChar *) "p");
@@ -4088,6 +4091,7 @@ formatBackBlock ()
   ud->translated_length = ud->sync_text_length = 0;
   ud->in_sync = 1;
   backTranslateBlock (xmlAddChild (addBlock, newBlock), curBrl);
+  logMessage(LOG_INFO, "Finish formatBackBlock");
   return 1;
 }
 
@@ -4260,16 +4264,30 @@ static PageStatus
 checkPageStatus ()
 {
   int remaining;
+  logMessage(LOG_INFO, "Begin checkPageStatus");
   if (ud->vert_line_pos == ud->page_top || ud->lines_on_page == 0)
+  {
+    logMessage(LOG_INFO, "Finish checkPageStatus: return=topOfPage");
     return topOfPage;
+  }
   remaining = ud->page_bottom - ud->vert_line_pos;
   if (remaining < ud->normal_line || ud->lines_on_page >= ud->lines_per_page)
+  {
+    logMessage(LOG_INFO, "Finish checkPageStatus: return=bottomOfPage");
     return bottomOfPage;
+  }
   if ((ud->lines_on_page + 1) >= ud->lines_per_page || remaining ==
       ud->normal_line)
+  {
+    logMessage(LOG_INFO, "Finish checkPageStatus: return=lastLine");
     return lastLine;
+  }
   if (remaining > (2 * ud->normal_line) && remaining < (3 * ud->normal_line))
+  {
+    logMessage(LOG_INFO, "Finish checkPageStatus: return=nearBottom");
     return nearBottom;
+  }
+  logMessage(LOG_INFO, "Finish checkPageStatus: return=midPage");
   return midPage;
 }
 
@@ -4633,10 +4651,12 @@ makeNewpage (xmlNode * parent)
 {
   char number[MAXNUMLEN];
   xmlNode *newNode = xmlNewNode (NULL, (xmlChar *) "newpage");
+  logMessage(LOG_INFO, "Begin makeNewpage");
   sprintf (number, "%d", ud->braille_page_number);
   xmlNewProp (newNode, (xmlChar *) "brlnumber", (xmlChar *) number);
   newpageNode = xmlAddChild (parent, newNode);
   ud->lines_on_page = 0;
+  logMessage(LOG_INFO, "Finish makeNewpage");
   return 1;
 }
 
@@ -4877,6 +4897,7 @@ utd_startLine ()
 {
   PageStatus curPageStatus;
   int availableCells = 0;
+  logMessage(LOG_INFO, "Begin utd_startLine");
   if (firstPage)
     {
       firstPage = 0;
@@ -4917,6 +4938,7 @@ utd_startLine ()
       else
 	availableCells = ud->cells_per_line;
     }
+  logMessage(LOG_INFO, "Begin utd_startLine");
   return availableCells;
 }
 
@@ -4929,6 +4951,7 @@ utd_finishLine (int leadingBlanks, int length)
   int k;
   int leaveBlank;
   int horizLinePos = ud->page_left + leadingBlanks * ud->cell_width;
+  logMessage(LOG_INFO, "Begin utd_finishLine");
   cellsOnLine = leadingBlanks + length;
   for (leaveBlank = -1; leaveBlank < ud->line_spacing; leaveBlank++)
     {
@@ -4999,6 +5022,7 @@ utd_finishLine (int leadingBlanks, int length)
       ud->vert_line_pos = ud->page_top;
       makeNewpage (brlNode);
     }
+  logMessage(LOG_INFO, "Finish utd_finishLine");
   return 1;
 }
 
@@ -5112,6 +5136,7 @@ static int
 utd_fillPage ()
 {
   PageStatus curPageStatus = checkPageStatus ();
+  logMessage(LOG_INFO, "Begin utd_fillPage");
   if (curPageStatus == topOfPage)
     {
       utd_startLine ();
@@ -5120,6 +5145,7 @@ utd_fillPage ()
   ud->vert_line_pos = ud->page_bottom - ud->normal_line;
   utd_startLine ();
   utd_finishLine (0, 0);
+  logMessage(LOG_INFO, "Finish utd_fillPage");
   return 1;
 }
 
@@ -5576,6 +5602,7 @@ static int
 utd_finish ()
 {
   xmlNode *newNode;
+  logMessage(LOG_INFO, "Begin utd_finish");
   if (ud->paragraphs)
     {
       newNode = xmlNewNode (NULL, (xmlChar *) "brl");
@@ -5610,5 +5637,6 @@ bottomMargin=%d", ud->braille_page_number, firstTableName, (int) ud->dpi, ud->pa
     convert_utd ();
   else
     output_xml (ud->doc);
+  logMessage(LOG_INFO, "Finish utd_finish");
   return 1;
 }
