@@ -125,6 +125,7 @@ examText (xmlNode * node)
 static void
 examCdataa (xmlNode * node)
 {
+  logMessage(LOG_INFO, "Begin examCdata");
   ud->has_cdata = 1;
 }
 
