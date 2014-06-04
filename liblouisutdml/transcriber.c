@@ -1095,16 +1095,16 @@ insert_text (xmlNode * node)
   int k;
   // int stripSpace = 0;
   logMessage(LOG_INFO, "Begin insert_text: node->content=%s", node->content);
-  for (k = length; k > 0 && node->content[k - 1] <= 32; k--);
+  // for (k = length; k > 0 && node->content[k - 1] <= 32; k--);
     // We want to track if the node only contains space 0x20 characters
     // if (node->content[k - 1] != 32)
     //   stripSpace = 1;
   // if (stripSpace == 0)
   //   k = length; // We want to keep the spaces
-  if (k <= 0)
-    return;
-  if (k < length)
-    length = k + 1;		/*Keep last whitespace */
+  //if (k <= 0)
+  //  return;
+  //if (k < length)
+  //  length = k + 1;		/*Keep last whitespace */
   if (style->emphasis)
     push_action (style->emphasis);
   if (ud->format_for == utd)
