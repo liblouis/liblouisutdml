@@ -9,6 +9,14 @@ extern "C" {
 #endif
 /*
  * Class:     org_liblouis_LibLouis
+ * Method:    charSize
+ * Signature: ()I
+ */
+JNIEXPORT jint JNICALL Java_org_liblouis_LibLouis_charSize
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     org_liblouis_LibLouis
  * Method:    setDataPath
  * Signature: (Ljava/lang/String;)V
  */
@@ -64,20 +72,6 @@ extern "C" {
 #define org_liblouis_LibLouisUTDML_HtmlDoc 536870912L
 #undef org_liblouis_LibLouisUTDML_notUC
 #define org_liblouis_LibLouisUTDML_notUC 268435456L
-#undef org_liblouis_LibLouisUTDML_LOG_ALL
-#define org_liblouis_LibLouisUTDML_LOG_ALL -2147483648L
-#undef org_liblouis_LibLouisUTDML_LOG_DEBUG
-#define org_liblouis_LibLouisUTDML_LOG_DEBUG 10000L
-#undef org_liblouis_LibLouisUTDML_LOG_INFO
-#define org_liblouis_LibLouisUTDML_LOG_INFO 20000L
-#undef org_liblouis_LibLouisUTDML_LOG_WARN
-#define org_liblouis_LibLouisUTDML_LOG_WARN 30000L
-#undef org_liblouis_LibLouisUTDML_LOG_ERROR
-#define org_liblouis_LibLouisUTDML_LOG_ERROR 40000L
-#undef org_liblouis_LibLouisUTDML_LOG_FATAL
-#define org_liblouis_LibLouisUTDML_LOG_FATAL 50000L
-#undef org_liblouis_LibLouisUTDML_LOG_OFF
-#define org_liblouis_LibLouisUTDML_LOG_OFF 2147483647L
 /*
  * Class:     org_liblouis_LibLouisUTDML
  * Method:    initialize
@@ -165,14 +159,6 @@ JNIEXPORT jboolean JNICALL Java_org_liblouis_LibLouisUTDML_checkTable
  */
 JNIEXPORT jboolean JNICALL Java_org_liblouis_LibLouisUTDML_compileString
   (JNIEnv *, jobject, jstring, jstring, jstring);
-
-/*
- * Class:     org_liblouis_LibLouisUTDML
- * Method:    charSize
- * Signature: ()I
- */
-JNIEXPORT jint JNICALL Java_org_liblouis_LibLouisUTDML_charSize
-  (JNIEnv *, jobject);
 
 /*
  * Class:     org_liblouis_LibLouisUTDML
