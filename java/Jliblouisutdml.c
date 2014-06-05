@@ -31,6 +31,29 @@
 
 #define EMPTY -1000
 
+// A pointer to the JVM for callbacks
+static JavaVM *jvm;
+static void execJavaLogCallback(jobject cb, int level, const char *message)
+{
+  JNIEnv *env;
+  jint rs;
+  jstring jstrMsg;
+  jclass cls;
+  jmethodID mid;
+  if ((jvm == NULL) || (cb == NULL))
+    return;
+  rs = (*jvm)->AttachCurrentThread(jvm, (void **)&env, NULL);
+  if (rs != JNI_OK)
+    return;
+  cls = (*env)->GetObjectClass(env, cb);
+  if (cls == NULL)
+    return;
+  mid = (*env)->GetMethodID(env, cls, "logMessage", "(ILjava/lang/String;)V");
+  if (mid == NULL)
+    return;
+  jstrMsg = (*env)->NewStringUTF(env, message);
+  (*env)->CallVoidMethod(env, cb, mid, level, jstrMsg);
+}
 /*
  * Class:     org_liblouis_LibLouisUTDML
  * Method:    initialize
@@ -617,7 +640,7 @@ release:
 /*
  * Class:     org.liblouis.LibLouis
  * Method:    setLogFile
- * Signature: (Ljava.lang.String)V
+ * Signature: (Ljava/lang/String)V
  */
 JNIEXPORT void JNICALL Java_org_liblouis_LibLouis_setLogFile
   (JNIEnv * env, jobject obj, jstring fileName)
@@ -652,6 +675,57 @@ JNIEXPORT jint JNICALL Java_org_liblouis_LibLouis_charSize
   return CHARSIZE;
 }
 
+/*
+ * Class:     org.liblouis.LibLouis
+ * Method:    setLogLevel
+ * Signature: (I)V
+ */
+JNIEXPORT void JNICALL Java_org_liblouis_LibLouis_setLogLevel
+  (JNIEnv * env, jobject this, jint level)
+{
+  lou_setLogLevel(level);
+}
+
+static jobject louLogCBFunc;
+static void javaLouLogCallback(int level, const char *message)
+{
+  execJavaLogCallback(louLogCBFunc, level, message);
+}
+/*
+ * Class:     org.liblouis.LibLouis
+ * Method:    registerLogCallback
+ * Signature: (Lorg/liblouis/LogCallback)V
+ */
+JNIEXPORT void JNICALL Java_org_liblouis_LibLouis_registerLogCallback
+  (JNIEnv * env, jobject this, jobject cb)
+{
+  // Ensure we have a reference to the JVM
+  if (jvm == NULL)
+  {
+    jint rs = (*env)->GetJavaVM(env, &jvm);
+    if (rs != JNI_OK)
+      return;
+  }
+  // Remove existing references to the callback
+  if (louLogCBFunc != NULL)
+  {
+    (*env)->DeleteGlobalRef(env, louLogCBFunc);
+    louLogCBFunc = NULL;
+  }
+  // Now set the callback according to what is passed in cb
+  if (cb != NULL)
+  {
+    louLogCBFunc = (*env)->NewGlobalRef(env, cb);
+  }
+  if (louLogCBFunc != NULL)
+  {
+    lou_registerLogCallback(javaLouLogCallback);
+  }
+  else
+  {
+    lou_registerLogCallback(NULL);
+  }
+}
 /*
  * Class:     org_liblouis_LibLouisUTDML
  * Method:    setWriteablePath
@@ -1249,28 +1323,12 @@ JNIEXPORT void JNICALL Java_org_liblouis_LibLouisUTDML_logEnd
   lbu_logEnd ();
 }
 
-static JavaVM *jvm;
-static jobject logCBFunc;
-static void javaLogCallbackFunc(int level, const char *message)
+static jobject lbuLogCBFunc;
+static void javaLbuLogCallbackFunc(int level, const char *message)
 {
-  JNIEnv *env;
-  jint rs = (*jvm)->AttachCurrentThread(jvm, (void **)&env, NULL);
-  jstring jstrMsg;
-  jclass cls;
-  jmethodID mid;
-  if (rs != JNI_OK)
-  {
-    return;
-  }
-  cls = (*env)->GetObjectClass(env, logCBFunc);
-  mid = (*env)->GetMethodID(env, cls, "logMessage", "(ILjava/lang/String;)V");
-  if (mid == 0)
-  {
-    return;
-  }
-  jstrMsg = (*env)->NewStringUTF(env, message);
-  (*env)->CallVoidMethod(env, logCBFunc, mid, level, jstrMsg);
+  execJavaLogCallback(lbuLogCBFunc, level, message);
 }
+
 /*
  * Class:     org_liblouis_LibLouisUTDML
  * Method:    registerLogCallback
@@ -1289,24 +1347,22 @@ JNIEXPORT void JNICALL Java_org_liblouis_LibLouisUTDML_registerLogCallback
     }
   }
   // Remove any existing global reference to callbacks
-  if (logCBFunc != NULL)
+  if (lbuLogCBFunc != NULL)
   {
-    (*env)->DeleteGlobalRef(env, logCBFunc);
-    logCBFunc = NULL;
+    (*env)->DeleteGlobalRef(env, lbuLogCBFunc);
+    lbuLogCBFunc = NULL;
   }
   if (cb != NULL)
   {
-    logCBFunc = (*env)->NewGlobalRef(env, cb);
+    lbuLogCBFunc = (*env)->NewGlobalRef(env, cb);
   }
-  if (logCBFunc != NULL)
+  if (lbuLogCBFunc != NULL)
   {
-    lbu_registerLogCallback(javaLogCallbackFunc);
-    lou_registerLogCallback(javaLogCallbackFunc);
+    lbu_registerLogCallback(javaLbuLogCallbackFunc);
   }
   else
   {
     lbu_registerLogCallback(NULL);
-    lou_registerLogCallback(NULL);
   }
 }
 
