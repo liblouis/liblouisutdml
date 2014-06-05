@@ -32,11 +32,11 @@
 #define EMPTY -1000
 
 /*
- * Class:     org_liblouis_liblouisutdml
+ * Class:     org_liblouis_LibLouisUTDML
  * Method:    initialize
  * Signature: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
  */
-JNIEXPORT void JNICALL Java_org_liblouis_liblouisutdml_initialize
+JNIEXPORT void JNICALL Java_org_liblouis_LibLouisUTDML_initialize
   (JNIEnv *env, jclass class, jstring dataPath, jstring
 writeablePath, jstring logfile)
 {
@@ -68,23 +68,23 @@ release:
 }
 
 /*
- * Class:     org_liblouis_liblouisutdml
+ * Class:     org_liblouis_LibLouisUTDML
  * Method:    version
  * Signature: ()Ljava/lang/String;
  */
-JNIEXPORT jstring JNICALL Java_org_liblouis_liblouisutdml_version
+JNIEXPORT jstring JNICALL Java_org_liblouis_LibLouisUTDML_version
   (JNIEnv * env, jobject obj)
 {
   return (*env)->NewStringUTF (env, lbu_version ());
 }
 
 /*
- * Class:     org_liblouis_liblouisutdml
+ * Class:     org_liblouis_LibLouisUTDML
  * Method:    translateString
  * Signature: (Ljava/lang/String;[B[B[ILjava/lang/String;Ljava/lang/String;I)Z
  */
 JNIEXPORT jboolean JNICALL
-Java_org_liblouis_liblouisutdml_translateString (JNIEnv * env,
+Java_org_liblouis_LibLouisUTDML_translateString (JNIEnv * env,
 						 jobject obj,
 						 jstring
 						 configFileList,
@@ -167,12 +167,12 @@ release:
 }
 
 /*
- * Class:     org_liblouis_liblouisutdml
+ * Class:     org_liblouis_LibLouisUTDML
  * Method:    backTranslateString
  * Signature: (Ljava/lang/String;[B[B[ILjava/lang/String;Ljava/lang/String;I)Z
  */
 JNIEXPORT jboolean JNICALL
-Java_org_liblouis_liblouisutdml_backTranslateString (JNIEnv * env,
+Java_org_liblouis_LibLouisUTDML_backTranslateString (JNIEnv * env,
 						     jobject obj,
 						     jstring
 						     configFileList,
@@ -265,11 +265,11 @@ release:
 }
 
 /*
- * Class:     org_liblouis_liblouisutdml
+ * Class:     org_liblouis_LibLouisUTDML
  * Method:    translateFile
  * Signature: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;I)Z
  */
-JNIEXPORT jboolean JNICALL Java_org_liblouis_liblouisutdml_translateFile
+JNIEXPORT jboolean JNICALL Java_org_liblouis_LibLouisUTDML_translateFile
   (JNIEnv * env, jobject obj, jstring configFileList, jstring inputFileName,
    jstring outputFileName, jstring logFile, jstring settingsString, jint mode)
 {
@@ -316,12 +316,12 @@ release:
 }
 
 /*
- * Class:     org_liblouis_liblouisutdml
+ * Class:     org_liblouis_LibLouisUTDML
  * Method:    translateTextFile
  * Signature: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;I)Z
  */
 JNIEXPORT jboolean JNICALL
-Java_org_liblouis_liblouisutdml_translateTextFile (JNIEnv * env,
+Java_org_liblouis_LibLouisUTDML_translateTextFile (JNIEnv * env,
 						   jobject obj,
 						   jstring
 						   configFileList,
@@ -376,12 +376,12 @@ release:
 }
 
 /*
- * Class:     org_liblouis_liblouisutdml
+ * Class:     org_liblouis_LibLouisUTDML
  * Method:    backTranslateFile
  * Signature: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;I)Z
  */
 JNIEXPORT jboolean JNICALL
-Java_org_liblouis_liblouisutdml_backTranslateFile (JNIEnv * env,
+Java_org_liblouis_LibLouisUTDML_backTranslateFile (JNIEnv * env,
 						   jobject obj,
 						   jstring
 						   configFileList,
@@ -436,11 +436,11 @@ release:
 }
 
 /*
- * Class:     org_liblouis_liblouisutdml
+ * Class:     org_liblouis_LibLouisUTDML
  * Method:    charToDots
  * Signature: (Ljava/lang/String;[B[BLjava/lang/String;I)V
  */
-JNIEXPORT jboolean JNICALL Java_org_liblouis_liblouisutdml_charToDots
+JNIEXPORT jboolean JNICALL Java_org_liblouis_LibLouisUTDML_charToDots
   (JNIEnv * env, jobject obj, jstring tableList, jbyteArray inbuf,
    jbyteArray outbuf, jstring logFile, jint mode)
 {
@@ -483,11 +483,11 @@ release:
 }
 
 /*
- * Class:     org_liblouis_liblouisutdml
+ * Class:     org_liblouis_LibLouisUTDML
  * Method:    dotsToChar
  * Signature: (Ljava/lang/String;[B[BLjava/lang/String;I)V
  */
-JNIEXPORT jboolean JNICALL Java_org_liblouis_liblouisutdml_dotsToChar
+JNIEXPORT jboolean JNICALL Java_org_liblouis_LibLouisUTDML_dotsToChar
   (JNIEnv * env, jobject obj, jstring tableList, jbyteArray inbuf,
    jbyteArray outbuf, jstring logFile, jint mode)
 {
@@ -529,11 +529,11 @@ release:
 }
 
 /*
- * Class:     org_liblouis_liblouisutdml
+ * Class:     org_liblouis_LibLouisUTDML
  * Method:    checkTable
  * Signature: (Ljava/lang/String;Ljava/lang/String;I)V
  */
-JNIEXPORT jboolean JNICALL Java_org_liblouis_liblouisutdml_checkTable
+JNIEXPORT jboolean JNICALL Java_org_liblouis_LibLouisUTDML_checkTable
   (JNIEnv * env, jobject obj, jstring tableList, jstring logFile, jint mode)
 {
   const jbyte *tableListX = NULL;
@@ -558,11 +558,11 @@ release:
 }
 
 /*
- * Class:     org_liblouis_liblouisutdml
+ * Class:     org_liblouis_LibLouisUTDML
  * Method:    compileString
  * Signature: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Z
  */
-JNIEXPORT jboolean JNICALL Java_org_liblouis_liblouisutdml_compileString
+JNIEXPORT jboolean JNICALL Java_org_liblouis_LibLouisUTDML_compileString
   (JNIEnv * env, jobject obj, jstring tableList, jstring newEntry,
    jstring logFile)
 {
@@ -597,11 +597,11 @@ release:
 }
 
 /*
- * Class:     org_liblouis_liblouisutdml
+ * Class:     org_liblouis_LibLouis
  * Method:    setDataPath
  * Signature: (Ljava/lang/String;)V
  */
-JNIEXPORT void JNICALL Java_org_liblouis_liblouisutdml_setDataPath
+JNIEXPORT void JNICALL Java_org_liblouis_LibLouis_setDataPath
   (JNIEnv * env, jclass obj, jstring path)
 {
   const jbyte *pathX = NULL;
@@ -615,22 +615,49 @@ release:
 }
 
 /*
- * Class:     org_liblouis_liblouisutdml
+ * Class:     org.liblouis.LibLouis
+ * Method:    setLogFile
+ * Signature: (Ljava.lang.String)V
+ */
+JNIEXPORT void JNICALL Java_org_liblouis_LibLouis_setLogFile
+  (JNIEnv * env, jobject obj, jstring fileName)
+{
+  jbyte logf = NULL;
+  logf = (*env)->GetStringUTFChars(env, fileName, NULL);
+  if (logf == NULL)
+    return;
+  lou_logFile(logf);
+  (*env)->ReleaseStringUTFChars(env, fileName, logf);
+}
+
+/*
+ * Class:     org.liblouis.LibLouis
+ * Method:    logEnd
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_org_liblouis_LibLouis_logEnd
+  (JNIEnv * env, jobject obj)
+{
+  lou_logEnd();
+}
+
+/*
+ * Class:     org_liblouis_LibLouisUTDML
  * Method:    charSize
  * Signature: ()I
  */
-JNIEXPORT jint JNICALL Java_org_liblouis_liblouisutdml_charSize
+JNIEXPORT jint JNICALL Java_org_liblouis_LibLouisUTDML_charSize
   (JNIEnv * env, jobject this)
 {
   return CHARSIZE;
 }
 
 /*
- * Class:     org_liblouis_liblouisutdml
+ * Class:     org_liblouis_LibLouisUTDML
  * Method:    setWriteablePath
  * Signature: (Ljava/lang/String;)V
  */
-JNIEXPORT void JNICALL Java_org_liblouis_liblouisutdml_setWriteablePath
+JNIEXPORT void JNICALL Java_org_liblouis_LibLouisUTDML_setWriteablePath
   (JNIEnv * env, jclass obj, jstring path)
 {
   const jbyte *pathX = NULL;
@@ -644,11 +671,11 @@ release:
 }
 
 /*
- * Class:     org_liblouis_liblouisutdml
+ * Class:     org_liblouis_LibLouisUTDML
  * Method:    free
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_org_liblouis_liblouisutdml_free
+JNIEXPORT void JNICALL Java_org_liblouis_LibLouisUTDML_free
   (JNIEnv * env, jobject this)
 {
   lbu_free ();
@@ -656,7 +683,7 @@ JNIEXPORT void JNICALL Java_org_liblouis_liblouisutdml_free
 }
 
 /*
- * Class:     org_liblouis_liblouisutdml
+ * Class:     org_liblouis_LibLouisUTDML
  * Method:    file2brl
  * Signature: ([Ljava/lang/String;)Z
  */
@@ -686,7 +713,7 @@ getArg (JNIEnv * env, jobject obj, jobjectArray args, jint index)
   return curArg;
 }
 
-JNIEXPORT jboolean JNICALL Java_org_liblouis_liblouisutdml_file2brl
+JNIEXPORT jboolean JNICALL Java_org_liblouis_LibLouisUTDML_file2brl
   (JNIEnv * env, jobject obj, jobjectArray args)
 {
   jint numArgs = (*env)->GetArrayLength (env, args);
@@ -1066,12 +1093,12 @@ release:
 }
 
 /*
- * Class:     org_liblouis_liblouisutdml
+ * Class:     org_liblouis_LibLouisUTDML
  * Method:    louisTranslateString
  * Signature: (Ljava/lang/String;[B[I[B[I[BLjava/lang/String;I)Z
  */
 JNIEXPORT jboolean JNICALL
-Java_org_liblouis_liblouisutdml_louisTranslateString (JNIEnv * env,
+Java_org_liblouis_LibLouisUTDML_louisTranslateString (JNIEnv * env,
 						      jobject obj,
 						      jstring tableList,
 						      jbyteArray inbuf,
@@ -1087,11 +1114,11 @@ Java_org_liblouis_liblouisutdml_louisTranslateString (JNIEnv * env,
 }
 
 /*
- * Class:     org_liblouis_liblouisutdml
+ * Class:     org_liblouis_LibLouisUTDML
  * Method:    louisTranslate
  * Signature: (Ljava/lang/String;[B[I[B[I[B[I[I[ILjava/lang/String;I)Z
  */
-JNIEXPORT jboolean JNICALL Java_org_liblouis_liblouisutdml_louisTranslate
+JNIEXPORT jboolean JNICALL Java_org_liblouis_LibLouisUTDML_louisTranslate
   (JNIEnv * env, jobject obj, jstring tableList, jbyteArray inbuf,
    jintArray inlen,
    jbyteArray outbuf, jintArray outlen,
@@ -1104,11 +1131,11 @@ JNIEXPORT jboolean JNICALL Java_org_liblouis_liblouisutdml_louisTranslate
 }
 
 /*
- * Class:     org_liblouis_liblouisutdml
+ * Class:     org_liblouis_LibLouisUTDML
  * Method:    hyphenate
  * Signature: (Ljava/lang/String;[BI[BLjava/lang/String;I)Z
  */
-JNIEXPORT jboolean JNICALL Java_org_liblouis_liblouisutdml_hyphenate
+JNIEXPORT jboolean JNICALL Java_org_liblouis_LibLouisUTDML_hyphenate
   (JNIEnv * env, jobject obj, jstring tableList, jbyteArray inbuf, jint
    inlen, jbyteArray hyphens, jstring logFile, jint mode)
 {
@@ -1159,12 +1186,12 @@ release:
 }
 
 /*
- * Class:     org_liblouis_liblouisutdml
+ * Class:     org_liblouis_LibLouisUTDML
  * Method:    louisBackTranslateString
  * Signature: (Ljava/lang/String;[B[I[B[I[BLjava/lang/String;I)Z
  */
 JNIEXPORT jboolean JNICALL
-  Java_org_liblouis_liblouisutdml_louisBackTranslateString
+  Java_org_liblouis_LibLouisUTDML_louisBackTranslateString
   (JNIEnv * env, jobject obj,
    jstring tableList,
    jbyteArray
@@ -1179,11 +1206,11 @@ JNIEXPORT jboolean JNICALL
 }
 
 /*
- * Class:     org_liblouis_liblouisutdml
+ * Class:     org_liblouis_LibLouisUTDML
  * Method:    louisBackTranslate
  * Signature: (Ljava/lang/String;[B[I[B[I[B[I[I[ILjava/lang/String;I)Z
  */
-JNIEXPORT jboolean JNICALL Java_org_liblouis_liblouisutdml_louisBackTranslate
+JNIEXPORT jboolean JNICALL Java_org_liblouis_LibLouisUTDML_louisBackTranslate
   (JNIEnv * env, jobject obj, jstring tableList, jbyteArray inbuf,
    jintArray inlen,
    jbyteArray outbuf, jintArray outlen,
@@ -1196,11 +1223,11 @@ JNIEXPORT jboolean JNICALL Java_org_liblouis_liblouisutdml_louisBackTranslate
 }
 
 /*
- * Class:     org_liblouis_liblouisutdml
+ * Class:     org_liblouis_LibLouisUTDML
  * Method:    setLogFile
  * Signature: (Ljava/lang/String;)V
  */
-JNIEXPORT void JNICALL Java_org_liblouis_liblouisutdml_setLogFile
+JNIEXPORT void JNICALL Java_org_liblouis_LibLouisUTDML_setLogFile
   (JNIEnv * env, jobject obj, jstring logFile)
 {
   const jbyte *logf = NULL;
@@ -1212,11 +1239,11 @@ JNIEXPORT void JNICALL Java_org_liblouis_liblouisutdml_setLogFile
 }
 
 /*
- * Class:     org_liblouis_liblouisutdml
+ * Class:     org_liblouis_LibLouisUTDML
  * Method:    logEnd
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_org_liblouis_liblouisutdml_logEnd
+JNIEXPORT void JNICALL Java_org_liblouis_LibLouisUTDML_logEnd
   (JNIEnv * env, jobject this)
 {
   lbu_logEnd ();
@@ -1245,11 +1272,11 @@ static void javaLogCallbackFunc(int level, const char *message)
   (*env)->CallVoidMethod(env, logCBFunc, mid, level, jstrMsg);
 }
 /*
- * Class:     org_liblouis_liblouisutdml
+ * Class:     org_liblouis_LibLouisUTDML
  * Method:    registerLogCallback
  * Signature: (Lorg/liblouis/LogCallback;)V
  */
-JNIEXPORT void JNICALL Java_org_liblouis_liblouisutdml_registerLogCallback
+JNIEXPORT void JNICALL Java_org_liblouis_LibLouisUTDML_registerLogCallback
   (JNIEnv * env, jobject this, jobject cb)
 {
   // if not previously set, set the JVM pointer
@@ -1284,11 +1311,11 @@ JNIEXPORT void JNICALL Java_org_liblouis_liblouisutdml_registerLogCallback
 }
 
 /*
- * Class:    org_liblouis_liblouisutdml
+ * Class:    org_liblouis_LibLouisUTDML
  * Method:   setLogLevel
  *Signature: (I)V
  */
-JNIEXPORT void JNICALL Java_org_liblouis_liblouisutdml_setLogLevel
+JNIEXPORT void JNICALL Java_org_liblouis_LibLouisUTDML_setLogLevel
   (JNIEnv * env, jobject this, jint level)
 {
   lbu_setLogLevel(level);
