@@ -7,6 +7,7 @@ public final class LibLouis
   private static LibLouis singleInstance = null;
   private static boolean libraryLoaded = false;
   public static void loadLibrary(String libraryPath, String librarySuffix)
+      throws Exception
   {
     if (libraryLoaded)
     {
@@ -14,7 +15,9 @@ public final class LibLouis
     }
     if ((libraryPath == null) || (librarySuffix == null))
     {
-      // Throw an exception
+      throw new Exception(
+          "Could not load liblouis, libraryPath or librarySuffix not defined."
+      );
     }
     System.load(new File(libraryPath, "liblouis" + librarySuffix).getAbsolutePath());
     libraryLoaded = true;
@@ -28,6 +31,10 @@ public final class LibLouis
       singleInstance = new LibLouis();
     return singleInstance;
   }
+  /**
+   * Get the size of widechar used by LibLouis.
+   */
+  public native int charSize();
   /**
    * Set the path for which liblouis will look for tables.
    */

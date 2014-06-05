@@ -642,11 +642,11 @@ JNIEXPORT void JNICALL Java_org_liblouis_LibLouis_logEnd
 }
 
 /*
- * Class:     org_liblouis_LibLouisUTDML
+ * Class:     org_liblouis_LibLouis
  * Method:    charSize
  * Signature: ()I
  */
-JNIEXPORT jint JNICALL Java_org_liblouis_LibLouisUTDML_charSize
+JNIEXPORT jint JNICALL Java_org_liblouis_LibLouis_charSize
   (JNIEnv * env, jobject this)
 {
   return CHARSIZE;
