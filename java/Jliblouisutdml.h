@@ -39,6 +39,22 @@ JNIEXPORT void JNICALL Java_org_liblouis_LibLouis_setLogFile
 JNIEXPORT void JNICALL Java_org_liblouis_LibLouis_logEnd
   (JNIEnv *, jobject);
 
+/*
+ * Class:     org_liblouis_LibLouis
+ * Method:    registerLogCallback
+ * Signature: (Lorg/liblouis/LogCallback;)V
+ */
+JNIEXPORT void JNICALL Java_org_liblouis_LibLouis_registerLogCallback
+  (JNIEnv *, jobject, jobject);
+
+/*
+ * Class:     org_liblouis_LibLouis
+ * Method:    setLogLevel
+ * Signature: (I)V
+ */
+JNIEXPORT void JNICALL Java_org_liblouis_LibLouis_setLogLevel
+  (JNIEnv *, jobject, jint);
+
 #ifdef __cplusplus
 }
 #endif
