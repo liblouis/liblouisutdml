@@ -55,6 +55,54 @@ JNIEXPORT void JNICALL Java_org_liblouis_LibLouis_registerLogCallback
 JNIEXPORT void JNICALL Java_org_liblouis_LibLouis_setLogLevel
   (JNIEnv *, jobject, jint);
 
+/*
+ * Class:     org_liblouis_LibLouis
+ * Method:    compileString
+ * Signature: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Z
+ */
+JNIEXPORT jboolean JNICALL Java_org_liblouis_LibLouis_compileString
+  (JNIEnv *, jobject, jstring, jstring, jstring);
+
+/*
+ * Class:     org_liblouis_LibLouis
+ * Method:    translateString
+ * Signature: (Ljava/lang/String;[B[I[B[I[BLjava/lang/String;I)Z
+ */
+JNIEXPORT jboolean JNICALL Java_org_liblouis_LibLouis_translateString
+  (JNIEnv *, jobject, jstring, jbyteArray, jintArray, jbyteArray, jintArray, jbyteArray, jstring, jint);
+
+/*
+ * Class:     org_liblouis_LibLouis
+ * Method:    translate
+ * Signature: (Ljava/lang/String;[B[I[B[I[B[I[I[ILjava/lang/String;I)Z
+ */
+JNIEXPORT jboolean JNICALL Java_org_liblouis_LibLouis_translate
+  (JNIEnv *, jobject, jstring, jbyteArray, jintArray, jbyteArray, jintArray, jbyteArray, jintArray, jintArray, jintArray, jstring, jint);
+
+/*
+ * Class:     org_liblouis_LibLouis
+ * Method:    hyphenate
+ * Signature: (Ljava/lang/String;[BI[BLjava/lang/String;I)Z
+ */
+JNIEXPORT jboolean JNICALL Java_org_liblouis_LibLouis_hyphenate
+  (JNIEnv *, jobject, jstring, jbyteArray, jint, jbyteArray, jstring, jint);
+
+/*
+ * Class:     org_liblouis_LibLouis
+ * Method:    backTranslateString
+ * Signature: (Ljava/lang/String;[B[I[B[I[BLjava/lang/String;I)Z
+ */
+JNIEXPORT jboolean JNICALL Java_org_liblouis_LibLouis_backTranslateString
+  (JNIEnv *, jobject, jstring, jbyteArray, jintArray, jbyteArray, jintArray, jbyteArray, jstring, jint);
+
+/*
+ * Class:     org_liblouis_LibLouis
+ * Method:    backTranslate
+ * Signature: (Ljava/lang/String;[B[I[B[I[I[I[I[BLjava/lang/String;I)Z
+ */
+JNIEXPORT jboolean JNICALL Java_org_liblouis_LibLouis_backTranslate
+  (JNIEnv *, jobject, jstring, jbyteArray, jintArray, jbyteArray, jintArray, jintArray, jintArray, jintArray, jbyteArray, jstring, jint);
+
 #ifdef __cplusplus
 }
 #endif
@@ -170,14 +218,6 @@ JNIEXPORT jboolean JNICALL Java_org_liblouis_LibLouisUTDML_checkTable
 
 /*
  * Class:     org_liblouis_LibLouisUTDML
- * Method:    compileString
- * Signature: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Z
- */
-JNIEXPORT jboolean JNICALL Java_org_liblouis_LibLouisUTDML_compileString
-  (JNIEnv *, jobject, jstring, jstring, jstring);
-
-/*
- * Class:     org_liblouis_LibLouisUTDML
  * Method:    file2brl
  * Signature: ([Ljava/lang/String;)Z
  */
@@ -199,46 +239,6 @@ JNIEXPORT void JNICALL Java_org_liblouis_LibLouisUTDML_setWriteablePath
  */
 JNIEXPORT void JNICALL Java_org_liblouis_LibLouisUTDML_free
   (JNIEnv *, jobject);
-
-/*
- * Class:     org_liblouis_LibLouisUTDML
- * Method:    louisTranslateString
- * Signature: (Ljava/lang/String;[B[I[B[I[BLjava/lang/String;I)Z
- */
-JNIEXPORT jboolean JNICALL Java_org_liblouis_LibLouisUTDML_louisTranslateString
-  (JNIEnv *, jobject, jstring, jbyteArray, jintArray, jbyteArray, jintArray, jbyteArray, jstring, jint);
-
-/*
- * Class:     org_liblouis_LibLouisUTDML
- * Method:    louisTranslate
- * Signature: (Ljava/lang/String;[B[I[B[I[B[I[I[ILjava/lang/String;I)Z
- */
-JNIEXPORT jboolean JNICALL Java_org_liblouis_LibLouisUTDML_louisTranslate
-  (JNIEnv *, jobject, jstring, jbyteArray, jintArray, jbyteArray, jintArray, jbyteArray, jintArray, jintArray, jintArray, jstring, jint);
-
-/*
- * Class:     org_liblouis_LibLouisUTDML
- * Method:    hyphenate
- * Signature: (Ljava/lang/String;[BI[BLjava/lang/String;I)Z
- */
-JNIEXPORT jboolean JNICALL Java_org_liblouis_LibLouisUTDML_hyphenate
-  (JNIEnv *, jobject, jstring, jbyteArray, jint, jbyteArray, jstring, jint);
-
-/*
- * Class:     org_liblouis_LibLouisUTDML
- * Method:    louisBackTranslateString
- * Signature: (Ljava/lang/String;[B[I[B[I[BLjava/lang/String;I)Z
- */
-JNIEXPORT jboolean JNICALL Java_org_liblouis_LibLouisUTDML_louisBackTranslateString
-  (JNIEnv *, jobject, jstring, jbyteArray, jintArray, jbyteArray, jintArray, jbyteArray, jstring, jint);
-
-/*
- * Class:     org_liblouis_LibLouisUTDML
- * Method:    louisBackTranslate
- * Signature: (Ljava/lang/String;[B[I[B[I[B[I[I[ILjava/lang/String;I)Z
- */
-JNIEXPORT jboolean JNICALL Java_org_liblouis_LibLouisUTDML_louisBackTranslate
-  (JNIEnv *, jobject, jstring, jbyteArray, jintArray, jbyteArray, jintArray, jbyteArray, jintArray, jintArray, jintArray, jstring, jint);
 
 /*
  * Class:     org_liblouis_LibLouisUTDML

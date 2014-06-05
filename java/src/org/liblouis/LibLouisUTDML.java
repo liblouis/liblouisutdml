@@ -185,12 +185,6 @@ public native boolean
 checkTable (String tableList, String logFile, int mode);
 
 /**
-* Add a new entrry to a table.
-*/
-public native boolean compileString (String tableList, String newEntry, 
-String logFile);
-
-/**
 * Path on which liblouis tables and liblouisutdml files can be found. 
 */
 
@@ -221,39 +215,6 @@ free method is called.
 */
 
   public native void free ();
-
-/**
- * The following methods call liblouis functions. inbuf, outbuf and 
- * typeform must be encoded in UTF-8. Thus it does not matter if 
- * liblouis is compiled for 16-bit or 32-bit Unicodee.
- */
-public native boolean louisTranslateString
-  (String tableList,
-   byte[]inbuf,
-   int[]inlen,
-   byte[] outbuf,
-   int[]outlen, byte[]typeform, String logFileName, int mode);
-
- public native boolean louisTranslate (String tableList, byte[]inbuf,
-   int[]inlen, byte[] outbuf, int[]outlen,
-   byte[]typeform, int[]outputPos, int[]inputPos, 
-int[]cursorPos, String logFileName, int mode);
-
-public native boolean hyphenate (String tableList, byte[]inbuf,
-   int inlen, byte[]hyphens, String logFileName, int mode);
-
-  public native boolean louisBackTranslateString (String tableList,
-    byte[]inbuf,
-   int[]inlen,
-    byte[] outbuf,
-    int[]outlen, byte[]typeform,
- String logFileName, int mode);
-
- public native boolean louisBackTranslate (String tableList, 
-byte[]inbuf,
- int[]inlen, byte[] outbuf, int[]outlen, 
-byte[]typeform, int[]outputPos, int[]inputPos, int[]cursorPos, String 
-logFileName, int mode);
 
 public native void setLogFile (String fileName);
 

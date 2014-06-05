@@ -1282,7 +1282,7 @@ initConfigFiles (const char *firstConfigFile, char *fileName, const
     {
       strcpy ((char *) ud->typeform, lbu_getWriteablePath ());
       strcat ((char *) ud->typeform, logFileName);
-      lou_logFile ((char *) ud->typeform);
+      lbu_logFile ((char *) ud->typeform);
     }
   if (!config_compileSettings ("liblouisutdml.ini"))
     return 0;
@@ -1365,7 +1365,7 @@ read_configuration_file (const char *configFileList, const char
     {
       strcpy ((char *) ud->typeform, lbu_getWriteablePath ());
       strcat ((char *) ud->typeform, logFileName);
-      lou_logFile ((char *) ud->typeform);
+      lbu_logFile ((char *) ud->typeform);
     }
       if (!(config_compileSettings ("liblouisutdml.ini")))
 	return 0;

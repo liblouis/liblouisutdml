@@ -581,11 +581,11 @@ release:
 }
 
 /*
- * Class:     org_liblouis_LibLouisUTDML
+ * Class:     org_liblouis_LibLouis
  * Method:    compileString
  * Signature: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Z
  */
-JNIEXPORT jboolean JNICALL Java_org_liblouis_LibLouisUTDML_compileString
+JNIEXPORT jboolean JNICALL Java_org_liblouis_LibLouis_compileString
   (JNIEnv * env, jobject obj, jstring tableList, jstring newEntry,
    jstring logFile)
 {
@@ -890,7 +890,7 @@ JNIEXPORT jboolean JNICALL Java_org_liblouis_LibLouisUTDML_file2brl
       getArg (env, obj, args, -1);
     }
   if (logFileName[0] != 0)
-    lou_logFile (logFileName);
+    lbu_logFile (logFileName);
   if (whichProc == 0)
     whichProc = 'x';
   if (configSettings != NULL)
@@ -900,7 +900,7 @@ JNIEXPORT jboolean JNICALL Java_org_liblouis_LibLouisUTDML_file2brl
   if (!read_configuration_file  (configFileList, logFileName, 
 configSettings, 0))
     {
-      lou_logEnd ();
+      lbu_logEnd ();
       return JNI_FALSE;
     }
   if (strcmp (inputFileName, "stdin") != 0)
@@ -908,7 +908,7 @@ configSettings, 0))
       if (!(inputFile = fopen (inputFileName, "rb")))
 	{
 	  logMessage (LOG_ERROR, "Can't open input file '%s'.\n", inputFileName);
-	  lou_logEnd ();
+	  lbu_logEnd ();
 	  return JNI_FALSE;
 	}
     }
@@ -920,7 +920,7 @@ configSettings, 0))
   if (!(tempFile = fopen (tempFileName, "wb")))
     {
       logMessage (LOG_ERROR, "Can't open temporary file.\n");
-      lou_logEnd ();
+      lbu_logEnd ();
       return JNI_FALSE;
     }
   if (whichProc == 'p')
@@ -1014,7 +1014,7 @@ configSettings, 0))
 	       (configFileList, tempFileName, temp2FileName, NULL,
 		NULL, mode)) != 1)
 	    {
-	      lou_logEnd ();
+	      lbu_logEnd ();
 	      return JNI_FALSE;
 	    }
 	  if (ud->back_text == html)
@@ -1042,7 +1042,7 @@ configSettings, 0))
       }
   if (configSettings != NULL)
     free (configSettings);
-  lou_logEnd ();
+  lbu_logEnd ();
   return JNI_TRUE;
 }
 
@@ -1167,12 +1167,12 @@ release:
 }
 
 /*
- * Class:     org_liblouis_LibLouisUTDML
- * Method:    louisTranslateString
+ * Class:     org_liblouis_LibLouis
+ * Method:    translateString
  * Signature: (Ljava/lang/String;[B[I[B[I[BLjava/lang/String;I)Z
  */
 JNIEXPORT jboolean JNICALL
-Java_org_liblouis_LibLouisUTDML_louisTranslateString (JNIEnv * env,
+Java_org_liblouis_LibLouis_translateString (JNIEnv * env,
 						      jobject obj,
 						      jstring tableList,
 						      jbyteArray inbuf,
@@ -1188,11 +1188,11 @@ Java_org_liblouis_LibLouisUTDML_louisTranslateString (JNIEnv * env,
 }
 
 /*
- * Class:     org_liblouis_LibLouisUTDML
- * Method:    louisTranslate
+ * Class:     org_liblouis_LibLouis
+ * Method:    translate
  * Signature: (Ljava/lang/String;[B[I[B[I[B[I[I[ILjava/lang/String;I)Z
  */
-JNIEXPORT jboolean JNICALL Java_org_liblouis_LibLouisUTDML_louisTranslate
+JNIEXPORT jboolean JNICALL Java_org_liblouis_LibLouis_translate
   (JNIEnv * env, jobject obj, jstring tableList, jbyteArray inbuf,
    jintArray inlen,
    jbyteArray outbuf, jintArray outlen,
@@ -1205,11 +1205,11 @@ JNIEXPORT jboolean JNICALL Java_org_liblouis_LibLouisUTDML_louisTranslate
 }
 
 /*
- * Class:     org_liblouis_LibLouisUTDML
+ * Class:     org_liblouis_LibLouis
  * Method:    hyphenate
  * Signature: (Ljava/lang/String;[BI[BLjava/lang/String;I)Z
  */
-JNIEXPORT jboolean JNICALL Java_org_liblouis_LibLouisUTDML_hyphenate
+JNIEXPORT jboolean JNICALL Java_org_liblouis_LibLouis_hyphenate
   (JNIEnv * env, jobject obj, jstring tableList, jbyteArray inbuf, jint
    inlen, jbyteArray hyphens, jstring logFile, jint mode)
 {
@@ -1260,12 +1260,12 @@ release:
 }
 
 /*
- * Class:     org_liblouis_LibLouisUTDML
- * Method:    louisBackTranslateString
+ * Class:     org_liblouis_LibLouis
+ * Method:    backTranslateString
  * Signature: (Ljava/lang/String;[B[I[B[I[BLjava/lang/String;I)Z
  */
 JNIEXPORT jboolean JNICALL
-  Java_org_liblouis_LibLouisUTDML_louisBackTranslateString
+  Java_org_liblouis_LibLouis_backTranslateString
   (JNIEnv * env, jobject obj,
    jstring tableList,
    jbyteArray
@@ -1280,11 +1280,11 @@ JNIEXPORT jboolean JNICALL
 }
 
 /*
- * Class:     org_liblouis_LibLouisUTDML
- * Method:    louisBackTranslate
+ * Class:     org_liblouis_LibLouis
+ * Method:    backTranslate
  * Signature: (Ljava/lang/String;[B[I[B[I[B[I[I[ILjava/lang/String;I)Z
  */
-JNIEXPORT jboolean JNICALL Java_org_liblouis_LibLouisUTDML_louisBackTranslate
+JNIEXPORT jboolean JNICALL Java_org_liblouis_LibLouis_backTranslate
   (JNIEnv * env, jobject obj, jstring tableList, jbyteArray inbuf,
    jintArray inlen,
    jbyteArray outbuf, jintArray outlen,
