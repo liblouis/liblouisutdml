@@ -47,5 +47,13 @@ public final class LibLouis
    * End the liblouis log file.
    */
   public native void logEnd();
+  /**
+   * Register a callback for liblouis logging.
+   */
+  public native void registerLogCallback(LogCallback cb);
+  /**
+   * Set liblouis logging level.
+   */
+  public native void setLogLevel(int level);
 }
 
