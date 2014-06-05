@@ -80,7 +80,7 @@ cleanupLibxml ()
 static void
 freeEverything ()
 {
-  lou_logEnd ();
+  lbu_logEnd ();
   cleanupLibxml ();
   lbu_free ();
 }
@@ -225,7 +225,7 @@ lbu_translateString (const char *configFileList,
       else
 	k = transcribe_text_string ();
       *outlen = ud->outlen_so_far;
-      lou_logEnd ();
+      lbu_logEnd ();
       return k;
     }
   if (inbuf[k + 1] == '?')
@@ -246,7 +246,7 @@ lbu_translateString (const char *configFileList,
   *outlen = ud->outlen_so_far;
   if (xmlInbuf != inbuf)
     free (xmlInbuf);
-  lou_logEnd ();
+  lbu_logEnd ();
   return k;
 }
 
@@ -279,7 +279,7 @@ int
   k = processXmlDocument (inFileName, 0);
   if (ud->outFile != stdout)
     fclose (ud->outFile);
-  lou_logEnd ();
+  lbu_logEnd ();
   return k;
 }
 
@@ -334,7 +334,7 @@ int
     fclose (ud->inFile);
   if (ud->outFile != stdout)
     fclose (ud->outFile);
-  lou_logEnd ();
+  lbu_logEnd ();
   return k;
 }
 
@@ -372,7 +372,7 @@ lbu_backTranslateString (const char *configFileList,
     }
   *outlen = ud->outlen_so_far;
   logMessage(LOG_INFO, "Finish lbu_backTranslateString");
-  lou_logEnd ();
+  lbu_logEnd ();
   return 1;
 }
 
@@ -428,7 +428,7 @@ int
     fclose (ud->inFile);
   if (ud->outFile != stdout)
     fclose (ud->outFile);
-  lou_logEnd ();
+  lbu_logEnd ();
   return 1;
 }
 
@@ -463,7 +463,7 @@ lbu_charToDots (const char *tableList, const unsigned char *inbuf,
   int result = 0;
   if (tableList == NULL || inbuf == NULL || outbuf == NULL)
     return 0;
-  lou_logFile (logFile);
+  lbu_logFile (logFile);
   interBuf = malloc (length * CHARSIZE);
   utf8Length = length;
   wcLength = length;
@@ -475,7 +475,7 @@ lbu_charToDots (const char *tableList, const unsigned char *inbuf,
       utf8Length = length;
       wc_string_to_utf8 (interBuf, &wcLength, outbuf, &utf8Length);
     }
-  lou_logEnd ();
+  lbu_logEnd ();
   free (interBuf);
   return result;
 }
@@ -491,7 +491,7 @@ lbu_dotsToChar (const char *tableList, const unsigned char *inbuf,
   int result = 0;
   if (tableList == NULL || inbuf == NULL || outbuf == NULL)
     return 0;
-  lou_logFile (logFile);
+  lbu_logFile (logFile);
   interBuf = malloc (length * CHARSIZE);
   utf8Length = length;
   wcLength = length;
@@ -502,7 +502,7 @@ lbu_dotsToChar (const char *tableList, const unsigned char *inbuf,
       utf8Length = length;
       wc_string_to_utf8 (interBuf, &wcLength, outbuf, &utf8Length);
     }
-  lou_logEnd ();
+  lbu_logEnd ();
   free (interBuf);
   return result;
 }
@@ -511,10 +511,10 @@ int EXPORT_CALL
 lbu_checkTable (const char *tableList, const char *logFile, unsigned int mode)
 {
   int result = 1;
-  lou_logFile (logFile);
+  lbu_logFile (logFile);
   if (!lou_getTable (tableList))
     result = 0;
-  lou_logEnd ();
+  lbu_logEnd ();
   return result;
 }
 
@@ -523,7 +523,7 @@ lbu_free ()
 {
 /* Free all memory used by liblouisutdml. You MUST call this function at 
 * the END of your application.*/
-  lou_logEnd ();
+  lbu_logEnd ();
   lou_free ();
   destroy_semantic_table ();
   if (ud != NULL)
