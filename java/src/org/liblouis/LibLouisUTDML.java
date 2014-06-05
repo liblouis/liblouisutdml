@@ -31,7 +31,9 @@
 
 package org.liblouis;
 
-public final class liblouisutdml {
+import java.io.File;
+
+public final class LibLouisUTDML {
 /** 
 * Bindings for the liblouisutdml and liblouis C libraries.
 * These bindings include enough functionality so that it should never 
@@ -74,13 +76,13 @@ public static final int LOG_OFF = 2147483647;
 * This class is a singleton.
 */
 
-private static liblouisutdml singleInstance = new liblouisutdml();
+private static LibLouisUTDML singleInstance = new LibLouisUTDML();
 private static boolean libraryLoaded = false;
 
-  private liblouisutdml () {
+  private LibLouisUTDML () {
   }
   
-  public static liblouisutdml getInstance()
+  public static LibLouisUTDML getInstance()
   {
     return singleInstance;
   }
@@ -95,8 +97,9 @@ private static boolean libraryLoaded = false;
     if (libraryPath == null || librarySuffix == null)
       throw new Exception (
       "Could not load libraries. libraryPath or librarySuffix undefined.");
-    System.load (libraryPath + "/liblouis" + librarySuffix);
-    System.load (libraryPath + "/liblouisutdml" + librarySuffix);
+    LibLouis.loadLibrary(libraryPath, librarySuffix);
+    // System.load (libraryPath + "/liblouis" + librarySuffix);
+    System.load (new File(libraryPath, "liblouisutdml" + librarySuffix).getAbsolutePath());
     libraryLoaded = true;
   }
   
@@ -199,7 +202,10 @@ String logFile);
 * Path on which liblouis tables and liblouisutdml files can be found. 
 */
 
-public native void setDataPath(String path);
+public void setDataPath(String path)
+{
+    LibLouis.getInstance().setDataPath(path);
+}
 
 /** Return the character size used internally by liblouis and 
 liblouisutdml. */
