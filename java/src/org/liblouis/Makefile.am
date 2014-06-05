@@ -1,3 +1,5 @@
-EXTRA_DIST = liblouisutdml.java \
-	LogCallback.java
+EXTRA_DIST = LibLouisUTDML.java \
+	LogCallback.java \
+	LibLouis.java \
+	LogLevel.java
 

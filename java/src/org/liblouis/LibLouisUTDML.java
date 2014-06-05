@@ -64,14 +64,6 @@ public static final int DontInit = 1<<30;
 public static final int HtmlDoc = 1<<29;
 public static final int notUC = 1<<28;
 
-public static final int LOG_ALL = -2147483648;
-public static final int LOG_DEBUG = 10000;
-public static final int LOG_INFO = 20000;
-public static final int LOG_WARN = 30000;
-public static final int LOG_ERROR = 40000;
-public static final int LOG_FATAL = 50000;
-public static final int LOG_OFF = 2147483647;
-
 /**
 * This class is a singleton.
 */
@@ -206,11 +198,6 @@ public void setDataPath(String path)
 {
     LibLouis.getInstance().setDataPath(path);
 }
-
-/** Return the character size used internally by liblouis and 
-liblouisutdml. */
-
-public native int charSize ();
 
 /**
 * This method performs the functions of the file2brl program in a more 
