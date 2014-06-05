@@ -1304,7 +1304,7 @@ JNIEXPORT jboolean JNICALL Java_org_liblouis_LibLouis_backTranslate
 JNIEXPORT void JNICALL Java_org_liblouis_LibLouisUTDML_setLogFile
   (JNIEnv * env, jobject obj, jstring logFile)
 {
-  const jbyte *logf = NULL;
+  const char *logf = NULL;
   logf = (*env)->GetStringUTFChars (env, logFile, NULL);
   if (logf == NULL)
     return;
