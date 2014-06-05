@@ -645,7 +645,7 @@ release:
 JNIEXPORT void JNICALL Java_org_liblouis_LibLouis_setLogFile
   (JNIEnv * env, jobject obj, jstring fileName)
 {
-  jbyte logf = NULL;
+  const char *logf = NULL;
   logf = (*env)->GetStringUTFChars(env, fileName, NULL);
   if (logf == NULL)
     return;
