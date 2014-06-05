@@ -55,5 +55,14 @@ public final class LibLouis
    * Set liblouis logging level.
    */
   public native void setLogLevel(int level);
+  /**
+   * Add a new entry to a table.
+   */
+  public native boolean compileString(String tableList, String newEntry, String logFile);
+  public native boolean translateString(String tableList, byte[] inbuf, int[] inlen, byte[] outbuf, int[] outlen, byte[]typeform, String logFileName, int mode);
+  public native boolean translate(String tableList, byte[] inbuf, int[] inlen, byte[] outbuf, int[] outlen, byte[] typeform, int[] outputPos, int[] inputPos, int[] cursorPos, String logFileName, int mode);
+  public native boolean hyphenate(String tableList, byte[] inbuf, int inlen, byte[] hyphens, String logFilename, int mode);
+  public native boolean backTranslateString(String tableList, byte[] inbuf, int[] inlen, byte[] outbuf, int[] outlen, byte[] typeform, String logFileName, int mode);
+  public native boolean backTranslate(String tableList, byte[] inbuf, int[] inlen, byte[] outbuf, int[] outlen, int[] outputPos, int[] inputPos, int[] cursorPos, byte[] typeform, String logFileName, int mode);
 }
 

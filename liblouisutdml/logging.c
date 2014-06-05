@@ -141,6 +141,7 @@ defaultLogCallback (logLevels level, const char *message)
 void EXPORT_CALL
 lbu_logEnd ()
 {
+  lou_logEnd();
   if (logFile != NULL)
     fclose (logFile);
   logFile = NULL;
