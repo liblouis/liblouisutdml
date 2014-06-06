@@ -33,10 +33,8 @@ fail=0
 xfail=0
 xpass=0
 
-if [ -n "$TESTS_DIR" ]; then
-    TESTS_DIR=$(cd $(dirname "$0"); pwd)
-    cd "$TESTS_DIR"
-fi
+TESTS_DIR=$(cd $(dirname "$0"); pwd)
+cd "$TESTS_DIR"
 
 # Create a temporary directory $tmp_dir in $TMPDIR (default /tmp).
 : ${TMPDIR=/tmp}
