@@ -1,0 +1,9 @@
+# WHITESPACE
+
+space \x0020 0
+space \x0009 0
+space \x000C 0
+space \x000D 0
+space \x000A 0
+space \x00A0 a
+
