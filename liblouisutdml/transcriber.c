@@ -4010,7 +4010,7 @@ backTranslateBlock (xmlNode * curBlock, xmlNode * curBrl)
   kk = 0;
   if (!(ud->mode & notSync))
     {
-      for (k = 0; k < translatedLength; k++)
+      for (k = 0; k < translationLength; k++)
 	{
 	  char posx[MAXNUMLEN];
 	  int posxLen = sprintf (posx, "%d ", backIndices[k]);
