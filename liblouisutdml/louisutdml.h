@@ -87,6 +87,8 @@ typedef struct
   int newline_after;
   int runningHead;
   sem_act emphasis;
+  const char topBoxline[1];
+  const char bottomBoxline[1];
   char name[1];
 } StyleType;
 

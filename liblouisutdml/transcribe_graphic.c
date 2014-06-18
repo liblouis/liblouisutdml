@@ -115,8 +115,6 @@ graphicEmptyElement (xmlNode * node)
     case softreturn:
       insert_code (node, 0);
       break;
-    case boxline:
-      break;
     case blankline:
       break;
     case newpage:

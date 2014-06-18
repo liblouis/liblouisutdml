@@ -40,6 +40,7 @@ static StyleRecord prevStyleSpec;
 static StyleType *style;
 static StyleType *prevStyle;
 static int styleBody ();
+static int addBoxline(const char *boxChar);
 
 int
 fineFormat ()
@@ -723,20 +724,28 @@ insert_translation (const char *table)
     {
       memset (ud->typeform, 0, sizeof (ud->typeform));
       ud->text_length = 0;
+      logMessage(LOG_DEBUG, "Finished insert_translation, table not defined");
       return 0;
     }
   if (ud->text_length == 0)
+  {
+    logMessage(LOG_DEBUG, "Finished insert_translation, no text to translate");
     return 1;
+  }
   for (k = 0; k < ud->text_length && ud->text_buffer[k] <= 32; k++);
   if (k == ud->text_length)
     {
       ud->text_length = 0;
+      logMessage(LOG_DEBUG, "Finished insert_translation, only whitespace");
       return 1;
     }
   if (styleSpec != NULL && styleSpec->status == resumeBody)
     styleSpec->status = bodyInterrupted;
   if (ud->format_for == utd)
+  {
+    logMessage(LOG_DEBUG, "Finished insert_translation, delegating to utd_insert_translation");
     return (utd_insert_translation (table));
+  }
   if (ud->translated_length > 0 && ud->translated_length <
       MAX_TRANS_LENGTH &&
       ud->translated_buffer[ud->translated_length - 1] > 32)
@@ -787,8 +796,12 @@ insert_translation (const char *table)
     {
       ud->translated_length = MAX_TRANS_LENGTH;
       if (!write_paragraph (para, NULL))
+      {
+        logMessage(LOG_DEBUG, "Finished insert_translation, issue with write_paragraph");
 	return 0;
+      }
     }
+  logMessage(LOG_DEBUG, "Finished insert_translation");
   return 1;
 }
 
@@ -1110,6 +1123,7 @@ insert_text (xmlNode * node)
   if (ud->format_for == utd)
     {
       utd_insert_text (node, length);
+      logMessage(LOG_DEBUG, "Finished insert_text");
       return;
     }
   switch (ud->stack[ud->top])
@@ -1131,9 +1145,11 @@ insert_text (xmlNode * node)
 	}
       ud->translated_length += ud->text_length;
       ud->text_length = 0;
+      logMessage(LOG_DEBUG, "Finished insert_text, notranslate action used");
       return;
     case pagenum:
       handlePagenum (node->content, length);
+      logMessage(LOG_DEBUG, "Finished insert_text, pagenum action used");
       return;
     default:
       break;
@@ -1141,6 +1157,7 @@ insert_text (xmlNode * node)
   ud->old_text_length = ud->text_length;
   insert_utf8 (node->content);
   setEmphasis ();
+  logMessage(LOG_DEBUG, "Finished insert_text");
 }
 
 static int
@@ -2848,6 +2865,10 @@ startStyle ()
       else if (style->newpage_before)
 	fillPage ();
     }
+  if (style->topBoxline[0])
+  {
+    addBoxline(style->topBoxline);
+  }
   writeOutbuf ();
   ud->blank_lines = maximum (ud->blank_lines, style->lines_before);
 
@@ -2971,6 +2992,10 @@ finishStyle ()
 /*Skip lines or pages after body*/
   if (ud->format_for == utd)
     return utd_finishStyle ();
+  if (style->bottomBoxline[0])
+  {
+    addBoxline(style->bottomBoxline);
+  }
   if (ud->braille_pages)
     {
       if (style->newpage_after)
@@ -2988,7 +3013,10 @@ write_paragraph (sem_act action, xmlNode * node)
   logMessage(LOG_DEBUG, "Begin write_paragraph");
   if (!((ud->text_length > 0 || ud->translated_length > 0) &&
 	ud->style_top >= 0))
+  {
+    logMessage(LOG_DEBUG, "Finished write_paragraph, no text translated");
     return 1;
+  }
   holdStyle = action_to_style (action);
   if (holdStyle == NULL)
     holdStyle = lookup_style ("para");
@@ -3470,6 +3498,29 @@ insert_linkOrTarget (xmlNode * node, int which)
   return 1;
 }
 
+static int
+addBoxline(const char *boxChar)
+{
+  int k;
+  int availableCells = 0;
+  widechar wTmpBuf = (widechar)boxChar[0];
+  logMessage(LOG_DEBUG, "Begin addBoxline");
+  while (availableCells != ud->cells_per_line)
+  {
+    finishLine();
+    availableCells = startLine();
+  }
+  logMessage(LOG_DEBUG, "availableCells=%d", availableCells);
+  for (k = 0; k < availableCells; k++)
+  {
+    ud->outbuf1[k+ud->outbuf1_len_so_far] = wTmpBuf;
+  }
+  ud->outbuf1_len_so_far += availableCells;
+  cellsWritten += availableCells;
+  finishLine();
+  logMessage(LOG_DEBUG, "Finished addBoxline");
+  return 1;
+}
 int
 doBoxline (xmlNode * node)
 {
@@ -3500,13 +3551,6 @@ doBoxline (xmlNode * node)
   finishLine ();
   logMessage(LOG_DEBUG, "Finished doBoxline");
   return 1;
-}
-
-int
-do_boxline (xmlNode * node)
-{
-  fineFormat ();
-  return doBoxline (node);
 }
 
 int

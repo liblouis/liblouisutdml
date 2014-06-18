@@ -1633,9 +1633,6 @@ doSemanticActions ()
 	break;
       insert_linkOrTarget (macroNode, 1);
       break;
-    case boxline:
-      do_boxline (macroNode);
-      break;
     case blankline:
       do_blankline ();
       break;

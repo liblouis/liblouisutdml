@@ -1118,6 +1118,10 @@ compileConfig (FileInfo * nested)
 	      "18",
 	      "emphasis",
 	      "19",
+              "topBoxline",
+              "20",
+              "bottomBoxline",
+              "21",
 	      NULL
 	    };
 	    static const char *formats[] = {
@@ -1248,6 +1252,12 @@ compileConfig (FileInfo * nested)
 		  nested->value);
 		  }
 		  break;
+                  case 20:
+                    memcpy(style->topBoxline, nested->value, 1);
+                    break;
+                  case 21:
+                    memcpy(style->bottomBoxline, nested->value, 1);
+                    break;
 		  default:
 		    configureError (nested, "Program error in readconfig.c");
 		    continue;

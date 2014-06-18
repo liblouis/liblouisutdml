@@ -46,7 +46,6 @@ static const char *semNames[] = {
   "attrtotext",
   "runninghead",
   "footer",
-  "boxline",
   "italicx",
   "boldx",
   "underlinex",
