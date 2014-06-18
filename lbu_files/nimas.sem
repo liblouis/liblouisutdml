@@ -95,6 +95,8 @@ generic col
 skip img
 generic imggroup
 
+# Sidebars
+boxline sidebar
 # Not sure what to do about these, subscript and superscript?
 generic vdo
 generic sub
