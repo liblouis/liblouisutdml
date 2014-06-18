@@ -114,8 +114,6 @@ computerCodeEmptyElement (xmlNode * node, int action)
     {
     case softreturn:
       break;
-    case boxline:
-      break;
     case blankline:
       break;
     case newpage:
