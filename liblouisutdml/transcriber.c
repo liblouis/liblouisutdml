@@ -3521,37 +3521,6 @@ addBoxline(const char *boxChar)
   logMessage(LOG_DEBUG, "Finished addBoxline");
   return 1;
 }
-int
-doBoxline (xmlNode * node)
-{
-  widechar boxChar;
-  widechar boxLine[MAXNAMELEN];
-  int k;
-  int start = ud->text_length;
-  int availableCells;
-  logMessage(LOG_DEBUG, "Begin doBoxline");
-  logMessage(LOG_DEBUG, "start=%d", start);
-  insert_code (node, 0);
-  if (!(ud->text_length - start))
-    return 0;
-  boxChar = ud->text_buffer[start];
-  ud->text_length = start;
-  cellsWritten = 0;
-  availableCells = startLine ();
-  while (availableCells != ud->cells_per_line)
-    {
-      finishLine ();
-      availableCells = startLine ();
-    }
-  for (k = 0; k < availableCells; k++)
-    boxLine[k] = boxChar;
-  if (!insertWidechars (boxLine, availableCells))
-    return 0;
-  cellsWritten = ud->cells_per_line;
-  finishLine ();
-  logMessage(LOG_DEBUG, "Finished doBoxline");
-  return 1;
-}
 
 int
 do_newpage ()
