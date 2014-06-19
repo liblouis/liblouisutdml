@@ -57,9 +57,8 @@ if JAVA_BINDINGS
 liblouisutdml_la_SOURCES += ../java/Jliblouisutdml.c
 endif
 
-# Make sure sem_names.h is generated before everything else
-EXTRA_DIST = make_sem_names.pl
-BUILT_SOURCES = sem_names.h
-sem_names.h: sem_enum.h Makefile
-	$(srcdir)/make_sem_names.pl < $< > $@
+EXTRA_DIST =					\
+	README					\
+	make_sem_names.c			\
+	Makesemnames
 

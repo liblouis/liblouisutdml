@@ -22,7 +22,6 @@ config.log
 config.status
 configure
 
-build-aux/compile
 build-aux/config.guess
 build-aux/config.sub
 build-aux/install-sh
@@ -56,7 +55,6 @@ liblouisutdml.pc
 liblouisutdml/config.h
 liblouisutdml/config.h.in
 liblouisutdml/stamp-h1
-liblouisutdml/sem_names.h
 
 liblouisutdml-*.tar.gz
 
