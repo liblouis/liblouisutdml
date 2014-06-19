@@ -40,7 +40,24 @@ static StyleRecord prevStyleSpec;
 static StyleType *style;
 static StyleType *prevStyle;
 static int styleBody ();
-static int addBoxline(const char *boxChar);
+static xmlNode *brlNode;
+/*
+ * addBoxline adds a boxline to the document using the character given.
+ * boxChar: The character to fill the line with.
+ * beforeAfter: Whether the line is before or after content. Value 1 for after
+ *              and -1 for before.
+ */
+static int addBoxline(const char *boxChar, int beforeAfter);
+/*
+ * utd_addBoxline, UTD version of addBoxline
+ * boxChar: The character to fill the line with.
+ * beforeAfter: Whether the boxline should be before or after the content.
+ *              Value 1 for after and value -1 for before.
+ */
+static int utd_addBoxline(const char *boxChar, int beforeAfter);
+
+static int utd_startLine();
+static int utd_finishLine(int number, int beforeAfter);
 
 int
 fineFormat ()
@@ -2867,7 +2884,7 @@ startStyle ()
     }
   if (style->topBoxline[0])
   {
-    addBoxline(style->topBoxline);
+    addBoxline(style->topBoxline, -1);
   }
   writeOutbuf ();
   ud->blank_lines = maximum (ud->blank_lines, style->lines_before);
@@ -2994,7 +3011,7 @@ finishStyle ()
     return utd_finishStyle ();
   if (style->bottomBoxline[0])
   {
-    addBoxline(style->bottomBoxline);
+    addBoxline(style->bottomBoxline, 1);
   }
   if (ud->braille_pages)
     {
@@ -3499,12 +3516,15 @@ insert_linkOrTarget (xmlNode * node, int which)
 }
 
 static int
-addBoxline(const char *boxChar)
+addBoxline(const char *boxChar, int beforeAfter)
 {
   int k;
   int availableCells = 0;
   widechar wTmpBuf = (widechar)boxChar[0];
+  if (ud->format_for == utd)
+    return utd_addBoxline(boxChar, beforeAfter);
   logMessage(LOG_DEBUG, "Begin addBoxline");
+  logMessage(LOG_DEBUG, "styleSpec->node->name=%s", styleSpec->node->name);
   while (availableCells != ud->cells_per_line)
   {
     finishLine();
@@ -3519,6 +3539,64 @@ addBoxline(const char *boxChar)
   cellsWritten += availableCells;
   finishLine();
   logMessage(LOG_DEBUG, "Finished addBoxline");
+  return 1;
+}
+
+static int
+utd_addBoxline(const char *boxChar, int beforeAfter)
+{
+  int k;
+  int availableCells = 0;
+  int inlen = CHARSIZE * (ud->cells_per_line);
+  int outlen = 10 * (ud->cells_per_line + 1);
+  xmlNode *tmpBrlNode;
+  xmlNode *lineNode;
+  xmlNode *textNode;
+  widechar wTmpBuf = (widechar)boxChar[0];
+  widechar *lineBuf;
+  char *chContent;
+  // Make sure that styleSpec relates to a node
+  if (styleSpec->node == NULL)
+    return 0;
+  logMessage(LOG_DEBUG, "Begin utd_addBoxline");
+  // We should catch the current brlNode so we can restore afterwards
+  tmpBrlNode = brlNode;
+  // Find a complete blank line
+  while (availableCells != ud->cells_per_line)
+  {
+    utd_finishLine(0, 0);
+  availableCells = utd_startLine();
+  }
+  // Create the line of characters
+  lineBuf = malloc(inlen);
+  chContent = malloc(outlen);
+  for (k = 0; k < availableCells; k++)
+  {
+    lineBuf[k] = wTmpBuf;
+  }
+  inlen = availableCells;
+  wc_string_to_utf8(lineBuf, &inlen, chContent, &outlen);
+  // Create new brl node at the start of the styled node
+  lineNode = xmlNewNode(NULL, (xmlChar *)"brl");
+  textNode = xmlNewText(chContent);
+  xmlAddChild(lineNode, textNode);
+  free(lineBuf);
+  free(chContent);
+  if (styleSpec->node->children && beforeAfter == -1)
+  {
+    brlNode = xmlAddPrevSibling(styleSpec->node->children, lineNode);
+  }
+  else if (styleSpec->node->children && beforeAfter == 1)
+  {
+    brlNode = xmlAddNextSibling(styleSpec->node->last, lineNode);
+  }
+  else
+  {
+    brlNode = xmlAddChild(styleSpec->node, lineNode);
+  }
+  // Restore original brlNode
+  brlNode = tmpBrlNode;
+  logMessage(LOG_DEBUG, "Finish utd_addBoxline");
   return 1;
 }
 
@@ -3700,7 +3778,7 @@ static int *indices;
 static int *backIndices;
 static widechar *backBuf;
 static int backLength;
-static xmlNode *brlNode;
+
 static xmlNode *firstBrlNode;
 static xmlNode *prevBrlNode;
 static xmlNode *documentNode = NULL;
@@ -4954,7 +5032,7 @@ utd_startLine ()
       else
 	availableCells = ud->cells_per_line;
     }
-  logMessage(LOG_DEBUG, "Begin utd_startLine");
+  logMessage(LOG_DEBUG, "Finished utd_startLine");
   return availableCells;
 }
 
@@ -5410,6 +5488,10 @@ utd_startStyle ()
       ud->vert_line_pos = ud->page_top;
       return 1;
     }
+  if (style->topBoxline[0] && styleSpec->node)
+  {
+    utd_addBoxline(style->topBoxline, -1);
+  }
   if (!ud->paragraphs)
     return 1;
   if ((style->lines_before ||
@@ -5522,6 +5604,10 @@ utd_finishStyle ()
 {
   PageStatus curPageStatus = checkPageStatus ();
   logMessage(LOG_DEBUG, "Begin utd_finishStyle");
+  if (style->bottomBoxline[0])
+  {
+    utd_addBoxline(style->bottomBoxline, 1);
+  }
   if (!ud->paragraphs)
     return 1;
   if (style->newpage_after)
