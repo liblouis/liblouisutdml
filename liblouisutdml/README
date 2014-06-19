@@ -1,3 +1,0 @@
-If you change sem_enum.h be sure to run
-make -f Makesemnames
-
