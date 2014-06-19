@@ -1,0 +1,19 @@
+<project name="jliblouisutdml" default="dist"
+basedir=".">
+<property name="src" location="src"/>
+<property name="build" location="classes"/>
+<target name="init">
+<mkdir dir="${build}"/>
+</target>
+<target name="compile" depends="init">
+<javac srcdir="${src}" destdir="${build}"
+includeantruntime="false" source="1.6" target="1.6">
+</javac>
+</target>
+<target name="dist" depends="compile">
+<jar jarfile="jliblouisutdml.jar" 
+basedir="${build}">
+</jar>
+</target>
+</project>
+
