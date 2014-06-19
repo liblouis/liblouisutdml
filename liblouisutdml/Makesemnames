@@ -1,0 +1,7 @@
+# If you change sem_enum.h run this file with
+# make -f Makesemnames
+
+sem_names.h : sem_enum.h make_sem_names
+	./make_sem_names
+make_sem_names : make_sem_names.c
+	gcc -O2 -Wall -o make_sem_names make_sem_names.c
