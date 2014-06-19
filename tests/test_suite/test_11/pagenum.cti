@@ -1,0 +1,25 @@
+# PAGENUMBERS
+
+digit 1 2
+digit 2 23
+digit 3 25
+digit 4 256
+digit 5 26
+digit 6 235
+digit 7 2356
+digit 8 236
+digit 9 35
+digit 0 356
+litdigit 1 1
+litdigit 2 12
+litdigit 3 14
+litdigit 4 145
+litdigit 5 15
+litdigit 6 124
+litdigit 7 1245
+litdigit 8 125
+litdigit 9 24
+litdigit 0 245
+sign \x0023 3456
+numsign 3456
+
