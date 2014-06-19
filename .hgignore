@@ -55,6 +55,7 @@ liblouisutdml.pc
 liblouisutdml/config.h
 liblouisutdml/config.h.in
 liblouisutdml/stamp-h1
+liblouisutdml/sem_names.h
 
 liblouisutdml-*.tar.gz
 
