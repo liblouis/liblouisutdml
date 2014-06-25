@@ -1,4 +1,5 @@
 import os
+import sys
 
 # Some helper function definitions
 
@@ -52,6 +53,8 @@ cSRCFiles = ['liblouisutdml/change_table.c',
 jniSRCFiles = ['java/Jliblouisutdml.c']
 toolsSRCFiles = ['tools/file2brl.c']
 louisutdmlDepLibs = ['louis', 'xml2']
+incDirs = ['liblouisutdml', 'gnulib']
+libDirs = []
 
 env = Environment()
 conf = Configure(env,
@@ -66,8 +69,10 @@ if not conf.CheckPKGConfig('0.15.0'):
   if sys.platform == 'win32':
     liblouisIncDir = [os.path.join('..', 'liblouis', 'include')]
     libxml2IncDir = [os.path.join('..', 'libxml2', 'include', 'libxml2')]
+    incDirs += libxml2IncDir + liblouisIncDir
     liblouisLibDir = [os.path.join('..', 'liblouis')]
     libxml2LibDir = [os.path.join('..', 'libxml2', 'lib')]
+    libDirs += libxml2LibDir + liblouisLibDir
   else:
     print('pkg-config >= 0.15.0 not found.')
     Exit(1)
@@ -93,10 +98,13 @@ if not conf.CheckFunc('memset'):
   Exit(1)
 javaHome = os.environ.get('JAVA_HOME')
 if javaHome:
-  conf.env.Append(CPPFLAGS=[os.path.join(javaHome, 'include')])
+  conf.env.Append(CPPPATH=[os.path.join(javaHome, 'include')])
 if not conf.CheckCHeader('jni.h'):
   print('jni.h not found.')
   Exit(1)
+else:
+  incDirs += ['java']
+  cSRCFiles += jniSRCFiles
 for defName, defVal in packageConfigDefines.items():
   conf.Define(defName, '"%s"' % defVal)
 env = conf.Finish()
@@ -106,8 +114,9 @@ env = conf.Finish()
 env.Append(CPPDEFINES={'LIBLOUIS_TABLES_PATH': '\\"/usr/local/share/liblouis/tables/\\"',
                        'LBU_PATH': '\\"/usr/local/share/liblouisutdml/lbu_files/\\"'
                       },
-           CPPPATH=['liblouisutdml', 'java', 'gnulib'])
+           CPPPATH=incDirs,
+           LIBPATH=libDirs)
 
-utdmlSharedLibs = env.SharedLibrary('louisutdml', cSRCFiles + jniSRCFiles, LIBS=louisutdmlDepLibs)
+utdmlSharedLibs = env.SharedLibrary('louisutdml', cSRCFiles, LIBS=louisutdmlDepLibs)
 env.Program('file2brl', toolsSRCFiles + ['gnulib/progname.c', 'gnulib/version-etc.c'], LIBS=utdmlSharedLibs)
 
