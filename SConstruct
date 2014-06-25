@@ -67,7 +67,7 @@ if not conf.CheckCC():
   Exit(1)
 if not conf.CheckPKGConfig('0.15.0'):
   if sys.platform == 'win32':
-    liblouisIncDir = [os.path.join('..', 'liblouis', 'include')]
+    liblouisIncDir = [os.path.join('..', 'liblouis', 'liblouis')]
     libxml2IncDir = [os.path.join('..', 'libxml2', 'include', 'libxml2')]
     incDirs += libxml2IncDir + liblouisIncDir
     liblouisLibDir = [os.path.join('..', 'liblouis')]
