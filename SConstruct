@@ -99,10 +99,7 @@ if not conf.CheckFunc('memset'):
 javaHome = os.environ.get('JAVA_HOME')
 if javaHome:
   conf.env.Append(CPPPATH=[os.path.join(javaHome, 'include')])
-if not conf.CheckCHeader('jni.h'):
-  print('jni.h not found.')
-  Exit(1)
-else:
+if conf.CheckCHeader('jni.h'):
   incDirs += ['java']
   cSRCFiles += jniSRCFiles
 for defName, defVal in packageConfigDefines.items():
