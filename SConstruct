@@ -65,9 +65,9 @@ if not conf.CheckCC():
 if not conf.CheckPKGConfig('0.15.0'):
   if sys.platform == 'win32':
     liblouisIncDir = [os.path.join('..', 'liblouis', 'include')]
-    libxml2IncDir = [os.path.join('..', 'libxml2', 'include', 'libxml')]
+    libxml2IncDir = [os.path.join('..', 'libxml2', 'include', 'libxml2')]
     liblouisLibDir = [os.path.join('..', 'liblouis')]
-    libxml2LibDir = [os.path.join('..', 'libxml2')]
+    libxml2LibDir = [os.path.join('..', 'libxml2', 'lib')]
   else:
     print('pkg-config >= 0.15.0 not found.')
     Exit(1)
