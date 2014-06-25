@@ -1,6 +1,23 @@
 import os
 
-configEnvDefines = {'PACKAGE': 'liblouisutdml',
+# Some helper function definitions
+
+def CheckPKGConfig(context, version):
+  """Checks whether pkg-config of a given version can be found."""
+  context.Message("Checking for pkg-config %s..." % version)
+  ret = context.TryAction('pkg-config --atleast-pkgconfig-version=%s' % version)[0]
+  context.Result(ret)
+  return ret
+
+def CheckPKG(context, name):
+  """Checks for package using pkg-config"""
+  context.Message("Checking for %s..." % name)
+  ret = context.TryAction('pkg-config --exists \'%s\'' % name)[0]
+  context.Result(ret)
+  return ret
+
+
+packageConfigDefines = {'PACKAGE': 'liblouisutdml',
                     'PACKAGE_NAME': 'liblouisutdml',
                     'PACKAGE_STRING': 'liblouisutdml 2.5.0',
                     'PACKAGE_VERSION': '2.5.0',
@@ -37,29 +54,59 @@ toolsSRCFiles = ['tools/file2brl.c']
 louisutdmlDepLibs = ['louis', 'xml2']
 
 env = Environment()
-env.ParseConfig('pkg-config liblouis --cflags --libs')
-env.ParseConfig('pkg-config libxml-2.0 --cflags --libs')
+conf = Configure(env,
+                 custom_tests={'CheckPKGConfig': CheckPKGConfig,
+                               'CheckPKG': CheckPKG},
+                 config_h='liblouisutdml/config.h'
+                )
+if not conf.CheckCC():
+  print('C compiler not found.')
+  Exit(1)
+if not conf.CheckPKGConfig('0.15.0'):
+  if sys.platform == 'win32':
+    liblouisIncDir = [os.path.join('..', 'liblouis', 'include')]
+    libxml2IncDir = [os.path.join('..', 'libxml2', 'include', 'libxml')]
+    liblouisLibDir = [os.path.join('..', 'liblouis')]
+    libxml2LibDir = [os.path.join('..', 'libxml2')]
+  else:
+    print('pkg-config >= 0.15.0 not found.')
+    Exit(1)
+else:
+  if not conf.CheckPKG('liblouis >= 2.5.4'):
+    print('liblouis not found.')
+    Exit(1)
+  else:
+    conf.env.ParseConfig('pkg-config --cflags --libs liblouis')
+  if not conf.CheckPKG('libxml-2.0'):
+    print('libxml2 not found.')
+    Exit(1)
+  else:
+    conf.env.ParseConfig('pkg-config --cflags --libs libxml-2.0')
+if not conf.CheckCHeader('stdlib.h'):
+  print('stdlib.h not found.')
+  Exit(1)
+if not conf.CheckCHeader('string.h'):
+  print('string.h not found.')
+  Exit(1)
+if not conf.CheckFunc('memset'):
+  print('memset function not found.')
+  Exit(1)
+javaHome = os.environ.get('JAVA_HOME')
+if javaHome:
+  conf.env.Append(CPPFLAGS=[os.path.join(javaHome, 'include')])
+if not conf.CheckCHeader('jni.h'):
+  print('jni.h not found.')
+  Exit(1)
+for defName, defVal in packageConfigDefines.items():
+  conf.Define(defName, '"%s"' % defVal)
+env = conf.Finish()
+
+# env.ParseConfig('pkg-config liblouis --cflags --libs')
+# env.ParseConfig('pkg-config libxml-2.0 --cflags --libs')
 env.Append(CPPDEFINES={'LIBLOUIS_TABLES_PATH': '\\"/usr/local/share/liblouis/tables/\\"',
                        'LBU_PATH': '\\"/usr/local/share/liblouisutdml/lbu_files/\\"'
                       },
            CPPPATH=['liblouisutdml', 'java', 'gnulib'])
-env.Append(**configEnvDefines)
-javacDir = os.path.dirname(env.WhereIs('javac'))
-if not javacDir:
-  print("javac not found.")
-  Exit(1)
-javaBaseDir = os.path.join(javacDir, '..')
-print("Java in:%s" % javaBaseDir)
-conf = Configure(env, config_h='liblouisutdml/config.h')
-if not conf.CheckCC():
-  print("C compiler not found.")
-  Exit(1)
-if not conf.CheckCHeader('liblouis.h'):
-  print("liblouis.h not found.")
-  Exit(1)
-for defName, defVal in configEnvDefines.items():
-  conf.Define(defName, '"%s"' % defVal)
-env = conf.Finish()
 
 utdmlSharedLibs = env.SharedLibrary('louisutdml', cSRCFiles + jniSRCFiles, LIBS=louisutdmlDepLibs)
 env.Program('file2brl', toolsSRCFiles + ['gnulib/progname.c', 'gnulib/version-etc.c'], LIBS=utdmlSharedLibs)
