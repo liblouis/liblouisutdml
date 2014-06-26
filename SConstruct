@@ -60,7 +60,7 @@ env = Environment()
 # Add JAVA_HOME paths if defined in environment variables
 javaHome = os.environ.get('HAVA_HOME')
 if javaHome:
-  env.Append(CPPPATH=[os.path.join(javaHome, 'include'))
+  env.Append(CPPPATH=[os.path.join(javaHome, 'include')])
 
 # Now configure for the system
 conf = Configure(env,
