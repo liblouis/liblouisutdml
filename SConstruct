@@ -82,7 +82,7 @@ if not conf.CheckPKGConfig('0.15.0'):
     libDirs += libxml2LibDir + liblouisLibDir
     cSRCFiles += ['windows/liblouisutdml.def']
     # Due to Windows linking and names, we need to redefine the libs
-    liblouisutdmlDepLibs = ['liblouis', 'libxml2']
+    louisutdmlDepLibs = ['liblouis', 'libxml2']
   else:
     print('pkg-config >= 0.15.0 not found.')
     Exit(1)
