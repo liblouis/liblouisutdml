@@ -53,10 +53,16 @@ cSRCFiles = ['liblouisutdml/change_table.c',
 jniSRCFiles = ['java/Jliblouisutdml.c']
 toolsSRCFiles = ['tools/file2brl.c']
 louisutdmlDepLibs = ['louis', 'xml2']
-incDirs = ['liblouisutdml', 'gnulib']
+incDirs = ['liblouisutdml']
 libDirs = []
 
 env = Environment()
+# Add JAVA_HOME paths if defined in environment variables
+javaHome = os.environ.get('HAVA_HOME')
+if javaHome:
+  env.Append(CPPPATH=[os.path.join(javaHome, 'include')
+
+# Now configure for the system
 conf = Configure(env,
                  custom_tests={'CheckPKGConfig': CheckPKGConfig,
                                'CheckPKG': CheckPKG},
@@ -73,6 +79,8 @@ if not conf.CheckPKGConfig('0.15.0'):
     liblouisLibDir = [os.path.join('..', 'liblouis')]
     libxml2LibDir = [os.path.join('..', 'libxml2', 'lib')]
     libDirs += libxml2LibDir + liblouisLibDir
+    # Due to Windows linking and names, we need to redefine the libs
+    liblouisutdmlDepLibs = ['liblouis', 'libxml2']
   else:
     print('pkg-config >= 0.15.0 not found.')
     Exit(1)
@@ -96,9 +104,6 @@ if not conf.CheckCHeader('string.h'):
 if not conf.CheckFunc('memset'):
   print('memset function not found.')
   Exit(1)
-javaHome = os.environ.get('JAVA_HOME')
-if javaHome:
-  conf.env.Append(CPPPATH=[os.path.join(javaHome, 'include')])
 if conf.CheckCHeader('jni.h'):
   incDirs += ['java']
   cSRCFiles += jniSRCFiles
@@ -115,5 +120,5 @@ env.Append(CPPDEFINES={'LIBLOUIS_TABLES_PATH': '\\"/usr/local/share/liblouis/tab
            LIBPATH=libDirs)
 
 utdmlSharedLibs = env.SharedLibrary('louisutdml', cSRCFiles, LIBS=louisutdmlDepLibs)
-env.Program('file2brl', toolsSRCFiles + ['gnulib/progname.c', 'gnulib/version-etc.c'], LIBS=utdmlSharedLibs)
+# env.Program('file2brl', toolsSRCFiles + ['gnulib/progname.c', 'gnulib/version-etc.c'], LIBS=utdmlSharedLibs)
 
