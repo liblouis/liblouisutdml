@@ -58,7 +58,7 @@ libDirs = []
 
 env = Environment()
 # Add JAVA_HOME paths if defined in environment variables
-javaHome = os.environ.get('HAVA_HOME')
+javaHome = os.environ.get('JAVA_HOME')
 if javaHome:
   env.Append(CPPPATH=[os.path.join(javaHome, 'include'),
                       os.path.join(javaHome, 'include', 'win32')])
