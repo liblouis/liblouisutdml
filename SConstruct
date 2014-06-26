@@ -80,7 +80,7 @@ if not conf.CheckPKGConfig('0.15.0'):
     liblouisLibDir = [os.path.join('..', 'liblouis')]
     libxml2LibDir = [os.path.join('..', 'libxml2', 'lib')]
     libDirs += libxml2LibDir + liblouisLibDir
-    cSRCFiles += ['liblouisutdml.def']
+    cSRCFiles += ['windows/liblouisutdml.def']
     # Due to Windows linking and names, we need to redefine the libs
     liblouisutdmlDepLibs = ['liblouis', 'libxml2']
   else:
