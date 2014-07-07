@@ -4946,7 +4946,8 @@ setNewlineProp (int horizLinePos)
 {
   char position[MAXNUMLEN];
   sprintf (position, "%d,%d", horizLinePos, ud->vert_line_pos);
-  xmlNewProp (newlineNode, (xmlChar *) "xy", (xmlChar *) position);
+  if (xmlHasProp(newlineNode, (xmlChar *) "xy") == NULL)
+    xmlNewProp (newlineNode, (xmlChar *) "xy", (xmlChar *) position);
   return 1;
 }
 
