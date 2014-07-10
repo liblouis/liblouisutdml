@@ -18,6 +18,7 @@ public class SimpleTest {
   public void LoadLibLouisUTDML() throws Exception {
     LibLouisUTDML.loadLibrary(System.getProperty("liblouis.dir"), System.getProperty("liblouis.ext"));
     lbu = LibLouisUTDML.getInstance();
+    lbu.setDataPath(new File("testdata").getAbsolutePath());
   }
   @BeforeMethod
   public void setup() {
