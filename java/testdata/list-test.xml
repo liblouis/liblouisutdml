@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dtbook PUBLIC "-//NISO//DTD dtbook 2005-3//EN" "http://www.daisy.org/z3986/2005/dtbook-2005-3.dtd" [
+  <!ENTITY % MATHML.prefixed "INCLUDE" >
+  <!ENTITY % MATHML.prefix "m">
+  <!ENTITY % MATHML.Common.attrib
+          "xlink:href    CDATA       #IMPLIED
+          xlink:type     CDATA       #IMPLIED	
+          class          CDATA       #IMPLIED
+          style          CDATA       #IMPLIED
+          id             ID          #IMPLIED
+          xref           IDREF       #IMPLIED
+          other          CDATA       #IMPLIED
+          xmlns:dtbook   CDATA       #FIXED	'http://www.daisy.org/z3986/2005/dtbook/'
+          dtbook:smilref CDATA       #IMPLIED"
+  >    
+  <!ENTITY % mathML2 PUBLIC "-//W3C//DTD MathML 2.0//EN"
+             "http://www.w3.org/Math/DTD/mathml2/mathml2.dtd"
+  >
+  %mathML2;        
+  <!ENTITY % externalFlow "| m:math">
+  <!ENTITY % externalNamespaces "xmlns:m CDATA #FIXED 'http://www.w3.org/1998/Math/MathML'">      
+ ]>
+<dtbook version="2005-3" xml:lang="en" xmlns="http://www.daisy.org/z3986/2005/dtbook/" xmlns:m="http://www.w3.org/1998/Math/MathML">
+<head/>
+<book>
+<bodymatter>
+<level1>
+<h1>List with Lone Space</h1>
+<p>This list has a single space between the number and the text in each list item. <prodnode>here is a test note</prodnode>
+</p>
+<list type="pl">
+<li>
+<strong>1.</strong> <span>Item one.</span>
+</li>
+<li>
+<strong>2.</strong> <span>Item Two.</span>
+</li>
+</list>
+</level1>
+</bodymatter>
+</book>
+</dtbook>
+
