@@ -42,7 +42,7 @@
         basedir="${build}">
     </jar>
   </target>
-  <target name="testCompile" depends="testInit">
+  <target name="testCompile" depends="testInit, compile">
     <javac srcdir="${test.src}" destdir="${test.build}"
         includeantruntime="false" source="1.6" target="1.6" 
         classpathref="test_cp"/>

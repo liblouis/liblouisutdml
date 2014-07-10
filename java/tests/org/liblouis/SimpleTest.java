@@ -10,19 +10,16 @@ import org.testng.annotations.*;
 import org.testng.Assert;
 
 import org.liblouis.LibLouisUTDML;
+import org.liblouis.LogLevel;
 
 public class SimpleTest {
-  int testInt;
   LibLouisUTDML lbu;
   @BeforeClass
   public void LoadLibLouisUTDML() throws Exception {
     LibLouisUTDML.loadLibrary(System.getProperty("liblouis.dir"), System.getProperty("liblouis.ext"));
     lbu = LibLouisUTDML.getInstance();
     lbu.setDataPath(new File("testdata").getAbsolutePath());
-  }
-  @BeforeMethod
-  public void setup() {
-    testInt = 0;
+    lbu.setLogLevel(LogLevel.FATAL);
   }
   @DataProvider(name="translateFileTest")
   public Object[][] translateFileData() {
@@ -34,16 +31,6 @@ public class SimpleTest {
     testCaseData.add(null);
     testCaseData.add(0);
     return new Object[][] {testCaseData.toArray()};
-  }
-  @Test
-  public void addTest() {
-    testInt++;
-    assert(testInt == 1);
-  }
-  @Test
-  public void subtractTest() {
-    testInt--;
-    assert(testInt == -1);
   }
   @Test(dataProvider="translateFileTest")
   public void testTranslateFile(String configList, String inFile, String expectedFile, String logFile, String settings, int mode) throws Exception {
