@@ -1,10 +1,17 @@
 package org.liblouis;
 
+import java.io.IOException;
 import java.io.File;
 import java.io.FileReader;
 import java.io.BufferedReader;
 import java.util.List;
 import java.util.ArrayList;
+
+import javax.xml.parsers.*;
+import javax.xml.xpath.*;
+
+import org.w3c.dom.*;
+import org.xml.sax.SAXException;
 
 import org.testng.annotations.*;
 import org.testng.Assert;
@@ -21,16 +28,48 @@ public class SimpleTest {
     lbu.setDataPath(new File("testdata").getAbsolutePath());
     lbu.setLogLevel(LogLevel.FATAL);
   }
+  private String getTextFromNode(XPathExpression expr, Node searchNode) throws XPathExpressionException {
+    NodeList resultList = (NodeList)expr.evaluate(searchNode, XPathConstants.NODESET);
+    if (resultList.getLength() == 0) {
+      return null;
+    }
+    return resultList.item(0).getNodeValue();
+  }
   @DataProvider(name="translateFileTest")
-  public Object[][] translateFileData() {
-    List<Object> testCaseData = new ArrayList();
-    testCaseData.add("nimas.cfg");
-    testCaseData.add(new File("testdata", "list-test.xml").getAbsolutePath());
-    testCaseData.add(new File("testdata", "output.utd").getAbsolutePath());
-    testCaseData.add(null);
-    testCaseData.add(null);
-    testCaseData.add(0);
-    return new Object[][] {testCaseData.toArray()};
+  public Object[][] translateFileData() throws ParserConfigurationException, SAXException, XPathExpressionException, IOException {
+    DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
+    domFactory.setNamespaceAware(true);
+    DocumentBuilder builder = domFactory.newDocumentBuilder();
+    Document doc = builder.parse(new File("testdata", "translateFileTests.xml").getAbsolutePath());
+    XPathFactory factory = XPathFactory.newInstance();
+    XPath xpath = factory.newXPath();
+    XPathExpression testsExpr = xpath.compile("/tests/translateFileTest");
+    XPathExpression configListExpr = xpath.compile("configList/text()");
+    XPathExpression inFileExpr = xpath.compile("inFile/text()");
+    XPathExpression expectedOutFileExpr = xpath.compile("expectedOutFile/text()");
+    NodeList testNodes = (NodeList)testsExpr.evaluate(doc, XPathConstants.NODESET);
+    List<Object[]> tests = new ArrayList<Object[]>();
+    Object[] testCase;
+    for (int i = 0; i < testNodes.getLength(); i++) {
+      testCase = new Object[6];
+      if ((testCase[0] = getTextFromNode(configListExpr, testNodes.item(i))) == null) {
+        System.out.println("Test with no configList being skipped");
+        continue;
+      }
+      if ((testCase[1] = getTextFromNode(inFileExpr, testNodes.item(i))) == null) {
+        System.out.println("Test has no inFile so skipping");
+        continue;
+      }
+      if ((testCase[2] = getTextFromNode(expectedOutFileExpr, testNodes.item(i))) == null) {
+        System.out.println("Test has no expectedOutFile so skipping");
+        continue;
+      }
+      testCase[3] = null;
+      testCase[4] = null;
+      testCase[5] = 0;
+      tests.add(testCase);
+    }
+    return tests.toArray(new Object[tests.size()][6]);
   }
   @Test(dataProvider="translateFileTest")
   public void testTranslateFile(String configList, String inFile, String expectedFile, String logFile, String settings, int mode) throws Exception {
