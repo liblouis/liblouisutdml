@@ -47,9 +47,11 @@ public class SimpleTest {
     XPathExpression configListExpr = xpath.compile("configList/text()");
     XPathExpression inFileExpr = xpath.compile("inFile/text()");
     XPathExpression expectedOutFileExpr = xpath.compile("expectedOutFile/text()");
+    XPathExpression modeExpr = xpath.compile("mode/text()");
     NodeList testNodes = (NodeList)testsExpr.evaluate(doc, XPathConstants.NODESET);
     List<Object[]> tests = new ArrayList<Object[]>();
     Object[] testCase;
+    String modeStr;
     for (int i = 0; i < testNodes.getLength(); i++) {
       testCase = new Object[6];
       if ((testCase[0] = getTextFromNode(configListExpr, testNodes.item(i))) == null) {
@@ -67,6 +69,13 @@ public class SimpleTest {
       testCase[3] = null;
       testCase[4] = null;
       testCase[5] = 0;
+      try {
+        if ((modeStr = getTextFromNode(modeExpr, testNodes.item(i))) != null) {
+          testCase[5] = Integer.parseInt(modeStr);
+        }
+      } catch(Exception e) {
+        testCase[5] = 0;
+      }
       tests.add(testCase);
     }
     return tests.toArray(new Object[tests.size()][6]);
