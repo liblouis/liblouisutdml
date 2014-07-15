@@ -84,8 +84,13 @@ public class SimpleTest {
   }
   @Test(dataProvider="translateFileTest")
   public void testTranslateFile(String configList, String inFile, String expectedFile, String logFile, String settings, int mode) throws Exception {
+    String absoluteLogFilePath = null;
+    if (logFile != null)
+    {
+      absoluteLogFilePath = new File(logFile).getAbsolutePath();
+    }
     // Perform the translation of the file
-    if (!lbu.translateFile(configList, new File(inFile).getAbsolutePath(), new File("testdata", "actual.utd").getAbsolutePath(), new File(logFile).getAbsolutePath(), settings, mode)) {
+    if (!lbu.translateFile(configList, new File(inFile).getAbsolutePath(), new File("testdata", "actual.utd").getAbsolutePath(), absoluteLogFilePath, settings, mode)) {
       throw new Exception("LibLouisUTDML could not perform translation of the file " + inFile);
     }
     // Now compare the results
