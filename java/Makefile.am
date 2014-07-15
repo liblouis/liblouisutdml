@@ -1,4 +1,6 @@
-SUBDIRS = src
+SUBDIRS = src \
+	  tests \
+	  testdata
 
 EXTRA_DIST =					\
 	Jliblouisutdml.c			\
