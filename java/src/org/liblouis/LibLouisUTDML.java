@@ -84,14 +84,22 @@ private static boolean libraryLoaded = false;
   
   public static void loadLibrary (String libraryPath, String 
   librarySuffix) throws Exception {
- if (libraryLoaded)
+    if (libraryLoaded)
       return;
     if (libraryPath == null || librarySuffix == null)
+    {
+      System.out.println("prefix or suffix is null");
       throw new Exception (
       "Could not load libraries. libraryPath or librarySuffix undefined.");
+    }
     LibLouis.loadLibrary(libraryPath, librarySuffix);
     // System.load (libraryPath + "/liblouis" + librarySuffix);
-    System.load (new File(libraryPath, "liblouisutdml" + librarySuffix).getAbsolutePath());
+    String libName = "liblouisutdml" + librarySuffix;
+    if (!libraryPath.equals(""))
+    {
+      libName = new File(libraryPath, libName).getAbsolutePath();
+    }
+    System.load(libName);
     libraryLoaded = true;
   }
   

@@ -48,6 +48,8 @@ public class SimpleTest {
     XPathExpression inFileExpr = xpath.compile("inFile/text()");
     XPathExpression expectedOutFileExpr = xpath.compile("expectedOutFile/text()");
     XPathExpression modeExpr = xpath.compile("mode/text()");
+    XPathExpression logFileExpr = xpath.compile("logFile/text()");
+    XPathExpression settingsExpr = xpath.compile("settings/text()");
     NodeList testNodes = (NodeList)testsExpr.evaluate(doc, XPathConstants.NODESET);
     List<Object[]> tests = new ArrayList<Object[]>();
     Object[] testCase;
@@ -66,8 +68,8 @@ public class SimpleTest {
         System.out.println("Test has no expectedOutFile so skipping");
         continue;
       }
-      testCase[3] = null;
-      testCase[4] = null;
+      testCase[3] = getTextFromNode(logFileExpr, testNodes.item(i));
+      testCase[4] = getTextFromNode(settingsExpr, testNodes.item(i));
       testCase[5] = 0;
       try {
         if ((modeStr = getTextFromNode(modeExpr, testNodes.item(i))) != null) {
@@ -83,7 +85,7 @@ public class SimpleTest {
   @Test(dataProvider="translateFileTest")
   public void testTranslateFile(String configList, String inFile, String expectedFile, String logFile, String settings, int mode) throws Exception {
     // Perform the translation of the file
-    if (!lbu.translateFile(configList, inFile, new File("testdata", "actual.utd").getAbsolutePath(), logFile, settings, mode)) {
+    if (!lbu.translateFile(configList, new File(inFile).getAbsolutePath(), new File("testdata", "actual.utd").getAbsolutePath(), new File(logFile).getAbsolutePath(), settings, mode)) {
       throw new Exception("LibLouisUTDML could not perform translation of the file " + inFile);
     }
     // Now compare the results
