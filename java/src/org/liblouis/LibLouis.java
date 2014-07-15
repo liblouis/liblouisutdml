@@ -15,11 +15,17 @@ public final class LibLouis
     }
     if ((libraryPath == null) || (librarySuffix == null))
     {
+      System.out.println("prefix or suffix is null");
       throw new Exception(
           "Could not load liblouis, libraryPath or librarySuffix not defined."
       );
     }
-    System.load(new File(libraryPath, "liblouis" + librarySuffix).getAbsolutePath());
+    String libName = "liblouis" + librarySuffix;
+    if (!libraryPath.equals(""))
+    {
+      libName = new File(libraryPath, libName).getAbsolutePath();
+    }
+    System.load(libName);
     libraryLoaded = true;
   }
   private LibLouis()
