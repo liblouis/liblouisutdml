@@ -40,7 +40,7 @@ public class SimpleTest {
     DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
     domFactory.setNamespaceAware(true);
     DocumentBuilder builder = domFactory.newDocumentBuilder();
-    Document doc = builder.parse(new File("testdata", "translateFileTests.xml").getAbsolutePath());
+    Document doc = builder.parse(new File("testdata", "tests.xml").getAbsolutePath());
     XPathFactory factory = XPathFactory.newInstance();
     XPath xpath = factory.newXPath();
     XPathExpression testsExpr = xpath.compile("/tests/translateFileTest");
