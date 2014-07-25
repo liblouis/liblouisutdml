@@ -121,7 +121,7 @@ settings. */
                                          byte[]inbuf,
                                          byte[]outbuf, int[]outlen,
                                          String logFilename,
-                                         String settingsSrting, int mode);
+                                         String settingsString, int mode);
   
   /** the brf characters in inbuf are translated to print characters in 
       outbuf according to the settings in the configuration files and 

@@ -1,7 +1,7 @@
 SUBDIRS = liblouis \
 	  liblouisutdml
 
-EXTRA_DIST = translateFileTests.xml \
+EXTRA_DIST = tests.xml \
 	     list-test.xml \
 	      output.utd
 
