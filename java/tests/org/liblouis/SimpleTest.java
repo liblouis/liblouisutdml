@@ -13,7 +13,10 @@ import javax.xml.xpath.*;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 
-import org.testng.annotations.*;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
 import org.testng.Assert;
 
 import org.liblouis.LibLouisUTDML;
@@ -28,12 +31,28 @@ public class SimpleTest {
     lbu.setDataPath(new File("testdata").getAbsolutePath());
     lbu.setLogLevel(LogLevel.FATAL);
   }
+  @AfterMethod
+  public void freeLibLouisUTDML() {
+    lbu.free();
+  }
   private String getTextFromNode(XPathExpression expr, Node searchNode) throws XPathExpressionException {
     NodeList resultList = (NodeList)expr.evaluate(searchNode, XPathConstants.NODESET);
     if (resultList.getLength() == 0) {
       return null;
     }
     return resultList.item(0).getNodeValue();
+  }
+  private int getIntFromNode(XPathExpression expr, Node searchNode, int defaultValue) throws XPathExpressionException {
+    int result = defaultValue;
+    String resultStr = "";
+    try {
+      if ((resultStr = getTextFromNode(expr, searchNode)) != null) {
+        result = Integer.parseInt(resultStr);
+      }
+    } catch (NumberFormatException e) {
+      result = defaultValue;
+    }
+    return result;
   }
   @DataProvider(name="translateFileTest")
   public Object[][] translateFileData() throws ParserConfigurationException, SAXException, XPathExpressionException, IOException {
@@ -53,7 +72,6 @@ public class SimpleTest {
     NodeList testNodes = (NodeList)testsExpr.evaluate(doc, XPathConstants.NODESET);
     List<Object[]> tests = new ArrayList<Object[]>();
     Object[] testCase;
-    String modeStr;
     for (int i = 0; i < testNodes.getLength(); i++) {
       testCase = new Object[6];
       if ((testCase[0] = getTextFromNode(configListExpr, testNodes.item(i))) == null) {
@@ -70,14 +88,7 @@ public class SimpleTest {
       }
       testCase[3] = getTextFromNode(logFileExpr, testNodes.item(i));
       testCase[4] = getTextFromNode(settingsExpr, testNodes.item(i));
-      testCase[5] = 0;
-      try {
-        if ((modeStr = getTextFromNode(modeExpr, testNodes.item(i))) != null) {
-          testCase[5] = Integer.parseInt(modeStr);
-        }
-      } catch(Exception e) {
-        testCase[5] = 0;
-      }
+      testCase[5] = getIntFromNode(modeExpr, testNodes.item(i), 0);
       tests.add(testCase);
     }
     return tests.toArray(new Object[tests.size()][6]);
@@ -110,5 +121,44 @@ public class SimpleTest {
     if ((actualLine == null) ^ (expectedLine == null)) {
       Assert.fail("The actual file does not match the expected file");
     }
+  }
+  @Test(enabled=false)
+  public void testBackTranslateFile() {
+    Assert.fail("Not implemented yet");
+  }
+  @DataProvider(name="translateStringTest")
+  public Object[][] translateStringData() throws IOException, ParserConfigurationException, SAXException, XPathExpressionException {
+    DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
+    domFactory.setNamespaceAware(true);
+    DocumentBuilder builder = domFactory.newDocumentBuilder();
+    Document doc = builder.parse(new File("testdata", "tests.xml").getAbsolutePath());
+    XPathFactory factory = XPathFactory.newInstance();
+    XPath xpath = factory.newXPath();
+    XPathExpression testsExpr = xpath.compile("/tests/translateStringTest");
+    XPathExpression configListExpr = xpath.compile("configList");
+    XPathExpression inbufExpr = xpath.compile("inbuf");
+    XPathExpression outbufExpr = xpath.compile("outbuf");
+    XPathExpression logFileNameExpr = xpath.compile("logFileName");
+    XPathExpression settingsExpr = xpath.compile("settings");
+    XPathExpression modeExpr = xpath.compile("mode");
+    List<Object[]> tests = new ArrayList<Object[]>();
+    Object[] testCase;
+    NodeList testNodes = (NodeList)testsExpr.evaluate(doc, XPathConstants.NODESET);
+    for (int i = 0; i < testNodes.getLength(); i++) {
+      testCase = new Object[7];
+      if ((testCase[0] = getTextFromNode(configListExpr, testNodes.item(i))) == null) {
+        System.out.println("No configList so skipping test");
+        continue;
+      }
+      testCase[4] = getTextFromNode(logFileNameExpr, testNodes.item(i));
+      testCase[5] = getTextFromNode(settingsExpr, testNodes.item(i));
+      testCase[6] = getIntFromNode(modeExpr, testNodes.item(i), 0);
+      tests.add(testCase);
+    }
+    return tests.toArray(new Object[testNodes.getLength()][7]);
+  }
+  @Test(dataProvider="translateStringTest")
+  public void testTranslateString(String configList, String inbuf, String outbuf, int outlen, String logFilename, String settingsString, int mode) {
+    Assert.fail("Not implemented");
   }
 }
