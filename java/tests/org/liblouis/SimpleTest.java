@@ -2,8 +2,11 @@ package org.liblouis;
 
 import java.io.IOException;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
+import java.io.InputStream;
 import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -17,7 +20,8 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-import org.testng.Assert;
+import static org.testng.Assert.fail;
+import static org.testng.Assert.assertEquals;
 
 import org.liblouis.LibLouisUTDML;
 import org.liblouis.LogLevel;
@@ -53,6 +57,34 @@ public class SimpleTest {
       result = defaultValue;
     }
     return result;
+  }
+  private void closeStream(InputStream s) {
+    try {
+      s.close();
+    } catch (IOException e) {
+      // No action needed
+    }
+  }
+  private String readFileToString(String filename, String encoding) {
+    FileInputStream in = null;
+    BufferedReader br = null;
+    StringBuilder builder = new StringBuilder();
+    try {
+      in = new FileInputStream(filename);
+      br = new BufferedReader(new InputStreamReader(in, encoding));
+      int read, n = 1024 * 1024;
+      char[] buf = new char[n];
+      while ((read = br.read(buf, 0, n)) != -1) {
+        builder.append(buf, 0, read);
+      }
+    } catch (IOException e) {
+      System.out.println("Problem reading data file");
+    } finally {
+      if (in != null) {
+        closeStream(in);
+      }
+    }
+    return builder.toString();
   }
   @DataProvider(name="translateFileTest")
   public Object[][] translateFileData() throws ParserConfigurationException, SAXException, XPathExpressionException, IOException {
@@ -119,12 +151,12 @@ public class SimpleTest {
     }
     // Check for failure, only one of actualLine or expectedLine will be null
     if ((actualLine == null) ^ (expectedLine == null)) {
-      Assert.fail("The actual file does not match the expected file");
+      fail("The actual file does not match the expected file");
     }
   }
   @Test(enabled=false)
   public void testBackTranslateFile() {
-    Assert.fail("Not implemented yet");
+    fail("Not implemented yet");
   }
   @DataProvider(name="translateStringTest")
   public Object[][] translateStringData() throws IOException, ParserConfigurationException, SAXException, XPathExpressionException {
@@ -135,30 +167,51 @@ public class SimpleTest {
     XPathFactory factory = XPathFactory.newInstance();
     XPath xpath = factory.newXPath();
     XPathExpression testsExpr = xpath.compile("/tests/translateStringTest");
-    XPathExpression configListExpr = xpath.compile("configList");
-    XPathExpression inbufExpr = xpath.compile("inbuf");
-    XPathExpression outbufExpr = xpath.compile("outbuf");
-    XPathExpression logFileNameExpr = xpath.compile("logFileName");
-    XPathExpression settingsExpr = xpath.compile("settings");
-    XPathExpression modeExpr = xpath.compile("mode");
+    XPathExpression configListExpr = xpath.compile("configList/text()");
+    XPathExpression inbufExpr = xpath.compile("inbuf/text()");
+    XPathExpression outbufExpr = xpath.compile("outbuf/text()");
+    XPathExpression logFileNameExpr = xpath.compile("logFileName/text()");
+    XPathExpression settingsExpr = xpath.compile("settings/text()");
+    XPathExpression modeExpr = xpath.compile("mode/text()");
     List<Object[]> tests = new ArrayList<Object[]>();
     Object[] testCase;
     NodeList testNodes = (NodeList)testsExpr.evaluate(doc, XPathConstants.NODESET);
+    String tmpStr = null;
     for (int i = 0; i < testNodes.getLength(); i++) {
       testCase = new Object[7];
       if ((testCase[0] = getTextFromNode(configListExpr, testNodes.item(i))) == null) {
         System.out.println("No configList so skipping test");
         continue;
       }
+      if ((tmpStr = getTextFromNode(inbufExpr, testNodes.item(i))) != null) {
+        testCase[1] = readFileToString(tmpStr, "UTF8");
+      } else {
+        System.out.println("No inbuf defined");
+        continue;
+      }
+      if ((tmpStr = getTextFromNode(outbufExpr, testNodes.item(i))) != null) {
+        testCase[2] = readFileToString(tmpStr, "UTF8");
+      } else {
+        System.out.println("No outbuf defined");
+        continue;
+      }
+      testCase[3] = ((String)testCase[2]).length() + 1;
       testCase[4] = getTextFromNode(logFileNameExpr, testNodes.item(i));
       testCase[5] = getTextFromNode(settingsExpr, testNodes.item(i));
       testCase[6] = getIntFromNode(modeExpr, testNodes.item(i), 0);
       tests.add(testCase);
     }
-    return tests.toArray(new Object[testNodes.getLength()][7]);
+    return tests.toArray(new Object[tests.size()][7]);
   }
   @Test(dataProvider="translateStringTest")
-  public void testTranslateString(String configList, String inbuf, String outbuf, int outlen, String logFilename, String settingsString, int mode) {
-    Assert.fail("Not implemented");
+  public void testTranslateString(String configList, String inbuf, String outbuf, int outlen, String logFilename, String settingsString, int mode) throws Exception {
+    byte[] actualOutbuf = new byte[outlen*4];
+    byte[] inbufBytes = java.util.Arrays.copyOf(inbuf.getBytes("UTF-8"), inbuf.length()+1);
+    int[] outlenArray = new int[] { outlen };
+    if (!lbu.translateString(configList, inbufBytes, actualOutbuf, outlenArray, logFilename, settingsString, mode)) {
+      throw new Exception("LibLouisUTDML was unable to perform the translation");
+    }
+    String actualResult = new String(actualOutbuf, 0, outlenArray[0], "UTF-8");
+    assertEquals(outbuf, actualResult);
   }
 }

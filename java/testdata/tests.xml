@@ -6,4 +6,9 @@
     <expectedOutFile>testdata/output.utd</expectedOutFile>
     <mode>0</mode>
   </translateFileTest>
+  <translateStringTest>
+    <configList>nimas.cfg</configList>
+    <inbuf>testdata/list-test.xml</inbuf>
+    <outbuf>testdata/output.utd</outbuf>
+  </translateStringTest>
 </tests>
