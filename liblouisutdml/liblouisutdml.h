@@ -53,6 +53,7 @@ documentation see liblouisutdml.html or type info liblouisutdml. */
   char *EXPORT_CALL lbu_version (void);
 /* Returns the version of liblouisutdml and liblouis. */
 
+  void EXPORT_CALL lbu_loadXMLCatalog(const char *fiilename);
   void *EXPORT_CALL lbu_initialize (const char *configFileList,
 				    const char *logFileName,
 				    const char *settingsString);
