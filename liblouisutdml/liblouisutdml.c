@@ -35,6 +35,7 @@
 #include <string.h>
 #include "louisutdml.h"
 #include <libxml/HTMLparser.h>
+#include <libxml/catalog.h>
 
 UserData *ud = NULL;
 
@@ -49,6 +50,10 @@ lbu_version ()
   return bothVersions;
 }
 
+void EXPORT_CALL lbu_loadXMLCatalog(const char *filename)
+{
+  xmlLoadCatalog(filename);
+}
 void
 libxml_errors (void *ctx ATTRIBUTE_UNUSED, const char *msg, ...)
 {

@@ -97,9 +97,18 @@ AC_CONFIG_FILES([Makefile
 	gnulib/Makefile
 	doc/Makefile
 	java/Makefile
+	java/lib/Makefile
 	java/src/Makefile
 	java/src/org/Makefile
 	java/src/org/liblouis/Makefile
+	java/tests/Makefile
+	java/tests/org/Makefile
+	java/tests/org/liblouis/Makefile
+	java/testdata/Makefile
+	java/testdata/liblouis/Makefile
+	java/testdata/liblouis/tables/Makefile
+	java/testdata/liblouisutdml/Makefile
+	java/testdata/liblouisutdml/lbu_files/Makefile
 	man/Makefile
 	lbu_files/Makefile
 	liblouisutdml/Makefile
