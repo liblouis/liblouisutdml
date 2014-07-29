@@ -108,6 +108,10 @@ private static boolean libraryLoaded = false;
    * liblouis */
   public native String version ();
 
+  /**
+   * Load a XML catalog into LibLouisUTDML.
+   */
+  public native void loadXMLCatalog(String filename);
 /** Make a braille translation of the UTF-8 characters in inbuf 
 according to configuration settings to UTF-8 characters in outbuf. The 
 latter will be in Unicode braille. The return value is true if the 

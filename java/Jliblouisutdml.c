@@ -103,6 +103,17 @@ JNIEXPORT jstring JNICALL Java_org_liblouis_LibLouisUTDML_version
 
 /*
  * Class:     org_liblouis_LibLouisUTDML
+ * Method:    loadXMLCatalog
+ * Signature: (Ljava/lang/String;)V
+ */
+JNIEXPORT void JNICALL Java_org_liblouis_LibLouisUTDML_loadXMLCatalog
+  (JNIEnv *env, jobject this, jstring filename)
+{
+  return lbu_loadXMLCatalog(filename);
+}
+
+/*
+ * Class:     org_liblouis_LibLouisUTDML
  * Method:    translateString
  * Signature: (Ljava/lang/String;[B[B[ILjava/lang/String;Ljava/lang/String;I)Z
  */
