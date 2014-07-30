@@ -1228,9 +1228,15 @@ get_sem_attr (xmlNode * node)
 {
   HashEntry *nodeEntry = (HashEntry *) node->_private;
   if (nodeEntry != NULL)
+  {
+    logMessage(LOG_DEBUG, "Node %s has nodeEntry", (const char *)node->name);
     return nodeEntry->semNum;
+  }
   else
+  {
+    logMessage(LOG_DEBUG, "Node %s has no nodeEntry", (const char *)node->name);
     return no;
+  }
 }
 
 unsigned char *
