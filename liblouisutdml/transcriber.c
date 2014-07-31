@@ -3553,7 +3553,6 @@ utd_addBoxline(const char *boxChar, int beforeAfter)
   int inlen = CHARSIZE * (ud->cells_per_line);
   int outlen = 10 * (ud->cells_per_line + 1);
   xmlNode *tmpBrlNode;
-  xmlNode *lineNode;
   xmlNode *textNode;
   widechar wTmpBuf = (widechar)boxChar[0];
   widechar dots;
@@ -3569,8 +3568,7 @@ utd_addBoxline(const char *boxChar, int beforeAfter)
   // We should catch the current brlNode so we can restore afterwards
   tmpBrlNode = brlNode;
   // Create the brl node for the boxline
-  lineNode = xmlNewNode(NULL, (const xmlChar *)"brl");
-  brlNode = lineNode;
+  brlNode = xmlNewNode(NULL, (const xmlChar *)"brl");
   // Find a complete blank line
   while (availableCells != ud->cells_per_line)
   {
@@ -3587,23 +3585,22 @@ utd_addBoxline(const char *boxChar, int beforeAfter)
   inlen = availableCells;
   wc_string_to_utf8(lineBuf, &inlen, chContent, &outlen);
   // Create new brl node at the start of the styled node
-  // lineNode = xmlNewNode(NULL, (xmlChar *)"brl");
   textNode = xmlNewText(chContent);
-  xmlSetProp(lineNode, (const xmlChar *)"type", (const xmlChar *)"brlonly");
-  xmlAddChild(lineNode, textNode);
+  xmlSetProp(brlNode, (const xmlChar *)"type", (const xmlChar *)"brlonly");
+  xmlAddChild(brlNode, textNode);
   free(lineBuf);
   free(chContent);
   if (styleSpec->node->children && beforeAfter == -1)
   {
-    brlNode = xmlAddPrevSibling(styleSpec->node->children, lineNode);
+    brlNode = xmlAddPrevSibling(styleSpec->node->children, brlNode);
   }
   else if (styleSpec->node->children && beforeAfter == 1)
   {
-    brlNode = xmlAddNextSibling(styleSpec->node->last, lineNode);
+    brlNode = xmlAddNextSibling(styleSpec->node->last, brlNode);
   }
   else
   {
-    brlNode = xmlAddChild(styleSpec->node, lineNode);
+    brlNode = xmlAddChild(styleSpec->node, brlNode);
   }
   utd_finishLine(0, 0);
   // Restore original brlNode
