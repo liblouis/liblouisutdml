@@ -3566,6 +3566,7 @@ utd_addBoxline(const char *boxChar, int beforeAfter)
   // Create the brl node for the boxline
   brlNode = xmlNewNode(NULL, (const xmlChar *)"brl");
   // Find a complete blank line
+  availableCells = utd_startLine();
   while (availableCells != ud->cells_per_line)
   {
     utd_finishLine(0, 0);
@@ -5046,6 +5047,8 @@ utd_finishLine (int leadingBlanks, int length)
   int k;
   int leaveBlank;
   int horizLinePos = ud->page_left + leadingBlanks * ud->cell_width;
+  if (newlineNode == NULL)
+    return 1;
   logMessage(LOG_DEBUG, "Begin utd_finishLine");
   cellsOnLine = leadingBlanks + length;
   for (leaveBlank = -1; leaveBlank < ud->line_spacing; leaveBlank++)
