@@ -3559,21 +3559,24 @@ utd_addBoxline(const char *boxChar, int beforeAfter)
   widechar dots;
   widechar *lineBuf;
   char *chContent;
+  // Dots representation of the boxline character
+  if (!lou_charToDots(ud->main_braille_table, &wTmpBuf, &dots, 1, 0))
+    return 0;
   // Make sure that styleSpec relates to a node
   if (styleSpec->node == NULL)
     return 0;
   logMessage(LOG_DEBUG, "Begin utd_addBoxline");
   // We should catch the current brlNode so we can restore afterwards
   tmpBrlNode = brlNode;
+  // Create the brl node for the boxline
+  lineNode = xmlNewNode(NULL, (const xmlChar *)"brl");
+  brlNode = lineNode;
   // Find a complete blank line
   while (availableCells != ud->cells_per_line)
   {
     utd_finishLine(0, 0);
     availableCells = utd_startLine();
   }
-  // Get the dots representation for the boxline character
-  if (!lou_charToDots(ud->main_braille_table, &wTmpBuf, &dots, 1, 0))
-    return 0;
   // Create the line of characters
   lineBuf = malloc(inlen);
   chContent = malloc(outlen);
@@ -3584,7 +3587,7 @@ utd_addBoxline(const char *boxChar, int beforeAfter)
   inlen = availableCells;
   wc_string_to_utf8(lineBuf, &inlen, chContent, &outlen);
   // Create new brl node at the start of the styled node
-  lineNode = xmlNewNode(NULL, (xmlChar *)"brl");
+  // lineNode = xmlNewNode(NULL, (xmlChar *)"brl");
   textNode = xmlNewText(chContent);
   xmlSetProp(lineNode, (const xmlChar *)"type", (const xmlChar *)"brlonly");
   xmlAddChild(lineNode, textNode);
@@ -3602,6 +3605,7 @@ utd_addBoxline(const char *boxChar, int beforeAfter)
   {
     brlNode = xmlAddChild(styleSpec->node, lineNode);
   }
+  utd_finishLine(0, 0);
   // Restore original brlNode
   brlNode = tmpBrlNode;
   logMessage(LOG_DEBUG, "Finish utd_addBoxline");
