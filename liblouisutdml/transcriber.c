@@ -55,7 +55,10 @@ static int addBoxline(const char *boxChar, int beforeAfter);
  *              Value 1 for after and value -1 for before.
  */
 static int utd_addBoxline(const char *boxChar, int beforeAfter);
-
+/*
+ * makeDotsTextNode, adds a text node containing dots to a brl node.
+ */
+static int makeDotsTextNode(xmlNode *node, const widechar *content, int length, int kind);
 static int utd_startLine();
 static int utd_finishLine(int number, int beforeAfter);
 
@@ -3551,16 +3554,9 @@ utd_addBoxline(const char *boxChar, int beforeAfter)
   int k;
   int availableCells = 0;
   int inlen = CHARSIZE * (ud->cells_per_line);
-  int outlen = 10 * (ud->cells_per_line + 1);
   xmlNode *tmpBrlNode;
-  xmlNode *textNode;
   widechar wTmpBuf = (widechar)boxChar[0];
-  widechar dots;
   widechar *lineBuf;
-  char *chContent;
-  // Dots representation of the boxline character
-  if (!lou_charToDots(ud->main_braille_table, &wTmpBuf, &dots, 1, 0))
-    return 0;
   // Make sure that styleSpec relates to a node
   if (styleSpec->node == NULL)
     return 0;
@@ -3577,19 +3573,14 @@ utd_addBoxline(const char *boxChar, int beforeAfter)
   }
   // Create the line of characters
   lineBuf = malloc(inlen);
-  chContent = malloc(outlen);
   for (k = 0; k < availableCells; k++)
   {
-    lineBuf[k] = dots;
+    lineBuf[k] = wTmpBuf;
   }
   inlen = availableCells;
-  wc_string_to_utf8(lineBuf, &inlen, chContent, &outlen);
-  // Create new brl node at the start of the styled node
-  textNode = xmlNewText(chContent);
   xmlSetProp(brlNode, (const xmlChar *)"type", (const xmlChar *)"brlonly");
-  xmlAddChild(brlNode, textNode);
+  makeDotsTextNode(brlNode, lineBuf, inlen, 1);
   free(lineBuf);
-  free(chContent);
   if (styleSpec->node->children && beforeAfter == -1)
   {
     brlNode = xmlAddPrevSibling(styleSpec->node->children, brlNode);
