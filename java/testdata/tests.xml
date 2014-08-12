@@ -8,7 +8,7 @@
   </translateFileTest>
   <translateStringTest>
     <configList>nimas.cfg</configList>
-    <inbuf>testdata/list-test.xml</inbuf>
-    <outbuf>testdata/output.utd</outbuf>
+    <inFile>testdata/list-test.xml</inFile>
+    <expectedOutFile>testdata/output.utd</expectedOutFile>
   </translateStringTest>
 </tests>

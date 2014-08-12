@@ -168,8 +168,8 @@ public class SimpleTest {
     XPath xpath = factory.newXPath();
     XPathExpression testsExpr = xpath.compile("/tests/translateStringTest");
     XPathExpression configListExpr = xpath.compile("configList/text()");
-    XPathExpression inbufExpr = xpath.compile("inbuf/text()");
-    XPathExpression outbufExpr = xpath.compile("outbuf/text()");
+    XPathExpression inbufExpr = xpath.compile("inFile/text()");
+    XPathExpression outbufExpr = xpath.compile("expectedOutFile/text()");
     XPathExpression logFileNameExpr = xpath.compile("logFileName/text()");
     XPathExpression settingsExpr = xpath.compile("settings/text()");
     XPathExpression modeExpr = xpath.compile("mode/text()");
