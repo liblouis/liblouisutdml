@@ -34,6 +34,7 @@
 #include <string.h>
 #include "louisutdml.h"
 
+static xmlNode* newlineNode;
 static StyleRecord *styleSpec;
 /* Note that the following is an actual data area, not a pointer*/
 static StyleRecord prevStyleSpec;
@@ -163,6 +164,7 @@ int
 start_document ()
 {
   ud->head_node = NULL;
+  newlineNode = NULL;
   if (ud->has_math)
     firstTableName = ud->main_braille_table = ud->mathtext_table_name;
   else
@@ -3786,7 +3788,6 @@ static xmlNode *documentNode = NULL;
 static xmlNode *parentOfBrlOnlyNode;
 static xmlNode *brlOnlyNode;
 static xmlNode *newpageNode;
-static xmlNode *newlineNode;
 static xmlChar *brlContent;
 static int maxContent;
 static char *utilStringBuf;
