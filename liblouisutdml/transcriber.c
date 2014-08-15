@@ -163,6 +163,7 @@ getLiblouisRule (TranslationTableOffset offset)
 int
 start_document ()
 {
+  logMessage(LOG_INFO, "Starting new document");
   ud->head_node = NULL;
   newlineNode = NULL;
   if (ud->has_math)
