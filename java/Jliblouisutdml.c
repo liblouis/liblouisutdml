@@ -73,9 +73,12 @@ writeablePath, jstring logfile)
   writeablePathX = (*env)->GetStringUTFChars (env, writeablePath, NULL);
   if (writeablePathX == NULL)
     goto release;
-  logfileX = (*env)->GetStringUTFChars (env, logfile, NULL);
-  if (logfileX == NULL)
-    goto release;
+  if (logfile != NULL)
+  {
+    logfileX = (*env)->GetStringUTFChars (env, logfile, NULL);
+    if (logfileX == NULL)
+      goto release;
+  }
   tmpDataPath = strdup(dataPathX);
   lou_setDataPath (tmpDataPath);
   free(tmpDataPath);
