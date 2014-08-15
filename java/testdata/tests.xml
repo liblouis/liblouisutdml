@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<tests>
+  <translateFileTest>
+    <configList>nimas.cfg</configList>
+    <inFile>testdata/list-test.xml</inFile>
+    <expectedOutFile>testdata/output.utd</expectedOutFile>
+    <mode>0</mode>
+  </translateFileTest>
+  <translateStringTest>
+    <configList>nimas.cfg</configList>
+    <inFile>testdata/list-test.xml</inFile>
+    <expectedOutFile>testdata/output.utd</expectedOutFile>
+  </translateStringTest>
+</tests>

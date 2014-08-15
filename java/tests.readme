@@ -1,0 +1,29 @@
+=================================
+LibLouisUTDML Java test Framework
+=================================
+
+The test framework for the LibLouisUTDML Java bindings is designed as a simple way to provide the data for testing LibLouisUTDML functions. Currently it supports testing the translateString and translateFile methods of LibLouisUTDML, for other methods and more complicated tests of the API (eg. tests involving multiple function calls) you will need to write your own tests using a more general Java test framework such as TestNG.
+
+test.xml
+========
+
+The main file you will need to interact with when writing tests is the tests.xml file which can be found in the testdata directory. In test.xml you define the data which will be used for the function calls.
+
+The root node of the tests.xml file is <tests>. The <tests> node can contain either a <translateFileTest> and/or <translateStringTest> nodes depending upon which function is to be tested.
+
+The <translateFileTest> node
+============================
+
+Use the <translateFileTest> node for a test using the translateFile function in the LibLouisUTDML API. This node can contain the following child nodes for the test data.
+
+* <configList>: The content of this node is the text to be placed in the configList parameter of the function call. This node is required.
+* <inFile>: The file to be used as input. If using a relative file path, then this is done with the liblouisutdml/java directory as the current directory. This node is required.
+* <expectedOutFile>: This is the file which the output should be compared against to determine if the test has passed. This is a relative path with the current directory set to the liblouisutdml/java directory. This node is required.
+* <settings>: This is the value of the settings string parameter to the function call. This node is optional, if it is not given then settings string parameter will be set to null.
+* <logFileName>: The log file LibLouisUTDML should use. This is optional, if not given is set to null. This node ideally should not be given now as the logFile parameter is becoming defunct in LibLouisUTDML with the logging callback system.
+* <mode>: This is the mode parameter. At the moment you need to set this to the integer value, you cannot use the enum values from LibLouisUTDML. This node is optional and if not given is set to 0.
+
+The <translateStringTest> node
+==============================
+
+This node works in a similar way to the translateFileTest node except it reads the input and output files into Java strings and uses these when calling the translateString function. In all other respects this node is treated in the same manner.

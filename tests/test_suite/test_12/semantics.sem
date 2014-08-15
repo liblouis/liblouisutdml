@@ -1,0 +1,4 @@
+root        &xpath(/*)
+p           &xpath(//p)
+italicx     &xpath(//em)
+no          &xpath(//span)
