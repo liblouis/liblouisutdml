@@ -1080,7 +1080,7 @@ printXpathNodes (xmlNodeSetPtr nodes)
   int size;
   int i;
   size = (nodes) ? nodes->nodeNr : 0;
-  semanticError (NULL, "Result (%d nodes):", size);
+  logMessage (LOG_INFO, "Result (%d nodes):", size);
   for (i = 0; i < size; ++i)
     {
       if (nodes->nodeTab[i]->type == XML_NAMESPACE_DECL)
@@ -1090,13 +1090,13 @@ printXpathNodes (xmlNodeSetPtr nodes)
 	  cur = (xmlNodePtr) ns->next;
 	  if (cur->ns)
 	    {
-	      semanticError (NULL,
+	      logMessage (LOG_INFO,
 			     "= namespace \"%s\"=\"%s\" for node %s:%s",
 			     ns->prefix, ns->href, cur->ns->href, cur->name);
 	    }
 	  else
 	    {
-	      semanticError (NULL, "= namespace \"%s\"=\"%s\" for node %s",
+	      logMessage (LOG_INFO, "= namespace \"%s\"=\"%s\" for node %s",
 			     ns->prefix, ns->href, cur->name);
 	    }
 	}
@@ -1105,18 +1105,18 @@ printXpathNodes (xmlNodeSetPtr nodes)
 	  cur = nodes->nodeTab[i];
 	  if (cur->ns)
 	    {
-	      semanticError (NULL, "= element node \"%s:%s\"",
+	      logMessage (LOG_INFO, "= element node \"%s:%s\"",
 			     cur->ns->href, cur->name);
 	    }
 	  else
 	    {
-	      semanticError (NULL, "= element node \"%s\"", cur->name);
+	      logMessage (LOG_INFO, "= element node \"%s\"", cur->name);
 	    }
 	}
       else
 	{
 	  cur = nodes->nodeTab[i];
-	  semanticError (NULL, "= node \"%s\": type %d", cur->name,
+	  logMessage (LOG_INFO, "= node \"%s\": type %d", cur->name,
 			 cur->type);
 	}
     }
