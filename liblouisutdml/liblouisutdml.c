@@ -63,7 +63,7 @@ libxml_errors (void *ctx ATTRIBUTE_UNUSED, const char *msg, ...)
   memset (buffer, 0, sizeof (buffer));
   vsnprintf (buffer, sizeof (buffer) - 4, msg, args);
   va_end (args);
-  logMessage (LOG_ERROR, "libxml: %s", buffer);
+  logMessage (LOG_ERROR, "%s", buffer);
 }
 
 static xmlParserCtxt *ctxt;
