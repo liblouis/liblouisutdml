@@ -34,7 +34,15 @@
 #include <string.h>
 #include "louisutdml.h"
 
-static xmlNode* newlineNode;
+static xmlNode *firstBrlNode;
+static xmlNode *prevBrlNode;
+static xmlNode *documentNode;
+static xmlNode *parentOfBrlOnlyNode;
+static xmlNode *brlOnlyNode;
+static xmlNode *newlineNode;
+static xmlNode *newpageNode;
+static xmlChar *brlContent;
+static int maxContent;
 static StyleRecord *styleSpec;
 /* Note that the following is an actual data area, not a pointer*/
 static StyleRecord prevStyleSpec;
@@ -63,6 +71,18 @@ static int makeDotsTextNode(xmlNode *node, const widechar *content, int length, 
 static int utd_startLine();
 static int utd_finishLine(int number, int beforeAfter);
 
+static void
+initializeTranscriber()
+{
+  firstBrlNode = NULL;
+  prevBrlNode = NULL;
+  documentNode = NULL;
+  parentOfBrlOnlyNode = NULL;
+  brlOnlyNode = NULL;
+  newlineNode = NULL;
+  newpageNode = NULL;
+  brlContent = NULL;
+}
 int
 fineFormat ()
 {
@@ -165,7 +185,7 @@ start_document ()
 {
   logMessage(LOG_INFO, "Starting new document");
   ud->head_node = NULL;
-  newlineNode = NULL;
+  initializeTranscriber();
   if (ud->has_math)
     firstTableName = ud->main_braille_table = ud->mathtext_table_name;
   else
@@ -3783,14 +3803,6 @@ static int *backIndices;
 static widechar *backBuf;
 static int backLength;
 
-static xmlNode *firstBrlNode;
-static xmlNode *prevBrlNode;
-static xmlNode *documentNode = NULL;
-static xmlNode *parentOfBrlOnlyNode;
-static xmlNode *brlOnlyNode;
-static xmlNode *newpageNode;
-static xmlChar *brlContent;
-static int maxContent;
 static char *utilStringBuf;
 static int lineWidth;
 static int cellsToWrite;
