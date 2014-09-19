@@ -40,6 +40,8 @@ typedef enum
   htmllink,
   htmltarget,
   changetable,
+  /* Endnote position */
+  noteref,
   reverse,
   configfile,
   configstring,
@@ -68,6 +70,10 @@ typedef enum
   contents8,
   contents9,
   contents10,
+  /* Endnotes */
+  note,
+  notesheader,
+  notesdescription,
   /* translation */
   notranslate,
   compbrl,

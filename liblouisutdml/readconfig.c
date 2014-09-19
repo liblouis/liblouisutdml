@@ -713,7 +713,8 @@ compileConfig (FileInfo * nested)
     "56",
     "pageNumberTable",
     "57",
-// available     "58",
+	"Endnotes",
+	"58",
 // available    "59",
     "macro",
     "60",
@@ -913,14 +914,6 @@ compileConfig (FileInfo * nested)
 	  return 0;
 	  }
 	  break;
-	case 57:
-	  ud->pagenum_table_name = findTable (nested);
-	  if (ud->pagenum_table_name == NULL)
-	  {
-	  configureError (nested, "invalid pageNumberTable");
-	  return 0;
-	  }
-	  break;
 	case 24:
 	  topMargin = atof (nested->value);
 	  break;
@@ -1073,8 +1066,18 @@ compileConfig (FileInfo * nested)
 	  if ((k = orValues (nested, configModes)) != NOTFOUND)
 	    ud->config_mode = k;
 	  break;
-// available	case 57:
-// available	case 58:
+	case 57:
+	  ud->pagenum_table_name = findTable (nested);
+	  if (ud->pagenum_table_name == NULL)
+	  {
+	  configureError (nested, "invalid pageNumberTable");
+	  return 0;
+	  }
+	  break;
+	case 58:
+	  if ((k = checkValues (nested, yesNo)) != NOTFOUND)
+	    ud->endnotes = k;
+	  break;
 // available	case 59:
 	case 60:
 	  new_macro (nested->value, nested->value2);

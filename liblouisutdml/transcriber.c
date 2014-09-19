@@ -230,6 +230,8 @@ start_document ()
     }
   if (ud->contents && !ud->has_contentsheader)
     initialize_contents ();
+  if(ud->endnotes)
+	initialize_endnotes();
   if (ud->format_for == utd)
     return utd_start ();
   return 1;
@@ -251,6 +253,8 @@ end_document ()
       fillPage ();
       writeOutbuf ();
     }
+  if(ud->endnotes)
+	make_endnotes();
   if (ud->contents)
     make_contents ();
   switch (ud->format_for)
@@ -791,7 +795,8 @@ insert_translation (const char *table)
   }
   if (ud->translated_length > 0 && ud->translated_length <
       MAX_TRANS_LENGTH &&
-      ud->translated_buffer[ud->translated_length - 1] > 32)
+      ud->translated_buffer[ud->translated_length - 1] > 32
+	  && ud->text_buffer[0] != 32)
     {
       ud->translated_buffer[ud->translated_length++] = 32;
       if (ud->in_sync)
@@ -1372,12 +1377,13 @@ getPageNumber ()
       pageNumberString[pageNumberLength++] = ' ';
       if (printPageNumber)
 	{
-	  pageNumberString[pageNumberLength++] = ' ';
+	  //pageNumberString[pageNumberLength++] = ' ';
 	  getPrintPageString ();
 	}
       if (braillePageNumber)
 	{
-	  pageNumberString[pageNumberLength++] = ' ';
+	  if(printPageNumber)
+		pageNumberString[pageNumberLength++] = ' ';
 	  getBraillePageString ();
 	}
     }
@@ -2786,6 +2792,8 @@ doCenterRight ()
       int wordTooLong = 0;
       int leadingBlanks = 0;
       int trailingBlanks = 0;
+      int breakAt = 0;
+      int insertHyphen;
       availableCells = startLine ();
       if (styleSpec->status == startBody)
 	{
@@ -2797,24 +2805,55 @@ doCenterRight ()
       trailingBlanks = ud->style_right_margin;
       availableCells -= leadingBlanks;
       availableCells -= trailingBlanks;
-      if ((translatedLength - charactersWritten) < availableCells)
+	if(ud->style_format == centered)
 	{
-	  k = (availableCells - (translatedLength - charactersWritten));
-	  if (ud->style_format == centered)
-	    k /= 2;
-	  else if (ud->style_format != rightJustified)
-	    return 0;
-	  if (!insertCharacters (blanks, leadingBlanks + k))
-	    return 0;
-	  if (!insertWidechars (&translatedBuffer[charactersWritten],
-				translatedLength - charactersWritten))
-	    return 0;
-	  finishLine ();
-	  break;
+		if(pageNumberLength > 0)
+			availableCells = ud->cells_per_line - 2*(pageNumberLength);
+		else
+			availableCells = ud->cells_per_line;
+		availableCells -= leadingBlanks;
+		availableCells -= trailingBlanks;
+		
+		if(translatedLength - charactersWritten <= availableCells)
+		{
+			if(pageNumberLength > 0)
+			{
+				leadingBlanks += pageNumberLength + (availableCells-(translatedLength - charactersWritten))/2;
+				trailingBlanks += (availableCells-(translatedLength - charactersWritten))/2;
+			}
+			else
+			{
+				trailingBlanks += (availableCells-(translatedLength - charactersWritten))/2;
+				leadingBlanks += (availableCells-(translatedLength - charactersWritten))/2;
+			}
+			
+			if (!insertCharacters (blanks, leadingBlanks))
+			return 0;
+			
+			if (!insertWidechars(
+						&translatedBuffer[charactersWritten],translatedLength - charactersWritten)
+					)
+			return 0;
+			finishLine ();
+			break;
+		}
 	}
-      if ((charactersWritten + availableCells) > translatedLength)
-	cellsToWrite = translatedLength - charactersWritten;
-      else
+	else if((translatedLength - charactersWritten) < availableCells)
+	{
+		k = availableCells - (translatedLength - charactersWritten);
+		if (ud->style_format != rightJustified)
+			return 0;
+		if (!insertCharacters (blanks, leadingBlanks + k))
+			return 0;
+		if (!insertWidechars(&translatedBuffer[charactersWritten],
+			translatedLength - charactersWritten))
+		return 0;
+		finishLine ();
+		break;
+	}
+    if ((charactersWritten + availableCells) > translatedLength)
+		cellsToWrite = translatedLength - charactersWritten;
+    else
 	{
 	  for (cellsToWrite = availableCells; cellsToWrite > 0;
 	       cellsToWrite--)
@@ -2825,15 +2864,36 @@ doCenterRight ()
 	      cellsToWrite = availableCells - 1;
 	      wordTooLong = 1;
 	    }
+		else if(ud->hyphenate)
+			if(hyphenatex(charactersWritten+cellsToWrite,
+			charactersWritten + availableCells,
+			&breakAt,
+			&insertHyphen))
+				cellsToWrite = breakAt - charactersWritten;
 	}
       for (k = charactersWritten; k < (charactersWritten + cellsToWrite); k++)
 	if (translatedBuffer[k] == 0xa0)	/*unbreakable space */
 	  translatedBuffer[k] = 0x20;	/*space */
       if (!wordTooLong)
 	{
-	  k = availableCells - cellsToWrite;
-	  if (ud->style_format == centered)
-	    k /= 2;
+		k = availableCells - cellsToWrite;
+		if (ud->style_format == centered)
+		{
+			availableCells = ud->cells_per_line - 2*pageNumberLength;
+			availableCells -= leadingBlanks;
+			availableCells -= trailingBlanks;
+			if(pageNumberLength > 0)
+			{
+				leadingBlanks += pageNumberLength + (availableCells-cellsToWrite)/2;
+				trailingBlanks += (availableCells-cellsToWrite)/2;
+			}
+			else
+			{
+				trailingBlanks += (availableCells-cellsToWrite)/2;
+				leadingBlanks += (availableCells-cellsToWrite)/2;
+			}
+			k=0;
+		}
 	}
       else
 	k = 0;
@@ -2845,12 +2905,10 @@ doCenterRight ()
       charactersWritten += cellsToWrite;
       if (translatedBuffer[charactersWritten] == ' ')
 	charactersWritten++;
-      if (wordTooLong)
-	{
-	  if (!insertDubChars (ud->lit_hyphen, strlen (ud->lit_hyphen)))
-	    return 0;
-	}
-      finishLine ();
+      if ((breakAt && insertHyphen) || wordTooLong)
+		if (!insertDubChars (ud->lit_hyphen, strlen (ud->lit_hyphen)))
+			return 0;
+    finishLine ();
     }
   return 1;
 }
@@ -2993,6 +3051,29 @@ styleBody ()
 	getBraillePageString ();
       start_heading (action, translatedBuffer, translatedLength);
     }
+  if(ud->endnotes && action == note && ud->endnote_stage == 1)				////
+  {
+	link_endnote(styleSpec->node);
+	ud->text_length = ud->translated_length = ud->sync_text_length = 0;
+	return 1;
+  }
+  else if(ud->endnotes && action == notesheader && ud->endnote_stage == 1)
+  {
+	set_notes_header();
+	ud->text_length = ud->translated_length = ud->sync_text_length = 0;
+	return 1;
+  }
+  else if(ud->endnotes && action == notesdescription && ud->endnote_stage == 1)
+  {
+	set_notes_description();
+	ud->text_length = ud->translated_length = ud->sync_text_length = 0;
+	return 1;
+  }
+  else if(!ud->endnotes && (action == note || action == notesheader || action == notesdescription))
+  {
+	ud->text_length = ud->translated_length = ud->sync_text_length = 0;
+	return 1;
+  }
   switch (ud->style_format)
     {
     case centered:

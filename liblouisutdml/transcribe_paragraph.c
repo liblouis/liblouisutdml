@@ -50,6 +50,9 @@ static int keep_with_previous_status = 0;
 static int orphan_control = 0;
 static int orphan_control_pos = 0;
 static int orphan_control_status = 0;
+static int widow_control = 0;
+static int widow_control_pos = 0;
+static int widow_control_status = 0;
 static int saved_text_length;
 static int saved_sync_text_length;
 static int saved_translated_length;
@@ -189,6 +192,7 @@ transcribe_paragraph (xmlNode * node, int action)
   int keep_with_next_this = 0;
   int keep_with_previous_this = 0;
   int orphan_control_this = 0;
+  int widow_control_this = 0;
   StyleType *style;
   int haveMacro = 0;
   xmlNode *child;
@@ -309,9 +313,19 @@ transcribe_paragraph (xmlNode * node, int action)
       return 1;
     case changetable:
       change_table (node);
-      if (node->children == NULL)
-	return 1;
+            //if (node->children == NULL)			////?? removed, as change_table() cycles through all children anyway, so if changetable has child nodes (ie. <changetable><xyz>Text</xyz><changetable>) then produces duplicate outputs.
+			return 1;
       break;
+	case noteref:							////
+		if(ud->endnotes)
+			start_endnote(node);
+		else
+		{
+			if(action!=0)
+				pop_sem_stack();
+			return 1;
+		}
+		break;
     case pagenum:
       do_pagenum ();
       break;
@@ -368,10 +382,13 @@ transcribe_paragraph (xmlNode * node, int action)
 			    dont_split_this = 1;
 			  else if (style_this->orphan_control > 1)
 			    orphan_control_this = style_this->orphan_control;
+			  else if (style_this->widow_control > 1)
+				widow_control_this = style_this->widow_control;
+
 			}
 		      keep_with_next_this = style_this->keep_with_next;
 		    }
-		  if (dont_split_this || orphan_control_this)
+		  if (dont_split_this || orphan_control_this || widow_control_this)
 		    {
 		      if (!ud->outbuf3_enabled)
 			{
@@ -397,6 +414,11 @@ transcribe_paragraph (xmlNode * node, int action)
 		      orphan_control = orphan_control_this;
 		      orphan_control_pos = ud->lines_length;
 		    }
+		  if (widow_control_this)
+		  {
+			widow_control = widow_control_this;
+			widow_control_pos = ud->lines_length;
+		  }
 		}
 	    }
 	  if (strcmp (child->name, "brl") != 0)
@@ -429,7 +451,8 @@ transcribe_paragraph (xmlNode * node, int action)
 	    {
 	      if (dont_split_status >= 0 &&
 		  keep_with_previous_status >= 0
-		  && orphan_control_status >= 0)
+		  && orphan_control_status >= 0
+		  && widow_control_status >=0)
 		{
 		  if (keep_with_previous)
 		    {
@@ -480,9 +503,32 @@ transcribe_paragraph (xmlNode * node, int action)
 		      if (i == orphan_control)
 			orphan_control_status = 1;
 		    }
+			
+		  if (widow_control)
+		    {
+		      if (widow_control_this)
+				widow_control_status = 1;
+		      else
+				widow_control_status = 0;
+		      i = ud->lines_length-widow_control_pos-1;
+		      while (i > ud->lines_length-widow_control && i > 0)
+			  {
+				if (ud->lines_pagenum[widow_control_pos + i] >
+			      ud->lines_pagenum[widow_control_pos + i - 1])
+			    {
+			      if (!ud->lines_newpage[i])
+					widow_control_status = -1;
+			      break;
+			    }
+				i--;
+			  }
+		      if (i == ud->lines_length-widow_control)
+				widow_control_status = 1;
+		    }
 		}
 	      if (dont_split_status < 0 ||
-		  keep_with_previous_status < 0 || orphan_control_status < 0)
+		  keep_with_previous_status < 0 || orphan_control_status < 0 ||
+		  widow_control_status < 0)
 		{
 		  if (state_saved)
 		    {
@@ -493,6 +539,8 @@ transcribe_paragraph (xmlNode * node, int action)
 		      keep_with_previous_status = 0;
 		      orphan_control = 0;
 		      orphan_control_status = 0;
+			  widow_control = 0;
+			  widow_control_status = 0;	
 		      restoreState ();
 		      child = saved_child;
 		      branchCount = saved_branchCount;
@@ -519,9 +567,14 @@ transcribe_paragraph (xmlNode * node, int action)
 		  orphan_control = 0;
 		  orphan_control_status = 0;
 		}
-	      if ((!dont_split && !keep_with_previous &&
-		   !keep_with_next && !orphan_control) || (!child
-							   && state_saved))
+		if(widow_control_status > 0)
+		{
+			widow_control = 0;
+			widow_control_status = 0;
+		}
+	    if ((!dont_split && !keep_with_previous &&
+		   !keep_with_next && !orphan_control 
+		   &&!widow_control) ||(!child && state_saved))
 		{
 		  write_buffer (3, 0);
 		  ud->outbuf3_enabled = 0;
@@ -536,6 +589,8 @@ transcribe_paragraph (xmlNode * node, int action)
 	    keep_with_previous = 0;
 	  if (orphan_control_this)
 	    orphan_control = 0;
+	  if(widow_control_this)
+		widow_control = 0;
 	}
     }
   insert_code (node, branchCount);
@@ -557,6 +612,10 @@ transcribe_paragraph (xmlNode * node, int action)
 	set_footer_string (ud->translated_buffer, ud->translated_length);
 	ud->translated_length = 0;
 	break;
+	case noteref:
+		if(ud->endnotes)
+			finish_endnote(node);
+		break;
       default:
 	break;
       }

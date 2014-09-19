@@ -29,6 +29,7 @@ liblouisutdml_la_LDFLAGS =	\
 liblouisutdml_la_SOURCES = \
 	change_table.c \
 	makeContents.c \
+	makeEndnotes.c \
 	examine_document.c \
 	liblouisutdml.c \
 	liblouisutdml.h \
