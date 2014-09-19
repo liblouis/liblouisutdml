@@ -11,5 +11,6 @@ SUBDIRS =					\
 	test_10					\
 	test_11					\
 	test_12					\
-	test_13
+	test_13					\
+	test_14
 

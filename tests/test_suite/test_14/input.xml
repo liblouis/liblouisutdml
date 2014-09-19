@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doc>
+		<notesheader>not seen header</notesheader>
+		<notesdescription>not seen description</notesdescription>
+
+		<note id = "3">Endnote Description 3</note>
+		
+		<p>Foo<noteref id = "1">1</noteref>Bar.</p>
+		<p>Foo<noteref id = "2">ref2</noteref>Bar.</p>
+		<newpage/>
+		<p>Foo<noteref id = "3">3</noteref>Bar.</p>
+		
+		<notesheader>Endnotes</notesheader>
+		<notesdescription>Some descriptive text</notesdescription>
+		
+		<note id = "1">Endnote Description 1</note>
+		<note id = "2">Endnote Description 2</note>
+</doc>

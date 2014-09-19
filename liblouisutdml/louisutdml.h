@@ -76,6 +76,7 @@ typedef struct
   int keep_with_next;
   int dont_split;
   int orphan_control;
+  int widow_control;
   int first_line_indent;	/* At true margin if negative */
   char *translation_table;
   int skip_number_lines;	/*Don't write on lines with page numbers */
@@ -187,6 +188,8 @@ typedef struct
   FormatFor orig_format_for;
   int contents;
   int has_contentsheader;
+  int endnotes;
+  int endnote_stage;
   unsigned int mode;
   unsigned int orig_mode;
   unsigned int config_mode;
@@ -348,6 +351,13 @@ int start_heading (sem_act action, widechar * translatedBuffer, int
 		   translatedLength);
 int finish_heading (sem_act action);
 int make_contents ();
+int initialize_endnotes();
+int make_endnotes();
+int link_endnote(xmlNode* node);
+void set_notes_header();
+void set_notes_description();
+int start_endnote();
+int finish_endnote(xmlNode* node);
 void do_reverse (xmlNode * node);
 int do_boxline (xmlNode * node);
 void do_pagebreak (xmlNode *node);
