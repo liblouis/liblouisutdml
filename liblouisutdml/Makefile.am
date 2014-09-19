@@ -15,6 +15,8 @@ endif
 
 lib_LTLIBRARIES = liblouisutdml.la
 
+liblouisutdml_la_CPPFLAGS = \
+	-DLBUAPI
 liblouisutdml_la_CFLAGS =	\
 	$(BASE_DEPENDENCIES_CFLAGS)
 
