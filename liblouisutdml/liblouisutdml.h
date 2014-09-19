@@ -41,20 +41,30 @@ extern "C"
 /* Function prototypes are documented briefly below. For more extensive 
 documentation see liblouisutdml.html or type info liblouisutdml. */
 
+#ifdef _WIN32
+#ifdef LBUAPI
+#define LBUAPI __declspec(dllexport)
+#else
+#define LBUAPI __declspec(dllimport)
+#endif
+#else
+#define LBUAPI
+#endif
+
 #ifndef EXPORT_CALL
 #ifdef _WIN32
 #define EXPORT_CALL __stdcall
-  char *EXPORT_CALL lou_getProgramPath (void);
+  LBUAPI char *EXPORT_CALL lou_getProgramPath (void);
 #else
 #define EXPORT_CALL
 #endif
 #endif
 
-  char *EXPORT_CALL lbu_version (void);
+  LBUAPI char *EXPORT_CALL lbu_version (void);
 /* Returns the version of liblouisutdml and liblouis. */
 
-  void EXPORT_CALL lbu_loadXMLCatalog(const char *fiilename);
-  void *EXPORT_CALL lbu_initialize (const char *configFileList,
+  LBUAPI void EXPORT_CALL lbu_loadXMLCatalog(const char *fiilename);
+  LBUAPI void *EXPORT_CALL lbu_initialize (const char *configFileList,
 				    const char *logFileName,
 				    const char *settingsString);
 
@@ -80,7 +90,7 @@ include louisutdml.h */
     louisDots = 1<<24
   } ProcessingModes;
 
-  int EXPORT_CALL lbu_translateString
+  LBUAPI int EXPORT_CALL lbu_translateString
     (const char *configFileList,
      const char *inbuf, int inlen, widechar *outbuf, int *outlen,
      const char *logFileName, const char *settingsString, unsigned int mode);
@@ -103,32 +113,32 @@ function returns 1 if no errors were encountered and a negative number
 if a conplete translation could not be done.  */
 
 
-  int EXPORT_CALL lbu_backTranslateString
+  LBUAPI int EXPORT_CALL lbu_backTranslateString
     (const char *configFileList,
      const char *inbuf, int inlen, widechar *outbuf, int *outlen,
      const char *logFileName, const char *settingsString, unsigned int mode);
 
-  int EXPORT_CALL lbu_translateFile (const char *configFileList, const char
+  LBUAPI int EXPORT_CALL lbu_translateFile (const char *configFileList, const char
 				     *inputFileName,
 				     const char *outputFileName,
 				     const char *logFileName,
 				     const char *settingsString,
 				     unsigned int mode);
 
-  int EXPORT_CALL lbu_translateTextFile (const char *configFileList,
+  LBUAPI int EXPORT_CALL lbu_translateTextFile (const char *configFileList,
 					 const char *inputFileName,
 					 const char *outputFileName,
 					 const char *logFileName,
 					 const char *settingsString,
 					 unsigned int mode);
-  int EXPORT_CALL lbu_backTranslateFile (const char *configFileList,
+  LBUAPI int EXPORT_CALL lbu_backTranslateFile (const char *configFileList,
 					 const char *inputFileName,
 					 const char *outputFileName,
 					 const char *logFileName,
 					 const char *settingsString,
 					 unsigned int mode);
 
-  int EXPORT_CALL
+  LBUAPI int EXPORT_CALL
     lbu_charToDots (const char *tableList, const unsigned char *inbuf,
 		    unsigned char *outbuf, int length, const char 
 *logFile,
@@ -137,7 +147,7 @@ if a conplete translation could not be done.  */
 /* Convert the utf8 character string in inbuf to Unicode braille dot 
 patterns and place the result as a utf8 string in outbuf. */
 
-  int EXPORT_CALL
+  LBUAPI int EXPORT_CALL
     lbu_dotsToChar (const char *tableList, const unsigned char *inbuf,
 		    unsigned char *outbuf, int length, const char 
 *logFile,
@@ -146,7 +156,7 @@ patterns and place the result as a utf8 string in outbuf. */
 /* Convert the utf8 string of dot patterns in inbuf to characters and 
 place the result as a utf8 string in outbuf. */
 
-  int EXPORT_CALL
+  LBUAPI int EXPORT_CALL
     lbu_checkTable (const char *tableList, const char *logFile, unsigned 
 int 
 mode);
@@ -155,20 +165,20 @@ mode);
 found logFile will be empty. */
 
 /* Set/get  the path to which temporary files will be written */
-char *EXPORT_CALL lbu_setWriteablePath (const char *path);
-char *EXPORT_CALL lbu_getWriteablePath ();
+LBUAPI char *EXPORT_CALL lbu_setWriteablePath (const char *path);
+LBUAPI char *EXPORT_CALL lbu_getWriteablePath ();
 
-void EXPORT_CALL lbu_registerLogCallback(logcallback callback);
+LBUAPI void EXPORT_CALL lbu_registerLogCallback(logcallback callback);
 
-void EXPORT_CALL lbu_setLogLevel(logLevels level);
+LBUAPI void EXPORT_CALL lbu_setLogLevel(logLevels level);
 
-void EXPORT_CALL lbu_logFile(const char *fileName);
+LBUAPI void EXPORT_CALL lbu_logFile(const char *fileName);
 
-void EXPORT_CALL lbu_logEnd();
+LBUAPI void EXPORT_CALL lbu_logEnd();
 
 /* This function should be called at the end of the application to free
 all memory allocated by liblouisutdml or liblouis. */
-void EXPORT_CALL lbu_free (void);
+LBUAPI void EXPORT_CALL lbu_free (void);
 
 #ifdef __cplusplus
 }

@@ -27,7 +27,7 @@
 #include <stdarg.h>
 #include <string.h>
 
-#include "louis.h"
+#include "louisutdml.h"
 
 void logWidecharBuf(logLevels level, const char *msg, const widechar *wbuf, int wlen)
 {
