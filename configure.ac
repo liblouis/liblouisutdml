@@ -128,6 +128,7 @@ AC_CONFIG_FILES([Makefile
 	tests/test_suite/test_11/Makefile
 	tests/test_suite/test_12/Makefile
 	tests/test_suite/test_13/Makefile
+	tests/test_suite/test_14/Makefile
 	tools/Makefile
 	windows/Makefile
 	windows/include/Makefile
