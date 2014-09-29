@@ -42,7 +42,7 @@ extern "C"
 documentation see liblouisutdml.html or type info liblouisutdml. */
 
 #ifdef _WIN32
-#ifdef LBUAPI
+#ifdef LBULIB
 #define LBUAPI __declspec(dllexport)
 #else
 #define LBUAPI __declspec(dllimport)
