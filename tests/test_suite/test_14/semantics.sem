@@ -1,0 +1,7 @@
+root           		&xpath(/*)
+p              		&xpath(//p)
+note		   		note,id
+noteref			   	noteref,id
+notesheader	   		notesheader
+notesdescription	notesdescription
+newpage				newpage

@@ -1,0 +1,36 @@
+Foo 99#a Bar.
+Foo 99ref#b Bar.
+
+
+
+
+
+
+
+Foo 99#c Bar.
+
+
+
+
+
+
+
+
+        Endnotes
+
+Some descriptive text
+
+    #a p#a#a Endnote
+  Description #a
+    ref#b p#a#b Endnote
+  Description #b
+
+    #c p#b#a Endnote
+  Description #c
+
+
+
+
+
+
+

@@ -1,0 +1,57 @@
+<project name="jliblouisutdml" default="dist"
+    basedir=".">
+  <property name="liblouis.dir" value="native"/>
+  <condition property="liblouis.ext" value=".dll">
+    <os family="windows"/>
+  </condition>
+  <condition property="liblouis.ext" value=".so">
+    <os family="unix"/>
+  </condition>
+  <condition property="liblouis.ext" value=".dynlib">
+    <os family="mac"/>
+  </condition>
+  <property name="liblouis.ext" value=".so"/>
+  <propertyset id="test.props">
+    <propertyref name="liblouis.dir"/>
+    <propertyref name="liblouis.ext"/>
+  </propertyset>
+  <property name="src" location="src"/>
+  <property name="build" location="classes"/>
+  <property name="test.src" location="tests"/>
+  <property name="test.build" location="testclasses"/>
+  <path id="test_cp">
+    <pathelement location="lib/testng-6.8.jar"/>
+    <pathelement location="${build}"/>
+    <pathelement location="${test.build}"/>
+  </path>
+  <taskdef name="testng" classpathref="test_cp"
+      classname="org.testng.TestNGAntTask"/>
+  <target name="init">
+    <mkdir dir="${build}"/>
+  </target>
+  <target name="testInit">
+    <mkdir dir="${test.build}"/>
+  </target>
+  <target name="compile" depends="init">
+    <javac srcdir="${src}" destdir="${build}"
+        includeantruntime="false" source="1.6" target="1.6">
+    </javac>
+  </target>
+  <target name="dist" depends="compile">
+    <jar jarfile="jliblouisutdml.jar" 
+        basedir="${build}">
+    </jar>
+  </target>
+  <target name="testCompile" depends="testInit, compile">
+    <javac srcdir="${test.src}" destdir="${test.build}"
+        includeantruntime="false" source="1.6" target="1.6" 
+        classpathref="test_cp"/>
+  </target>
+  <target name="test" depends="testCompile">
+    <testng classpathref="test_cp">
+      <classfileset dir="${test.build}" includes="org/liblouis/*.class"/>
+      <propertyset refid="test.props"/>
+    </testng>
+  </target>
+</project>
+
