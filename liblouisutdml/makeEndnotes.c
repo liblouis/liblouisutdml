@@ -297,7 +297,7 @@ int finish_endnote(xmlNode* node)
 	
 	get_page_line_num(ud->translated_length,&page_num,&line_num);
 	
-	itoa(line_num,buffer,10);
+	sprintf(buffer, "%d", line_num);
 	for(k=0;k<strlen(buffer);k++)
 		ud->text_buffer[k]=buffer[k];
 	ud->text_length = strlen(buffer);
@@ -319,7 +319,7 @@ int finish_endnote(xmlNode* node)
 	if(!(endnotePtr->free_code & 8)) endnotePtr->free_code += 8;
 	
 	
-	itoa(page_num,buffer,10);
+	sprintf(buffer, "%d", page_num);
 	for(k=0;k<strlen(buffer);k++)
 		ud->text_buffer[k]=buffer[k];
 	ud->text_length = strlen(buffer);
