@@ -377,6 +377,7 @@ int finish_endnote(xmlNode* node)
 	lastEndnote = endnotePtr;
 	if (firstEndnote == NULL)
 		firstEndnote = endnotePtr;
+	return 0;
 }
  
 // called when a note cannot find a noteref with the same id.
@@ -412,6 +413,7 @@ int create_endnote_shell(xmlNode* node)
 	lastEndnote = endnotePtr;
 	if (firstEndnote == NULL)
 		firstEndnote = endnotePtr;
+	return 1;
 }
 
 // called by the note action.
