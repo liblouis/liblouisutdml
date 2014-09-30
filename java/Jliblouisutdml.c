@@ -112,7 +112,9 @@ JNIEXPORT jstring JNICALL Java_org_liblouis_LibLouisUTDML_version
 JNIEXPORT void JNICALL Java_org_liblouis_LibLouisUTDML_loadXMLCatalog
   (JNIEnv *env, jobject this, jstring filename)
 {
-  return lbu_loadXMLCatalog(filename);
+  const char *cFilename = (*env)->GetStringUTFChars(env, filename, 0);
+  lbu_loadXMLCatalog(cFilename);
+  (*env)->ReleaseStringUTFChars(env, filename, cFilename);
 }
 
 /*
