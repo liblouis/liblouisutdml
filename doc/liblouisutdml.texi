@@ -12,6 +12,7 @@
 @finalout
 
 @defindex semantic
+@defindex style
 
 @c Macro definitions
 
@@ -101,6 +102,7 @@ Fifth Floor, Boston, MA 02110-1301, USA.
 * Example files::
 * Configuration Settings Index::
 * Semantic Action Index::
+* Style Index::
 * Function Index::
 * Program Index::
 * Concept Index::
@@ -901,6 +903,7 @@ Below are the settings for the predefined style names. The
 only settings that are different from the defaults.
 
 @subsection style document
+@styleindex document
 
 This is a predefined style name. All settings have their default values.
 The user must specify any other values. If a "persistent" style setting
@@ -1018,6 +1021,7 @@ have a value of @samp{2} or more.
 
 @anchor{contentsheader style}
 @subsection style contentsheader
+@styleindex contentsheader
 
 This style is used to specify where the table of contents should be
 placed and its title. The xml tag assigned to it in the semantic action
@@ -1032,6 +1036,8 @@ starting and ending markers.
 @end table
 
 @subsection style contents1
+@styleindex contents1
+
 This style and the other contents styles are used for the table of
 contents and correspond to the ten heading levels (@samp{contents5},
 @samp{contents6}, @samp{contents7}, @samp{contents8},
@@ -1042,19 +1048,28 @@ contents and correspond to the ten heading levels (@samp{contents5},
 @setting{leftMargin, 2}
 @setting{format, contents}
 @end table
+
 @subsection style contents2
+@styleindex contents2
+
 @table @code
 @setting{firstLineIndent, -2}
 @setting{leftMargin, 4}
 @setting{format, contents}
 @end table
+
 @subsection style contents3
+@styleindex contents3
+
 @table @code
 @setting{firstLineIndent, -2}
 @setting{leftMargin, 6}
 @setting{format, contents}
 @end table
+
 @subsection style contents4
+@styleindex contents4
+
 @table @code
 @setting{firstLineIndent, -2}
 @setting{leftMargin, 8}
@@ -1062,6 +1077,7 @@ contents and correspond to the ten heading levels (@samp{contents5},
 @end table
 
 @subsection style heading1
+@styleindex heading1
 
 This style is used for main headings, such as chapter titles.
 
@@ -1072,6 +1088,7 @@ This style is used for main headings, such as chapter titles.
 @end table
 
 @subsection style heading2
+@styleindex heading2
 
 The first level of subheadings after the main heading.
 
@@ -1081,6 +1098,7 @@ The first level of subheadings after the main heading.
 @end table
 
 @subsection style heading3
+@styleindex heading3
 
 The third level of headings.
 
@@ -1091,6 +1109,7 @@ The third level of headings.
 @end table
 
 @subsection style heading4
+@styleindex heading4
 
 The fourth level of headings. There are six more levels:
 @samp{heading5}, @samp{heading6}, @samp{heading7},
@@ -1103,6 +1122,7 @@ The fourth level of headings. There are six more levels:
 @end table
 
 @subsection style para
+@styleindex para
 
 Paragraph. This is ordinary body text.
 
@@ -4549,6 +4569,11 @@ pass2 @@1b-12-4-4 @@4
 @unnumbered Semantic Action Index
 
 @printindex semantic
+
+@node Style Index
+@unnumbered Style Index
+
+@printindex style
 
 @node Function Index
 @unnumbered Function Index
