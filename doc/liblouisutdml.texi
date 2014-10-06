@@ -146,6 +146,16 @@ Special Features
 * Interlining::
 * Browser-Friendly Output::
 * CDATA Sections::
+* End notes::
+
+End notes
+
+* Use of Endnotes::
+* Output::
+* Configuration::
+* Styles::
+* Semantic Actions::
+* Example::
 
 Special Formats
 
@@ -1115,7 +1125,6 @@ Paragraph. This is ordinary body text.
 @node Semantic Actions Overview, Semantic Actions in detail, Connecting with the xml Document, Connecting with the xml Document
 @section Overview
 
-
 When liblouisutdml (or @command{file2brl}) processes an xml document, it
 needs to be told how to use the information in that document to
 produce a properly translated and formatted braille document. These
@@ -1499,8 +1508,8 @@ contents generator. They should be assigned style settings, however.
 
 @semanticAction{contentsheader, elementSpecifier}
 
-This semantic action must be assigned an element specifier if used. See
-the discussion of it in the section on styles.
+This semantic action must be assigned an element specifier if used.
+See the discussion of it in @ref{style}.
 
 @semanticAction{document, elementSpecifier}
 
@@ -1997,6 +2006,7 @@ made to it.
 * Interlining::
 * Browser-Friendly Output::
 * CDATA Sections::
+* End notes::
 @end menu
 
 @node Table of contents, Back-translation, Special Features, Special Features
@@ -2127,7 +2137,7 @@ specified by the configuration. outfile should have the extension
 part of the above example specifies a configuration setting, which of
 course can also be specified in a configuration file.
 
-@node CDATA Sections,  , Browser-Friendly Output, Special Features
+@node CDATA Sections, End notes, Browser-Friendly Output, Special Features
 @section @code{CDATA} Sections
 
 A @code{cdata} section may be given the semantic actions @code{skip},
@@ -2136,6 +2146,280 @@ A @code{cdata} section may be given the semantic actions @code{skip},
 the output with no translation. In the third case it is translated into
 computer braille and inserted into the output. Any other semantic action
 has the same effect as @code{no}.
+
+@node End notes
+@section End notes
+
+An endnote is defined as the link between a reference character in the
+body of the text and a description at the end of the output document.
+
+@menu
+* Use of Endnotes::
+* Output::
+* Configuration::
+* Styles::
+* Semantic Actions::
+* Example::
+@end menu
+
+@node Use of Endnotes
+@subsection Use of Endnotes
+
+The position of the reference character in the body of the text is
+defined by the @semanticref{noteref}, which is then linked to a
+@semanticref{note} (which can appear anywhere within the input file)
+with the same id. The content of @code{note} will appear at the end of
+the output document, along with its corresponding reference character
+and the page and line numbers of where the reference character appears
+in the text.
+
+A heading for the first endnote page can be set using the
+@semanticref{notesheader}, and a small note can also be placed after
+this heading, but before the endnotes, by using the
+@semanticref{notesdescription}.
+
+The endnote page created will follow any formatting (page numbers,
+headers, footers) from the last page in the document.
+
+@node Output
+@subsection Output
+
+Let's look at an example. The following text in an input file
+
+@example
+some text <mynoteref id="1">1</mynoteref> some text
+...
+<mynote id="1">Endnote Description</mynote>
+@end example
+
+will produce a reference to the end note in the output as follows
+(with usual representation of numbers):
+ 
+@example
+some text 99#a some text
+@end example
+
+The @samp{99} in ascii is used as the indicator for an endnote
+reference. And it will also produce an entry on the end notes page as
+follows:
+
+@example
+#a p#g#b Endnote Description
+@end example
+
+with the usual representation of numbers and, in this example, the
+reference to the note, i.e. the reference character appearing on the
+2nd line of the 7th page.
+
+@node Configuration
+@subsection Configuration
+
+@table @code
+@setting{endnotes,yes}
+
+Choose whether to use endnotes or not. Choosing @samp{no} will ignore
+anything enclosed by all the semantic actions @ref{Semantic Actions}.
+
+@end table
+
+@node Styles
+@subsection Styles
+
+The semantic actions @code{note}, @code{notesdescription}, and
+@code{notesheader} have corresponding styles.
+
+@table @code
+
+@item style note
+
+Each endnote on the endnote page will use this style
+
+@item style notesheader
+
+The style used by the title on the endnote page
+
+@item style notesdescription
+
+The style used by the note just after the title on the endnote page
+
+@end table
+
+The @semanticref{noteref} will inherit its style.
+
+@node Semantic Actions
+@subsection Semantic Actions
+
+@table @code
+@semanticAction{note, elementSpecifier id}
+
+Defines the endnote displayed at the bottom of the file. The id
+attribute has to be unique, and be identical to the id attribute in a
+@code{noteref} in the file in order to be displayed, but the
+@code{note} action can appear before the corresponding @code{noteref}
+action if needed. 
+
+Given the following definition in the semantic action file
+
+@example
+note    mynote,idref
+@end example
+
+we could define an endnote in the input file as follows:
+
+@example
+<mynote idref="1">This is an endnote</mynote>
+@end example
+
+@semanticAction{noteref, elementSpecifier id}
+
+Defines the position where the endnote reference character should be
+placed, as well as the endnote reference character in the endnote at
+the bottom of the file. The order that these appear in the input file
+determines the order that they appear in the endnote section.
+
+Given the following definition in the semantic action file
+
+@example
+noteref    mynoteref,idref
+@end example
+
+we could place a reference to an endnote in the input file as follows:
+
+@example
+<mynoteref idref="1">*</mynoteref>
+@end example
+
+@semanticAction{notesheader, elementSpecifier}
+
+The text enclosed defines the header to be placed at the top of the
+first endnote page. For multiple of these defined in the input, the
+last one is used.
+
+Given the following definition in the semantic action file
+
+@example
+notesheader    mynotesheader
+@end example
+
+we could define the page header of the first endnotes page in the
+input file as follows:
+
+@example
+<mynotesheader>Endnote Page Header</mynotesheader>
+@end example
+
+@semanticAction{notesdescription, elementSpecifier}
+
+Defines some text to be placed after the @semanticref{notesheader},
+but before the rest of the endnotes. Again, for multiple definitions
+in the input file, the last one will be used.
+
+Given the following definition in the semantic action file
+
+@example
+notesdescription    mynotesdescription
+@end example
+
+we could define some text to appear on the first endnotes page in the
+input file as follows:
+
+@example
+<mynotesdescription>Endnote Page Text</mynotesdescription>
+@end example
+@end table
+
+@node Example
+@subsection Example
+
+So, to define end notes we need an input file (@pxref{endnotes.xml})
+containing end notes and references to them , end notes have to be
+enabled in the ini file or via command line options
+(@pxref{endnotes.ini}) and finally we have to specify which element in
+the input file constitutes an endnote and a reference to it by
+defining this in a semantic action file (@pxref{endnotes.sem}).
+Optionally we can also define styles for the notes, the header of the
+notes page and the descriptive text (@pxref{endnote styles}).
+
+The following example shows the relevant excerpts in the input, sem
+and configuration files together with the resulting output
+(@pxref{endnote output}).
+
+@subsubsection input.xml
+@anchor{endnotes.xml}
+
+@example
+<?xml version=""1.0" encoding="UTF-8"?>
+<doc>
+    <notesheader>not seen header</notesheader>
+    <notesdescription>not seen description</notesdescription>
+
+    <note id = "2">Endnote Description 2</note>
+                    
+    <p>Foo<noteref id = "1">1</noteref>Bar.</p>
+    <p>Foo<noteref id = "2">ref2</noteref>Bar.</p>
+                    
+    <notesheader>Endnotes</notesheader>
+    <notesdescription>Some descriptive text</notesdescription>
+                    
+    <note id = "1">Endnote Description 1</note>
+</doc>
+@end example
+
+@subsubsection liblouisutdml.ini
+@anchor{endnotes.ini}
+
+@example
+endnotes yes
+@end example
+
+@subsubsection endnotes.sem
+@anchor{endnotes.sem}
+
+@example
+note                note,id
+noteref             noteref,id
+notesheader         notesheader
+notesdescription    notesdescription
+@end example
+
+@subsubsection styles.cfg
+@anchor{endnote styles}
+
+@example
+style note
+    leftMargin 2
+    firstLineIndent 2
+    
+style notesheader
+    format centered
+    
+style notesdescription
+    format leftJustified
+@end example
+
+@subsubsection output.txt
+@anchor{endnote output}
+
+@example
+Foo 99#a Bar.
+Foo 99ref#b Bar.
+
+
+
+
+
+
+-page-
+     Endnotes Header
+
+Some descriptive text
+
+#a p#a#a Endnote
+  Description #a
+ref#b p#a#b Endnote
+  Description #b
+-page-
+@end example
 
 @node Special Formats, Implementing Braille Mathematics Codes, Special Features, Top
 @chapter Special Formats
@@ -3735,7 +4019,7 @@ no td,class,td11
 @section @file{nemeth.sem}
 
 @example
-# Licnsed under LGPL
+# Licensed under LGPL
 
 # Updated 6-18-08 by Mike Sivill <mike.sivill@@viewplus.com>
 

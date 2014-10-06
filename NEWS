@@ -6,12 +6,17 @@ liblouisxml NEWS -- history of user-visible changes.
   circumstances.
 - Add a configure option to disable the Java bindings.
 - Added Java bindings for logging callback API in liblouis.
+- Add end note functionality. Thanks to Paul Wood from Torch Trust
+
 ** Bug fixes
 - fixed a problem with duplicate semantics attributes 
 - solve multiple brl nodes after math nodes
 - Improve the documentation on XPath expressions.
 - Fixed numerous problems in the build system.
 - Fixed the character used when UCS2 builds encounter characters above u+ffff
+
+** Documentation updates
+- Document the end note functionality
 
 * Noteworthy changes in release 2.1.0 (2009-11-23)
 
