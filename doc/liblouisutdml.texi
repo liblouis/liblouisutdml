@@ -83,7 +83,7 @@ Fifth Floor, Boston, MA 02110-1301, USA.
 @contents
 
 @ifnottex
-@node Top, Introduction, (dir), (dir)
+@node Top
 @top Liblouisutdml User's and Programmer's Manual
 
 @insertcopying
@@ -199,7 +199,7 @@ Files for BAUK Maths (ukmaths)
 @end detailmenu
 @end menu
 
-@node Introduction, Transcribing Documents, Top, Top
+@node Introduction
 @chapter Introduction
 
 liblouisutdml is a software component which can be incorporated into
@@ -239,7 +239,7 @@ library liblouis, which is a braille translator and back-translator
 (@pxref{Top, , Overview, liblouis, Liblouis User's and Programmer's
 Manual}).
 
-@node Transcribing Documents, Customization Configuring liblouisutdml, Introduction, Top
+@node Transcribing Documents
 @chapter Transcribing Documents
 
 @menu
@@ -252,7 +252,7 @@ Manual}).
 * Transcribing PDF files with pdf2brl::
 @end menu
 
-@node Transcribing XML files with file2brl, Transcribing Text Documents, Transcribing Documents, Transcribing Documents
+@node Transcribing XML files with file2brl
 @section Transcribing XML files with file2brl
 @pindex file2brl
 
@@ -409,7 +409,7 @@ If only the program name is typed @command{file2brl} assumes that the
 configuration file is @file{default.cfg}, input is from the standard
 input unit, and output is to the standard output unit.
 
-@node Transcribing Text Documents, Transcribing Poorly Formatted Documents, Transcribing XML files with file2brl, Transcribing Documents
+@node Transcribing Text Documents
 @section Transcribing Text Documents
 
 See the previous section on using @command{file2brl}. This program
@@ -418,7 +418,7 @@ the information in the configuration files. Paragraphs must be
 separated with a blank line. If you want a blank line in the output use
 two blank lines.
 
-@node Transcribing Poorly Formatted Documents, Transcribing html Documents, Transcribing Text Documents, Transcribing Documents
+@node Transcribing Poorly Formatted Documents
 @section Transcribing Poorly Formatted Documents
 
 @example
@@ -436,7 +436,7 @@ with rtf2brl}) will convert the file, it will work with the resulting
 xml file.
 
 
-@node Transcribing html Documents, Transcribing Microsoft Word files with msword2brl, Transcribing Poorly Formatted Documents, Transcribing Documents
+@node Transcribing html Documents
 @section Transcribing html Documents
 
 @example
@@ -449,7 +449,7 @@ infile as an xml document. This will produce a lot of error messages.
 @command{file2brl} will then try the html parser. Note that xhtml
 documents are actually xml.
 
-@node Transcribing Microsoft Word files with msword2brl, Transcribing RTF files with rtf2brl, Transcribing html Documents, Transcribing Documents
+@node Transcribing Microsoft Word files with msword2brl
 @section Transcribing Microsoft Word files with msword2brl
 @pindex msword2brl
 
@@ -464,7 +464,7 @@ causes the output to be in docbook format. This is piped to
 @command{file2brl}. The output file from @command{file2brl} contains
 much of the formatting, including emphasis, of the word file.
 
-@node Transcribing RTF files with rtf2brl, Transcribing PDF files with pdf2brl, Transcribing Microsoft Word files with msword2brl, Transcribing Documents
+@node Transcribing RTF files with rtf2brl
 @section Transcribing RTF files with rtf2brl
 @pindex rtf2brl
 
@@ -482,7 +482,7 @@ with the root element @code{doc}. The file @file{doc.sem} is fairly
 complete, so the output of @command{file2brl} contains much of the
 formatting, including emphasis, of the original rtf file.
 
-@node Transcribing PDF files with pdf2brl,  , Transcribing RTF files with rtf2brl, Transcribing Documents
+@node Transcribing PDF files with pdf2brl
 @section Transcribing PDF files with pdf2brl
 @pindex pdf2brl
 
@@ -502,7 +502,7 @@ which is called with the @option{-p} option, since output from
 @command{pdftotext} is likely to be poorly formatted. The output file
 from @command{file2brl} is mostly in sensible paragraphs.
 
-@node Customization Configuring liblouisutdml, Connecting with the xml Document, Transcribing Documents, Top
+@node Customization Configuring liblouisutdml
 @chapter Customization: Configuring liblouisutdml
 
 The operation of liblouisutdml is controlled by two types of files:
@@ -594,7 +594,7 @@ setting. A few settings have two values.
 * style::
 @end menu
 
-@node outputFormat, translation, Customization Configuring liblouisutdml, Customization Configuring liblouisutdml
+@node outputFormat
 @section outputFormat
 
 This section specifies the format of the output file (or string).
@@ -772,7 +772,7 @@ character is an apostrophe (dot 3).
 
 @end table
 
-@node translation, xml, outputFormat, Customization Configuring liblouisutdml
+@node translation
 @section translation
 
 This section specifies the liblouis translation tables to be used for
@@ -810,7 +810,7 @@ removes these errors.
 
 @end table
 
-@node xml, style, translation, Customization Configuring liblouisutdml
+@node xml
 @section xml
 
 This section provides various information for the processing of xml files.
@@ -858,7 +858,7 @@ with the minutiae of semantic-action files.
 
 @end table
 
-@node style,  , xml, Customization Configuring liblouisutdml
+@node style
 @section style
 
 The following sections all deal with styles. Each style has its own
@@ -1112,7 +1112,7 @@ Paragraph. This is ordinary body text.
 
 @end table
 
-@node Connecting with the xml Document, Special Features, Customization Configuring liblouisutdml, Top
+@node Connecting with the xml Document
 @chapter Connecting with the xml Document - Semantic-Action Files
 
 @menu
@@ -1122,7 +1122,7 @@ Paragraph. This is ordinary body text.
 * Using XPath Expressions::
 @end menu
 
-@node Semantic Actions Overview, Semantic Actions in detail, Connecting with the xml Document, Connecting with the xml Document
+@node Semantic Actions Overview
 @section Overview
 
 When liblouisutdml (or @command{file2brl}) processes an xml document, it
@@ -1465,7 +1465,7 @@ For further discussion of how the third column is used
 not limited to mathematics. It can be used to add characters to
 anything enclosed by an xml tag.
 
-@node Semantic Actions in detail, Pseudo-actions, Semantic Actions Overview, Connecting with the xml Document
+@node Semantic Actions in detail
 @section Semantic Actions in detail
 
 Here is a complete list of the semantic actions which liblouisutdml
@@ -1894,7 +1894,7 @@ Enclose the text which follows in braille underline indicators.
 
 @end table
 
-@node Pseudo-actions, Using XPath Expressions, Semantic Actions in detail, Connecting with the xml Document
+@node Pseudo-actions
 @section Pseudo-actions
 
 These actions affect the processing of semantic-action files. They are
@@ -1907,7 +1907,7 @@ are encountered in the processing of semantic-action files.
 * namespaces::
 @end menu
 
-@node include, newentries, Pseudo-actions, Pseudo-actions
+@node include
 @subsection include
 
 @example
@@ -1918,7 +1918,7 @@ filename must be the name of a semantic action file. The file is
 compiled as though it were part of the file containing the
 @code{include} entry. Included files may include other files.
 
-@node newentries, namespaces, include, Pseudo-actions
+@node newentries
 @subsection newentries
 
 @example
@@ -1931,7 +1931,7 @@ produced. This affects only documents processed with this
 semantic-action file. The configuration setting @code{newEntries}
 affects all documents.
 
-@node namespaces,  , newentries, Pseudo-actions
+@node namespaces
 @subsection namespaces
 @cindex Namespaces
 
@@ -1944,7 +1944,7 @@ expressions. (@pxref{Using XPath Expressions}). The format is
 @samp{namespaces prefix1=url1,prefix2=url2,...}. The list of
 namespaces may not contain blanks.
 
-@node Using XPath Expressions,  , Pseudo-actions, Connecting with the xml Document
+@node Using XPath Expressions
 @section Using XPath Expressions
 @cindex XPath Expressions
 
@@ -1996,7 +1996,7 @@ This example causes any element with the name @samp{h4} to be given the
 semantic action @code{para}, no matter what other assignments may be
 made to it.
 
-@node Special Features, Special Formats, Connecting with the xml Document, Top
+@node Special Features
 @chapter Special Features
 
 @menu
@@ -2009,7 +2009,7 @@ made to it.
 * End notes::
 @end menu
 
-@node Table of contents, Back-translation, Special Features, Special Features
+@node Table of contents
 @section Table of contents
 
 A table of contents is produced for an xml file if the file contains a
@@ -2067,7 +2067,7 @@ means that if it is negative it is really subtracted. For example, if
 will start in cell 2. If the result of adding these two values is
 negative it is set to 0.
 
-@node Back-translation, Reformatting, Table of contents, Special Features
+@node Back-translation
 @section Back-translation
 
 @example
@@ -2093,7 +2093,7 @@ space \x001b 1b escape character
 To perform the back-translation operation, @command{file2brl} uses the
 liblouisutdml function @code{lbu_backTranslateFile}.
 
-@node Reformatting, Interlining, Back-translation, Special Features
+@node Reformatting
 @section Reformatting
 
 @example
@@ -2108,7 +2108,7 @@ page numbers will be generated if @code{braillePages yes} is specified.
 If @code{backFormat html} has been specified, print page numbers will be
 reproduced in the appropriate places. Some formatting may be lost.
 
-@node Interlining, Browser-Friendly Output, Reformatting, Special Features
+@node Interlining
 @section Interlining
 
 Interlining means printing the original text between the lines of
@@ -2118,7 +2118,7 @@ back-translation. However, it is inadequate for mathematics and depends
 too much on the quality of the liblouis tables. It is scheduled to be
 replaced, so you should not use it.
 
-@node Browser-Friendly Output, CDATA Sections, Interlining, Special Features
+@node Browser-Friendly Output
 @section Browser-Friendly Output
 
 @example
@@ -2137,7 +2137,7 @@ specified by the configuration. outfile should have the extension
 part of the above example specifies a configuration setting, which of
 course can also be specified in a configuration file.
 
-@node CDATA Sections, End notes, Browser-Friendly Output, Special Features
+@node CDATA Sections
 @section @code{CDATA} Sections
 
 A @code{cdata} section may be given the semantic actions @code{skip},
@@ -2421,7 +2421,7 @@ ref#b p#a#b Endnote
 -page-
 @end example
 
-@node Special Formats, Implementing Braille Mathematics Codes, Special Features, Top
+@node Special Formats
 @chapter Special Formats
 
 @menu
@@ -2435,7 +2435,7 @@ ref#b p#a#b Endnote
 * Dividing a Book Into Volumes::
 @end menu
 
-@node Tables, Reserving Space for Graphics, Special Formats, Special Formats
+@node Tables
 @section Tables
 
 Various methods of handling tables can be devised. One that is in
@@ -2459,7 +2459,7 @@ third column. your liblouis table must also contain the following line:
 noback always ;\s; 0
 @end example
 
-@node Reserving Space for Graphics, Displayed Text, Tables, Special Formats
+@node Reserving Space for Graphics
 @section Reserving Space for Graphics
 
 Your configuration files should contain lines like these:
@@ -2477,32 +2477,32 @@ In particular, you should have another invocation of @samp{graphspace}
 at the end to skip to a new page, or the next right-hand page if you are
 using interpoint.
 
-@node Displayed Text, Displayed Mathematics, Reserving Space for Graphics, Special Formats
+@node Displayed Text
 @section Displayed Text
 
 Conventions for setting off a block of text from the rest vary. you may
 wish to use the @code{quotation} style or devise a style of your own.
 
-@node Displayed Mathematics, Spatial Layouts in Mathematics, Displayed Text, Special Formats
+@node Displayed Mathematics
 @section Displayed Mathematics
 
 Again, conventions vary. you can define your own style for this purpose
 and invoke it according to the attributes of the @code{math} tag.
 
-@node Spatial Layouts in Mathematics, Arithmetic Examples, Displayed Mathematics, Special Formats
+@node Spatial Layouts in Mathematics
 @section Spatial Layouts in Mathematics
 
 This is also known as 2d mathematics. It spreads out complex fractions
 and other materials for easier viewing. It is being developed based on
 the specifications of MathML 3.
 
-@node Arithmetic Examples, Poetry, Spatial Layouts in Mathematics, Special Formats
+@node Arithmetic Examples
 @section Arithmetic Examples
 
 This is another format that is being developed using MathML 3. It is
 difficult in earlier versions.
 
-@node Poetry, Dividing a Book Into Volumes, Arithmetic Examples, Special Formats
+@node Poetry
 @section Poetry
 
 @file{liblouisutdml.ini} defines two styles which can be used to format
@@ -2532,7 +2532,7 @@ Coleridge's "Rime of the Ancient Mariner":
 Note that when stanzas follow each other liblouisutdml will produce only
 one blank line between them, not two.
 
-@node Dividing a Book Into Volumes,  , Poetry, Special Formats
+@node Dividing a Book Into Volumes
 @section Dividing a Book Into Volumes
 
 Details are still under development. However, this much can be said.
@@ -2556,7 +2556,7 @@ style called @samp{volume} and assign appopriate xml tags to it in a
 semantic-action file. Within the volume style you can nest a title page,
 chapters, etc. A volume table of contents is still under development.
 
-@node Implementing Braille Mathematics Codes, Programming with liblouisutdml, Special Formats, Top
+@node Implementing Braille Mathematics Codes
 @chapter Implementing Braille Mathematics Codes
 
 Much information useful in implementing braille mathematical codes is
@@ -2781,7 +2781,7 @@ always "\s 0
 replaces the baseline or multipurpose indicator followed by a space
 with just a space.
 
-@node Programming with liblouisutdml, Example files, Implementing Braille Mathematics Codes, Top
+@node Programming with liblouisutdml
 @chapter Programming with liblouisutdml
 
 @menu
@@ -2797,7 +2797,7 @@ with just a space.
 * lbu_free::
 @end menu
 
-@node License, Overview, Programming with liblouisutdml, Programming with liblouisutdml
+@node License
 @section License
 
 Liblouisutdml may contain code borrowed from the Linux screenreader
@@ -2826,7 +2826,7 @@ You should have received a copy of the GNU Lesser General Public
 License along with Liblouisutdml. If not, see
 @uref{http://www.gnu.org/licenses/}.
 
-@node Overview, Files and Paths, License, Programming with liblouisutdml
+@node Overview
 @section Overview
 
 liblouisutdml is an "extensible renderer", designed to translate a wide
@@ -2880,7 +2880,7 @@ internally. This is inherited from liblouis, so liblouis must be
 compiled first and then liblouisutdml. Wherever 16 bits are mentioned in
 this document, read 32 if you have compiled the library for 32 bits.
 
-@node Files and Paths, lbu_version, Overview, Programming with liblouisutdml
+@node Files and Paths
 @section Files and Paths
 
 liblouisutdml uses three kinds of
@@ -2916,7 +2916,7 @@ Paths are handled in the @code{paths.c} module. This contains the
 function @code{set_paths}, which is called from @code{readconfig.c} and
 in turn calls @code{addPath} in the @code{paths.c} module.
 
-@node lbu_version, lbu_initialize, Files and Paths, Programming with liblouisutdml
+@node lbu_version
 @section lbu_version
 
 @findex lbu_version
@@ -2928,7 +2928,7 @@ This function returns a pointer to a character string containing the
 version of liblouisutdml. Other information such as the release
 date and perhaps notable changes may be added later.
 
-@node lbu_initialize, lbu_translateString, lbu_version, Programming with liblouisutdml
+@node lbu_initialize
 @section lbu_initialize
 
 @findex lbu_initialize
@@ -2955,7 +2955,7 @@ and must be cast to @code{(UserData *)} in the calling program. To
 access the information in this structure you must include
 @file{louisutdml.h}. This function is used by @command{file2brl}.
 
-@node lbu_translateString, lbu_translateFile, lbu_initialize, Programming with liblouisutdml
+@node lbu_translateString
 @section lbu_translateString
 
 @findex lbu_translateString
@@ -2998,7 +2998,7 @@ length. When it returns, it is set to the actual length used. The
 function returns 1 if no errors were encountered and a negative number
 if a complete translation could not be done.
 
-@node lbu_translateFile, lbu_translateTextFile, lbu_translateString, Programming with liblouisutdml
+@node lbu_translateFile
 @section lbu_translateFile
 
 @findex lbu_translateFile
@@ -3026,7 +3026,7 @@ UTF-8, UTF-16, UTF-32 or Ascii-8. This is specified by the
 @code{configfilelist}. The function returns 1 if the translation was
 successful.
 
-@node lbu_translateTextFile, lbu_backTranslateFile, lbu_translateFile, Programming with liblouisutdml
+@node lbu_translateTextFile
 @section lbu_translateTextFile
 
 @findex lbu_translateTextFile
@@ -3050,7 +3050,7 @@ line in the configuration file, @code{configfilelist}. As for
 whether complete initialization is to be done or simply initialization
 for a new document.
 
-@node lbu_backTranslateFile, lbu_free, lbu_translateTextFile, Programming with liblouisutdml
+@node lbu_backTranslateFile
 @section lbu_backTranslateFile
 
 @findex lbu_backTranslateFile
@@ -3075,7 +3075,7 @@ parameter specifies whether or not the library is to be initialized
 with new configuration information, as described in the section on
 @code{lbu_translateString} (@pxref{lbu_translateString}).
 
-@node lbu_free,  , lbu_backTranslateFile, Programming with liblouisutdml
+@node lbu_free
 @section lbu_free
 
 @findex lbu_free
@@ -3089,7 +3089,7 @@ change configuration files during your application, use a @code{mode}
 parameter of 0 on the function call using the new configuration
 information. This will call the @code{lbu_free} function automatically.
 
-@node Example files, Configuration Settings Index, Programming with liblouisutdml, Top
+@node Example files
 @appendix Example files
 
 This appendix contains all the files referenced in this document. They
@@ -3105,7 +3105,7 @@ studied to see how things are done.
 * Files for BAUK Maths (ukmaths)::
 @end menu
 
-@node liblouisutdml.ini, default.cfg, Example files, Example files
+@node liblouisutdml.ini
 @section @file{liblouisutdml.ini}
 
 @example
@@ -3288,7 +3288,7 @@ style volume
 @end example
 
 
-@node default.cfg, html.sem, liblouisutdml.ini, Example files
+@node default.cfg
 @section @file{default.cfg}
 
 @example
@@ -3314,7 +3314,7 @@ internetAccess no
 
 @end example
 
-@node html.sem, nemeth.sem, default.cfg, Example files
+@node html.sem
 @section @file{html.sem}
 
 @example
@@ -4015,7 +4015,7 @@ no td,class,td11
 @end example
 
 
-@node nemeth.sem, Files for BAUK Maths (ukmaths), html.sem, Example files
+@node nemeth.sem
 @section @file{nemeth.sem}
 
 @example
@@ -4153,7 +4153,7 @@ no mfrac
 no mstyle,scriptlevel,-1
 @end example
 
-@node Files for BAUK Maths (ukmaths),  , nemeth.sem, Example files
+@node Files for BAUK Maths (ukmaths)
 @section Files for BAUK Maths (ukmaths)
 
 @menu
@@ -4163,7 +4163,7 @@ no mstyle,scriptlevel,-1
 * ukmaths_edit.ctb::
 @end menu
 
-@node ukmaths.cfg, ukmaths.sem, Files for BAUK Maths (ukmaths), Files for BAUK Maths (ukmaths)
+@node ukmaths.cfg
 @subsection @file{ukmaths.cfg}
 
 @example
@@ -4176,7 +4176,7 @@ semanticFiles *,ukmaths.sem
 
 @end example
 
-@node ukmaths.sem, ukmaths.ctb, ukmaths.cfg, Files for BAUK Maths (ukmaths)
+@node ukmaths.sem
 @subsection @file{ukmaths.sem}
 
 @example
@@ -4300,7 +4300,7 @@ no mstyle,scriptlevel,-1
 @end example
 
 
-@node ukmaths.ctb, ukmaths_edit.ctb, ukmaths.sem, Files for BAUK Maths (ukmaths)
+@node ukmaths.ctb
 @subsection @file{ukmaths.ctb}
 
 @example
@@ -4482,7 +4482,7 @@ pass3 @@16[%lownum1-10]@@12456 *
 pass3 @{mfrac[@@3456%upnum1-10%lownum1-10]@}mfrac *
 @end example
 
-@node ukmaths_edit.ctb,  , ukmaths.ctb, Files for BAUK Maths (ukmaths)
+@node ukmaths_edit.ctb
 @subsection @file{ukmaths_edit.ctb}
 
 @example
@@ -4540,27 +4540,27 @@ pass2 @@1b-15 ?
 pass2 @@1b-12-4-4 @@4
 @end example
 
-@node Configuration Settings Index, Semantic Action Index, Example files, Top
+@node Configuration Settings Index
 @unnumbered Configuration Settings Index
 
 @printindex tp
 
-@node Semantic Action Index, Function Index, Configuration Settings Index, Top
+@node Semantic Action Index
 @unnumbered Semantic Action Index
 
 @printindex semantic
 
-@node Function Index, Program Index, Semantic Action Index, Top
+@node Function Index
 @unnumbered Function Index
 
 @printindex fn
 
-@node Program Index, Concept Index, Function Index, Top
+@node Program Index
 @unnumbered Program Index
 
 @printindex pg
 
-@node Concept Index,  , Program Index, Top
+@node Concept Index
 @unnumbered Concept Index
 
 @printindex cp
