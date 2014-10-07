@@ -20,7 +20,20 @@ public final class LibLouis
           "Could not load liblouis, libraryPath or librarySuffix not defined."
       );
     }
-    String libName = "liblouis" + librarySuffix;
+    String[] dependencyLibs = {"libiconv-2", "libxml2-2", "liblouis"};
+    String libName = null;
+    for (int i = 0; i < dependencyLibs.length; i++) {
+      libName = dependencyLibs[i] + librarySuffix;
+      if (!libraryPath.equals("")) {
+        libName = new File(libraryPath, libName).getAbsolutePath();
+      }
+      try {
+        System.load(libName);
+      } catch (Throwable t) {
+        // Do nothing, may be log it though
+      }
+    }
+    libName = "liblouisutdml" + librarySuffix;
     if (!libraryPath.equals(""))
     {
       libName = new File(libraryPath, libName).getAbsolutePath();
