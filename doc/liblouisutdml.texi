@@ -133,6 +133,7 @@ Connecting with the xml Document - Semantic-Action Files
 * Semantic Actions in detail::
 * Pseudo-actions::
 * Using XPath Expressions::
+* Using Macros::
 
 Pseudo-actions
 
@@ -1161,6 +1162,7 @@ which appears after the content.
 * Semantic Actions in detail::
 * Pseudo-actions::
 * Using XPath Expressions::
+* Using Macros::
 @end menu
 
 @node Semantic Actions Overview
@@ -2028,6 +2030,93 @@ para &xpath(//h4)
 This example causes any element with the name @samp{h4} to be given the
 semantic action @code{para}, no matter what other assignments may be
 made to it.
+
+@node Using Macros
+@section Using Macros
+@cindex Macros
+
+A semantic-action file permits only one action or style to be
+mentioned in the first column. Macros get around this limitation. They
+define a style and a series of semantic actions. A macro name can also
+be in the first column.
+
+Macros somewhat resemble styles. They are defined in a configuration
+file and used in a semantic-action file. In a configuration file the
+definition is of the form
+
+@example
+macro macroName macroBody
+@end example
+
+In a semantic-action file they are invoked as follows:
+
+@example
+macroName element[,attribute[,value]] [parameters]
+@end example
+
+Here is an example of a macro definition.
+
+@example
+macro useSpanish para,configtweak(literaryTextTable=es-Es-g2.ctb)
+@end example
+
+In a semantic-action file it might be used as follows.
+
+@example
+useSpanish p,lang,ES
+@end example
+
+The meanings of the various parts of a macro are as follows:
+
+@table @code
+
+@item macroName
+
+is a string of alphanumeric characters, of which the first must be a
+letter.
+
+@item macroBody
+
+is a series of items separated by commas. It may not contain
+whitespace. If it is too long to fit on one line it may be continued
+by using a backslash (@samp{\}) followed by enter. It should not be
+more than 500 characters in length. Each item is one of the following:
+
+@table @asis
+
+@item A style name
+
+Only one style can be specified in a macro. This is due to the way in
+which styles are handled.
+
+@item A semantic action, optionally with parameters
+
+The parameters are enclosed in parentheses. They consist of whatever
+is legal in the third column for the particular semantic action. If
+the parentheses are empty, that is, simply @samp{()} the contents of
+the third column of the macro invocation itself are used as the
+parameters.
+
+@item @samp{pause}
+
+This is used after a style name so that text belonging to that style
+can be processed. Semantic actions can be specified between the style
+name and the word @samp{pause}.
+
+@item @samp{endstyle}
+
+This causes the style to be terminated and the processing of any text
+which may have been entered into it to be completed. Semantic actions
+may be specified after the word @samp{endstyle}.
+
+@end table
+
+If a style has been specified and neither @samp{pause} nor
+@samp{endstyle} has been used the style is terminated when the end of
+the macro has been reached, and the processing of text is completed.
+(When the end_macro function is called by the program.)
+
+@end table
 
 @node Special Features
 @chapter Special Features
