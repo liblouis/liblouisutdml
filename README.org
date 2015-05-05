@@ -1,0 +1,43 @@
+* Introduction
+
+Liblouisutdml is an open-source library providing complete braille
+transcription services for xml, html and text documents. It translates
+into appropriate braille codes and formats according to its style
+sheet and the specifications in the document. A command-line program,
+~file2brl~ which uses this library is also included. The latest version
+of liblouis is required. Java bindings are built in to the library.
+
+The library is licensed under the GNU Lesser General Public License
+(LGPL) version 3 or later. See the file COPYING.LIB.
+
+The command line tools, are licensed under the GNU General Public
+License version 3.0 or later. See the file COPYING.
+
+* Documentation
+
+For documentation, see ~liblouisutdml.html~ or ~liblouisutdml.txt~.
+These are in the docs directory. For an example of a configuration
+file, see ~liblouisutdml.ini~ and ~preferences.cfg~. For examples of
+semantics-action files, see ~dtbook.sem~ and ~nemeth.sem~. These files
+are in the ~lbu_files~ subdirectory. For examples of translation
+tables, see ~en-us-g2.ctb~, ~en-us-g1.ctb~, ~chardefs.cti~,
+~nemeth.ctb~ and whatever other files they may include. These are all
+in the ~tables~ directory of [[https://github.com/liblouis/liblouis][liblouis]].
+
+* Installation
+
+First obtain the latest version of [[https://github.com/liblouis/liblouis][liblouis]] and compile it. Before
+compiling, you should chose between 16- and 32-bit Unicode, as
+described in the README file and the documentation. liblouisutdml
+inherits this choice from liblouis.
+
+After unpacking the distribution tarball for liblouisutdml go to the
+directory it creates. After running ~configure~ run ~make~ and ~make
+install~. You will need root privileges for the installation step.
+
+This will produce the liblouisutdml library and the program ~file2brl~.
+To compile the Java bindings go to the java subdirectory and run ~ant~.
+
+Note that that the library and programs will not work properly unless
+you have first installed the latest version of [[https://github.com/liblouis/liblouis][liblouis]].
+
