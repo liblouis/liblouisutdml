@@ -1132,6 +1132,27 @@ Paragraph. This is ordinary body text.
 
 @end table
 
+@subsection style boxline
+@styleindex boxline
+
+Typically used to form the top and bottom lines of "boxed" material.
+The character must be chosen to produce the desired dot pattern on the
+embosser or display in use.
+
+@table @code
+
+@setting{topBoxline, .}
+
+This should be set to the character you want used for the boxline
+which appears before the content.
+
+@setting{bottomBoxline, .}
+
+This should be set to the character you want used for the boxline
+which appears after the content.
+
+@end table
+
 @node Connecting with the xml Document
 @chapter Connecting with the xml Document - Semantic-Action Files
 
@@ -1567,14 +1588,6 @@ Enclose the text which follows in braille bold indicators. The @samp{x}
 at the end of the semantic action name is there to prevent conflicts
 with names elsewhere in the software. Just where the bold indicators
 will be placed is controlled by the liblouis translation table in use.
-
-@semanticAction{boxline, elementSpecifier character}
-
-A line consisting entirely of the character in the third column is
-placed in the output. If the third column is blank this semantic action
-does nothing. It is typically used to form the top and bottom lines of
-"boxed" material. The character must be chosen to produce the desired
-dot pattern on the embosser or display in use.
 
 @semanticAction{chemistry, elementSpecifier}
 
@@ -3683,7 +3696,6 @@ no meta,name,generator
 no mo,class,MathClass-op
 no mo,class,MathClass-open
 no mo,class,MathClass-bin
-boxline boxline 7
 no base
 no var
 para dd
