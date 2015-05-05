@@ -539,56 +539,57 @@ structure containing the configuration information. The calling program
 must include the header file @code{louisutdml.h}. You do not need to call
 @code{lbu_initialize} unless you need the facilities which it provides.
 
-A configuration file specification may contain more than one file name, 
-separated by commas. liblouisutdml will process these files in sequence, 
-merging the information they contain. The first file name may also 
-contain a path. liblouisutdml will search for the files it needs first 
-on this path. To make it search first the current directory precede the 
-first file name with @code{./}. After the path, if any, has been 
-evaluated, but before reading any of the files, liblouisutdml reads in a 
-file called @file{liblouisutdml.ini}. This file can contain any 
-configuration settings, but it usually contains only the minimum ones 
-for liblouisutdml to operate properly. You may alter the values in the 
-distribution @file{liblouisutdml.ini}, but you should not delete any 
-settings. Do not specify @file{liblouisutdml.ini} as your configuration 
-file. This will lead to error messages and program termination. If a 
-configuration file read in later contains a particular setting name, the 
-value specified simply replaces the one specified in 
-@file{liblouisutdml.ini} or any previously read configuration file.
+A configuration file specification may contain more than one file
+name, separated by commas. liblouisutdml will process these files in
+sequence, merging the information they contain. The first file name
+may also contain a path. liblouisutdml will search for the files it
+needs first on this path. To make it search first the current
+directory precede the first file name with @code{./}. After the path,
+if any, has been evaluated, but before reading any of the files,
+liblouisutdml reads in a file called @file{liblouisutdml.ini}. This
+file can contain any configuration settings, but it usually contains
+only the minimum ones for liblouisutdml to operate properly. You may
+alter the values in the distribution @file{liblouisutdml.ini}, but you
+should not delete any settings. Do not specify
+@file{liblouisutdml.ini} as your configuration file. This will lead to
+error messages and program termination. If a configuration file read
+in later contains a particular setting name, the value specified
+simply replaces the one specified in @file{liblouisutdml.ini} or any
+previously read configuration file.
 
-Originally, configuration files contained four main sections, 
-@code{outputFormat}, @code{translation}, @code{xml} and @code{style}. 
-The section names, except for @code{style} are now optional. In 
-addition, a configuration file can contain an include entry. This causes 
-the file named on that line to be read in at the point where the line 
-occurs. The sections need not follow each other in any particular order, 
-nor is the order of settings within each section important. The section 
-names, except for @code{style} are optional. In this document and in the 
-@file{liblouisutdml.ini} file, where section and setting names consist 
-of more than one word, the first letter of each word following the 
-initial one is capitalized. This is merely for readability. The case of 
-the letters in these names is ignored by the program. Section and 
-setting names may not contain spaces.
+Originally, configuration files contained four main sections,
+@code{outputFormat}, @code{translation}, @code{xml} and @code{style}.
+The section names, except for @code{style} are now optional. In
+addition, a configuration file can contain an include entry. This
+causes the file named on that line to be read in at the point where
+the line occurs. The sections need not follow each other in any
+particular order, nor is the order of settings within each section
+important. The section names, except for @code{style} are optional. In
+this document and in the @file{liblouisutdml.ini} file, where section
+and setting names consist of more than one word, the first letter of
+each word following the initial one is capitalized. This is merely for
+readability. The case of the letters in these names is ignored by the
+program. Section and setting names may not contain spaces.
 
-In addition to @file{liblouisutdml.ini} the distribution also 
-sontains a number of configuration files. The most important of 
-these is @file{preferences.cfg}, which contains all possible 
-settings and a "default" value for each. You should use this file 
-as a refererence. It is the file read by the @command{file2brl} 
-command-line interface program if no configuration file is giben.
+In addition to @file{liblouisutdml.ini} the distribution also sontains
+a number of configuration files. The most important of these is
+@file{preferences.cfg}, which contains all possible settings and a
+"default" value for each. You should use this file as a refererence.
+It is the file read by the @command{file2brl} command-line interface
+program if no configuration file is giben.
 
-Here, then, is an explanation of each section and setting in the 
-@file{preferences.cfg} file. When you look at this file you will see 
-that the section names start at the left margin, while the settings are 
-indented one tab stop. This is done for readability. it has no effect on 
-the meaning of the lines. You will also see lines beginning with a 
-number sign (@samp{#}), which are comments. Blank lines can also be used 
-anywhere in a configuration file. In general, a section name is a single 
-word or combination of unspaced words. However, each style has a section 
-of its own, so the word @samp{style} is followed by a space then by the 
-name of the style. Setting lines begin with the name of the setting, 
-followed by at least one space or tab, followed by the value of the 
-setting. A few settings have two values.
+Here, then, is an explanation of each section and setting in the
+@file{preferences.cfg} file. When you look at this file you will see
+that the section names start at the left margin, while the settings
+are indented one tab stop. This is done for readability. it has no
+effect on the meaning of the lines. You will also see lines beginning
+with a number sign (@samp{#}), which are comments. Blank lines can
+also be used anywhere in a configuration file. In general, a section
+name is a single word or combination of unspaced words. However, each
+style has a section of its own, so the word @samp{style} is followed
+by a space then by the name of the style. Setting lines begin with the
+name of the setting, followed by at least one space or tab, followed
+by the value of the setting. A few settings have two values.
 
 @menu
 * outputFormat::
@@ -657,70 +658,71 @@ Braille volumes.
 
 @setting{printPageNumberAt, top}
 If print page numbers are given in the xml input file they will be
-placed at the top of each braille page in the right-hand corner. If 
-@code{pageSeparator} is set to @samp{yes}, a page separator line 
-will also be produced on the Braille page where the print page break 
+placed at the top of each braille page in the right-hand corner. If
+@code{pageSeparator} is set to @samp{yes}, a page separator line will
+also be produced on the Braille page where the print page break
 actually occurs. You may also specify @samp{bottom} for this setting.
 
 @setting{braillePageNumberAt, bottom}
 The braille page number will be placed in the bottom right-hand corner
-of each page. If @code{interpoint yes} has been specified only odd pages 
-will receive page numbers. You may also specify @samp{top} for this 
-setting. If print page numbers and Braille page numbers are 
-both placed at the top or bottom, they are rendered next to each other 
-with a space in between. 
+of each page. If @code{interpoint yes} has been specified only odd
+pages will receive page numbers. You may also specify @samp{top} for
+this setting. If print page numbers and Braille page numbers are both
+placed at the top or bottom, they are rendered next to each other with
+a space in between.
 
 @anchor{continuePages setting}
 @setting{continuePages, yes}
-Print page numbers can be prefixed with a letter (a, b, c, etc.) on 
+Print page numbers can be prefixed with a letter (a, b, c, etc.) on
 continued pages. The two valid values are @samp{yes} and @samp{no}.
 
 @anchor{pageSeparator setting}
 @setting{pageSeparator, yes}
-A page separator line (or page break indicator), a line of unspaced 
-Braille dots 36, will be placed wherever a print page break occurs. No 
-page separator lines are placed on the first or last line of a Braille 
-page, and no page separator lines are shown when the new print page 
+A page separator line (or page break indicator), a line of unspaced
+Braille dots 36, will be placed wherever a print page break occurs. No
+page separator lines are placed on the first or last line of a Braille
+page, and no page separator lines are shown when the new print page
 coincides with a new Braille page.
 
 @setting{pageSeparatorNumber, yes}
-Show a page number at the far right margin of a page separator line. No 
-space is left between the separator line and the first symbol of the 
-page number. 
+Show a page number at the far right margin of a page separator line.
+No space is left between the separator line and the first symbol of
+the page number.
 
 @setting{ignoreEmptyPages, yes}
-An empty page occurs when a @code{pagenum} tag is immediately followed 
-by another @code{pagenum} tag. By default, empty pages are completely 
-ignored. If you specify @samp{no} for this setting, a sequence of 
-@code{pagenum} tags will lead to a @emph{combined} print page number: 
-the number of the first empty page is combined with that of the page on 
-which text reappears, e.g. 5-7. If lettered continuation pages are 
-required (see @code{continuePages}), they carry only the number of the 
+An empty page occurs when a @code{pagenum} tag is immediately followed
+by another @code{pagenum} tag. By default, empty pages are completely
+ignored. If you specify @samp{no} for this setting, a sequence of
+@code{pagenum} tags will lead to a @emph{combined} print page number:
+the number of the first empty page is combined with that of the page
+on which text reappears, e.g. 5-7. If lettered continuation pages are
+required (see @code{continuePages}), they carry only the number of the
 page on which text reappears.
 
 @anchor{printPageNumberRange setting}
 @setting{printPageNumberRange, no}
-By default, only the page number of the @emph{first} print page on a 
-Braille page is shown at the top or bottom. However, if 
-@code{printPageNumberRange} is set to @samp{yes}, the @emph{range} of 
-print pages contained in the current Braille page is displayed. If the 
-first page in this range is a continued print page, it is prefixed 
+By default, only the page number of the @emph{first} print page on a
+Braille page is shown at the top or bottom. However, if
+@code{printPageNumberRange} is set to @samp{yes}, the @emph{range} of
+print pages contained in the current Braille page is displayed. If the
+first page in this range is a continued print page, it is prefixed
 with a letter as usual (see @code{continuePages}).
 
 @setting{mergeUnnumberedPages, yes}
-Page breaks without a page number can simply be ignored. This means that 
-unnumbered print pages will be treated as if they were a part of the 
-preceding page. You can also specify @samp{no} for this setting.
+Page breaks without a page number can simply be ignored. This means
+that unnumbered print pages will be treated as if they were a part of
+the preceding page. You can also specify @samp{no} for this setting.
 
 @setting{pageNumberTopSeparateLine, yes}
-Whether or not to provide a separate line for page numbers when they are 
-placed at the top of a Braille page. The two valid values are @samp{yes} and 
-@samp{no}. A print page number range (see @code{printPageNumberRange}) 
-at the top of a page is always displayed on a separate line.
+Whether or not to provide a separate line for page numbers when they
+are placed at the top of a Braille page. The two valid values are
+@samp{yes} and @samp{no}. A print page number range (see
+@code{printPageNumberRange}) at the top of a page is always displayed
+on a separate line.
 
 @setting{pageNumberBottomSeparateLine, yes}
-Whether or not to provide a separate line for page numbers when they are 
-placed at the bottom of a Braille page.
+Whether or not to provide a separate line for page numbers when they
+are placed at the bottom of a Braille page.
 
 @setting{hyphenate, no}
 If @samp{yes} is specified words will be hyphenated at the ends of
@@ -1992,7 +1994,7 @@ When constructing your XPath expressions you may wish to consider the
 following facts:
 
 @itemize @bullet
-@item 
+@item
 The XPath expression may contain brackets but they must match
 
 @item
@@ -2316,7 +2318,7 @@ some text <mynoteref id="1">1</mynoteref> some text
 
 will produce a reference to the end note in the output as follows
 (with usual representation of numbers):
- 
+
 @example
 some text 99#a some text
 @end example
@@ -2378,7 +2380,7 @@ Defines the endnote displayed at the bottom of the file. The id
 attribute has to be unique, and be identical to the id attribute in a
 @code{noteref} in the file in order to be displayed, but the
 @code{note} action can appear before the corresponding @code{noteref}
-action if needed. 
+action if needed.
 
 Given the following definition in the semantic action file
 
@@ -2476,13 +2478,13 @@ and configuration files together with the resulting output
     <notesdescription>not seen description</notesdescription>
 
     <note id = "2">Endnote Description 2</note>
-                    
+
     <p>Foo<noteref id = "1">1</noteref>Bar.</p>
     <p>Foo<noteref id = "2">ref2</noteref>Bar.</p>
-                    
+
     <notesheader>Endnotes</notesheader>
     <notesdescription>Some descriptive text</notesdescription>
-                    
+
     <note id = "1">Endnote Description 1</note>
 </doc>
 @end example
@@ -2511,10 +2513,10 @@ notesdescription    notesdescription
 style note
     leftMargin 2
     firstLineIndent 2
-    
+
 style notesheader
     format centered
-    
+
 style notesdescription
     format leftJustified
 @end example
