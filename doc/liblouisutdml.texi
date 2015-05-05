@@ -1889,7 +1889,7 @@ is declared with this semantic action
 @semanticAction{righthandpage, elementSpecifier}
 
 If @code{interpoint yes} has been specified in the configuration file,
-and the current page is a right-hand one, the lest of the page is
+and the current page is a right-hand one, the rest of the page is
 skipped except for footer and page number. the following left-hand page
 is similarly skipped. Otherwise, the action is the same as
 @code{newpage}.
