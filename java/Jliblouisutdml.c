@@ -1068,7 +1068,7 @@ jboolean JNICALL
   (JNIEnv * env, jobject obj, jstring tableList, jbyteArray inbuf,
    jintArray inlen,
    jbyteArray outbuf, jintArray outlen,
-   jbyteArray typeform, jintArray outputpos, jintArray inputpos,
+   jshortArray typeform, jintArray outputpos, jintArray inputpos,
    jintArray cursorpos, jstring logFile, jint mode, jint forBack)
 {
   const jbyte *tableListX = NULL;
@@ -1076,7 +1076,7 @@ jboolean JNICALL
   jint inlenY = EMPTY;
   jbyte *outbufY = NULL;
   jint outlenY = EMPTY;
-  jbyte *typeformY = NULL;
+  jshort *typeformY = NULL;
   jint *outputposY = NULL;
   jint *inputposY = NULL;
   jint cursorposY = EMPTY;
@@ -1112,7 +1112,7 @@ jboolean JNICALL
   if (typeform != NULL)
     {
       typeformY = malloc (inlenY);
-      (*env)->GetByteArrayRegion (env, typeform, 0, inlenY, typeformY);
+      (*env)->GetShortArrayRegion (env, typeform, 0, inlenY, typeformY);
       if (typeformY == NULL)
 	goto release;
     }
@@ -1156,7 +1156,7 @@ jboolean JNICALL
       wc_string_to_utf8 (outbufX, &wcLength, outbufY, &utf8Length);
       (*env)->SetByteArrayRegion (env, outbuf, 0, utf8Length, outbufY);
       if (typeformX != NULL)
-	(*env)->SetByteArrayRegion (env, typeform, 0, inlenY, typeformX);
+	(*env)->SetShortArrayRegion (env, typeform, 0, inlenY, typeformX);
       if (outputpos != NULL)
 	(*env)->SetIntArrayRegion (env, outputpos, 0, inlenY, outputposX);
       if (inputpos != NULL)
