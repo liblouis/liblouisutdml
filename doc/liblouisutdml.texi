@@ -116,9 +116,6 @@ Transcribing Documents
 * Transcribing Text Documents::
 * Transcribing Poorly Formatted Documents::
 * Transcribing html Documents::
-* Transcribing Microsoft Word files with msword2brl::
-* Transcribing RTF files with rtf2brl::
-* Transcribing PDF files with pdf2brl::
 
 Customization: Configuring liblouisutdml
 
@@ -235,9 +232,6 @@ Manual}).
 * Transcribing Text Documents::
 * Transcribing Poorly Formatted Documents::
 * Transcribing html Documents::
-* Transcribing Microsoft Word files with msword2brl::
-* Transcribing RTF files with rtf2brl::
-* Transcribing PDF files with pdf2brl::
 @end menu
 
 @node Transcribing XML files with file2brl
@@ -420,10 +414,7 @@ better braille by ignoring whatever markup they contain. The
 @option{-p} option of @command{file2brl} does this. It ignores xml or
 html markup and uses heuristics to find the beginning of paragraphs.
 Its choices are usually good. Note that it does not work with rtf
-files. However, if @command{rtf2xml} (@pxref{Transcribing RTF files
-with rtf2brl}) will convert the file, it will work with the resulting
-xml file.
-
+files.
 
 @node Transcribing html Documents
 @section Transcribing html Documents
@@ -432,64 +423,10 @@ xml file.
 file2brl -t infile outfile
 @end example
 
-The @option{-t} option prevents @command{xml2blr} from trying to
-transcribe
-infile as an xml document. This will produce a lot of error messages.
-@command{file2brl} will then try the html parser. Note that xhtml
-documents are actually xml.
-
-@node Transcribing Microsoft Word files with msword2brl
-@section Transcribing Microsoft Word files with msword2brl
-@pindex msword2brl
-
-@example
-msword2brl infile outfile
-@end example
-
-Infile must be a Microsoft Word file. The script first calls the
-@command{antiword} program, so you must have this installed on your
-machine. @command{antiword} is called with @option{-x db}, which
-causes the output to be in docbook format. This is piped to
-@command{file2brl}. The output file from @command{file2brl} contains
-much of the formatting, including emphasis, of the word file.
-
-@node Transcribing RTF files with rtf2brl
-@section Transcribing RTF files with rtf2brl
-@pindex rtf2brl
-
-@example
-rtf2brl infile outfile
-@end example
-
-Infile must be a rich-text (rtf) file, such as Bookshare provides for
-proofreading. The script first calls @command{rtf2xml}, so you must have
-this program installed on your machine. You can find it on the downloads
-page of @uref{www.abilitiessoft.com}. It was copied from its SourceForge
-project. Since it is a Python program, it can be rather slow. Its output
-is piped to @command{file2brl}. The output of @command{rtf2xml} is xml
-with the root element @code{doc}. The file @file{doc.sem} is fairly
-complete, so the output of @command{file2brl} contains much of the
-formatting, including emphasis, of the original rtf file.
-
-@node Transcribing PDF files with pdf2brl
-@section Transcribing PDF files with pdf2brl
-@pindex pdf2brl
-
-@example
-pdf2brl infile outfile
-@end example
-
-Infile must be a PDF (Portable Document Format) file. The script first
-calls the @command{pdftotext} program, so you must have this installed
-on your machine. It is part of xpdf and most likely already installed
-if you're on a modern Linux distribution. Otherwise, you can get it
-from either @uref{http://poppler.freedesktop.org} or
-@uref{http://www.foolabs.com/xpdf/download.html}. @command{pdftotext}
-is called with the @option{-raw} and @option{-} options, which cause
-it to place its output on stdout. This is piped to @command{file2brl},
-which is called with the @option{-p} option, since output from
-@command{pdftotext} is likely to be poorly formatted. The output file
-from @command{file2brl} is mostly in sensible paragraphs.
+The @option{-t} option prevents @command{file2brl} from trying to
+transcribe infile as an xml document. This will produce a lot of error
+messages. @command{file2brl} will then try the html parser. Note that
+xhtml documents are actually xml.
 
 @node Customization Configuring liblouisutdml
 @chapter Customization: Configuring liblouisutdml
