@@ -1,0 +1,30 @@
+# define liblouisutdml so that Travis CI service can build and test it
+
+language: c
+
+compiler:
+  - gcc
+
+# make sure we have texinfo and libxml and java (for jni.h)
+before_install:
+  - sudo apt-get update -qq
+  - sudo apt-get install -y texinfo
+  - sudo apt-get install -y libxml2
+  - sudo apt-get install openjdk-6-jdk
+
+# in fact make sure we have texinfo 5.0 or higher. Travis currently
+# runs the old Ubuntu LTS which has an old version of texinfo, so we
+# need to install from source. Also install the newest liblouis
+install:
+  - wget http://ftp.gnu.org/gnu/texinfo/texinfo-5.2.tar.xz
+  - tar -xJvf texinfo-5.2.tar.xz
+  - cd texinfo-5.2 && ./configure --prefix=/usr && make && sudo make install && cd ..
+  - wget https://github.com/liblouis/liblouis/releases/download/v2.6.2/liblouis-2.6.2.tar.gz
+  - tar -xvf liblouis-2.6.2.tar.gz
+  - cd liblouis-2.6.2 && ./configure && make && sudo make install && cd ..
+
+script: "./autogen.sh && ./configure && make && make check"
+
+# tell the irc channel about the results of the build
+notifications:
+  irc: "irc.oftc.net#liblouis"
