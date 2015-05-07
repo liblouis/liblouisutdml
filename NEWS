@@ -18,6 +18,8 @@ liblouisxml NEWS -- history of user-visible changes.
 ** Documentation updates
 - Document the end note functionality
 - Add an index for the default styles
+- Update the documentation appendix
+- Add the boxline style
 
 * Noteworthy changes in release 2.1.0 (2009-11-23)
 
