@@ -7,7 +7,7 @@
    Copyright (C) 2004, 2005, 2006
    ViewPlus Technologies, Inc. www.viewplus.com
    and
-   abilitiessoft, Inc. www.abilitiessoft.com
+   abilitiessoft, Inc. www.abilitiessoft.org
    All rights reserved
 
    This file is free software; you can redistribute it and/or modify it

@@ -48,7 +48,7 @@ This file may contain code borrowed from the Linux screenreader
 @noindent
 Copyright @copyright{} 2004-2009 ViewPlus Technologies, Inc.
 @uref{www.viewplus.com} and Copyright @copyright{} 2006,2009
-Abilitiessoft, Inc. @uref{www.abilitiessoft.com}.
+Abilitiessoft, Inc. @uref{www.abilitiessoft.org}.
 
 @quotation
 This file is free software; you can redistribute it and/or modify it
@@ -204,7 +204,7 @@ format. If the word processor has been used correctly
 
 There is a Mac GUI application incorporating liblouisutdml called
 @command{louis}. For a link to it go to
-@uref{www.abilitiessoft.com/downloads}. You can also obtain a Windows
+@uref{www.abilitiessoft.org/downloads}. You can also obtain a Windows
 binary on this page. At present it is command-line. We hope to have a
 GUI soon.
 
@@ -2857,7 +2857,7 @@ Copyright @copyright{} 2004-2009 ViewPlus Technologies, Inc.
 
 @noindent
 Copyright @copyright{} 2006,2009 Abilitiessoft, Inc.
-@uref{www.abilitiessoft.com}.
+@uref{www.abilitiessoft.org}.
 
 Liblouisutdml is free software: you can redistribute it and/or modify it
 under the terms of the GNU Lesser General Public License as published
@@ -2918,7 +2918,7 @@ The functions which are not ready for use at the moment, such as
 graphics capability of the Tiger tactile graphics embossers.
 
 The latest versions of liblouisutdml and liblouis can be downloaded from
-@uref{www.abilitiessoft.com}. This site also contains links to a mailing
+@uref{www.abilitiessoft.org}. This site also contains links to a mailing
 list and to project pages on googlecode.google.com. Note that
 liblouisutdml will only work with the latest version of liblouis.
 
