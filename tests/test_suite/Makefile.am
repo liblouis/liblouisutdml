@@ -14,3 +14,4 @@ SUBDIRS =					\
 	test_13					\
 	test_14
 
+EXTRA_DIST = README

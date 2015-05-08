@@ -4,7 +4,6 @@ EXTRA_DIST =					\
 	input.xml				\
 	liblouisutdml.ini			\
 	nabcc.dis				\
-	output.txt				\
 	pagenum.cti				\
 	README					\
 	semantics.sem				\
