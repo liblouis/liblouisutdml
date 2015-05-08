@@ -58,7 +58,6 @@ PKG_CHECK_MODULES(BASE_DEPENDENCIES, [liblouis >= 2.5.1, libxml-2.0])
 # Checks for header files.
 AC_HEADER_STDC
 AC_CHECK_HEADERS([stdlib.h string.h])
-AC_CHECK_HEADERS([jni.h],[found_jni_h=yes;])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
@@ -75,6 +74,16 @@ case $host in
  CFLAGS="$CFLAGS -Wl,--add-stdcall-alias"
  ;;
 esac
+
+# make sure jni include dirs are found
+# using a macro from the autoconf archive
+AX_JNI_INCLUDE_DIR
+
+for JNI_INCLUDE_DIR in $JNI_INCLUDE_DIRS
+do
+	CPPFLAGS="$CPPFLAGS -I$JNI_INCLUDE_DIR"
+	found_jni_h=yes
+done
 
 # Disable building the Java bindings on request
 AC_ARG_ENABLE(
