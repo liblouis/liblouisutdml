@@ -8,5 +8,5 @@ EXTRA_DIST =					\
 	README					\
 	semantics.sem				\
 	styles.cfg				\
-	whitespace.cti
-
+	whitespace.cti				\
+	xfail
