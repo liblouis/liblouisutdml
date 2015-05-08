@@ -22,6 +22,7 @@ install:
   - wget https://github.com/liblouis/liblouis/releases/download/v2.6.2/liblouis-2.6.2.tar.gz
   - tar -xvf liblouis-2.6.2.tar.gz
   - cd liblouis-2.6.2 && ./configure && make && sudo make install && cd ..
+  - sudo ldconfig
 
 script: "./autogen.sh && ./configure && make && make check"
 
