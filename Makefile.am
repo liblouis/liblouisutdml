@@ -1,4 +1,4 @@
-SUBDIRS = gnulib doc lbu_files liblouisutdml tests tools man m4 java windows
+SUBDIRS = gnulib doc lbu_files liblouisutdml tools tests man m4 java windows
 
 ACLOCAL_AMFLAGS = -I m4 -I gnulib/m4
 
