@@ -1,14 +1,13 @@
 # Process this file with autoconf to produce a configure script.
 
-AC_PREREQ(2.59)
-AC_INIT(liblouisutdml, 2.5.0, john.boyer@abilitiessoft.com)
+AC_PREREQ(2.68)
+AC_INIT([liblouisutdml], [2.5.0], [liblouis-liblouisxml@freelists.org], [liblouisutdml], [http://www.liblouis.org])
 AC_CONFIG_SRCDIR([liblouisutdml/semantics.c])
 AC_CONFIG_HEADER([liblouisutdml/config.h])
-# AM_MAINTAINER_MODE
 
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIR([m4])
-AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION)
+AM_INIT_AUTOMAKE
 
 # increment if the interface has additions, changes, removals.
 LIBLOUISUTDML_CURRENT=6
