@@ -1,5 +1,9 @@
 * Introduction
 
+#+BEGIN_HTML
+<a href="https://travis-ci.org/liblouis/liblouisutdml"><img alt="Build Status" src="https://travis-ci.org/liblouis/liblouisutdml.svg?branch=master"/></a>
+#+END_HTML
+
 Liblouisutdml is an open-source library providing complete braille
 transcription services for xml, html and text documents. It translates
 into appropriate braille codes and formats according to its style
