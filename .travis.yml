@@ -17,10 +17,10 @@ before_install:
 # need to install from source. Also install the newest liblouis
 install:
   - wget http://ftp.gnu.org/gnu/texinfo/texinfo-5.2.tar.xz
-  - tar -xJvf texinfo-5.2.tar.xz
+  - tar -xJf texinfo-5.2.tar.xz
   - cd texinfo-5.2 && ./configure --prefix=/usr && make && sudo make install && cd ..
   - wget https://github.com/liblouis/liblouis/releases/download/v2.6.2/liblouis-2.6.2.tar.gz
-  - tar -xvf liblouis-2.6.2.tar.gz
+  - tar -xf liblouis-2.6.2.tar.gz
   - cd liblouis-2.6.2 && ./configure && make && sudo make install && cd ..
   - sudo ldconfig
 
