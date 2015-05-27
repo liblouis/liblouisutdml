@@ -5,20 +5,18 @@ language: c
 compiler:
   - gcc
 
-# make sure we have texinfo and libxml and java (for jni.h)
+# make sure we have libxml and java (for jni.h). Make sure we have
+# texinfo 5.0 or higher. Travis currently runs the old Ubuntu LTS
+# which has an old version of texinfo, so we need to install from ppa.
 before_install:
+  - sudo add-apt-repository -y ppa:marutter/texlive.backport
   - sudo apt-get update -qq
   - sudo apt-get install -y texinfo
   - sudo apt-get install -y libxml2
   - sudo apt-get install openjdk-6-jdk
 
-# in fact make sure we have texinfo 5.0 or higher. Travis currently
-# runs the old Ubuntu LTS which has an old version of texinfo, so we
-# need to install from source. Also install the newest liblouis
+# Install the newest liblouis
 install:
-  - wget http://ftp.gnu.org/gnu/texinfo/texinfo-5.2.tar.xz
-  - tar -xJf texinfo-5.2.tar.xz
-  - cd texinfo-5.2 && ./configure --prefix=/usr && make && sudo make install && cd ..
   - wget https://github.com/liblouis/liblouis/releases/download/v2.6.2/liblouis-2.6.2.tar.gz
   - tar -xf liblouis-2.6.2.tar.gz
   - cd liblouis-2.6.2 && ./configure && make && sudo make install && cd ..
