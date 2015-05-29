@@ -1,12 +1,16 @@
 #!/bin/bash
 set -ev
+# get and build liblouis
 if [ "${LIBLOUIS_VERSION}" = "master" ]; then
-    LIBLOUIS_DOWNLOAD_URL=https://github.com/liblouis/liblouis/archive/master.tar.gz
+    wget https://github.com/liblouis/liblouis/archive/master.tar.gz
+    tar -xf master.tar.gz
+    ( cd liblouis-* && ./autogen.sh && ./configure && make && sudo make install )
 else
-    LIBLOUIS_DOWNLOAD_URL=https://github.com/liblouis/liblouis/releases/download/v${LIBLOUIS_VERSION}/liblouis-${LIBLOUIS_VERSION}.tar.gz
+    wget https://github.com/liblouis/liblouis/releases/download/v${LIBLOUIS_VERSION}/liblouis-${LIBLOUIS_VERSION}.tar.gz
+    tar -xf liblouis-*.tar.gz
+    ( cd liblouis-* && ./configure && make && sudo make install )
 fi
-wget -O liblouis-release.tar.gz ${LIBLOUIS_DOWNLOAD_URL}
-tar -xf liblouis-release.tar.gz
-cd liblouis-* && ./configure && make && sudo make install && cd ..
 sudo ldconfig
+
+# build liblouisutdml
 ./autogen.sh && ./configure && make && make check
