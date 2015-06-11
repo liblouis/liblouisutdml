@@ -2,11 +2,11 @@ liblouisxml NEWS -- history of user-visible changes.
 
 * Noteworthy changes in release 2.6.0 (2015-06-09)
 
-This is the first official release in a long time. Many bug fixes and
-stability improvements have gone into it. There are a couple of new
-features like end note functionality and boxlines for example. There
-is an extensive test suite now. Also the documentation has been vastly
-enhanced.
+This is the first official Liblouisutdml release in a long time. Many
+bug fixes and stability improvements have gone into it. There are a
+couple of new features like end note functionality and boxlines for
+example. Also there is an extensive test suite now and the
+documentation has been vastly enhanced.
 
 ** New features
 - Added an extensive test suite which tests liblouisutml under various
