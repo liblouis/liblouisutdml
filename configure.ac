@@ -74,16 +74,6 @@ case $host in
  ;;
 esac
 
-# make sure jni include dirs are found
-# using a macro from the autoconf archive
-AX_JNI_INCLUDE_DIR
-
-for JNI_INCLUDE_DIR in $JNI_INCLUDE_DIRS
-do
-	CPPFLAGS="$CPPFLAGS -I$JNI_INCLUDE_DIR"
-	found_jni_h=yes
-done
-
 # Disable building the Java bindings on request
 AC_ARG_ENABLE(
 	[java_bindings], 
@@ -96,6 +86,19 @@ AC_ARG_ENABLE(
 AM_CONDITIONAL([JAVA_BINDINGS], [test x$java_bindings == xyes])
 AC_MSG_CHECKING([whether Java bindings should be built])
 AC_MSG_RESULT($java_bindings)
+
+if test x$java_bindings == xyes ; then
+
+   # make sure jni include dirs are found
+   # using a macro from the autoconf archive
+   AX_JNI_INCLUDE_DIR
+
+   for JNI_INCLUDE_DIR in $JNI_INCLUDE_DIRS
+       do
+           CPPFLAGS="$CPPFLAGS -I$JNI_INCLUDE_DIR"
+	   found_jni_h=yes
+       done
+fi
 
 if test x$java_bindings == xyes -a x$found_jni_h != xyes ; then
     AC_MSG_ERROR([Please install jni properly or disable the Java bindings with --disable-java-bindings.])
