@@ -32,7 +32,7 @@
 void logWidecharBuf(logLevels level, const char *msg, const widechar *wbuf, int wlen)
 {
   /* When calculating output size:
-   * Each wdiechar is represented in hex, thus needing two bytes for each
+   * Each widechar is represented in hex, thus needing two bytes for each
    * byte in the widechar (sizeof(widechar) * 2)
    * Allow space for the "0x%X " formatting (+ 3)
    * Number of characters in widechar buffer (wlen * )
