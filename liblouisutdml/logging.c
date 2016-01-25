@@ -127,7 +127,7 @@ lbu_logFile (const char *fileName)
 }
 
 static void
-defaultLogCallback (logLevels level, const char *message)
+defaultLogCallback (int level, const char *message)
 {
   if (message == NULL)
     return;
