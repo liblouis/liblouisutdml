@@ -35,7 +35,6 @@ xpass=0
 
 TESTS_DIR=$(cd $(dirname "$0"); pwd)
 cd "$TESTS_DIR"
-
 # Create a temporary directory $tmp_dir in $TMPDIR (default /tmp).
 : ${TMPDIR=/tmp}
 {
@@ -49,7 +48,7 @@ for test_dir in $TESTS_DIR/test_suite/test_* ; do
 	if [ -e README -a $verbose -ne 0 ]; then
 		echo "$(cat README | fold -sw 77 | sed 's/.*/   &/' )"
 	fi
-	file2brl -w $tmp_dir -f ./styles.cfg input.xml $tmp_dir/output.txt 
+	$TESTS_DIR/../tools/file2brl -w $tmp_dir -f ./styles.cfg input.xml $tmp_dir/output.txt 
 	if [ $? -ne 0 ]; then
 		error=$(( error + 1 ))
 		if [ $colors -ne 0 ]; then
