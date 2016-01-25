@@ -142,13 +142,12 @@ void EXPORT_CALL
 lbu_logEnd ()
 {
   lou_logEnd();
-  if (logFile != NULL)
-    fclose (logFile);
-  logFile = NULL;
+  closeLogFile();
 }
 
 void closeLogFile()
 {
-  if (logFile != NULL)
+  if (logFile != NULL && logFile != stderr)
     fclose (logFile);
+  logFile = NULL;
 }
