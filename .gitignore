@@ -8,6 +8,10 @@
 .libs
 
 TAGS
+GPATH
+GRTAGS
+GSYMS
+GTAGS
 
 **Makefile
 **Makefile.in
@@ -39,6 +43,7 @@ doc/stamp-vti
 doc/version.texi
 
 file2brl.temp
+file2brl.log
 
 gnulib/unistd.h
 gnulib/arg-nonnull.h
@@ -68,6 +73,7 @@ m4/ltsugar.m4
 m4/ltversion.m4
 m4/lt~obsolete.m4
 
+tests/run_test_suite.sh
 tests/testTranslateString
 tests/tripleTrans
 tests/*.log
