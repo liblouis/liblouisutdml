@@ -145,5 +145,8 @@ AC_CONFIG_FILES([Makefile
 	windows/include/Makefile
 	m4/Makefile])
 
+# generate the shell script to run the test suite and make sure it is executable
+AC_CONFIG_FILES([tests/run_test_suite.sh], [chmod +x tests/run_test_suite.sh])
+
 AC_OUTPUT
 
