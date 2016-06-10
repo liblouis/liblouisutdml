@@ -1,5 +1,5 @@
 # DO NOT EDIT! GENERATED AUTOMATICALLY!
-# Copyright (C) 2002-2013 Free Software Foundation, Inc.
+# Copyright (C) 2002-2016 Free Software Foundation, Inc.
 #
 # This file is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -37,9 +37,13 @@ AC_DEFUN([gl_EARLY],
   m4_pattern_allow([^gl_ES$])dnl a valid locale name
   m4_pattern_allow([^gl_LIBOBJS$])dnl a variable
   m4_pattern_allow([^gl_LTLIBOBJS$])dnl a variable
-  AC_REQUIRE([gl_PROG_AR_RANLIB])
-  # Code from module extensions:
+
+  # Pre-early section.
   AC_REQUIRE([gl_USE_SYSTEM_EXTENSIONS])
+  AC_REQUIRE([gl_PROG_AR_RANLIB])
+
+  # Code from module absolute-header:
+  # Code from module extensions:
   # Code from module extern-inline:
   # Code from module getopt-gnu:
   # Code from module getopt-posix:
@@ -293,6 +297,7 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/version-etc.c
   lib/version-etc.h
   m4/00gnulib.m4
+  m4/absolute-header.m4
   m4/extensions.m4
   m4/extern-inline.m4
   m4/getopt.m4
@@ -301,7 +306,6 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/malloc.m4
   m4/nocrash.m4
   m4/off_t.m4
-  m4/onceonly.m4
   m4/realloc.m4
   m4/ssize_t.m4
   m4/stdarg.m4
