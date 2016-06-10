@@ -23,6 +23,7 @@ config.log
 config.status
 configure
 
+build-aux/ar-lib
 build-aux/compile
 build-aux/config.guess
 build-aux/config.sub
@@ -89,3 +90,4 @@ tools/file2brl
 # Eclipse
 .cproject
 .project
+
