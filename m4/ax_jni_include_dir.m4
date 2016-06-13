@@ -66,21 +66,25 @@ else
 fi
 
 case "$host_os" in
-        darwin*)        # Apple JDK is at /System location and has headers symlinked elsewhere
+        darwin*)        # Apple JDK is in /System. Header files are bunded with Xcode on newer systems.
+                        macos_version=$(sw_vers -productVersion | awk -F. '{print $2}')
+                        if [[ $macos_version > 7 ]]; then
+                            _JINC=$(cd /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/*.sdk/System/Library/Frameworks/JavaVM.framework/Headers; pwd)
+                        else
+                            _JINC="/System/Library/Frameworks/JavaVM.framework/Headers"
+                        fi
                         case "$_JTOPDIR" in
                         /System/Library/Frameworks/JavaVM.framework/*)
-				_JTOPDIR=`echo "$_JTOPDIR" | sed -e 's:/[[^/]]*$::'`
-				_JINC="$_JTOPDIR/Headers";;
-			*)      _JINC="$_JTOPDIR/include";;
+				            _JTOPDIR=`echo "$_JTOPDIR" | sed -e 's:/[[^/]]*$::'`;;
                         esac;;
         *)              _JINC="$_JTOPDIR/include";;
 esac
+
 _AS_ECHO_LOG([_JTOPDIR=$_JTOPDIR])
 _AS_ECHO_LOG([_JINC=$_JINC])
 
-# On Mac OS X 10.6.4, jni.h is a symlink:
-# /System/Library/Frameworks/JavaVM.framework/Versions/Current/Headers/jni.h
-# -> ../../CurrentJDK/Headers/jni.h.
+# On OS X 10.8 and later, headers are bundled with Xcode:
+#/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/*.sdk/System/Library/Frameworks/JavaVM.framework/Headers
 AC_CHECK_FILE([$_JINC/jni.h],
 	[JNI_INCLUDE_DIRS="$JNI_INCLUDE_DIRS $_JINC"],
 	[_JTOPDIR=`echo "$_JTOPDIR" | sed -e 's:/[[^/]]*$::'`
