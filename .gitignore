@@ -83,3 +83,20 @@ tools/file2brl
 # Eclipse
 .cproject
 .project
+*.obj
+*.tlog
+windows/msvc/liblouisutdml/Debug/liblouisutdml.dll
+*.exp
+windows/msvc/liblouisutdml/Debug/liblouisutdml.ilk
+windows/msvc/liblouisutdml/Debug/liblouisutdml.lib
+windows/msvc/liblouisutdml/Debug/liblouisutdml.log
+windows/msvc/liblouisutdml/Debug/liblouisutdml.pdb
+windows/msvc/liblouisutdml/Debug/vc140.idb
+windows/msvc/liblouisutdml/Debug/vc140.pdb
+windows/msvc/liblouisutdml/Release/liblouisutdml.dll
+windows/msvc/liblouisutdml/Release/liblouisutdml.iobj
+windows/msvc/liblouisutdml/Release/liblouisutdml.ipdb
+windows/msvc/liblouisutdml/Release/liblouisutdml.lib
+windows/msvc/liblouisutdml/Release/vc140.pdb
+windows/msvc/liblouisutdml/Release/liblouisutdml.pdb
+windows/msvc/liblouisutdml/Release/liblouisutdml.log

@@ -95,13 +95,26 @@ static int isnan (double d) {
 
 #if defined(_MSC_VER)
 #define mkdir(p,m) _mkdir(p)
-#define snprintf _snprintf
+#if _MSC_VER>=1900
+#  define STDC99
+#endif
 #if _MSC_VER < 1500
 #define vsnprintf(b,c,f,a) _vsnprintf(b,c,f,a)
 #endif
 #elif defined(__MINGW32__)
 #define mkdir(p,m) _mkdir(p)
 #endif
+
+#ifdef _WIN32
+/* Program name buffer to store real full filename via GetModuleFileName()
+call. */
+#define WIN32_LEAN_AND_MEAN 1
+#define PACKAGE_VERSION "2.6.0"
+#define PACKAGE_BUGREPORT "liblouis-liblouisxml@freelists.org"
+#include "liblouisutdml.h"
+#include <windows.h>
+char program_name_buf[1024];
+#endif /* _WIN32 */
 
 /* Threading API to use should be specified here for compatibility reasons.
    This is however best specified on the compiler's command-line. */
