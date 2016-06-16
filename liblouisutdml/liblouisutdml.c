@@ -63,7 +63,7 @@ libxml_errors (void *ctx ATTRIBUTE_UNUSED, const char *msg, ...)
   memset (buffer, 0, sizeof (buffer));
   vsnprintf (buffer, sizeof (buffer) - 4, msg, args);
   va_end (args);
-  logMessage (LOG_ERROR, "%s", buffer);
+  lbu_logMessage (LOG_ERROR, "%s", buffer);
 }
 
 static xmlParserCtxt *ctxt;
@@ -124,7 +124,7 @@ processXmlDocument (const char *inputDoc, int length)
 	    ud->doc = xmlParseFile (inputDoc);
 	  if (ud->doc == NULL)
 	    {
-	      logMessage
+	      lbu_logMessage
 		(LOG_FATAL, "Document could not be processed; may be \
 malformed or contain illegal characters");
 	      cleanupLibxml ();
@@ -136,20 +136,20 @@ malformed or contain illegal characters");
     ud->doc = xmlParseMemory (inputDoc, length);
   if (ud->doc == NULL)
     {
-      logMessage (LOG_FATAL, "Document could not be processed, probably  malformed");
+      lbu_logMessage (LOG_FATAL, "Document could not be processed, probably  malformed");
       cleanupLibxml ();
       return 0;
     }
   if (ud->doc->encoding == NULL)
     {
-      logMessage (LOG_ERROR, "Encoding, preferably UTF-8,  must be specified");
+      lbu_logMessage (LOG_ERROR, "Encoding, preferably UTF-8,  must be specified");
       cleanupLibxml ();
       return 0;
     }
   if (ud->format_for >= utd && ignore_case_comp (ud->doc->encoding,
 						 "UTF-8", 5) != 0)
     {
-      logMessage (LOG_ERROR, "UTDML requires UTF-8 encoding, not '%s'",
+      lbu_logMessage (LOG_ERROR, "UTDML requires UTF-8 encoding, not '%s'",
 		    ud->doc->encoding);
       cleanupLibxml ();
       return 0;
@@ -157,7 +157,7 @@ malformed or contain illegal characters");
   rootElement = xmlDocGetRootElement (ud->doc);
   if (rootElement == NULL)
     {
-      logMessage (LOG_ERROR, "Document is empty");
+      lbu_logMessage (LOG_ERROR, "Document is empty");
       cleanupLibxml ();
       return 0;
     }
@@ -179,7 +179,7 @@ malformed or contain illegal characters");
 	}
       if (!transcribe_document (rootElement))
 	{
-	  logMessage (LOG_ERROR, "Document could not be transcribed");
+	  lbu_logMessage (LOG_ERROR, "Document could not be transcribed");
 	  cleanupLibxml ();
 	  return 0;
 	}
@@ -240,7 +240,7 @@ lbu_translateString (const char *configFileList,
       inlen += strlen (ud->xml_header);
       if (!(xmlInbuf = malloc (inlen + 4)))
 	{
-	  logMessage (LOG_FATAL, "Not enough memory");
+	  lbu_logMessage (LOG_FATAL, "Not enough memory");
 	  return 0;
 	}
       strcpy (xmlInbuf, ud->xml_header);
@@ -274,7 +274,7 @@ LBUAPI int EXPORT_CALL lbu_translateFile
     {
       if (!(ud->outFile = fopen (outFileName, "wb")))
 	{
-	  logMessage (LOG_ERROR, "Can't open output file %s.", outFileName);
+	  lbu_logMessage (LOG_ERROR, "Can't open output file %s.", outFileName);
 	  return 0;
 	}
     }
@@ -308,7 +308,7 @@ LBUAPI int EXPORT_CALL lbu_translateTextFile
     {
       if (!(ud->inFile = fopen (inFileName, "rb")))
 	{
-	  logMessage (LOG_ERROR, "Can't open input file %s.", inFileName);
+	  lbu_logMessage (LOG_ERROR, "Can't open input file %s.", inFileName);
 	  return 0;
 	}
     }
@@ -318,7 +318,7 @@ LBUAPI int EXPORT_CALL lbu_translateTextFile
     {
       if (!(ud->outFile = fopen (outFileName, "wb")))
 	{
-	  logMessage (LOG_ERROR, "Can't open output file %s.", outFileName);
+	  lbu_logMessage (LOG_ERROR, "Can't open output file %s.", outFileName);
 	  return 0;
 	}
     }
@@ -350,7 +350,7 @@ lbu_backTranslateString (const char *configFileList,
 			 *settingsString, unsigned int mode)
 {
   int k;
-  logMessage(LOG_INFO, "Begin lbu_backTranslateString: inbuf=%s", inbuf);
+  lbu_logMessage(LOG_INFO, "Begin lbu_backTranslateString: inbuf=%s", inbuf);
   if (!read_configuration_file
       (configFileList, logFileName, settingsString, mode))
     return 0;
@@ -363,7 +363,7 @@ lbu_backTranslateString (const char *configFileList,
   ud->inFile = ud->outFile = NULL;
   if (ud->format_for == utd)
   {
-    logMessage(LOG_DEBUG, "ud->format_for=utd");
+    lbu_logMessage(LOG_DEBUG, "ud->format_for=utd");
     k = utd_back_translate_braille_string ();
   }
   else
@@ -374,7 +374,7 @@ lbu_backTranslateString (const char *configFileList,
       return 0;
     }
   *outlen = ud->outlen_so_far;
-  logMessage(LOG_INFO, "Finish lbu_backTranslateString");
+  lbu_logMessage(LOG_INFO, "Finish lbu_backTranslateString");
   lbu_logEnd ();
   return 1;
 }
@@ -401,7 +401,7 @@ LBUAPI int EXPORT_CALL lbu_backTranslateFile
     {
       if (!(ud->inFile = fopen (inFileName, "rb")))
 	{
-	  logMessage (LOG_ERROR, "Can't open input file %s.", inFileName);
+	  lbu_logMessage (LOG_ERROR, "Can't open input file %s.", inFileName);
 	  return 0;
 	}
     }
@@ -411,7 +411,7 @@ LBUAPI int EXPORT_CALL lbu_backTranslateFile
     {
       if (!(ud->outFile = fopen (outFileName, "wb")))
 	{
-	  logMessage (LOG_ERROR, "Can't open output file %s.", outFileName);
+	  lbu_logMessage (LOG_ERROR, "Can't open output file %s.", outFileName);
 	  return 0;
 	}
     }
