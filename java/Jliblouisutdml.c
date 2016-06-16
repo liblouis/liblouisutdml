@@ -243,11 +243,11 @@ Java_org_liblouis_LibLouisUTDML_backTranslateString (JNIEnv * env,
   if (inbufX == NULL)
     goto release;
   inlen = (*env)->GetArrayLength (env, inbuf);
-  lbu_logMessage(LOG_DEBUG, "inlen=%d", inlen);
+  logMessage(LOG_DEBUG, "inlen=%d", inlen);
   if (outbuf == NULL)
     goto release;
   (*env)->GetIntArrayRegion (env, outlen, 0, 1, &outlenX);
-  lbu_logMessage(LOG_DEBUG, "outlenX=%d", outlenX);
+  logMessage(LOG_DEBUG, "outlenX=%d", outlenX);
   if (outlenX == EMPTY)
     goto release;
   if (logFile != NULL)
@@ -269,17 +269,17 @@ Java_org_liblouis_LibLouisUTDML_backTranslateString (JNIEnv * env,
     {
       int wcLength;
       int utf8Length;
-      lbu_logMessage(LOG_DEBUG, "After backTranslate outlenX=%d", outlenX);
+      logMessage(LOG_DEBUG, "After backTranslate outlenX=%d", outlenX);
       if (ud->format_for == utd)
 	{
-          lbu_logMessage(LOG_DEBUG, "Preparing to return UTD");
+          logMessage(LOG_DEBUG, "Preparing to return UTD");
 	  (*env)->SetByteArrayRegion (env, outbuf, 0, outlenX,
 				      (jbyte *) outbufX);
 	  utf8Length = outlenX;
 	}
       else
 	{
-          lbu_logMessage(LOG_DEBUG, "Preparing to return non-UTD");
+          logMessage(LOG_DEBUG, "Preparing to return non-UTD");
 	  wcLength = outlenX;
 	  utf8Length = outlenX;
           outbufY = (jbyte *)malloc(utf8Length);
@@ -876,7 +876,7 @@ JNIEXPORT jboolean JNICALL Java_org_liblouis_LibLouisUTDML_file2brl
 		  k++;
 		  break;
 		default:
-		  lbu_logMessage (LOG_ERROR, "invalid argument '%s'", curArg);
+		  logMessage (LOG_ERROR, "invalid argument '%s'", curArg);
 		  return JNI_FALSE;
 		}
 	      continue;
@@ -896,7 +896,7 @@ JNIEXPORT jboolean JNICALL Java_org_liblouis_LibLouisUTDML_file2brl
 		}
 	      else
 		{
-		  lbu_logMessage (LOG_ERROR, "extra operand: '%s'\n",
+		  logMessage (LOG_ERROR, "extra operand: '%s'\n",
 				getArg (env, obj, args, k + 2));
 		  return JNI_FALSE;
 		}
@@ -923,7 +923,7 @@ configSettings, 0))
     {
       if (!(inputFile = fopen (inputFileName, "rb")))
 	{
-	  lbu_logMessage (LOG_ERROR, "Can't open input file '%s'.\n", inputFileName);
+	  logMessage (LOG_ERROR, "Can't open input file '%s'.\n", inputFileName);
 	  lbu_logEnd ();
 	  return JNI_FALSE;
 	}
@@ -935,7 +935,7 @@ configSettings, 0))
   strcat (tempFileName, "file2brl.temp");
   if (!(tempFile = fopen (tempFileName, "wb")))
     {
-      lbu_logMessage (LOG_ERROR, "Can't open temporary file.\n");
+      logMessage (LOG_ERROR, "Can't open temporary file.\n");
       lbu_logEnd ();
       return JNI_FALSE;
     }
