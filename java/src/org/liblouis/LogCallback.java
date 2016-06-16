@@ -31,5 +31,5 @@
 package org.liblouis;
 
 public interface LogCallback {
-    public void logMessage(int level, String message);
+    public void lbu_logMessage(int level, String message);
 }

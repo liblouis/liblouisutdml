@@ -266,7 +266,7 @@ logFileName, int mode);
 
 public native void setLogFile (String fileName);
 
-public native void logMessage (String message);
+public native void lbu_logMessage (String message);
 
 public native void logEnd();
 
