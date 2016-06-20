@@ -56,7 +56,7 @@ void logWidecharBuf(logLevels level, const char *msg, const widechar *wbuf, int 
       p += sprintf(p, formatString, wbuf[i]);
     }
   p = '\0';
-  logMessage(level, logMsg);
+  lbu_logMessage(level, logMsg);
   free(logMsg);
 }
 
@@ -77,7 +77,7 @@ void EXPORT_CALL lbu_setLogLevel(logLevels level)
   logLevel = level;
 }
 
-void logMessage(logLevels level, const char *format, ...)
+void lbu_logMessage(logLevels level, const char *format, ...)
 {
   if (format == NULL)
       return;

@@ -25,12 +25,26 @@
 
 #include "config.h"
 
+#ifdef _WIN32
+	#define WIN32_LEAN_AND_MEAN 1
+	#define program_name "file2brl.exe"
+	#define PACKAGE_NAME "(liblouis)"
+	#define VERSION "2.6.5"
+	#define PACKAGE_BUGREPORT "liblouis-liblouisxml@freelists.org"
+	#include <windows.h>
+	char program_name_buf[1024];
+#endif /* _WIN32 */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "louisutdml.h"
 #include <getopt.h>
+
+#ifndef _WIN32
 #include "progname.h"
+#endif
+
 #include "version-etc.h"
 
 static const struct option longopts[] = {
@@ -117,7 +131,9 @@ main (int argc, char **argv)
   int optc;
   lbu_setLogLevel(LOG_DEBUG);
   lou_setLogLevel(LOG_DEBUG);
-  set_program_name (argv[0]);
+#ifndef _WIN32
+  set_program_name(argv[0]);
+#endif
   logFileName[0] = 0;
   
   while ((optc =
@@ -213,7 +229,7 @@ main (int argc, char **argv)
     {
       if (!(inputFile = fopen (inputFileName, "r")))
 	{
-	  logMessage (LOG_FATAL, "Can't open input file %s.\n", inputFileName);
+	  lbu_logMessage (LOG_FATAL, "Can't open input file %s.\n", inputFileName);
 	  exit (EXIT_FAILURE);
 	}
     }
@@ -224,7 +240,7 @@ main (int argc, char **argv)
   strcat (tempFileName, "file2brl.temp");
   if (!(tempFile = fopen (tempFileName, "w")))
     {
-      logMessage (LOG_FATAL, "Can't open temporary file.\n");
+      lbu_logMessage (LOG_FATAL, "Can't open temporary file.\n");
       exit (EXIT_FAILURE);
     }
   if (whichProc == 'p')
@@ -353,7 +369,7 @@ main (int argc, char **argv)
 	  exit (EXIT_FAILURE);
 	break;
       default:
-	logMessage (LOG_FATAL, "Program bug %c\n", whichProc);
+	lbu_logMessage (LOG_FATAL, "Program bug %c\n", whichProc);
 	break;
       }
   lbu_free ();

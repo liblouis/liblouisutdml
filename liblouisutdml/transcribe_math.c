@@ -44,12 +44,12 @@ transcribe_math (xmlNode * node, int action)
   StyleType *style;
   xmlNode *child;
   int branchCount = 0;
-  logMessage(LOG_INFO, "Begin transcribe_math");
+  lbu_logMessage(LOG_INFO, "Begin transcribe_math");
   if (node == NULL)
     return 0;
   if (action == 0)
     {
-      logMessage(LOG_DEBUG, "Math node action==0");
+      lbu_logMessage(LOG_DEBUG, "Math node action==0");
       insert_translation (ud->main_braille_table);
       curLink = node;
       if (ud->format_for == utd)
@@ -59,17 +59,17 @@ transcribe_math (xmlNode * node, int action)
     }
   else
     {
-      logMessage(LOG_DEBUG, "Math node action!=0");
+      lbu_logMessage(LOG_DEBUG, "Math node action!=0");
       push_sem_stack (node);
     }
   switch (ud->stack[ud->top])
     {
     case skip:
-      logMessage(LOG_DEBUG, "Math node skip");
+      lbu_logMessage(LOG_DEBUG, "Math node skip");
       pop_sem_stack ();
       return 1;
     case reverse:
-      logMessage(LOG_DEBUG, "Math node reverse");
+      lbu_logMessage(LOG_DEBUG, "Math node reverse");
       do_reverse (node);
       break;
     default:
@@ -77,7 +77,7 @@ transcribe_math (xmlNode * node, int action)
     }
   if ((style = is_style (node)) != NULL)
     {
-      logMessage(LOG_DEBUG, "Math node start style");
+      lbu_logMessage(LOG_DEBUG, "Math node start style");
       mathTrans ();
       start_style (style, node);
     }
@@ -106,14 +106,14 @@ transcribe_math (xmlNode * node, int action)
   insert_code (node, -1);
   if (style)
     {
-      logMessage(LOG_DEBUG, "Math node end style");
+      lbu_logMessage(LOG_DEBUG, "Math node end style");
       mathTrans ();
       end_style ();
     }
   pop_sem_stack ();
   if (action == 0)
     mathTrans ();
-  logMessage(LOG_INFO, "Finish transcribe_math");
+  lbu_logMessage(LOG_INFO, "Finish transcribe_math");
   return 1;
 }
 
@@ -145,7 +145,7 @@ mathTrans ()
       ud->text_length = 0;
       if (!k)
 	{
-	  logMessage (LOG_ERROR, "Could not open table %s", ud->mathexpr_table_name);
+	  lbu_logMessage (LOG_ERROR, "Could not open table %s", ud->mathexpr_table_name);
 	  ud->mathexpr_table_name = NULL;
 	  return 0;
 	}
