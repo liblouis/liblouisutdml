@@ -79,8 +79,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>..\..\Include;c:\libxml2-2.7.2\include;C:\liblouis-2.6.5\windows\include;C:\liblouis-2.6.5\liblouis;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\liblouis-2.6.5\windows;$(ProjectDir)\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\..\Include;c:\libxml2-2.7.2\include;C:\liblouis-mrg_ueb_update\windows\include;C:\liblouis-mrg_ueb_update\liblouis;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\liblouis-mrg_ueb_update\windows\msvc\liblouis\Debug;$(ProjectDir)\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
