@@ -60,7 +60,7 @@ void logWidecharBuf(logLevels level, const char *msg, const widechar *wbuf, int 
   free(logMsg);
 }
 
-static void defaultLogCallback(int level, const char *message);
+static void defaultLogCallback(logLevels level, const char *message);
 
 static logcallback logCallbackFunction = defaultLogCallback;
 void EXPORT_CALL lbu_registerLogCallback(logcallback callback)
@@ -127,7 +127,7 @@ lbu_logFile (const char *fileName)
 }
 
 static void
-defaultLogCallback (int level, const char *message)
+defaultLogCallback (logLevels level, const char *message)
 {
   if (message == NULL)
     return;
