@@ -107,3 +107,9 @@ windows/msvc/liblouisutdml/liblouisutdml.sdf
 windows/msvc/liblouisutdml/liblouisutdml.sdf
 windows/msvc/liblouisutdml/liblouisutdml.sdf
 windows/msvc/liblouisutdml/.vs/liblouisutdml/v14/.suo
+*.suo
+*.suo
+*.exe
+*.ilk
+*.pdb
+*.exe

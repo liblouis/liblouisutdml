@@ -64,7 +64,7 @@ static widechar* notes_description;
 static int notes_description_length;
 static int old_translated_length;
 
-static void free_endnotes_from(EndnoteStruct *start);
+//static void free_endnotes_from(EndnoteStruct *start);
 
 //initialisation to make sure everything is set up correctly
 int initialize_endnotes (void)
@@ -285,12 +285,14 @@ int finish_endnote(xmlNode* node)
 	{
 		memmove(&ud->translated_buffer[old_translated_length+2],&ud->translated_buffer[old_translated_length],endnotePtr->character_length*CHARSIZE);
 		ud->translated_length+=2;
-		ud->translated_buffer[old_translated_length]=ud->translated_buffer[old_translated_length+1]='9';
+		ud->translated_buffer[old_translated_length] = '"';
+		ud->translated_buffer[old_translated_length + 1] = '9';
 	}
 	else if(ud->translated_buffer[old_translated_length]==32)
 	{
 		memmove(&ud->translated_buffer[old_translated_length+3],&ud->translated_buffer[old_translated_length+1],(endnotePtr->character_length-1)*CHARSIZE);
-		ud->translated_buffer[old_translated_length+1]=ud->translated_buffer[old_translated_length+2]='9';
+		ud->translated_buffer[old_translated_length + 1] = '"';
+		ud->translated_buffer[old_translated_length + 2] = '9';
 		ud->translated_length+=2;
 	}
 	if(!(endnotePtr->free_code & 1)) endnotePtr->free_code += 1;
@@ -565,7 +567,7 @@ int make_endnotes(void)
 		}
 		do_newpage ();
 		write_buffer(1,0);
-		free_endnotes_from (firstEndnote);
+		//free_endnotes_from (firstEndnote);
 		firstEndnote = NULL;
     }
   return 1;
@@ -574,15 +576,15 @@ int make_endnotes(void)
 // frees the memory of all resources belonging to 'endnote'
 static void free_endnote(EndnoteStruct* endnote)
 {
-	if(endnote->free_code&1) free(endnote->character);
-	if(endnote->free_code&2) free(endnote->endnote);
-	if(endnote->free_code&4) free(endnote->page_num);
-	if(endnote->free_code&8) free(endnote->line_num);
-	free(endnote);
+	//if(endnote->free_code&1) free(endnote->character);
+	//if(endnote->free_code&2) free(endnote->endnote);
+	//if(endnote->free_code&4) free(endnote->page_num);
+	//if(endnote->free_code&8) free(endnote->line_num);
+	//free(endnote);
 }
 
 // frees the memory of all the endnotes that appear after 'start'
-static void free_endnotes_from(EndnoteStruct *start)
+/*static void free_endnotes_from(EndnoteStruct *start)
  {
    EndnoteStruct *current;
    EndnoteStruct *next;
@@ -591,8 +593,8 @@ static void free_endnotes_from(EndnoteStruct *start)
    while (current != NULL) 
 	{
 		next = current->next;
-		free_endnote(current);
+		//free_endnote(current);
 		current = next;
 	}
- }
+ }*/
  
