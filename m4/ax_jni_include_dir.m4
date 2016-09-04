@@ -77,7 +77,7 @@ case "$host_os" in
                 _JINC="$_JTOPDIR/Headers"
             fi
             ;;
-        *) JINC="$_JTOPDIR/include";;
+        *) _JINC="$_JTOPDIR/include";;
 esac
 
 _AS_ECHO_LOG([_JTOPDIR=$_JTOPDIR])
