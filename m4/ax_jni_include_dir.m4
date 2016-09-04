@@ -1,4 +1,3 @@
-
 # ===========================================================================
 #    http://www.gnu.org/software/autoconf-archive/ax_jni_include_dir.html
 # ===========================================================================
@@ -53,17 +52,17 @@ AC_DEFUN([AX_JNI_INCLUDE_DIR],[
 JNI_INCLUDE_DIRS=""
 
 if test "x$JAVA_HOME" != x; then
-    _JTOPDIR="$JAVA_HOME"
+	_JTOPDIR="$JAVA_HOME"
 else
-    if test "x$JAVAC" = x; then
-        JAVAC=javac
-    fi
-    AC_PATH_PROG([_ACJNI_JAVAC], [$JAVAC], [no])
-    if test "x$_ACJNI_JAVAC" = xno; then
-        AC_MSG_ERROR([cannot find JDK; try setting \$JAVAC or \$JAVA_HOME])
-    fi
-    _ACJNI_FOLLOW_SYMLINKS("$_ACJNI_JAVAC")
-    _JTOPDIR=`echo "$_ACJNI_FOLLOWED" | sed -e 's://*:/:g' -e 's:/[[^/]]*$::'`
+	if test "x$JAVAC" = x; then
+		JAVAC=javac
+	fi
+	AC_PATH_PROG([_ACJNI_JAVAC], [$JAVAC], [no])
+	if test "x$_ACJNI_JAVAC" = xno; then
+		AC_MSG_ERROR([cannot find JDK; try setting \$JAVAC or \$JAVA_HOME])
+	fi
+	_ACJNI_FOLLOW_SYMLINKS("$_ACJNI_JAVAC")
+	_JTOPDIR=`echo "$_ACJNI_FOLLOWED" | sed -e 's://*:/:g' -e 's:/[[^/]]*$::'`
 fi
 
 case "$host_os" in
@@ -87,12 +86,12 @@ _AS_ECHO_LOG([_JINC=$_JINC])
 # On OS X 10.8 and later, headers are bundled with Xcode:
 #/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/*.sdk/System/Library/Frameworks/JavaVM.framework/Headers
 AC_CHECK_FILE([$_JINC/jni.h],
-    [JNI_INCLUDE_DIRS="$JNI_INCLUDE_DIRS $_JINC"],
-    [_JTOPDIR=`echo "$_JTOPDIR" | sed -e 's:/[[^/]]*$::'`
-     AC_CHECK_FILE([$_JTOPDIR/include/jni.h],
-        [JNI_INCLUDE_DIRS="$JNI_INCLUDE_DIRS $_JTOPDIR/include"],
+	[JNI_INCLUDE_DIRS="$JNI_INCLUDE_DIRS $_JINC"],
+	[_JTOPDIR=`echo "$_JTOPDIR" | sed -e 's:/[[^/]]*$::'`
+	 AC_CHECK_FILE([$_JTOPDIR/include/jni.h],
+		[JNI_INCLUDE_DIRS="$JNI_INCLUDE_DIRS $_JTOPDIR/include"],
                 AC_MSG_ERROR([cannot find JDK header files]))
-    ])
+	])
 
 # get the likely subdirectories for system specific java includes
 case "$host_os" in
@@ -102,8 +101,8 @@ darwin*)        _JNI_INC_SUBDIRS="darwin";;
 linux*)         _JNI_INC_SUBDIRS="linux genunix";;
 osf*)           _JNI_INC_SUBDIRS="alpha";;
 solaris*)       _JNI_INC_SUBDIRS="solaris";;
-mingw*)     _JNI_INC_SUBDIRS="win32";;
-cygwin*)    _JNI_INC_SUBDIRS="win32";;
+mingw*)		_JNI_INC_SUBDIRS="win32";;
+cygwin*)	_JNI_INC_SUBDIRS="win32";;
 *)              _JNI_INC_SUBDIRS="genunix";;
 esac
 
