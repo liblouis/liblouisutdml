@@ -329,6 +329,9 @@ transcribe_paragraph (xmlNode * node, int action)
     case pagenum:
       do_pagenum ();
       break;
+    case footer:
+        keep_with_next = 1;
+        break;
     default:
       break;
     }
