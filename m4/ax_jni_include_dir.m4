@@ -66,18 +66,18 @@ else
 fi
 
 case "$host_os" in
-        darwin*)        # Apple JDK is in /System. Header files are bunded with Xcode on newer systems.
-                        macos_version=$(sw_vers -productVersion | awk -F. '{print $2}')
-                        if [[ $macos_version > 7 ]]; then
-                            _JINC=$(cd /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/*.sdk/System/Library/Frameworks/JavaVM.framework/Headers; pwd)
-                        else
-                            _JINC="/System/Library/Frameworks/JavaVM.framework/Headers"
-                        fi
-                        case "$_JTOPDIR" in
-                        /System/Library/Frameworks/JavaVM.framework/*)
-				            _JTOPDIR=`echo "$_JTOPDIR" | sed -e 's:/[[^/]]*$::'`;;
-                        esac;;
-        *)              _JINC="$_JTOPDIR/include";;
+        darwin*)    # Apple Java files are contained within the Xcode bundle on systems > 10.7.
+                    # On OS 10.7 and earlier, they're located in System/Library/Frameworks/JavaVM.framework.
+            macos_version=$(sw_vers -productVersion | sed -n -e 's/^@<:@0-9@:>@*.\(@<:@0-9@:>@*\).@<:@0-9@:>@*/\1/p')
+            if @<:@ "$macos_version" -gt "7" @:>@; then
+                _JTOPDIR="$(xcrun --show-sdk-path)/System/Library/Frameworks/JavaVM.framework"
+                _JINC="$_JTOPDIR/Headers"
+            else
+                _JTOPDIR="/System/Library/Frameworks/JavaVM.framework"
+                _JINC="$_JTOPDIR/Headers"
+            fi
+            ;;
+        *) _JINC="$_JTOPDIR/include";;
 esac
 
 _AS_ECHO_LOG([_JTOPDIR=$_JTOPDIR])
