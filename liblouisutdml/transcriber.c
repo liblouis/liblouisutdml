@@ -728,10 +728,10 @@ int
 translate_possibly_prehyphenated (const char *table,
 				  const widechar * inbuf, int *inlen,
 				  widechar * outbuf, int *outlen,
-				  char *typeform, int *indices, int mode)
+				  formtype *typeform, int *indices, int mode)
 {
   static widechar tmp_outbuf[2 * BUFSIZE];
-  static char tmp_typeform[2 * BUFSIZE];
+  static formtype tmp_typeform[2 * BUFSIZE];
   static int tmp_indices_1[2 * BUFSIZE];
   static int tmp_indices_2[2 * BUFSIZE];
   int tmp_outlen;
@@ -816,7 +816,7 @@ insert_translation (const char *table)
 					&ud->translated_buffer[ud->
 							       translated_length],
 					&translatedLength,
-					(char *) &ud->typeform[0],
+					&ud->typeform[0],
 					ud->in_sync ? &ud->
 					positions_array[ud->
 							translated_length] :
@@ -3230,7 +3230,7 @@ makeParagraph ()
 				ud->text_buffer, &translationLength,
 				&ud->translated_buffer[0],
 				&translatedLength,
-				(char *) ud->typeform, NULL, 0))
+				ud->typeform, NULL, 0))
     return 0;
   if (ud->back_text == html)
     {
@@ -4948,7 +4948,7 @@ utd_insert_translation (const char *table)
 		     &ud->
 		     translated_buffer[ud->translated_length],
 		     &translatedLength,
-		     (char *) ud->typeform, NULL, NULL,
+		     ud->typeform, NULL, NULL,
 		     setIndices, NULL, dotsIO);
   ud->in_sync = 0;
   memset (ud->typeform, 0, sizeof (ud->typeform));
