@@ -116,3 +116,4 @@ windows/msvc/liblouisutdml/.vs/liblouisutdml/v14/.suo
 *.log
 /windows/msvc/liblouisutdml/liblouisutdml.VC.db
 /windows/msvc/liblouisutdml/liblouisutdml.VC.VC.opendb
+/windows/msvc/file2brl/file2brl.VC.db
