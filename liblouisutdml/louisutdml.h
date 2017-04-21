@@ -311,7 +311,7 @@ typedef struct
   int sync_text_length;
   int positions_array[2 * BUFSIZE];
   widechar translated_buffer[2 * BUFSIZE];
-  formtype typeform[2 * BUFSIZE];
+  unsigned char typeform[2 * BUFSIZE];
   char string_buffer[2 * BUFSIZE];
 } UserData;
 extern UserData *ud;

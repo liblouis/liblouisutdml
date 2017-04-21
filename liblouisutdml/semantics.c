@@ -32,10 +32,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <ctype.h>
 #include "louisutdml.h"
 #include <libxml/xpath.h>
-#include <libxml/xpathInternals.h>
 #include "sem_names.h"
 
 typedef struct

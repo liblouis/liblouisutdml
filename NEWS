@@ -1,17 +1,5 @@
 liblouisxml NEWS -- history of user-visible changes.
 
-* Noteworthy changes in release 2.7.0 (2017-03-??)
-
-This Liblouisutdml release finally has support for liblouis 3.0.
-
-** New features
-** Bug fixes
-- Fixes for locating jni.h on macOS thanks to Gordon Byrnes
-- Fix so footer doesn't stop KeepWithNext working thanks to Paul Wood
-- Fix log level type in default callback thanks to Boris Dušek
-
-** Documentation updates
-
 * Noteworthy changes in release 2.6.0 (2015-06-09)
 
 This is the first official Liblouisutdml release in a long time. Many

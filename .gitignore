@@ -8,10 +8,6 @@
 .libs
 
 TAGS
-GPATH
-GRTAGS
-GSYMS
-GTAGS
 
 **Makefile
 **Makefile.in
@@ -43,7 +39,6 @@ doc/stamp-vti
 doc/version.texi
 
 file2brl.temp
-file2brl.log
 
 gnulib/unistd.h
 gnulib/arg-nonnull.h
@@ -73,7 +68,6 @@ m4/ltsugar.m4
 m4/ltversion.m4
 m4/lt~obsolete.m4
 
-tests/run_test_suite.sh
 tests/testTranslateString
 tests/tripleTrans
 tests/*.log
@@ -89,4 +83,37 @@ tools/file2brl
 # Eclipse
 .cproject
 .project
-
+*.obj
+*.tlog
+windows/msvc/liblouisutdml/Debug/liblouisutdml.dll
+*.exp
+windows/msvc/liblouisutdml/Debug/liblouisutdml.ilk
+windows/msvc/liblouisutdml/Debug/liblouisutdml.lib
+windows/msvc/liblouisutdml/Debug/liblouisutdml.log
+windows/msvc/liblouisutdml/Debug/liblouisutdml.pdb
+windows/msvc/liblouisutdml/Debug/vc140.idb
+windows/msvc/liblouisutdml/Debug/vc140.pdb
+windows/msvc/liblouisutdml/Release/liblouisutdml.dll
+windows/msvc/liblouisutdml/Release/liblouisutdml.iobj
+windows/msvc/liblouisutdml/Release/liblouisutdml.ipdb
+windows/msvc/liblouisutdml/Release/liblouisutdml.lib
+windows/msvc/liblouisutdml/Release/vc140.pdb
+windows/msvc/liblouisutdml/Release/liblouisutdml.pdb
+windows/msvc/liblouisutdml/Release/liblouisutdml.log
+windows/msvc/liblouisutdml/liblouisutdml.opensdf
+windows/msvc/liblouisutdml/liblouisutdml.sdf
+windows/msvc/liblouisutdml/liblouisutdml.sdf
+windows/msvc/liblouisutdml/liblouisutdml.sdf
+windows/msvc/liblouisutdml/liblouisutdml.sdf
+windows/msvc/liblouisutdml/liblouisutdml.sdf
+windows/msvc/liblouisutdml/.vs/liblouisutdml/v14/.suo
+*.suo
+*.suo
+*.exe
+*.ilk
+*.pdb
+*.exe
+*.log
+/windows/msvc/liblouisutdml/liblouisutdml.VC.db
+/windows/msvc/liblouisutdml/liblouisutdml.VC.VC.opendb
+/windows/msvc/file2brl/file2brl.VC.db

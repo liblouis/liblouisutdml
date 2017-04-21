@@ -71,16 +71,16 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>..\..\Include;..\..\..\..\libxml2-2.7.2\include;..\..\..\..\liblouis\liblouis\\windows\include;..\..\..\..\liblouis\liblouis\liblouis;$(IncludePath)</IncludePath>
-    <LibraryPath>..\..\..\..\liblouis\liblouis\windows\tools;$(ProjectDir)\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\..\Include;..\..\..\..\libxml2-2.7.2\include;..\..\..\..\liblouis\windows\include;..\..\..\..\liblouis\liblouis;$(IncludePath)</IncludePath>
+    <LibraryPath>..\..\..\..\liblouis\windows\tools;$(ProjectDir)\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>..\..\Include;..\..\..\..\libxml2-2.7.2\include;..\..\..\..\liblouis\liblouis\\windows\include;..\..\..\..\liblouis\liblouis\liblouis;$(IncludePath)</IncludePath>
-    <LibraryPath>..\..\..\..\liblouis\liblouis\windows\tools;$(ProjectDir)\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\..\Include;..\..\..\..\libxml2-2.7.2\include;..\..\..\..\liblouis\windows\include;..\..\..\..\liblouis\liblouis;$(IncludePath)</IncludePath>
+    <LibraryPath>..\..\..\..\liblouis\windows\tools;$(ProjectDir)\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>

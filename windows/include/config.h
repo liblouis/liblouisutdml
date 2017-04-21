@@ -93,16 +93,11 @@ static int isnan (double d) {
 #endif
 #endif /* _MSC_VER */
 
- #if (defined(_MSC_VER) && (_MSC_VER < 1900)) 
+#if defined(_MSC_VER)
 #define mkdir(p,m) _mkdir(p)
 #if _MSC_VER>=1900
 #  define STDC99
 #endif
-
-#if _MSC_VER<1900
-#  define  snprintf _snprintf
-#endif
-
 #if _MSC_VER < 1500
 #define vsnprintf(b,c,f,a) _vsnprintf(b,c,f,a)
 #endif

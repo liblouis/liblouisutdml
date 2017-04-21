@@ -1,7 +1,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.68)
-AC_INIT([liblouisutdml], [2.7.0-alpha1], [liblouis-liblouisxml@freelists.org], [liblouisutdml], [http://www.liblouis.org])
+AC_INIT([liblouisutdml], [2.6.0], [liblouis-liblouisxml@freelists.org], [liblouisutdml], [http://www.liblouis.org])
 AC_CONFIG_SRCDIR([liblouisutdml/semantics.c])
 AC_CONFIG_HEADER([liblouisutdml/config.h])
 
@@ -10,7 +10,7 @@ AC_CONFIG_MACRO_DIR([m4])
 AM_INIT_AUTOMAKE
 
 # increment if the interface has additions, changes, removals.
-LIBLOUISUTDML_CURRENT=8
+LIBLOUISUTDML_CURRENT=7
 
 # increment any time the source changes; set to
 # 0 if you increment CURRENT
@@ -50,7 +50,7 @@ AM_CONDITIONAL([HAVE_HELP2MAN], [test x$HELP2MAN = xhelp2man])
 
 AC_PATH_PROG(PKG_CONFIG, pkg-config)
 
-PKG_CHECK_MODULES(BASE_DEPENDENCIES, [liblouis >= 3.0.0, libxml-2.0])
+PKG_CHECK_MODULES(BASE_DEPENDENCIES, [liblouis >= 2.5.1, libxml-2.0])
 
 # Checks for libraries.
 
@@ -144,9 +144,6 @@ AC_CONFIG_FILES([Makefile
 	windows/Makefile
 	windows/include/Makefile
 	m4/Makefile])
-
-# generate the shell script to run the test suite and make sure it is executable
-AC_CONFIG_FILES([tests/run_test_suite.sh], [chmod +x tests/run_test_suite.sh])
 
 AC_OUTPUT
 

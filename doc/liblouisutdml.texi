@@ -487,12 +487,12 @@ each word following the initial one is capitalized. This is merely for
 readability. The case of the letters in these names is ignored by the
 program. Section and setting names may not contain spaces.
 
-In addition to @file{liblouisutdml.ini} the distribution also contains
+In addition to @file{liblouisutdml.ini} the distribution also sontains
 a number of configuration files. The most important of these is
 @file{preferences.cfg}, which contains all possible settings and a
-"default" value for each. You should use this file as a reference.
+"default" value for each. You should use this file as a refererence.
 It is the file read by the @command{file2brl} command-line interface
-program if no configuration file is given.
+program if no configuration file is giben.
 
 Here, then, is an explanation of each section and setting in the
 @file{preferences.cfg} file. When you look at this file you will see

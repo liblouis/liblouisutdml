@@ -138,7 +138,7 @@ mathTrans ()
 			 &ud->
 			 translated_buffer[ud->translated_length],
 			 &translatedLength,
-			 ud->typeform, NULL, NULL,
+			 (char *) ud->typeform, NULL, NULL,
 			 NULL, NULL, dotsIO);
       ud->in_sync = 0;
       memset (ud->typeform, 0, sizeof (ud->typeform));
