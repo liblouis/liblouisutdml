@@ -113,3 +113,6 @@ windows/msvc/liblouisutdml/.vs/liblouisutdml/v14/.suo
 *.ilk
 *.pdb
 *.exe
+*.log
+/windows/msvc/liblouisutdml/liblouisutdml.VC.db
+/windows/msvc/liblouisutdml/liblouisutdml.VC.VC.opendb
