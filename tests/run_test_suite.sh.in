@@ -1,8 +1,9 @@
 #!/bin/sh
+# @configure_input@
 
 # run_test_suite
 #
-# Copyright (C) 2013 by Swiss Library for the Blind, Visually Impaired and Print Disabled 
+# Copyright (C) 2013,2016 by Swiss Library for the Blind, Visually Impaired and Print Disabled 
 #
 # This file is free software; you can redistribute it and/or modify it
 # under the terms of the Lesser or Library GNU General Public License as
@@ -33,7 +34,7 @@ fail=0
 xfail=0
 xpass=0
 
-TESTS_DIR=$(cd $(dirname "$0"); pwd)
+TESTS_DIR=@abs_top_srcdir@/tests
 cd "$TESTS_DIR"
 
 # Create a temporary directory $tmp_dir in $TMPDIR (default /tmp).
@@ -49,6 +50,8 @@ for test_dir in $TESTS_DIR/test_suite/test_* ; do
 	if [ -e README -a $verbose -ne 0 ]; then
 		echo "$(cat README | fold -sw 77 | sed 's/.*/   &/' )"
 	fi
+	echo `pwd`
+	echo "file2brl -w $tmp_dir -f ./styles.cfg input.xml $tmp_dir/output.txt"
 	file2brl -w $tmp_dir -f ./styles.cfg input.xml $tmp_dir/output.txt 
 	if [ $? -ne 0 ]; then
 		error=$(( error + 1 ))

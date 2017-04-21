@@ -120,7 +120,7 @@ saveState (void)
   widecharcpy (saved_running_head, ud->running_head,
 	       saved_running_head_length);
   widecharcpy (saved_footer, ud->footer, saved_footer_length);
-  unsignedcharcpy (saved_typeform, ud->typeform, saved_text_length);
+  memcpy(saved_typeform, ud->typeform, saved_text_length * sizeof(formtype));
 
   widestrcpy (saved_page_separator_number_first,
 	      ud->page_separator_number_first);
@@ -167,7 +167,7 @@ restoreState (void)
   widecharcpy (ud->running_head, saved_running_head,
 	       saved_running_head_length);
   widecharcpy (ud->footer, saved_footer, saved_footer_length);
-  unsignedcharcpy (ud->typeform, saved_typeform, saved_text_length);
+  memcpy(ud->typeform, saved_typeform, saved_text_length * sizeof(formtype));
 
   widestrcpy (ud->page_separator_number_first,
 	      saved_page_separator_number_first);
@@ -329,6 +329,9 @@ transcribe_paragraph (xmlNode * node, int action)
     case pagenum:
       do_pagenum ();
       break;
+    case footer:
+        keep_with_next = 1;
+        break;
     default:
       break;
     }
