@@ -36,7 +36,7 @@
 #include <stdarg.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <louis.h>
+#include <internal.h>
 #include "louisutdml.h"
 #include "sem_names.h"
 #include <ctype.h>
@@ -241,7 +241,7 @@ findTable (FileInfo * nested)
   if (trialPath[0] == 0)
     {
       if (lou_getTable (nested->value) != NULL)
-	strcpy (trialPath, getLastTableList ());
+	strcpy (trialPath, _lou_getLastTableList());
     }
   if (trialPath[0] == 0)
     {
