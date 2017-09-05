@@ -65,7 +65,7 @@ typedef struct
   char *value2;
   int value2Length;
 }
-FileInfo;
+FileInfo2;
 
 static char pathEnd[2];
 static double paperWidth;
@@ -78,7 +78,7 @@ static int errorCount = 0;
 static int fatalErrorCount = 0;
 
 static void
-configureError (FileInfo * nested, char *format, ...)
+configureError (FileInfo2 * nested, char *format, ...)
 {
   char buffer[1024];
   va_list arguments;
@@ -215,7 +215,7 @@ find_file (const char *fileName, char *filePath)
 }
 
 static char *
-findTable (FileInfo * nested)
+findTable (FileInfo2 * nested)
 {
   char trialPath[MAXNAMELEN];
   char filePath[MAXNAMELEN];
@@ -253,7 +253,7 @@ findTable (FileInfo * nested)
 }
 
 static int
-controlCharValue (FileInfo * nested)
+controlCharValue (FileInfo2 * nested)
 {
 /*Decode centrol characters*/
   int k = 0;
@@ -295,13 +295,13 @@ controlCharValue (FileInfo * nested)
   return 1;
 }
 
-static int compileConfig (FileInfo * nested);
+static int compileConfig (FileInfo2 * nested);
 
 int
 config_compileSettings (const char *fileName)
 {
 /*Compile an input file or string */
-  FileInfo nested;
+  FileInfo2 nested;
   char completePath[MAXNAMELEN];
   if (!*fileName)
     return 1;			/*Probably run with defaults */
@@ -329,7 +329,7 @@ config_compileSettings (const char *fileName)
 }
 
 static int
-getLine (FileInfo * nested)
+getLine (FileInfo2 * nested)
 {
   int lineLen = 0;
   int ch;
@@ -369,7 +369,7 @@ getLine (FileInfo * nested)
 }
 
 static int
-parseLine (FileInfo * nested)
+parseLine (FileInfo2 * nested)
 {
   char *curchar = NULL;
   int ch = 0;
@@ -468,7 +468,7 @@ find_action (const char **actions, const char *action)
 }
 
 static int
-checkActions (FileInfo * nested, const char **actions)
+checkActions (FileInfo2 * nested, const char **actions)
 {
   int actionNum = find_action (actions, nested->action);
   if (actionNum == -1)
@@ -477,7 +477,7 @@ checkActions (FileInfo * nested, const char **actions)
 }
 
 static int
-checkValues (FileInfo * nested, const char **values)
+checkValues (FileInfo2 * nested, const char **values)
 {
   int k;
   for (k = 0; values[k]; k += 2)
@@ -494,7 +494,7 @@ checkValues (FileInfo * nested, const char **values)
 }
 
 static unsigned int
-hexValue (FileInfo * nested, const char *digits)
+hexValue (FileInfo2 * nested, const char *digits)
 {
   int length = strlen (digits);
   int k;
@@ -520,7 +520,7 @@ hexValue (FileInfo * nested, const char *digits)
 }
 
 static unsigned int
-convertValue (FileInfo * nested, const char *number)
+convertValue (FileInfo2 * nested, const char *number)
 {
   if (number[0] == '0' && number[1] == 'x')
     return hexValue (nested, &number[2]);
@@ -534,7 +534,7 @@ convertValue (FileInfo * nested, const char *number)
 }
 
 static int
-orValues (FileInfo * nested, const char **values)
+orValues (FileInfo2 * nested, const char **values)
 {
   int result = 0;
   int k;
@@ -564,7 +564,7 @@ orValues (FileInfo * nested, const char **values)
 }
 
 static int
-checkSubActions (FileInfo * nested, const char **mainActions, const char
+checkSubActions (FileInfo2 * nested, const char **mainActions, const char
 		 **subActions)
 {
   int subAction;
@@ -588,7 +588,7 @@ checkSubActions (FileInfo * nested, const char **mainActions, const char
 }
 
 static int
-compileConfig (FileInfo * nested)
+compileConfig (FileInfo2 * nested)
 {
   static const char *mainActions[] = {
     "outputFormat",
