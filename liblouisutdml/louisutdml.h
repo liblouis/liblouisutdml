@@ -117,7 +117,6 @@ typedef enum
   utf8 = 0,
   utf16,
   utf32,
-  ascii8
 } Encoding;
 
 typedef enum

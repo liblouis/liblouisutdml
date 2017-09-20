@@ -47,7 +47,7 @@ typedef struct
   int unedited;
   char line[5 * MAXNAMELEN];
 }
-FileInfo;
+FileInfo2;
 
 #define HASHSIZE 383
 #define MAXINSERTS 256
@@ -91,10 +91,10 @@ static HashTable *newEntriesTable = NULL;
 static int errorCount = 0;
 static const xmlChar *rootName;
 static xmlXPathContext *xpathCtx = NULL;
-static int registerNamespaces (FileInfo * Nested, xmlXPathContextPtr
+static int registerNamespaces (FileInfo2 * Nested, xmlXPathContextPtr
 			       xpathCtx, const xmlChar * nsList);
 static void
-semanticError (FileInfo * nested, char *format, ...)
+semanticError (FileInfo2 * nested, char *format, ...)
 {
   char buffer[MAXNAMELEN];
   va_list arguments;
@@ -342,7 +342,7 @@ destroy_semantic_table ()
 }
 
 static widechar
-hexValue (FileInfo * nested, const xmlChar * digits, int length)
+hexValue (FileInfo2 * nested, const xmlChar * digits, int length)
 {
   int k;
   unsigned int binaryValue = 0;
@@ -367,7 +367,7 @@ hexValue (FileInfo * nested, const xmlChar * digits, int length)
 }
 
 static InsertsType *
-encodeInsertions (FileInfo * nested, xmlChar * insertions, int length)
+encodeInsertions (FileInfo2 * nested, xmlChar * insertions, int length)
 {
   int k = 0;
   int prevk = 0;
@@ -642,7 +642,7 @@ find_group_length (const char groupSym[2], const char *groupStart)
   return -1;
 }
 static int
-compileLine (FileInfo * nested)
+compileLine (FileInfo2 * nested)
 {
   char *curchar = NULL;
   int ch = 0;
@@ -835,7 +835,7 @@ compileLine (FileInfo * nested)
 }
 
 static int
-getALine (FileInfo * nested)
+getALine (FileInfo2 * nested)
 {
   /*Read a line of chars from an input file */
   int ch;
@@ -867,7 +867,7 @@ static int
 sem_compileFile (const char *fileName)
 {
   /*Compile an input file */
-  FileInfo nested;
+  FileInfo2 nested;
   char completePath[MAXNAMELEN];
   int haveAppended = 0;
   logMessage(LOG_INFO, "Begin sem_compileFile: fileName=%s", fileName);
@@ -1025,7 +1025,7 @@ static void addNewEntries (const xmlChar * key);
  * Returns 1 on success and 0 on failure.
  */
 static int
-registerNamespaces (FileInfo * nested, xmlXPathContextPtr xpathCtx, const
+registerNamespaces (FileInfo2 * nested, xmlXPathContextPtr xpathCtx, const
 		    xmlChar * nsList)
 {
   xmlChar *nsListDup;
