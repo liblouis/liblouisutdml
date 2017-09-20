@@ -205,7 +205,7 @@ start_document ()
   prevStyleSpec.style = prevStyle;
   if (ud->format_for != utd)
     {
-      if (ud->outFile && ud->output_encoding == utf16)
+      if (ud->outFile && ud->output_encoding == lbu_utf16)
 	{
 	  /*Little Endian indicator */
 	  fputc (0xff, ud->outFile);
@@ -334,7 +334,7 @@ transcribe_text_string ()
       if (ch > 32)
 	paragraphBuffer[charsInParagraph++] = ch;
     }
-  ud->input_encoding = utf8;
+  ud->input_encoding = lbu_utf8;
   end_style (docStyle);
   end_document ();
   return 1;
@@ -391,7 +391,7 @@ transcribe_text_file ()
       if (ch > 32)
 	paragraphBuffer[charsInParagraph++] = ch;
     }
-  ud->input_encoding = utf8;
+  ud->input_encoding = lbu_utf8;
   end_style ();
   end_document ();
   return 1;
@@ -1872,28 +1872,28 @@ write_buffer (int from, int skip)
 	  unsigned char *utf8Str;
 	  switch (ud->output_encoding)
 	    {
-	    case utf8:
+	    case lbu_utf8:
 	      for (k = 0; k < *buffer_from_len_so_far; k++)
 		{
 		  utf8Str = utfwcto8 (buffer_from[k]);
 		  fwrite (utf8Str, strlen ((char *) utf8Str), 1, ud->outFile);
 		}
 	      break;
-	    case utf16:
+	    case lbu_utf16:
 	      for (k = 0; k < *buffer_from_len_so_far; k++)
 		{
 		  unsigned short uc16 = (unsigned short) buffer_from[k];
 		  fwrite (&uc16, 1, sizeof (uc16), ud->outFile);
 		}
 	      break;
-	    case utf32:
+	    case lbu_utf32:
 	      for (k = 0; k < *buffer_from_len_so_far; k++)
 		{
 		  unsigned int uc32 = (unsigned int) buffer_from[k];
 		  fwrite (&uc32, 1, sizeof (uc32), ud->outFile);
 		}
 	      break;
-	    case ascii8:
+	    case lbu_ascii8:
 	      for (k = 0; k < *buffer_from_len_so_far; k++)
 		{
 		  fputc ((char) buffer_from[k], ud->outFile);
@@ -3411,7 +3411,7 @@ back_translate_braille_string ()
 	return 0;
       if (!insertCharacters (ud->lineEnd, strlen (ud->lineEnd)))
 	return 0;
-      ud->output_encoding = utf8;
+      ud->output_encoding = lbu_utf8;
     }
   else
     ud->output_encoding = ascii8;
@@ -3497,7 +3497,7 @@ back_translate_file ()
 	return 0;
       if (!insertCharacters (ud->lineEnd, strlen (ud->lineEnd)))
 	return 0;
-      ud->output_encoding = utf8;
+      ud->output_encoding = lbu_utf8;
     }
   else
     ud->output_encoding = ascii8;
@@ -4067,7 +4067,7 @@ utd_transcribe_text_string ()
       handleChar (ch, paragraphBuffer, &charsInParagraph);
     }
   processDaisyDoc ();
-  ud->input_encoding = utf8;
+  ud->input_encoding = lbu_utf8;
   return 1;
 }
 
@@ -4114,7 +4114,7 @@ utd_transcribe_text_file ()
 	handleChar (ch, paragraphBuffer, &charsInParagraph);
     }
   processDaisyDoc ();
-  ud->input_encoding = utf8;
+  ud->input_encoding = lbu_utf8;
   return 1;
 }
 
@@ -4295,7 +4295,7 @@ utd_back_translate_file ()
   ud->main_braille_table = ud->contracted_table_name;
   if (!lou_getTable (ud->main_braille_table))
     return 0;
-  ud->output_encoding = utf8;
+  ud->output_encoding = lbu_utf8;
   utd_start ();
   addBlock = makeDaisyDoc ();
   ud->translated_length = ud->sync_text_length = 0;
@@ -4347,7 +4347,7 @@ utd_back_translate_braille_string ()
   ud->main_braille_table = ud->contracted_table_name;
   if (!lou_getTable (ud->main_braille_table))
     return 0;
-  ud->output_encoding = utf8;
+  ud->output_encoding = lbu_utf8;
   utd_start ();
   addBlock = makeDaisyDoc ();
   for (k = 0; k < ud->inlen; k++)
