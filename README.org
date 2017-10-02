@@ -45,3 +45,42 @@ To compile the Java bindings go to the java subdirectory and run ~ant~.
 Note that that the library and programs will not work properly unless
 you have first installed the latest version of [[https://github.com/liblouis/liblouis][liblouis]].
 
+* Docker
+
+There are docker images for liblouisutdml and liblouis. So to run
+liblouisutdml from docker simply type the following command which will
+bring you into a shell where you can invoke ~file2brl~:
+
+#+BEGIN_EXAMPLE
+$ docker run -it liblouis/liblouisutdml /bin/bash
+root@74a8b1ad5e03:/usr/src/liblouisutdml# file2brl --help
+Usage: file2brl [OPTION] [inputFile] [outputFile]
+Translate an xml or a text file into an embosser-ready braille file.
+This includes translation into grade two, if desired, mathematical 
+codes, etc. It also includes formatting according to a built-in 
+style sheet which can be modified by the user.
+
+If inputFile is not specified or '-' input is taken from stdin. If outputFile
+is not specified the output is sent to stdout.
+
+  -h, --help          	  display this help and exit
+  -v, --version       	  display version information and exit
+  -f, --config-file       name a configuration file that specifies
+                          how to do the translation
+  -b, --backward      	  backward translation
+  -r, --reformat      	  reformat a braille file
+  -T, --text		  Treat as text even if xml
+  -t, --html              html document, not xhtml
+  -p, --poorly-formatted  translate a poorly formatted file
+  -P, --paragraph-line    treat each block of text ending in a newline
+                          as a paragraph. If there are two newline characters
+                          a blank line will be inserted before the next paragraph
+  -C, --config-setting    specify particular configuration settings
+                          They override any settings that are specified in a
+                          config file
+  -w  --writeable-path    path for temp files and log file
+  -l, --log-file          write errors to file2brl.log instead of stderr
+
+Report bugs to <liblouis-liblouisxml@freelists.org>.
+root@74a8b1ad5e03:/usr/src/liblouisutdml# 
+#+END_EXAMPLE
