@@ -47,7 +47,7 @@ you have first installed the latest version of [[https://github.com/liblouis/lib
 
 * Docker
 
-There are docker images for liblouisutdml and liblouis. So to run
+There are docker images for [[https://hub.docker.com/r/liblouis/liblouisutdml/][liblouisutdml]] and [[https://hub.docker.com/r/liblouis/liblouis/][liblouis]]. So to run
 liblouisutdml from docker simply type the following command which will
 bring you into a shell where you can invoke ~file2brl~:
 
