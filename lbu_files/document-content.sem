@@ -6,6 +6,16 @@
 
 no sequence-decls
 document document-content
+heading1 h,outline-level,1
+heading2 h,outline-level,2
+heading3 h,outline-level,3
+heading4 h,outline-level,4
+heading5 h,outline-level,5
+heading6 h,outline-level,6
+heading7 h,outline-level,7
+heading8 h,outline-level,8
+heading9 h,outline-level,9
+heading10 h,outline-level,10
 para p
 no font-face-decls
 no text
