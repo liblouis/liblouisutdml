@@ -120,7 +120,7 @@ saveState (void)
   widecharcpy (saved_running_head, ud->running_head,
 	       saved_running_head_length);
   widecharcpy (saved_footer, ud->footer, saved_footer_length);
-  memcpy(saved_typeform, ud->typeform, saved_text_length * sizeof(formtype));
+  unsignedcharcpy (saved_typeform, ud->typeform, saved_text_length);
 
   widestrcpy (saved_page_separator_number_first,
 	      ud->page_separator_number_first);
@@ -167,7 +167,7 @@ restoreState (void)
   widecharcpy (ud->running_head, saved_running_head,
 	       saved_running_head_length);
   widecharcpy (ud->footer, saved_footer, saved_footer_length);
-  memcpy(ud->typeform, saved_typeform, saved_text_length * sizeof(formtype));
+  unsignedcharcpy (ud->typeform, saved_typeform, saved_text_length);
 
   widestrcpy (ud->page_separator_number_first,
 	      saved_page_separator_number_first);
@@ -198,7 +198,7 @@ transcribe_paragraph (xmlNode * node, int action)
   xmlNode *child;
   int branchCount = 0;
   int i;
-  logMessage(LOG_DEBUG, "Begin transcribe_paragraph");
+  lbu_logMessage(LOG_DEBUG, "Begin transcribe_paragraph");
   if (node == NULL)
     return 0;
   if (ud->top == 0)
@@ -227,7 +227,7 @@ transcribe_paragraph (xmlNode * node, int action)
       ud->main_braille_table = ud->contracted_table_name;
       if (!lou_getTable (ud->main_braille_table))
 	{
-	  logMessage (LOG_ERROR, "Cannot open main table %s", ud->main_braille_table);
+	  lbu_logMessage (LOG_ERROR, "Cannot open main table %s", ud->main_braille_table);
 	  return 0;
 	}
       if (node->children == NULL)
@@ -329,16 +329,13 @@ transcribe_paragraph (xmlNode * node, int action)
     case pagenum:
       do_pagenum ();
       break;
-    case footer:
-        keep_with_next = 1;
-        break;
     default:
       break;
     }
   if (is_macro (node))
     {
       haveMacro = 1;
-      logMessage(LOG_DEBUG, "Node has macro");
+      lbu_logMessage(LOG_DEBUG, "Node has macro");
       start_macro (node);
     }
   else if ((style = is_style (node)) != NULL)
@@ -349,7 +346,7 @@ transcribe_paragraph (xmlNode * node, int action)
 	    pop_sem_stack ();
 	  return 0;
 	}
-      logMessage(LOG_DEBUG, "Node has style");
+      lbu_logMessage(LOG_DEBUG, "Node has style");
       start_style (style, node);
     }
   child = node->children;
@@ -629,6 +626,6 @@ transcribe_paragraph (xmlNode * node, int action)
       insert_translation (ud->main_braille_table);
       write_paragraph (para, NULL);
     }
-  logMessage(LOG_DEBUG, "Finished transcribe_paragraph");
+  lbu_logMessage(LOG_DEBUG, "Finished transcribe_paragraph");
   return 1;
 }

@@ -32,7 +32,7 @@
 void logWidecharBuf(logLevels level, const char *msg, const widechar *wbuf, int wlen)
 {
   /* When calculating output size:
-   * Each widechar is represented in hex, thus needing two bytes for each
+   * Each wdiechar is represented in hex, thus needing two bytes for each
    * byte in the widechar (sizeof(widechar) * 2)
    * Allow space for the "0x%X " formatting (+ 3)
    * Number of characters in widechar buffer (wlen * )
@@ -56,11 +56,11 @@ void logWidecharBuf(logLevels level, const char *msg, const widechar *wbuf, int 
       p += sprintf(p, formatString, wbuf[i]);
     }
   p = '\0';
-  logMessage(level, logMsg);
+  lbu_logMessage(level, logMsg);
   free(logMsg);
 }
 
-static void defaultLogCallback(logLevels level, const char *message);
+static void defaultLogCallback(int level, const char *message);
 
 static logcallback logCallbackFunction = defaultLogCallback;
 void EXPORT_CALL lbu_registerLogCallback(logcallback callback)
@@ -77,7 +77,7 @@ void EXPORT_CALL lbu_setLogLevel(logLevels level)
   logLevel = level;
 }
 
-void logMessage(logLevels level, const char *format, ...)
+void lbu_logMessage(logLevels level, const char *format, ...)
 {
   if (format == NULL)
       return;
@@ -142,12 +142,13 @@ void EXPORT_CALL
 lbu_logEnd ()
 {
   lou_logEnd();
-  closeLogFile();
+  if (logFile != NULL)
+    fclose (logFile);
+  logFile = NULL;
 }
 
 void closeLogFile()
 {
-  if (logFile != NULL && logFile != stderr)
+  if (logFile != NULL)
     fclose (logFile);
-  logFile = NULL;
 }

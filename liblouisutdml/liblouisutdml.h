@@ -168,6 +168,8 @@ found logFile will be empty. */
 LBUAPI char *EXPORT_CALL lbu_setWriteablePath (const char *path);
 LBUAPI char *EXPORT_CALL lbu_getWriteablePath ();
 
+LBUAPI void EXPORT_CALL lbu_logMessage(logLevels level, const char *format, ...);
+
 LBUAPI void EXPORT_CALL lbu_registerLogCallback(logcallback callback);
 
 LBUAPI void EXPORT_CALL lbu_setLogLevel(logLevels level);
