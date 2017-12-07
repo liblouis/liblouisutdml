@@ -1,7 +1,8 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.68)
-AC_INIT([liblouisutdml], [2.6.0], [liblouis-liblouisxml@freelists.org], [liblouisutdml], [http://www.liblouis.org])
+
+AC_INIT([liblouisutdml], [2.7.0], [liblouis-liblouisxml@freelists.org], [liblouisutdml], [http://www.liblouis.org])
 AC_CONFIG_SRCDIR([liblouisutdml/semantics.c])
 AC_CONFIG_HEADER([liblouisutdml/config.h])
 

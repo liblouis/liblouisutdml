@@ -33,7 +33,7 @@
 #define liblouisutdml_h
 #include <libxml/parser.h>
 #include "liblouisutdml.h"
-#include <louis.h>
+#include <internal.h>
 #include "sem_enum.h"
 
 typedef enum
@@ -114,10 +114,10 @@ typedef struct
 
 typedef enum
 {
-  utf8 = 0,
-  utf16,
-  utf32,
-  ascii8
+  lbu_utf8 = 0,
+  lbu_utf16,
+  lbu_utf32,
+  lbu_ascii8
 } Encoding;
 
 typedef enum
