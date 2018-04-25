@@ -81,6 +81,8 @@ examine_document (xmlNode * node)
     case music:
       ud->has_music = 1;
       break;
+    case pagebreak:
+      ud->has_pagebreak = 1;
     default:
       break;
     }

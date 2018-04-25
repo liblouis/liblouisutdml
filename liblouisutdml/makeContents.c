@@ -108,6 +108,8 @@ initialize_contents (void)
     ud->braille_page_number = ud->beginning_braille_page_number;
   else
     ud->braille_page_number = 1;
+  if (ud->has_pagebreak)
+    ud->page_number = 1;
   return 1;
 }
 

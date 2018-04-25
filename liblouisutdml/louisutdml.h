@@ -179,6 +179,7 @@ typedef struct
   int has_graphics;
   int has_music;
   int has_cdata;
+  int has_pagebreak;
   Encoding input_encoding;
   Encoding output_encoding;
   Encoding input_text_encoding;
@@ -249,6 +250,7 @@ typedef struct
   BrlPageNumFormat cur_brl_page_num_format;
   int lines_on_page;
   int braille_page_number;
+  int page_number;
   int prelim_pages;
   int paragraphs;
   int braille_pages;

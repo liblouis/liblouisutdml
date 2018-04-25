@@ -71,6 +71,8 @@ static int makeDotsTextNode(xmlNode *node, const widechar *content, int length, 
 static int utd_startLine();
 static int utd_finishLine(int number, int beforeAfter);
 
+static int handlePagenum (xmlChar * printPageNumber, int length);
+
 static void
 initializeTranscriber()
 {
@@ -199,6 +201,12 @@ start_document ()
     ud->braille_page_number = 1;
   else
     ud->braille_page_number = ud->beginning_braille_page_number;
+  if (ud->has_pagebreak)
+    {
+      ud->page_number = 1;
+      /* Prepare first page number */
+      handlePagenum (NULL, 0);
+    }
   ud->outbuf1_len_so_far = 0;
   styleSpec = &prevStyleSpec;
   style = prevStyle = lookup_style ("document");
@@ -1014,9 +1022,16 @@ handlePagenum (xmlChar * printPageNumber, int length)
   int translationLength = MAXNUMLEN - 1;
   widechar translatedBuffer[MAXNUMLEN];
   int translatedLength = MAXNUMLEN;
+  char autoPageNumber[MAXNUMLEN];
   char setup[MAXNAMELEN];
   if (length == 0)
-    return 1;
+    {
+      sprintf (autoPageNumber, "%d", ud->page_number);
+      ud->page_number++;
+      printPageNumber = autoPageNumber;
+    }
+  else if ((printPageNumber[0] >= '0' && printPageNumber[0] <= '9'))
+    ud->page_number = strtol(printPageNumber, NULL, 10);
   strcpy (setup, " ");
   if (!(printPageNumber[0] >= '0' && printPageNumber[0] <= '9'))
     strcat (setup, ud->letsign);
