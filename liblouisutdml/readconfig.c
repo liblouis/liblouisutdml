@@ -1431,6 +1431,7 @@ read_configuration_file (const char *configFileList, const char
     }
   memset (ud->typeform, 0, sizeof (ud->typeform));
   ud->braille_page_number = ud->beginning_braille_page_number;
+  ud->page_number = 1;
   if (entities)
     strcat (ud->xml_header, "]>\n");
   ud->mode = mode | ud->config_mode;

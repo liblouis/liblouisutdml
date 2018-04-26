@@ -20,7 +20,7 @@ para p
 no font-face-decls
 no text
 no sequence-decl
-no soft-page-break
+pagebreak soft-page-break
 no automatic-styles
 no body
 no scripts
