@@ -1,0 +1,10 @@
+include braille-patterns.cti
+space \x0020 0
+space \x00A0 a
+space \x000A 0
+space \x000C 0
+space \x000D 0
+space \x001B 1b
+repeated \x0020 0
+repeated \x00A0 a
+

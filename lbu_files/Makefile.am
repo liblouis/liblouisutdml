@@ -16,10 +16,14 @@ lbu_files_DATA =				\
 	html.sem				\
 	liblouisutdml.ini			\
 	marburg.cfg				\
+	marburg.ctb				\
 	marburg.sem				\
+	marburg_edit.ctb			\
 	math.sem				\
 	nemeth.cfg				\
+	nemeth.ctb				\
 	nemeth.sem				\
+	nemeth_edit.ctb				\
 	nimas.cfg				\
 	nimas.sem				\
 	package.sem				\
@@ -30,12 +34,17 @@ lbu_files_DATA =				\
 	ThML.sem				\
 	transinxml.cfg				\
 	ukmaths.cfg				\
+	ukmaths.ctb				\
 	ukmaths.sem				\
+	ukmaths_edit.ctb			\
 	utd.sem					\
 	viewxml.cfg				\
 	viewxml.ctb				\
 	volumes.cfg				\
 	w_wordDocument.sem			\
+	wiskunde.ctb				\
+	wiskunde.sem				\
+	wiskunde_edit.ctb			\
 	wordDocument.sem			\
 	Workbook.sem
 

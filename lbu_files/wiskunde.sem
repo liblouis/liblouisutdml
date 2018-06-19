@@ -1,0 +1,275 @@
+#
+#  Copyright (C) 2010 DocArch <http://www.docarch.be>.
+#
+#  This file is part of liblouis.
+#
+#  liblouis is free software: you can redistribute it and/or modify it
+#  under the terms of the GNU Lesser General Public License as
+#  published by the Free Software Foundation, either version 2.1 of the
+#  License, or (at your option) any later version.
+#
+#  liblouis is distributed in the hope that it will be useful, but
+#  WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+#  Lesser General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public
+#  License along with liblouis. If not, see
+#  <http://www.gnu.org/licenses/>.
+#
+# ----------------------------------------------------------------------------------------------
+#
+#  Flemish Braille Math Code (a.k.a. Woluwe code)
+#     Created and maintained by Bert Frees <bertfrees@gmail.com>
+#     See also: « Handleiding Braillesymbolen Wiskunde »
+#              (Gilbert Notaert, Marc Suij en Emmanuel Vandekerkhove, G.on Woluwe, 1984)
+#
+# ----------------------------------------------------------------------------------------------
+
+namespaces math=http://www.w3.org/1998/Math/MathML
+
+math         math
+generic      semantics
+generic      mstyle
+
+generic      mi \es
+generic      mn \es
+generic      mo \es
+generic      mtext \et,\et
+generic      mrow
+generic      mfrac \ef,\ed,\ex
+generic      &xpath(//math:mfrac[descendant::math:mfrac]) \ef,\ed\ed,\ex
+
+#generic      &xpath(//math:mfenced[@open='(' and @close=')'][not(child::math:mtable)])  (,\*)
+generic      &xpath(//math:mfenced[@open='' and @close=''][not(child::math:mtable)])  (,\*)
+generic      &xpath(//math:mfenced[@open='' and @close=']'][not(child::math:mtable)])  (,\*]
+generic      &xpath(//math:mfenced[@open='[' and @close=''][not(child::math:mtable)])  [,\*)
+generic      &xpath(//math:mfenced[@open='[' and @close=']'][not(child::math:mtable)])  [,\*]
+generic      &xpath(//math:mfenced[@open='[' and @close='['][not(child::math:mtable)])  [,\*[
+generic      &xpath(//math:mfenced[@open=']' and @close=']'][not(child::math:mtable)])  ],\*]
+generic      &xpath(//math:mfenced[@open=']' and @close='['][not(child::math:mtable)])  ],\*[
+generic      &xpath(//math:mfenced[@open='∣' and @close='∣'][not(child::math:mtable)])  @1456,\*@1456
+
+generic      mtable
+skip         &xpath(//math:mtext[ancestor::math:mfrac or ancestor::math:mtable])
+softreturn   mtr @56@1256
+softreturn   &xpath(//*[not(self::math:mfenced)]/math:mtable/math:mtr[position()=1])       @123456
+generic      &xpath(//*[not(self::math:mfenced)]/math:mtable/math:mtr[position()=last()])  @56@1256,\*\ex
+generic      mtd \s
+generic      &xpath(//math:mtd[position()=1])
+
+#softreturn   &xpath(//math:mfenced[@open='(']/math:mtable/math:mtr[position()=1])   (@123456
+softreturn   &xpath(//math:mfenced[@open='']/math:mtable/math:mtr[position()=1])   (@123456
+softreturn   &xpath(//math:mfenced[@open='[']/math:mtable/math:mtr[position()=1])   [@123456
+softreturn   &xpath(//math:mfenced[@open=']']/math:mtable/math:mtr[position()=1])   ]@123456
+softreturn   &xpath(//math:mfenced[@open='∣']/math:mtable/math:mtr[position()=1])   @1456@123456
+
+#generic      &xpath(//math:mfenced[@close=')']/math:mtable/math:mtr[position()=last()])   @56@1256,\*\ex)
+generic      &xpath(//math:mfenced[@close='']/math:mtable/math:mtr[position()=last()])   @56@1256,\*\ex)
+generic      &xpath(//math:mfenced[@close=']']/math:mtable/math:mtr[position()=last()])   @56@1256,\*\ex]
+generic      &xpath(//math:mfenced[@close='[']/math:mtable/math:mtr[position()=last()])   @56@1256,\*\ex[
+generic      &xpath(//math:mfenced[@close='∣']/math:mtable/math:mtr[position()=last()])   @56@1256,\*\ex@1456
+
+generic      msub       ,\ei\e_r,\ex
+generic      msup       ,\ei\e^r,\ex
+generic      msubsup    ,\ei\e_r,\ex\ei\e^r,\ex
+skip         munder
+skip         mover
+skip         munderover
+
+generic      &xpath(//math:munder    [child::*[1][    string()='∫' or string()='∬' or string()='∭' or string()='∑' or string()='∏' or string()='lim']])   ,\ei\e_r,\ex
+generic      &xpath(//math:mover     [child::*[1][    string()='∫' or string()='∬' or string()='∭' or string()='∑' or string()='∏']])                     ,\ei\e^r,\ex
+generic      &xpath(//math:munderover[child::*[1][    string()='∫' or string()='∬' or string()='∭' or string()='∑' or string()='∏']])                     ,\ei\e_r,\ex\ei\e^r,\ex
+
+generic      &xpath(//math:munder    [child::*[1][not(string()='∫' or string()='∬' or string()='∭' or string()='∑' or string()='∏') and string-length()=1]])   ,\ei\e_c,\ex
+generic      &xpath(//math:munderover[child::*[1][not(string()='∫' or string()='∬' or string()='∭' or string()='∑' or string()='∏') and string-length()=1]])   ,\ei\e_c,\ex\ei\e^c,\ex
+
+generic      &xpath(//math:mover     [child::*[1][not(string()='∫' or string()='∬' or string()='∭' or string()='∑' or string()='∏') and string-length()=1] and     child::*[2][string()='⃗' or string()='→']])   @45@1246
+skip         &xpath(//math:mover     [child::*[1][not(string()='∫' or string()='∬' or string()='∭' or string()='∑' or string()='∏') and string-length()=1]] /      child::*[2][string()='⃗' or string()='→'])
+generic      &xpath(//math:mover     [child::*[1][not(string()='∫' or string()='∬' or string()='∭' or string()='∑' or string()='∏') and string-length()=1] and not(child::*[2][string()='⃗' or string()='→'])])  ,\ei\e^c,\ex
+
+generic      &xpath(//math:mover[child::*[1][string-length()>1] and child::*[2][string()='¯']])  @456@25,\ex
+generic      &xpath(//math:mover[child::*[1][string-length()>1] and child::*[2][string()='̂']])  @456@126,\ex
+generic      &xpath(//math:mover[child::*[1][string-length()>1] and child::*[2][string()='̃']])   @456@26,\ex
+generic      &xpath(//math:mover[child::*[1][string-length()>1] and child::*[2][string()='⃗']])   @456@25@2,\ex
+generic      &xpath(//math:mover[child::*[1][string-length()>1] and child::*[2][string()='→']])  @456@25@2,\ex
+generic      &xpath(//math:mover[child::*[1][string-length()>1] and child::*[2][string()='←']])  @456@2@25,\ex
+
+skip         &xpath(//math:mover[child::*[1][string-length()>1]] /  child::*[2][string()='¯'])
+skip         &xpath(//math:mover[child::*[1][string-length()>1]] /  child::*[2][string()='̂'])
+skip         &xpath(//math:mover[child::*[1][string-length()>1]] /  child::*[2][string()='̃'])
+skip         &xpath(//math:mover[child::*[1][string-length()>1]] /  child::*[2][string()='⃗']) 
+skip         &xpath(//math:mover[child::*[1][string-length()>1]] /  child::*[2][string()='→'])
+skip         &xpath(//math:mover[child::*[1][string-length()>1]] /  child::*[2][string()='←'])
+
+generic      none \en
+generic      mprescripts
+skip         mmultiscripts
+generic      &xpath(//math:mmultiscripts[not(child::math:mprescripts) and (count(child::*)=3)])  ,\ei\e_r,\ex\ei\e^r,\ex
+reverse      &xpath(//math:mmultiscripts[   (child::math:mprescripts) and (count(child::*)=4)])   \ei\e^l,\ex\ei\e_l,\ex
+
+generic      msqrt                                    \ev,\*\ex
+generic      mroot                                    \ev,\*\ex
+reverse      &xpath(//math:mroot[count(child::*)=2])  \ei\e^l,\ex\ev,\ex
+
+# ----------------------------------------------------------------------------------------------
+
+skip abs
+skip and
+skip annotation
+skip annotation-xml
+skip apply
+skip approx
+skip arccos
+skip arccosh
+skip arccot
+skip arccoth
+skip arccsc
+skip arccsch
+skip arcsec
+skip arcsech
+skip arcsin
+skip arcsinh
+skip arctan
+skip arctanh
+skip arg
+skip bvar
+skip card
+skip cartesianproduct
+skip ceiling
+skip ci
+skip cn
+skip codomain
+skip complexes
+skip compose
+skip condition
+skip conjugate
+skip cos
+skip cosh
+skip cot
+skip coth
+skip csc
+skip csch
+skip csymbol
+skip curl
+skip declare
+skip degree
+skip determinant
+skip diff
+skip divergence
+skip divide
+skip domain
+skip domainofapplication
+skip emptyset
+skip eq
+skip equivalent
+skip eulergamma
+skip exists
+skip exp
+skip exponentiale
+skip factorial
+skip factorof
+skip false
+skip floor
+skip fn
+skip forall
+skip gcd
+skip geq
+skip grad
+skip gt
+skip ident
+skip image
+skip imaginary
+skip imaginaryi
+skip implies
+skip in
+skip infinity
+skip int
+skip integers
+skip intersect
+skip interval
+skip inverse
+skip lambda
+skip laplacian
+skip lcm
+skip leq
+skip limit
+skip list
+skip ln
+skip log
+skip logbase
+skip lowlimit
+skip lt
+skip maction
+skip maligngroup
+skip malignmark
+skip matrix
+skip matrixrow
+skip max
+skip mean
+skip median
+skip menclose
+skip merror
+skip mglyph
+skip min
+skip minus
+skip mlabeledtr
+skip mode
+skip moment
+skip momentabout
+skip mpadded
+skip mphantom
+skip ms
+skip mspace
+skip naturalnumbers
+skip neq
+skip not
+skip notanumber
+skip notin
+skip notprsubset
+skip notsubset
+skip or
+skip otherwise
+skip outerproduct
+skip partialdiff
+skip pi
+skip piece
+skip piecewise
+skip plus
+skip power
+skip primes
+skip product
+skip prsubset
+skip quotient
+skip rationals
+skip real
+skip reals
+skip reln
+skip rem
+skip root
+skip scalarproduct
+skip sdev
+skip sec
+skip sech
+skip selector
+skip sep
+skip set
+skip setdiff
+skip sin
+skip sinh
+skip subset
+skip sum
+skip tan
+skip tanh
+skip tendsto
+skip times
+skip transpose
+skip true
+skip union
+skip uplimit
+skip variance
+skip vector
+skip vectorproduct
+skip xor
+
+# ----------------------------------------------------------------------------------------------
