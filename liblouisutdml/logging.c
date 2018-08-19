@@ -29,37 +29,6 @@
 
 #include "louisutdml.h"
 
-void logWidecharBuf(logLevels level, const char *msg, const widechar *wbuf, int wlen)
-{
-  /* When calculating output size:
-   * Each widechar is represented in hex, thus needing two bytes for each
-   * byte in the widechar (sizeof(widechar) * 2)
-   * Allow space for the "0x%X " formatting (+ 3)
-   * Number of characters in widechar buffer (wlen * )
-   * Give space for additional message (+ strlen(msg))
-   * Remember the null terminator (+ 1)
-   */
-  int logBufSize = (wlen * ((sizeof(widechar) * 2) + 3)) + 1 + strlen(msg);
-  char *logMsg = malloc(logBufSize);
-  char *p = logMsg;
-  char *formatString;
-  int i = 0;
-  if (sizeof(widechar) == 2)
-    formatString = "0x%04X ";
-  else
-    formatString = "0x%08X ";
-  for (i = 0; i < strlen(msg); i++)
-    logMsg[i] = msg[i];
-  p += strlen(msg);
-  for (i = 0; i < wlen; i++)
-    {
-      p += sprintf(p, formatString, wbuf[i]);
-    }
-  p = '\0';
-  logMessage(level, logMsg);
-  free(logMsg);
-}
-
 static void defaultLogCallback(logLevels level, const char *message);
 
 static logcallback logCallbackFunction = defaultLogCallback;
@@ -105,6 +74,36 @@ void logMessage(logLevels level, const char *format, ...)
     }
 }
 
+void logWidecharBuf(logLevels level, const char *msg, const widechar *wbuf, int wlen)
+{
+  /* When calculating output size:
+   * Each widechar is represented in hex, thus needing two bytes for each
+   * byte in the widechar (sizeof(widechar) * 2)
+   * Allow space for the "0x%X " formatting (+ 3)
+   * Number of characters in widechar buffer (wlen * )
+   * Give space for additional message (+ strlen(msg))
+   * Remember the null terminator (+ 1)
+   */
+  int logBufSize = (wlen * ((sizeof(widechar) * 2) + 3)) + 1 + strlen(msg);
+  char *logMsg = malloc(logBufSize);
+  char *p = logMsg;
+  char *formatString;
+  int i = 0;
+  if (sizeof(widechar) == 2)
+    formatString = "0x%04X ";
+  else
+    formatString = "0x%08X ";
+  for (i = 0; i < strlen(msg); i++)
+    logMsg[i] = msg[i];
+  p += strlen(msg);
+  for (i = 0; i < wlen; i++)
+    {
+      p += sprintf(p, formatString, wbuf[i]);
+    }
+  p = '\0';
+  logMessage(level, logMsg);
+  free(logMsg);
+}
 
 static FILE *logFile = NULL;
 static char initialLogFileName[256];
@@ -138,16 +137,16 @@ defaultLogCallback (logLevels level, const char *message)
   fprintf (logFile, "%s\n", message);
 }
 
-void EXPORT_CALL
-lbu_logEnd ()
-{
-  lou_logEnd();
-  closeLogFile();
-}
-
 void closeLogFile()
 {
   if (logFile != NULL && logFile != stderr)
     fclose (logFile);
   logFile = NULL;
+}
+
+void EXPORT_CALL
+lbu_logEnd ()
+{
+  lou_logEnd();
+  closeLogFile();
 }
