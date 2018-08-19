@@ -12,6 +12,7 @@ SUBDIRS =					\
 	test_11					\
 	test_12					\
 	test_13					\
-	test_14
+	test_14					\
+	test_mathml_woluwe
 
 EXTRA_DIST = README

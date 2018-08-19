@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi>A</mi><mi mathvariant="normal">⊂</mi><mi>B</mi></mrow><mi mathvariant="italic">en</mi><mrow><mi>B</mi><mi mathvariant="normal">⊂</mi><mi>A</mi></mrow><mi mathvariant="normal">⇔</mi><mrow><mi>A</mi><mi mathvariant="normal">=</mi><mi>B</mi></mrow></mrow><annotation encoding="StarMath 5.0">A subset B en B subset A dlrarrow A = B </annotation></semantics></math>

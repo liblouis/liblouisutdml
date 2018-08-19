@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mfrac><mi>t</mi><mrow><msubsup><mi>x</mi><mi>i</mi><mi>m</mi></msubsup><mo stretchy="false">+</mo><msubsup><mi>x</mi><mi>j</mi><mi>m</mi></msubsup></mrow></mfrac><annotation encoding="StarMath 5.0">t over {x_i^m + x_j^m}</annotation></semantics></math>

@@ -7,11 +7,12 @@ subdirectory contains at least the following files:
 
 - input.xml
 - expected.txt
-- liblouisutdml.ini: The configuration. The liblouis tables specified in
-  this file should ideally point to files in the same directory to
-  ensure the test is completely self-contained.
+
+- liblouisutdml.ini: The configuration. Should define a semantic
+  actions file. The liblouis tables specified in this file should
+  ideally point to files in the same directory to ensure the test is
+  completely self-contained.
 - styles.cfg: The style definitions.
-- semantics.sem: The semantic actions.
 - README: Info about the test that will be printed when in verbose mode.
 
 Some tests contain a dummy file named xfail to flag them as expected

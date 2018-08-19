@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msqrt><mrow><mi mathvariant="italic">ab</mi><msqrt><mi>c</mi></msqrt></mrow></msqrt><mi mathvariant="normal">=</mi><mrow><msqrt><mi mathvariant="italic">ab</mi></msqrt><mi mathvariant="normal">×</mi><mroot><mi>c</mi><mn>4</mn></mroot></mrow></mrow><annotation encoding="StarMath 5.0">sqrt{ab sqrt c} = sqrt{ab} times nroot{4}{c} </annotation></semantics></math>

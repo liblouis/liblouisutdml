@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mrow><mi>n</mi><mi mathvariant="normal">−</mi><mn>1</mn></mrow></msub><msup><mi>x</mi><mrow><mi>n</mi><mi mathvariant="normal">−</mi><mn>1</mn></mrow></msup></mrow><annotation encoding="StarMath 5.0">a_{n-1} x^{n-1}</annotation></semantics></math>
