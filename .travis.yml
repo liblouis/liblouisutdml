@@ -22,6 +22,10 @@ env:
 
 script: ./scripts/run-tests.sh
 
+after_failure:
+  - cat tests/test-suite.log
+  - cat tests/run_test_suite.sh.log
+
 # tell the irc channel about the results of the build
 notifications:
   irc: "irc.oftc.net#liblouis"
