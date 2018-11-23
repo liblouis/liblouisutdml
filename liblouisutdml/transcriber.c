@@ -171,16 +171,16 @@ static void utd_pagebreak (xmlNode * node, char *printPageNumber, int length);
 static int utd_startStyle ();
 static int utd_styleBody ();
 static int utd_finishStyle ();
-static const TranslationTableHeader *firstTableHeader;
+static const void *firstTableHeader;
 static const char *firstTableName;
 
-static TranslationTableRule *
+/*static TranslationTableRule *
 getLiblouisRule (TranslationTableOffset offset)
 {
   if (offset == 0)
     return NULL;
   return (TranslationTableRule *) & firstTableHeader->ruleArea[offset];
-}
+}*/
 
 int
 start_document ()
@@ -423,7 +423,7 @@ utf8_string_to_wc (const unsigned char *inStr, int *inSize, widechar *
   while (in < *inSize)
     {
       ch = inStr[in++] & 0xff;
-      if (ch < 128 || ud->input_encoding == ascii8)
+      if (ch < 128 || ud->input_encoding == lbu_ascii8)
 	{
 	  outstr[out++] = (widechar) ch;
 	  if (out >= *outSize)
@@ -569,7 +569,7 @@ utf8ToWc (const unsigned char *utf8str, int *inSize, widechar *
   while (in < *inSize)
     {
       ch = utf8str[in++] & 0xff;
-      if (ch < 128 || ud->input_encoding == ascii8)
+      if (ch < 128 || ud->input_encoding == lbu_ascii8)
 	{
 	  utfwcstr[out++] = (widechar) ch;
 	  if (out >= *outSize)
@@ -3429,7 +3429,7 @@ back_translate_braille_string ()
       ud->output_encoding = lbu_utf8;
     }
   else
-    ud->output_encoding = ascii8;
+    ud->output_encoding = lbu_ascii8;
   while (charsProcessed < ud->inlen)
     {
       ch = ud->inbuf[charsProcessed++];
@@ -3484,7 +3484,7 @@ back_translate_braille_string ()
       if (!insertCharacters (ud->lineEnd, strlen (ud->lineEnd)))
 	return 0;
       writeOutbuf ();
-      ud->output_encoding = ascii8;
+      ud->output_encoding = lbu_ascii8;
     }
   logMessage(LOG_DEBUG, "Finish back_translate_braille_string");
   return 1;
@@ -3515,7 +3515,7 @@ back_translate_file ()
       ud->output_encoding = lbu_utf8;
     }
   else
-    ud->output_encoding = ascii8;
+    ud->output_encoding = lbu_ascii8;
   while ((ch = fgetc (ud->inFile)) != EOF)
     {
       if (ch == 13)
@@ -3569,7 +3569,7 @@ back_translate_file ()
       if (!insertCharacters (ud->lineEnd, strlen (ud->lineEnd)))
 	return 0;
       writeOutbuf ();
-      ud->output_encoding = ascii8;
+      ud->output_encoding = lbu_ascii8;
     }
   return 1;
 }
@@ -4014,7 +4014,7 @@ static int
 handleChar (int ch, unsigned char *buf, int *posx)
 {
   int pos = *posx;
-  if (ch > 127 && ud->input_encoding == ascii8)
+  if (ch > 127 && ud->input_encoding == lbu_ascii8)
     {
       buf[pos++] = 0xc3;
       buf[pos++] = ch & 0x3f;
@@ -4710,12 +4710,14 @@ utd_getPrintPageString ()
 {
   widechar printPageString[40];
   int k;
-  TranslationTableRule *rule;
+  //TranslationTableRule *rule;
   for (k = 0; ud->print_page_number[k]; k++)
     printPageString[k] = ud->print_page_number[k];
   setOrigTextWidechar (&pageNumber, printPageString, k);
   translateShortBrlOnly (&pageNumber);
-  rule = getLiblouisRule (firstTableHeader->letterSign);
+  // FIXME: provide something in Liblouis API to translate print page
+  // numbers instead of inspecting internal details of compiled table
+  /*rule = getLiblouisRule (firstTableHeader->letterSign);
   if (rule != NULL)
     {
       for (k = 0; k < pageNumber.transTextLength; k++)
@@ -4726,7 +4728,7 @@ utd_getPrintPageString ()
 	    break;
 	  }
     }
-  else
+  else*/
     addSpaces (&pageNumber, 3);
   ud->print_page_number[0]++;
   return 1;
