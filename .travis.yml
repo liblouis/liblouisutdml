@@ -17,7 +17,7 @@ before_install:
 # let's have two parallel builds. One with stable liblouis and one
 # with bleeding edge liblouis
 env:
-  - LIBLOUIS_VERSION=3.6.0
+  - LIBLOUIS_VERSION=3.9.0
   - LIBLOUIS_VERSION=master
 
 script: ./scripts/run-tests.sh
