@@ -48,7 +48,7 @@ addPath (const char *path)
   for (k = 0; path[k]; k++)
     if (path[k] == ',')
       {
-	logMessage (LOG_ERROR, "Path %s must not contain a comma", path);
+	logMessage (LOU_LOG_ERROR, "Path %s must not contain a comma", path);
 	return 0;
       }
   if (curLen > 0)

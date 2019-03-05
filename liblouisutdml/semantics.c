@@ -106,9 +106,9 @@ semanticError (lbu_FileInfo * nested, char *format, ...)
 #endif
   va_end (arguments);
   if (nested)
-    logMessage (LOG_ERROR, "%s:%d: %s", nested->fileName, nested->lineNumber, buffer);
+    logMessage (LOU_LOG_ERROR, "%s:%d: %s", nested->fileName, nested->lineNumber, buffer);
   else
-    logMessage (LOG_ERROR, "%s", buffer);
+    logMessage (LOU_LOG_ERROR, "%s", buffer);
   errorCount++;
 }
 
@@ -870,7 +870,7 @@ sem_compileFile (const char *fileName)
   lbu_FileInfo nested;
   char completePath[MAXNAMELEN];
   int haveAppended = 0;
-  logMessage(LOG_INFO, "Begin sem_compileFile: fileName=%s", fileName);
+  logMessage(LOU_LOG_INFO, "Begin sem_compileFile: fileName=%s", fileName);
   if (!*fileName)
     return 1;			/*Probably run with defaults */
   if (strncmp (fileName, "appended_", 9) == 0)
@@ -892,7 +892,7 @@ sem_compileFile (const char *fileName)
   memset (&nested, 0, sizeof (nested));
   nested.fileName = fileName;
   nested.unedited = 1;
-  logMessage(LOG_INFO, "Loading semantic action file: %s", completePath);
+  logMessage(LOU_LOG_INFO, "Loading semantic action file: %s", completePath);
   if ((nested.in = fopen ((char *) completePath, "rb")))
     {
       while (getALine (&nested))
@@ -912,7 +912,7 @@ sem_compileFile (const char *fileName)
       return 0;
     }
   numEntries += nested.numEntries;
-  logMessage(LOG_INFO, "Finish sem_compileFile");
+  logMessage(LOU_LOG_INFO, "Finish sem_compileFile");
   return 1;
 }
 
@@ -1082,7 +1082,7 @@ printXpathNodes (xmlNodeSetPtr nodes)
   int size;
   int i;
   size = (nodes) ? nodes->nodeNr : 0;
-  logMessage (LOG_INFO, "Result (%d nodes):", size);
+  logMessage (LOU_LOG_INFO, "Result (%d nodes):", size);
   for (i = 0; i < size; ++i)
     {
       if (nodes->nodeTab[i]->type == XML_NAMESPACE_DECL)
@@ -1092,13 +1092,13 @@ printXpathNodes (xmlNodeSetPtr nodes)
 	  cur = (xmlNodePtr) ns->next;
 	  if (cur->ns)
 	    {
-	      logMessage (LOG_INFO,
+	      logMessage (LOU_LOG_INFO,
 			     "= namespace \"%s\"=\"%s\" for node %s:%s",
 			     ns->prefix, ns->href, cur->ns->href, cur->name);
 	    }
 	  else
 	    {
-	      logMessage (LOG_INFO, "= namespace \"%s\"=\"%s\" for node %s",
+	      logMessage (LOU_LOG_INFO, "= namespace \"%s\"=\"%s\" for node %s",
 			     ns->prefix, ns->href, cur->name);
 	    }
 	}
@@ -1107,18 +1107,18 @@ printXpathNodes (xmlNodeSetPtr nodes)
 	  cur = nodes->nodeTab[i];
 	  if (cur->ns)
 	    {
-	      logMessage (LOG_INFO, "= element node \"%s:%s\"",
+	      logMessage (LOU_LOG_INFO, "= element node \"%s:%s\"",
 			     cur->ns->href, cur->name);
 	    }
 	  else
 	    {
-	      logMessage (LOG_INFO, "= element node \"%s\"", cur->name);
+	      logMessage (LOU_LOG_INFO, "= element node \"%s\"", cur->name);
 	    }
 	}
       else
 	{
 	  cur = nodes->nodeTab[i];
-	  logMessage (LOG_INFO, "= node \"%s\": type %d", cur->name,
+	  logMessage (LOU_LOG_INFO, "= node \"%s\": type %d", cur->name,
 			 cur->type);
 	}
     }
@@ -1231,12 +1231,12 @@ get_sem_attr (xmlNode * node)
   HashEntry *nodeEntry = (HashEntry *) node->_private;
   if (nodeEntry != NULL)
   {
-    logMessage(LOG_DEBUG, "Node %s has nodeEntry", (const char *)node->name);
+    logMessage(LOU_LOG_DEBUG, "Node %s has nodeEntry", (const char *)node->name);
     return nodeEntry->semNum;
   }
   else
   {
-    logMessage(LOG_DEBUG, "Node %s has no nodeEntry", (const char *)node->name);
+    logMessage(LOU_LOG_DEBUG, "Node %s has no nodeEntry", (const char *)node->name);
     return no;
   }
 }
@@ -1421,10 +1421,10 @@ append_new_entries ()
     }
   fclose (semOut);
   if (haveSemanticFile)
-    logMessage (LOG_WARN, "%d new entries appended to '%s%s'.", numEntries,
+    logMessage (LOU_LOG_WARN, "%d new entries appended to '%s%s'.", numEntries,
 		  filePrefix, firstFileName);
   else
-    logMessage (LOG_WARN, "%d entries written to new semantic-action file '%s%s'.",
+    logMessage (LOU_LOG_WARN, "%d entries written to new semantic-action file '%s%s'.",
 		  numEntries, filePrefix, firstFileName);
   moreEntries = 0;
 }
@@ -1519,7 +1519,7 @@ macroError (char *format, ...)
   vsnprintf (buffer, sizeof (buffer), format, arguments);
 #endif
   va_end (arguments);
-  logMessage (LOG_ERROR, "Macro %s: %s", macroName, buffer);
+  logMessage (LOU_LOG_ERROR, "Macro %s: %s", macroName, buffer);
 }
 
 char *
@@ -1627,7 +1627,7 @@ doSemanticActions ()
       ud->main_braille_table = ud->contracted_table_name;
       if (!lou_getTable (ud->main_braille_table))
 	{
-	  logMessage (LOG_ERROR, "Cannot open main table %s", ud->main_braille_table);
+	  logMessage (LOU_LOG_ERROR, "Cannot open main table %s", ud->main_braille_table);
 	  return 0;
 	}
       break;

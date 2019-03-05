@@ -46,7 +46,7 @@ change_table (xmlNode * node)
     return 0;
   if (!find_file (newTable, completePath))
     {
-      logMessage (LOG_ERROR, "Table %s cannot be found", newTable);
+      logMessage (LOU_LOG_ERROR, "Table %s cannot be found", newTable);
       return 0;
     }
   if (!lou_getTable (completePath))

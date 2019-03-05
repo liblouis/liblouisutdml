@@ -40,7 +40,7 @@ void EXPORT_CALL lbu_registerLogCallback(logcallback callback)
     logCallbackFunction = callback;
 }
 
-static logLevels logLevel = LOG_INFO;
+static logLevels logLevel = LOU_LOG_INFO;
 void EXPORT_CALL lbu_setLogLevel(logLevels level)
 {
   logLevel = level;

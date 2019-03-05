@@ -99,7 +99,7 @@ initialize_contents (void)
   strcat (tempFileName, "lbx_body.temp");
   if (!(tempFile = fopen (tempFileName, "w")))
     {
-      logMessage (LOG_ERROR, "Can't open temporary file.\n");
+      logMessage (LOU_LOG_ERROR, "Can't open temporary file.\n");
       return 0;
     }
   ud->outFile = tempFile;
@@ -284,7 +284,7 @@ make_contents (void)
 
   if (!(tempFile = fopen (tempFileName, "r")))
     {
-      logMessage (LOG_ERROR, "Can't open temporary file.\n");
+      logMessage (LOU_LOG_ERROR, "Can't open temporary file.\n");
       return 0;
     }
   do

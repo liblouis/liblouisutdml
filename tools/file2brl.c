@@ -115,8 +115,8 @@ main (int argc, char **argv)
   UserData *ud;
 
   int optc;
-  lbu_setLogLevel(LOG_DEBUG);
-  lou_setLogLevel(LOG_DEBUG);
+  lbu_setLogLevel(LOU_LOG_DEBUG);
+  lou_setLogLevel(LOU_LOG_DEBUG);
   set_program_name (argv[0]);
   logFileName[0] = 0;
   
@@ -213,7 +213,7 @@ main (int argc, char **argv)
     {
       if (!(inputFile = fopen (inputFileName, "r")))
 	{
-	  logMessage (LOG_FATAL, "Can't open input file %s.\n", inputFileName);
+	  logMessage (LOU_LOG_FATAL, "Can't open input file %s.\n", inputFileName);
 	  exit (EXIT_FAILURE);
 	}
     }
@@ -224,7 +224,7 @@ main (int argc, char **argv)
   strcat (tempFileName, "file2brl.temp");
   if (!(tempFile = fopen (tempFileName, "w")))
     {
-      logMessage (LOG_FATAL, "Can't open temporary file.\n");
+      logMessage (LOU_LOG_FATAL, "Can't open temporary file.\n");
       exit (EXIT_FAILURE);
     }
   if (whichProc == 'p')
@@ -353,7 +353,7 @@ main (int argc, char **argv)
 	  exit (EXIT_FAILURE);
 	break;
       default:
-	logMessage (LOG_FATAL, "Program bug %c\n", whichProc);
+	logMessage (LOU_LOG_FATAL, "Program bug %c\n", whichProc);
 	break;
       }
   lbu_free ();

@@ -39,7 +39,7 @@ transcribe_document (xmlNode * node)
   StyleType *style;
   xmlNode *child;
   int childrenDone = 0;
-  logMessage(LOG_DEBUG, "Begin transcribe_document");
+  logMessage(LOU_LOG_DEBUG, "Begin transcribe_document");
   ud->top = -1;
   ud->style_top = -1;
   ud->text_length = 0;
@@ -144,6 +144,6 @@ transcribe_document (xmlNode * node)
     end_style ();
   end_document ();
   pop_sem_stack ();
-  logMessage(LOG_DEBUG, "Finished transcribe_document");
+  logMessage(LOU_LOG_DEBUG, "Finished transcribe_document");
   return 1;
 }
