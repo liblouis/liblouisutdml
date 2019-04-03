@@ -1,9 +1,8 @@
 #!/bin/bash
-# tests/run_test_suite.sh.  Generated from run_test_suite.sh.in by configure.
 
-# run_test_suite
+# run_test
 #
-# Copyright (C) 2013,2016 by Swiss Library for the Blind, Visually Impaired and Print Disabled 
+# Copyright (C) 2019 by Swiss Library for the Blind, Visually Impaired and Print Disabled
 #
 # This file is free software; you can redistribute it and/or modify it
 # under the terms of the Lesser or Library GNU General Public License as
@@ -29,13 +28,14 @@
 find-up () {
     current=$(pwd)
     path=$current
-    while [[ "$path" != "" && ! -e "$path/$1" ]]; do
-	path=${path%/*}
+    while [[ "$path" != "/" && ! -e "$path/$1" ]]; do
+	path=$(dirname -- "$path")
     done
-    if [ "$path" != "" ]; then
-	echo $(realpath --relative-to=$current $path/$1)
+    if [ "$path" != "/" ]; then
+	echo "$path/$1"
     else
-	exit 1;
+	>&2 echo "No file $1 found in parent directories of $current"
+	echo ""
     fi
 }
 
@@ -46,9 +46,14 @@ run_test () {
     input=$(find-up input.xml)
     styles=$(find-up styles.cfg)
     expected=$(find-up expected.txt)
+
+    if [[ $README == "" || $input == "" || $styles == "" || $expected == "" ]]; then
+	exit 1
+    fi
+
     file2brl -w $tmp_dir -f $styles $input $tmp_dir/output.txt 2> /dev/null
     if [ $? -ne 0 ]; then
-	exit 99;
+	exit 99
     else
 	diff -q $expected $tmp_dir/output.txt >/dev/null
 	if [ $? -ne 0 ]; then
@@ -57,11 +62,10 @@ run_test () {
 		echo "Diff: " >&2
 		diff -u $expected $tmp_dir/output.txt
 	    fi
-	    exit 1;
+	    exit 1
 	else
-	    echo "bah"
 	    rm $tmp_dir/output.txt
-	    exit 0;
+	    exit 0
 	fi
     fi
     rm -f file2brl.temp
