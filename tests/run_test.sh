@@ -2,7 +2,7 @@
 
 # run_test
 #
-# Copyright (C) 2019 by Swiss Library for the Blind, Visually Impaired and Print Disabled
+# Copyright (C) 2013,2016,2019 by Swiss Library for the Blind, Visually Impaired and Print Disabled
 #
 # This file is free software; you can redistribute it and/or modify it
 # under the terms of the Lesser or Library GNU General Public License as
