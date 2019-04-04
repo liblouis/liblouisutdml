@@ -71,7 +71,11 @@ run_test () {
 	cleanup_and_exit 1
     fi
 
-    file2brl -w $tmp_dir -f $config $input $tmp_dir/output.txt 2> /dev/null
+    # the config file contains paths which are relative to that file,
+    # so we need to start file2brl from there to make the relative
+    # paths work
+    (cd $(dirname $config);
+     file2brl -w $tmp_dir -f $config $input $tmp_dir/output.txt 2> /dev/null)
     if [ $? -ne 0 ]; then
 	cleanup_and_exit 99
     else
