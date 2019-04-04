@@ -6,6 +6,6 @@ EXTRA_DIST =					\
 	nabcc.dis				\
 	README					\
 	semantics.sem				\
-	styles.cfg				\
+	config.cfg				\
 	whitespace.cti				\
 	xfail

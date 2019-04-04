@@ -121,4 +121,4 @@ SUBDIRS =		\
 
 EXTRA_DIST =			\
 	README			\
-	styles.cfg
+	config.cfg

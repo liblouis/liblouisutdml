@@ -56,22 +56,22 @@ run_test () {
     cd "$test_dir"
     local README=$(find-up README)
     local input=$(find-up input.xml)
-    local styles=$(find-up styles.cfg)
+    local config=$(find-up config.cfg)
     local expected=$(find-up expected.txt)
 
     # create an empty ini file if there isn't one. In that case we
     # assume that all the real configuration for this test in in the
-    # styles file
+    # config file
     if [ ! -f $ini_file ]; then
 	test_has_ini_file=0
 	touch $ini_file
     fi
 
-    if [[ $README == "" || $input == "" || $styles == "" || $expected == "" ]]; then
+    if [[ $README == "" || $input == "" || $config == "" || $expected == "" ]]; then
 	cleanup_and_exit 1
     fi
 
-    file2brl -w $tmp_dir -f $styles $input $tmp_dir/output.txt 2> /dev/null
+    file2brl -w $tmp_dir -f $config $input $tmp_dir/output.txt 2> /dev/null
     if [ $? -ne 0 ]; then
 	cleanup_and_exit 99
     else

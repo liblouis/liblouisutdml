@@ -8,5 +8,5 @@ EXTRA_DIST =					\
 	pagenum.cti				\
 	README					\
 	semantics.sem				\
-	styles.cfg				\
+	config.cfg				\
 	whitespace.cti
