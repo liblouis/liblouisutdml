@@ -498,7 +498,7 @@ wc_string_to_utf8 (const widechar * inStr, int *inSize, unsigned char *outstr,
 	    {
 	      *inSize = in;
 	      *outSize = out;
-              logMessage(LOU_LOG_DEBUG, "Finish wc_string_to_utf8 due to not enough memory in outstr");
+              logMessage(LOU_LOG_FATAL, "Not enough memory in outstr");
 	      return 1;
 	    }
 	}
