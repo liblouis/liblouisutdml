@@ -185,7 +185,6 @@ getLiblouisRule (TranslationTableOffset offset)
 int
 start_document ()
 {
-  logMessage(LOU_LOG_INFO, "Starting new document");
   ud->head_node = NULL;
   initializeTranscriber();
   if (ud->has_math)
@@ -473,9 +472,6 @@ wc_string_to_utf8 (const widechar * inStr, int *inSize, unsigned char *outstr,
   int numBytes;
   unsigned int utf32;
   int k;
-  logMessage(LOU_LOG_DEBUG, "Begin wc_string_to_utf8: inSize=%d, outSize=%d", *inSize, *outSize);
-  logWidecharBuf(LOU_LOG_DEBUG, "inStr=", inStr, *inSize);
-  logMessage(LOU_LOG_DEBUG, "inStr=%d, outstr=%d", inStr, outstr);
   while (in < *inSize)
     {
       utf32 = inStr[in++];
@@ -506,20 +502,16 @@ wc_string_to_utf8 (const widechar * inStr, int *inSize, unsigned char *outstr,
 	      return 1;
 	    }
 	}
-      logMessage(LOU_LOG_DEBUG, "Adding UTF8 character to output");
       for (k = 0; k < utf8Length; k++)
       {
-        logMessage(LOU_LOG_DEBUG, "out=%d, k=%d, utf8Str[%d]=%c", out, k, k, utf8Str[k]);
         outstr[out++] = utf8Str[k];
       }
-      logMessage(LOU_LOG_DEBUG, "Moving to next character");
     }
   // We normally want to null terminate the string but should not if it will not fit in allocated memory
   if (out < *outSize)
     outstr[out++] = 0;
   *inSize = in;
   *outSize = out;
-  logMessage(LOU_LOG_DEBUG, "Finish wc_string_to_utf8: outstr=%s, outSize=%d", outstr, *outSize);
   return 1;
 }
 
@@ -772,33 +764,28 @@ insert_translation (const char *table)
   int translationLength;
   int translatedLength;
   int k;
-  logMessage(LOU_LOG_DEBUG, "Begin insert_translation");
   if (style->translation_table != NULL)
     table = style->translation_table;
   if (table == NULL)
     {
       memset (ud->typeform, 0, sizeof (ud->typeform));
       ud->text_length = 0;
-      logMessage(LOU_LOG_DEBUG, "Finished insert_translation, table not defined");
       return 0;
     }
   if (ud->text_length == 0)
   {
-    logMessage(LOU_LOG_DEBUG, "Finished insert_translation, no text to translate");
     return 1;
   }
   for (k = 0; k < ud->text_length && ud->text_buffer[k] <= 32; k++);
   if (k == ud->text_length)
     {
       ud->text_length = 0;
-      logMessage(LOU_LOG_DEBUG, "Finished insert_translation, only whitespace");
       return 1;
     }
   if (styleSpec != NULL && styleSpec->status == resumeBody)
     styleSpec->status = bodyInterrupted;
   if (ud->format_for == utd)
   {
-    logMessage(LOU_LOG_DEBUG, "Finished insert_translation, delegating to utd_insert_translation");
     return (utd_insert_translation (table));
   }
   if (ud->translated_length > 0 && ud->translated_length <
@@ -853,11 +840,9 @@ insert_translation (const char *table)
       ud->translated_length = MAX_TRANS_LENGTH;
       if (!write_paragraph (para, NULL))
       {
-        logMessage(LOU_LOG_DEBUG, "Finished insert_translation, issue with write_paragraph");
 	return 0;
       }
     }
-  logMessage(LOU_LOG_DEBUG, "Finished insert_translation");
   return 1;
 }
 
@@ -1170,7 +1155,6 @@ insert_text (xmlNode * node)
   int length = strlen ((char *) node->content);
   int k;
   // int stripSpace = 0;
-  logMessage(LOU_LOG_DEBUG, "Begin insert_text: node->content=%s", node->content);
   // for (k = length; k > 0 && node->content[k - 1] <= 32; k--);
     // We want to track if the node only contains space 0x20 characters
     // if (node->content[k - 1] != 32)
@@ -1186,7 +1170,6 @@ insert_text (xmlNode * node)
   if (ud->format_for == utd)
     {
       utd_insert_text (node, length);
-      logMessage(LOU_LOG_DEBUG, "Finished insert_text");
       return;
     }
   switch (ud->stack[ud->top])
@@ -1208,11 +1191,9 @@ insert_text (xmlNode * node)
 	}
       ud->translated_length += ud->text_length;
       ud->text_length = 0;
-      logMessage(LOU_LOG_DEBUG, "Finished insert_text, notranslate action used");
       return;
     case pagenum:
       handlePagenum (node->content, length);
-      logMessage(LOU_LOG_DEBUG, "Finished insert_text, pagenum action used");
       return;
     default:
       break;
@@ -1220,7 +1201,6 @@ insert_text (xmlNode * node)
   ud->old_text_length = ud->text_length;
   insert_utf8 (node->content);
   setEmphasis ();
-  logMessage(LOU_LOG_DEBUG, "Finished insert_text");
 }
 
 static int
@@ -3149,11 +3129,9 @@ int
 write_paragraph (sem_act action, xmlNode * node)
 {
   StyleType *holdStyle;
-  logMessage(LOU_LOG_DEBUG, "Begin write_paragraph");
   if (!((ud->text_length > 0 || ud->translated_length > 0) &&
 	ud->style_top >= 0))
   {
-    logMessage(LOU_LOG_DEBUG, "Finished write_paragraph, no text translated");
     return 1;
   }
   holdStyle = action_to_style (action);
@@ -3191,7 +3169,6 @@ write_paragraph (sem_act action, xmlNode * node)
   styleBody ();
   end_style ();
   ud->needs_editing = 0;
-  logMessage(LOU_LOG_DEBUG, "Finish write_paragraph");
   return 1;
 }
 
@@ -3220,7 +3197,6 @@ makeParagraph ()
   int charactersWritten = 0;
   int pieceStart;
   int k;
-  logMessage(LOU_LOG_DEBUG, "Begin makeParagraph");
   while (ud->text_length > 0 && ud->text_buffer[ud->text_length - 1] <=
 	 32 && ud->text_buffer[ud->text_length - 1] != escapeChar)
     ud->text_length--;
@@ -3240,7 +3216,6 @@ makeParagraph ()
       translationLength++;
     }
   translatedLength = MAX_TRANS_LENGTH;
-  logMessage(LOU_LOG_DEBUG, "About to perform back translation");
   if (!lou_backTranslateString (ud->main_braille_table,
 				ud->text_buffer, &translationLength,
 				&ud->translated_buffer[0],
@@ -3340,7 +3315,6 @@ makeParagraph ()
     return 0;
   writeOutbuf ();
   ud->text_length = 0;
-  logMessage(LOU_LOG_DEBUG, "Finish makeParagraph");
   return 1;
 }
 
@@ -3415,7 +3389,6 @@ back_translate_braille_string ()
   int newPage = 0;
   char *htmlStart = "<html><head><title>No Title</title></head><body>";
   char *htmlEnd = "</body></html>";
-  logMessage(LOU_LOG_DEBUG, "Begin back_translate_braille_string");
   if (ud->format_for == utd)
     return utd_back_translate_braille_string ();
   if (!start_document ())
@@ -3486,7 +3459,6 @@ back_translate_braille_string ()
       writeOutbuf ();
       ud->output_encoding = ascii8;
     }
-  logMessage(LOU_LOG_DEBUG, "Finish back_translate_braille_string");
   return 1;
 }
 
@@ -3646,14 +3618,11 @@ addBoxline(const char *boxChar, int beforeAfter)
   widechar dots;
   if (ud->format_for == utd)
     return utd_addBoxline(boxChar, beforeAfter);
-  logMessage(LOU_LOG_DEBUG, "Begin addBoxline");
-  logMessage(LOU_LOG_DEBUG, "styleSpec->node->name=%s", styleSpec->node->name);
   while (availableCells != ud->cells_per_line)
   {
     finishLine();
     availableCells = startLine();
   }
-  logMessage(LOU_LOG_DEBUG, "availableCells=%d", availableCells);
   if (!lou_charToDots(ud->main_braille_table, &wTmpBuf, &dots, 1, 0))
     return 0;
   for (k = 0; k < availableCells; k++)
@@ -3663,7 +3632,6 @@ addBoxline(const char *boxChar, int beforeAfter)
   ud->outbuf1_len_so_far += availableCells;
   cellsWritten += availableCells;
   finishLine();
-  logMessage(LOU_LOG_DEBUG, "Finished addBoxline");
   return 1;
 }
 
@@ -3679,7 +3647,6 @@ utd_addBoxline(const char *boxChar, int beforeAfter)
   // Make sure that styleSpec relates to a node
   if (styleSpec->node == NULL)
     return 0;
-  logMessage(LOU_LOG_DEBUG, "Begin utd_addBoxline");
   // We should catch the current brlNode so we can restore afterwards
   tmpBrlNode = brlNode;
   // Create the brl node for the boxline
@@ -3716,7 +3683,6 @@ utd_addBoxline(const char *boxChar, int beforeAfter)
   utd_finishLine(0, 0);
   // Restore original brlNode
   brlNode = tmpBrlNode;
-  logMessage(LOU_LOG_DEBUG, "Finish utd_addBoxline");
   return 1;
 }
 
@@ -3787,7 +3753,6 @@ do_linespacing (xmlNode * node)
 int
 start_style (StyleType * curStyle, xmlNode * node)
 {
-  logMessage(LOU_LOG_DEBUG, "Begin start_style");
   if (curStyle == NULL)
     curStyle = lookup_style ("para");
   if (prevStyle == NULL)
@@ -3837,14 +3802,12 @@ start_style (StyleType * curStyle, xmlNode * node)
     return 1;
   startStyle ();
   styleSpec->status = startBody;
-  logMessage(LOU_LOG_DEBUG, "Finish start_style");
   return 1;
 }
 
 int
 end_style ()
 {
-  logMessage(LOU_LOG_DEBUG, "Begin end_style");
   styleSpec = &ud->style_stack[ud->style_top];
   style = styleSpec->style;
   ud->brl_page_num_format = styleSpec->curBrlNumFormat;
@@ -3874,7 +3837,6 @@ end_style ()
   ud->style_right_margin = styleSpec->curRightMargin;
   ud->style_first_line_indent = styleSpec->curFirstLineIndent;
   ud->needs_editing = 0;
-  logMessage(LOU_LOG_DEBUG, "Finish end_style");
   return 1;
 }
 
@@ -4163,7 +4125,6 @@ backTranslateBlock (xmlNode * curBlock, xmlNode * curBrl)
   int goodTrans;
   int pos;
   int k, kk;
-  logMessage(LOU_LOG_DEBUG, "Begin backTranslateBlock");
   if (curBlock == NULL || curBrl == NULL)
     return 1;
   ud->text_length = 0;
@@ -4225,7 +4186,6 @@ backTranslateBlock (xmlNode * curBlock, xmlNode * curBrl)
       utilStringBuf[--kk] = 0;
       xmlNewProp (addBrl, (xmlChar *) "index", (xmlChar *) utilStringBuf);
     }
-  logMessage(LOU_LOG_DEBUG, "Finish backTranslateBlock");
   return 1;
 }
 
@@ -4235,7 +4195,6 @@ makeDotsTextNode (xmlNode * node, const widechar * content, int length,
 {
   xmlNode *textNode;
   int inlen, outlen;
-  logMessage(LOU_LOG_DEBUG, "Begin makeDotsTextNode");
   if (length <= 0)
     return 1;
   if (ud->mode & notUC)
@@ -4272,10 +4231,8 @@ makeDotsTextNode (xmlNode * node, const widechar * content, int length,
     }
   outlen = maxContent;
   wc_string_to_utf8 (ud->text_buffer, &inlen, brlContent, &outlen);
-  logMessage(LOU_LOG_DEBUG, "brlContent=%s", brlContent);
   textNode = xmlNewText (brlContent);
   xmlAddChild (node, textNode);
-  logMessage(LOU_LOG_DEBUG, "Finished makeDotsTextNode");
   return 1;
 }
 
@@ -4287,7 +4244,6 @@ formatBackBlock ()
   xmlNode *newBlock;
   xmlNode *curBrl;
   int k;
-  logMessage(LOU_LOG_DEBUG, "Begin formatBackBlock");
   if (ud->translated_length <= 0)
     return 1;
   newBlock = xmlNewNode (NULL, (xmlChar *) "p");
@@ -4296,7 +4252,6 @@ formatBackBlock ()
   ud->translated_length = ud->sync_text_length = 0;
   ud->in_sync = 1;
   backTranslateBlock (xmlAddChild (addBlock, newBlock), curBrl);
-  logMessage(LOU_LOG_DEBUG, "Finish formatBackBlock");
   return 1;
 }
 
@@ -4358,7 +4313,6 @@ utd_back_translate_braille_string ()
   int pch = 0;
   int leadingBlanks = 0;
   int k;
-  logMessage(LOU_LOG_DEBUG, "Begin utd_back_trranslate_braille_string");
   ud->main_braille_table = ud->contracted_table_name;
   if (!lou_getTable (ud->main_braille_table))
     return 0;
@@ -4398,7 +4352,6 @@ utd_back_translate_braille_string ()
   ud->in_sync = ud->hyphenate;
   utd_finish ();
   freeDaisyDoc ();
-  logMessage(LOU_LOG_DEBUG, "Finish utd_back_translate_braille_string");
   return 1;
 }
 
@@ -4448,7 +4401,6 @@ checkTextFragment (widechar * text, int length)
 static int
 insertTextFragment (widechar * content, int length)
 {
-  logMessage(LOU_LOG_DEBUG, "Begin insertTextFragment");
   if (length <= 0)
     return 1;
   checkTextFragment (content, length);
@@ -4469,30 +4421,24 @@ static PageStatus
 checkPageStatus ()
 {
   int remaining;
-  logMessage(LOU_LOG_DEBUG, "Begin checkPageStatus");
   if (ud->vert_line_pos == ud->page_top || ud->lines_on_page == 0)
   {
-    logMessage(LOU_LOG_DEBUG, "Finish checkPageStatus: return=topOfPage");
     return topOfPage;
   }
   remaining = ud->page_bottom - ud->vert_line_pos;
   if (remaining < ud->normal_line || ud->lines_on_page >= ud->lines_per_page)
   {
-    logMessage(LOU_LOG_DEBUG, "Finish checkPageStatus: return=bottomOfPage");
     return bottomOfPage;
   }
   if ((ud->lines_on_page + 1) >= ud->lines_per_page || remaining ==
       ud->normal_line)
   {
-    logMessage(LOU_LOG_DEBUG, "Finish checkPageStatus: return=lastLine");
     return lastLine;
   }
   if (remaining > (2 * ud->normal_line) && remaining < (3 * ud->normal_line))
   {
-    logMessage(LOU_LOG_DEBUG, "Finish checkPageStatus: return=nearBottom");
     return nearBottom;
   }
-  logMessage(LOU_LOG_DEBUG, "Finish checkPageStatus: return=midPage");
   return midPage;
 }
 
@@ -4856,12 +4802,10 @@ makeNewpage (xmlNode * parent)
 {
   char number[MAXNUMLEN];
   xmlNode *newNode = xmlNewNode (NULL, (xmlChar *) "newpage");
-  logMessage(LOU_LOG_DEBUG, "Begin makeNewpage");
   sprintf (number, "%d", ud->braille_page_number);
   xmlNewProp (newNode, (xmlChar *) "brlnumber", (xmlChar *) number);
   newpageNode = xmlAddChild (parent, newNode);
   ud->lines_on_page = 0;
-  logMessage(LOU_LOG_DEBUG, "Finish makeNewpage");
   return 1;
 }
 
@@ -4889,7 +4833,6 @@ assignIndices (xmlNode * startNode, int startPos)
   int firstIndex;
   int curPos = startPos;
   xmlNode *curBrlNode;
-  logMessage(LOU_LOG_DEBUG, "Begin assignIndices");
   if (indices == NULL)
     return 1;
   if (startNode == NULL)
@@ -4916,9 +4859,7 @@ assignIndices (xmlNode * startNode, int startPos)
 	      kk += posLen;
 	      indexPos++;
 	    }
-          logMessage(LOU_LOG_DEBUG, "indexPos=%d", indexPos);
 	  utilStringBuf[--kk] = 0;
-          logMessage(LOU_LOG_DEBUG, "utilStringBuf=%s", utilStringBuf);
 	  if (xmlGetProp (curBrlNode, (xmlChar *) "index") == NULL && indexPos > 0)
 	    xmlNewProp (curBrlNode, (xmlChar *) "index", (xmlChar *)
 			utilStringBuf);
@@ -4928,7 +4869,6 @@ assignIndices (xmlNode * startNode, int startPos)
 	}
       nextSegment = curPos + 1;
     }
-  logMessage(LOU_LOG_DEBUG, "Finish assignIndices");
   return 1;
 }
 
@@ -4940,7 +4880,6 @@ utd_insert_translation (const char *table)
   int oldUdTranslatedLength = ud->translated_length;
   int k;
   int *setIndices;
-  logMessage(LOU_LOG_DEBUG, "Begin utd_insert_translation");
   if (table != currentTable)
     {
       for (k = strlen (table); k >= 0; k--)
@@ -4979,7 +4918,6 @@ utd_insert_translation (const char *table)
   else
     ud->translated_length = MAX_TRANS_LENGTH;
   assignIndices (startNode, oldUdTranslatedLength);
-  logMessage(LOU_LOG_DEBUG, "Finish utd_insert_translation");
   return 1;
 }
 
@@ -5103,7 +5041,6 @@ utd_startLine ()
 {
   PageStatus curPageStatus;
   int availableCells = 0;
-  logMessage(LOU_LOG_DEBUG, "Begin utd_startLine");
   if (firstPage)
     {
       firstPage = 0;
@@ -5144,7 +5081,6 @@ utd_startLine ()
       else
 	availableCells = ud->cells_per_line;
     }
-  logMessage(LOU_LOG_DEBUG, "Finished utd_startLine");
   return availableCells;
 }
 
@@ -5159,7 +5095,6 @@ utd_finishLine (int leadingBlanks, int length)
   int horizLinePos = ud->page_left + leadingBlanks * ud->cell_width;
   if (newlineNode == NULL)
     return 1;
-  logMessage(LOU_LOG_DEBUG, "Begin utd_finishLine");
   cellsOnLine = leadingBlanks + length;
   for (leaveBlank = -1; leaveBlank < ud->line_spacing; leaveBlank++)
     {
@@ -5230,7 +5165,6 @@ utd_finishLine (int leadingBlanks, int length)
       ud->vert_line_pos = ud->page_top;
       makeNewpage (brlNode);
     }
-  logMessage(LOU_LOG_DEBUG, "Finish utd_finishLine");
   return 1;
 }
 
@@ -5246,10 +5180,8 @@ utd_doOrdinaryText ()
   int charactersWritten = 0;
   int newLineNeeded = 1;
   brlNode = firstBrlNode;
-  logMessage(LOU_LOG_DEBUG, "Begin utd_doOrdinaryText");
   while (brlNode)
     {
-      logMessage(LOU_LOG_DEBUG, "Finding brlNode content");
       do
 	{
 	  if (newLineNeeded)
@@ -5314,7 +5246,6 @@ utd_doOrdinaryText ()
       prevBrlNode->_private = NULL;
     }
   brlNode = prevBrlNode;	/*for utd_finishStyle */
-  logMessage(LOU_LOG_DEBUG, "Finish utd_doOrdinaryText");
   return 1;
 }
 static int
@@ -5344,7 +5275,6 @@ static int
 utd_fillPage ()
 {
   PageStatus curPageStatus = checkPageStatus ();
-  logMessage(LOU_LOG_DEBUG, "Begin utd_fillPage");
   if (curPageStatus == topOfPage)
     {
       utd_startLine ();
@@ -5353,7 +5283,6 @@ utd_fillPage ()
   ud->vert_line_pos = ud->page_bottom - ud->normal_line;
   utd_startLine ();
   utd_finishLine (0, 0);
-  logMessage(LOU_LOG_DEBUG, "Finish utd_fillPage");
   return 1;
 }
 
@@ -5364,7 +5293,6 @@ utd_doComputerCode ()
   int cellsToWrite = 0;
   int availableCells = 0;
   int k;
-  logMessage(LOU_LOG_DEBUG, "Begin utd_doComputerCode");
   while (translatedBuffer[charactersWritten] == CR)
     charactersWritten++;
   while (charactersWritten < translatedLength)
@@ -5419,7 +5347,6 @@ utd_doAlignColumns ()
   int k;
   unsigned int ch;
   int rowEnd = 0;
-  logMessage(LOU_LOG_DEBUG, "Begin utd_doAlignColumns");
   for (bufPos = 0; bufPos < translatedLength; bufPos++)
     if (translatedBuffer[bufPos] == ESCAPE)
       break;
@@ -5581,7 +5508,6 @@ utd_doAlignColumns ()
 	  utd_finishLine (0, cellsToWrite);
 	}
     }
-  logMessage(LOU_LOG_DEBUG, "Finish utd_doAlignColumns");
   return 1;
 }
 
@@ -5654,7 +5580,6 @@ static int
 utd_styleBody ()
 {
   sem_act action;
-  logMessage(LOU_LOG_DEBUG, "Begin utd_styleBody");
   if (!utd_editTrans ())
     return 0;
   if (!ud->paragraphs)
@@ -5709,7 +5634,6 @@ utd_styleBody ()
   ud->sync_text_length = 0;
   ud->in_sync = ud->hyphenate;
   firstBrlNode = NULL;
-  logMessage(LOU_LOG_DEBUG, "Finish utd_styleBody");
   return 1;
 }
 
@@ -5717,7 +5641,6 @@ static int
 utd_finishStyle ()
 {
   PageStatus curPageStatus = checkPageStatus ();
-  logMessage(LOU_LOG_DEBUG, "Begin utd_finishStyle");
   if (style->bottomBoxline[0])
   {
     utd_addBoxline(style->bottomBoxline, 1);
@@ -5737,7 +5660,6 @@ utd_finishStyle ()
 	}
     }
   brlNode = firstBrlNode = NULL;
-  logMessage(LOU_LOG_DEBUG, "Finish utd_finishStyle");
   return 1;
 }
 
@@ -5818,7 +5740,6 @@ static int
 utd_finish ()
 {
   xmlNode *newNode;
-  logMessage(LOU_LOG_DEBUG, "Begin utd_finish");
   if (ud->paragraphs)
     {
       newNode = xmlNewNode (NULL, (xmlChar *) "brl");
@@ -5853,6 +5774,5 @@ bottomMargin=%d", ud->braille_page_number, firstTableName, (int) ud->dpi, ud->pa
     convert_utd ();
   else
     output_xml (ud->doc);
-  logMessage(LOU_LOG_DEBUG, "Finish utd_finish");
   return 1;
 }

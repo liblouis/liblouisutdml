@@ -83,7 +83,6 @@ brf_findBrlNodes (xmlNode * node)
     case utdmeta:
       return 1;
     case utdbrl:
-      logMessage(LOU_LOG_DEBUG, "Processing brl node");
       brf_doBrlNode (node, 0);
       pop_sem_stack ();
       return 1;
@@ -125,18 +124,14 @@ brf_insertCharacters (const char *text, int length)
 static int
 brf_doDotsText (xmlNode * node)
 {
-  logMessage(LOU_LOG_DEBUG, "brf_doDotsText %s", node->content);
   ud->text_length = 0;
   insert_utf8 (node->content);
   if ((ud->outbuf1_len_so_far + ud->text_length) > ud->outbuf1_len)
     brf_saveBuffer ();
-  logMessage(LOU_LOG_DEBUG, "text_buffer: %s", ud->text_buffer);
   if (!lou_dotsToChar (ud->main_braille_table, ud->text_buffer,
 		       &ud->outbuf1[ud->outbuf1_len_so_far],
 		       ud->text_length, 0))
     return 0;
-  logMessage(LOU_LOG_DEBUG, "ud->textLength %d", ud->text_length);
-  logMessage(LOU_LOG_DEBUG, "ud->outbuf1: %s", &ud->outbuf1[ud->outbuf1_len_so_far+1]);
   ud->outbuf1_len_so_far += ud->text_length;
   return 1;
 }

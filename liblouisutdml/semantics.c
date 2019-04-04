@@ -870,7 +870,6 @@ sem_compileFile (const char *fileName)
   lbu_FileInfo nested;
   char completePath[MAXNAMELEN];
   int haveAppended = 0;
-  logMessage(LOU_LOG_INFO, "Begin sem_compileFile: fileName=%s", fileName);
   if (!*fileName)
     return 1;			/*Probably run with defaults */
   if (strncmp (fileName, "appended_", 9) == 0)
@@ -892,7 +891,6 @@ sem_compileFile (const char *fileName)
   memset (&nested, 0, sizeof (nested));
   nested.fileName = fileName;
   nested.unedited = 1;
-  logMessage(LOU_LOG_INFO, "Loading semantic action file: %s", completePath);
   if ((nested.in = fopen ((char *) completePath, "rb")))
     {
       while (getALine (&nested))
@@ -912,7 +910,6 @@ sem_compileFile (const char *fileName)
       return 0;
     }
   numEntries += nested.numEntries;
-  logMessage(LOU_LOG_INFO, "Finish sem_compileFile");
   return 1;
 }
 
@@ -1082,7 +1079,6 @@ printXpathNodes (xmlNodeSetPtr nodes)
   int size;
   int i;
   size = (nodes) ? nodes->nodeNr : 0;
-  logMessage (LOU_LOG_INFO, "Result (%d nodes):", size);
   for (i = 0; i < size; ++i)
     {
       if (nodes->nodeTab[i]->type == XML_NAMESPACE_DECL)
@@ -1231,12 +1227,10 @@ get_sem_attr (xmlNode * node)
   HashEntry *nodeEntry = (HashEntry *) node->_private;
   if (nodeEntry != NULL)
   {
-    logMessage(LOU_LOG_DEBUG, "Node %s has nodeEntry", (const char *)node->name);
     return nodeEntry->semNum;
   }
   else
   {
-    logMessage(LOU_LOG_DEBUG, "Node %s has no nodeEntry", (const char *)node->name);
     return no;
   }
 }

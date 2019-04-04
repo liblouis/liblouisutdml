@@ -264,7 +264,6 @@ int finish_endnote(xmlNode* node)
 	}
 	else if(endnotePtr != NULL && endnotePtr->has_endnote_pos!=0)
 	{
-		logMessage(LOU_LOG_DEBUG,"finish_endnote:Endnote with id %s already exists",get_attr_value(node));
 		return 0;
 	}
 	else found_endnote=1;
@@ -442,7 +441,6 @@ int link_endnote(xmlNode* node)
 	}
 	else
 	{
-		logMessage(LOU_LOG_DEBUG,"link_endnote:Endnote with id %s already exists",get_attr_value(node));
 		return 0;
 	}
 	
