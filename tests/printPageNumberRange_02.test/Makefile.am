@@ -8,5 +8,4 @@ EXTRA_DIST =					\
 	README					\
 	semantics.sem				\
 	config.cfg				\
-	whitespace.cti				\
-	xfail
+	whitespace.cti
