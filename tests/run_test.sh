@@ -25,9 +25,12 @@
     tmp_dir=`(umask 077 && mktemp -d "$TMPDIR/fooXXXXXX") 2>/dev/null` && test -d "$tmp_dir"
 } || exit $?
 
+ini_file=liblouisutdml.ini
+test_has_ini_file=1
+
 find-up () {
-    current=$(pwd)
-    path=$current
+    local current=$(pwd)
+    local path=$current
     while [[ "$path" != "/" && ! -e "$path/$1" ]]; do
 	path=$(dirname -- "$path")
     done
@@ -39,21 +42,38 @@ find-up () {
     fi
 }
 
+cleanup_and_exit () {
+    local status=$1
+    rm -rf $tmp_dir
+    if [[ $test_has_ini_file == 0 ]]; then
+	rm $ini_file
+    fi
+    exit $status
+}
+
 run_test () {
-    test_dir=$1
+    local test_dir=$1
     cd "$test_dir"
-    README=$(find-up README)
-    input=$(find-up input.xml)
-    styles=$(find-up styles.cfg)
-    expected=$(find-up expected.txt)
+    local README=$(find-up README)
+    local input=$(find-up input.xml)
+    local styles=$(find-up styles.cfg)
+    local expected=$(find-up expected.txt)
+
+    # create an empty ini file if there isn't one. In that case we
+    # assume that all the real configuration for this test in in the
+    # styles file
+    if [ ! -f $ini_file ]; then
+	test_has_ini_file=0
+	touch $ini_file
+    fi
 
     if [[ $README == "" || $input == "" || $styles == "" || $expected == "" ]]; then
-	exit 1
+	cleanup_and_exit 1
     fi
 
     file2brl -w $tmp_dir -f $styles $input $tmp_dir/output.txt 2> /dev/null
     if [ $? -ne 0 ]; then
-	exit 99
+	cleanup_and_exit 99
     else
 	diff -q $expected $tmp_dir/output.txt >/dev/null
 	if [ $? -ne 0 ]; then
@@ -62,14 +82,13 @@ run_test () {
 		echo "Diff: " >&2
 		diff -u $expected $tmp_dir/output.txt
 	    fi
-	    exit 1
+	    cleanup_and_exit 1
 	else
-	    rm $tmp_dir/output.txt
-	    exit 0
+	    cleanup_and_exit 0
 	fi
     fi
-    rm -f file2brl.temp
-    rm -rf $tmp
+    # shouldn't really reach this code
+    cleanup_and_exit 1
 }
 
 run_test $1
