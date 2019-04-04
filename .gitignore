@@ -76,8 +76,8 @@ m4/lt~obsolete.m4
 tests/run_test_suite.sh
 tests/testTranslateString
 tests/tripleTrans
-tests/*.log
-tests/*.trs
+tests/**/*.log
+tests/**/*.trs
 tests/**/output.txt
 tests/**/error.log
 
