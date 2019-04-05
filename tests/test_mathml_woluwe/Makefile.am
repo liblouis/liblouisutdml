@@ -119,6 +119,7 @@ SUBDIRS =		\
 	test_118.test	\
 	test_119.test
 
-EXTRA_DIST =			\
-	README			\
-	config.cfg
+EXTRA_DIST =					\
+	README					\
+	config.cfg				\
+	liblouisutdml.ini

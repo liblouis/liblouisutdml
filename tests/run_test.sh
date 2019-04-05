@@ -25,9 +25,6 @@
     tmp_dir=`(umask 077 && mktemp -d "$TMPDIR/fooXXXXXX") 2>/dev/null` && test -d "$tmp_dir"
 } || exit $?
 
-ini_file=liblouisutdml.ini
-test_has_ini_file=1
-
 find-up () {
     local current=$(pwd)
     local path=$current
@@ -44,10 +41,11 @@ find-up () {
 
 cleanup_and_exit () {
     local status=$1
-    rm -rf $tmp_dir
-    if [[ $test_has_ini_file == 0 ]]; then
-	rm $ini_file
+    local message=$2
+    if [[ $message != "" ]]; then
+	>&2 echo "$message"
     fi
+    rm -rf $tmp_dir
     exit $status
 }
 
@@ -58,17 +56,14 @@ run_test () {
     local input=$(find-up input.xml)
     local config=$(find-up config.cfg)
     local expected=$(find-up expected.txt)
+    local ini_file=$(find-up liblouisutdml.ini)
 
-    # create an empty ini file if there isn't one. In that case we
-    # assume that all the real configuration for this test in in the
-    # config file
-    if [ ! -f $ini_file ]; then
-	test_has_ini_file=0
-	touch $ini_file
+    if [[ $README == "" || $input == "" || $config == "" || $expected == "" || $ini_file == "" ]]; then
+	cleanup_and_exit 1 "Couldn't find README, input.xml, config.cfg, expected.txt or liblouisutdml.ini"
     fi
 
-    if [[ $README == "" || $input == "" || $config == "" || $expected == "" ]]; then
-	cleanup_and_exit 1
+    if [[ $(dirname $config) != $(dirname $ini_file) ]]; then
+	cleanup_and_exit 2 "$config and $ini_file need to be in the same directory for the test to work."
     fi
 
     # the config file contains paths which are relative to that file,
@@ -77,7 +72,7 @@ run_test () {
     (cd $(dirname $config);
      file2brl -w $tmp_dir -f $config $input $tmp_dir/output.txt 2> /dev/null)
     if [ $? -ne 0 ]; then
-	cleanup_and_exit 99
+	cleanup_and_exit 99 "Invocation of file2brl failed with error code $?"
     else
 	diff -q $expected $tmp_dir/output.txt >/dev/null
 	if [ $? -ne 0 ]; then
