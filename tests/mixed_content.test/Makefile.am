@@ -6,5 +6,5 @@ EXTRA_DIST =					\
 	nabcc.dis				\
 	README					\
 	semantics.sem				\
-	config.cfg				\
+	styles.cfg				\
 	whitespace.cti

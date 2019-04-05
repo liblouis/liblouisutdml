@@ -54,23 +54,23 @@ run_test () {
     cd "$test_dir"
     local README=$(find-up README)
     local input=$(find-up input.xml)
-    local config=$(find-up config.cfg)
+    local styles=$(find-up styles.cfg)
     local expected=$(find-up expected.txt)
     local ini_file=$(find-up liblouisutdml.ini)
 
-    if [[ $README == "" || $input == "" || $config == "" || $expected == "" || $ini_file == "" ]]; then
-	cleanup_and_exit 1 "Couldn't find README, input.xml, config.cfg, expected.txt or liblouisutdml.ini"
+    if [[ $README == "" || $input == "" || $styles == "" || $expected == "" || $ini_file == "" ]]; then
+	cleanup_and_exit 1 "Couldn't find README, input.xml, styles.cfg, expected.txt or liblouisutdml.ini"
     fi
 
-    if [[ $(dirname $config) != $(dirname $ini_file) ]]; then
-	cleanup_and_exit 2 "$config and $ini_file need to be in the same directory for the test to work."
+    if [[ $(dirname $styles) != $(dirname $ini_file) ]]; then
+	cleanup_and_exit 2 "$styles and $ini_file need to be in the same directory for the test to work."
     fi
 
-    # the config file contains paths which are relative to that file,
-    # so we need to start file2brl from there to make the relative
-    # paths work
-    (cd $(dirname $config);
-     file2brl -w $tmp_dir -f $config $input $tmp_dir/output.txt 2> /dev/null)
+    # the liblouisutdml.ini file contains paths which are relative to
+    # that file, so we need to start file2brl from there to make the
+    # relative paths work
+    (cd $(dirname $ini_file);
+     file2brl -w $tmp_dir -f $styles $input $tmp_dir/output.txt 2> /dev/null)
     if [ $? -ne 0 ]; then
 	cleanup_and_exit 99 "Invocation of file2brl failed with error code $?"
     else

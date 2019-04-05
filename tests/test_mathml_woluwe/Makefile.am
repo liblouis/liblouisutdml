@@ -121,5 +121,5 @@ SUBDIRS =		\
 
 EXTRA_DIST =					\
 	README					\
-	config.cfg				\
+	styles.cfg				\
 	liblouisutdml.ini
