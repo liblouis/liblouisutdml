@@ -231,6 +231,5 @@ TEST_LOG_COMPILER = $(top_srcdir)/tests/$(TEST_LOG_COMPILER_SCRIPT)
 EXTRA_DIST = README $(TEST_LOG_COMPILER_SCRIPT)
 
 TESTS_ENVIRONMENT =									\
-	TESTS_DIR=$(top_srcdir)								\
 	LD_LIBRARY_PATH=$(abs_top_builddir)/liblouisutdml/.libs:$$LD_LIBRARY_PATH	\
 	PATH=$(abs_top_builddir)/tools:$$PATH
