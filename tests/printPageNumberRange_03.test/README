@@ -1,0 +1,1 @@
+Testing printPageNumberRange when a page break in print happens right before a page break in braille (fails when printPageNumberAt=bottom)

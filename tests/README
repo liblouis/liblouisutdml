@@ -1,0 +1,19 @@
+This is a test suite for liblouisutdml. Every test is a subdirectory
+and is completely self-contained, meaning all configuration files and
+tables are in that directory. That's important if you want to have
+good understanding of what the test does. You want to test isolated
+features and limit the influences of unknown variables. Each
+subdirectory contains at least the following files:
+
+- input.xml
+- expected.txt
+
+- liblouisutdml.ini: The configuration. Should define a semantic
+  actions file. The liblouis tables specified in this file should
+  ideally point to files in the same directory to ensure the test is
+  completely self-contained.
+- styles.cfg: The style definitions.
+- README: Info about the test that will be printed when in verbose mode.
+
+For testing UTDML you'll need a more sophisticated way of comparing
+the results. Right now as simple diff is made.
