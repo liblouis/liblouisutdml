@@ -70,7 +70,7 @@ run_test () {
     # that file, so we need to start file2brl from there to make the
     # relative paths work
     (cd $(dirname $ini_file);
-     file2brl -w $tmp_dir -f $styles $input $tmp_dir/output.txt 2> /dev/null)
+     file2brl -w $tmp_dir -f $styles $input $tmp_dir/output.txt)
     if [ $? -ne 0 ]; then
 	cleanup_and_exit 99 "Invocation of file2brl failed with error code $?"
     else
