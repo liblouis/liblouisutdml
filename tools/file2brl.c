@@ -115,8 +115,8 @@ main (int argc, char **argv)
   UserData *ud;
 
   int optc;
-  lbu_setLogLevel(LOU_LOG_DEBUG);
-  lou_setLogLevel(LOU_LOG_DEBUG);
+  lbu_setLogLevel(LOU_LOG_WARN);
+  lou_setLogLevel(LOU_LOG_WARN);
   set_program_name (argv[0]);
   logFileName[0] = 0;
   
