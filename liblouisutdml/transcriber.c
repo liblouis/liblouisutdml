@@ -2004,7 +2004,7 @@ hyphenatex (int lastBlank, int lineEnd, int *breakAt, int *insertHyphen)
 
 #define MIN_SYLLABLE_LENGTH 2
 #define MIN_WORD_LENGTH 5
-#define MIN_NEXT_LINE 2
+#define MIN_NEXT_LINE 12
 
   int k;
   char hyphens[MAXNAMELEN];
