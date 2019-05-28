@@ -36,7 +36,6 @@
 #include <stdarg.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <internal.h>
 #include "louisutdml.h"
 #include "sem_names.h"
 #include <ctype.h>
