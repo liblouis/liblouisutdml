@@ -42,7 +42,7 @@ examine_document (xmlNode * node)
 {
 /*Examine the parse tree, add semantic attributes and set indicators.*/
   xmlNode *child;
-  logMessage(LOU_LOG_INFO, "Begin examine_document: node->name=%s", node->name);
+  logMessage(LOU_LOG_DEBUG, "Begin examine_document: node->name=%s", node->name);
   if (node == NULL)
     return 0;
   ud->stack[++ud->top] = set_sem_attr (node);
@@ -114,7 +114,7 @@ static void
 examText (xmlNode * node)
 /*We may want to examine text content in the future*/
 {
-  logMessage(LOU_LOG_INFO, "Begin examText: node->content=%s", node->content);
+  logMessage(LOU_LOG_DEBUG, "Begin examText: node->content=%s", node->content);
   switch (ud->stack[ud->top])
     {
     case pagenum:
@@ -127,7 +127,7 @@ examText (xmlNode * node)
 static void
 examCdataa (xmlNode * node)
 {
-  logMessage(LOU_LOG_INFO, "Begin examCdata");
+  logMessage(LOU_LOG_DEBUG, "Begin examCdata");
   ud->has_cdata = 1;
 }
 
