@@ -128,6 +128,7 @@ AC_CONFIG_FILES([Makefile
 	tests/footer_01.test/Makefile
 	tests/footer_02.test/Makefile
 	tests/hyphenation.test/Makefile
+	tests/minSyllableWidth.test/Makefile
 	tests/mixed_content.test/Makefile
 	tests/orphanControl_01.test/Makefile
 	tests/orphanControl_02.test/Makefile

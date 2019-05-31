@@ -54,6 +54,7 @@ dist_suite_TESTS =				\
 	hyphenation.test			\
 	firstLineIndent.test			\
 	page_numbering.test			\
+	minSyllableWidth.test			\
 	mixed_content.test			\
 	printPageNumberRange_03.test		\
 	endNotes.test				\

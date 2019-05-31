@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doc>
+		<p>xxxxx foobar</p>
+
+		<p>xxxxxx foobar x x x x x x x</p>
+		<p>xxxxxxx foobar x x x x x x x</p>
+		<p>xxxxxxxx foobar x x x x x x x</p>
+		<p>xxxxxxx fooba x x x x x x x</p>
+		<p>xxxxxxxx oobar x x x x x x x</p>
+
+		<p>xxxxxx foo-bar x x x x x x x</p>
+		<p>xxxxxxx foo-bar x x x x x x x</p>
+		<p>xxxxxxxx foo-bar x x x x x x x</p>
+		<p>xxxxxxx foo-ba x x x x x x x</p>
+		<p>xxxxxxxx oo-bar x x x x x x x</p>
+</doc>
