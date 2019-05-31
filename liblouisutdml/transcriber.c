@@ -3825,9 +3825,9 @@ start_style (StyleType * curStyle, xmlNode * node)
   styleSpec->curLeftMargin = ud->style_left_margin;
   styleSpec->curRightMargin = ud->style_right_margin;
   styleSpec->curFirstLineIndent = ud->style_first_line_indent;
+  startStyle ();
   if (node && !node->children)
     return 1;
-  startStyle ();
   styleSpec->status = startBody;
   logMessage(LOU_LOG_DEBUG, "Finish start_style");
   return 1;
@@ -3850,9 +3850,9 @@ end_style ()
       if (style->runningHead)
 	set_runninghead_string (ud->translated_buffer, ud->translated_length);
       styleBody ();
-      if (!ud->after_contents)
-	finishStyle ();
     }
+  if (!ud->after_contents)
+      finishStyle ();
   memcpy (&prevStyleSpec, styleSpec, sizeof (prevStyleSpec));
   prevStyle = prevStyleSpec.style;
   ud->style_top--;
