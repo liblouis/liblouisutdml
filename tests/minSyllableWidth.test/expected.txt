@@ -1,0 +1,43 @@
+xxxxx foobar
+
+xxxxxx foo-
+bar x x x x
+x x x
+
+xxxxxxx foo-
+bar x x x x
+x x x
+
+xxxxxxxx
+foobar x x x
+x x x x
+
+xxxxxxx
+fooba x x x
+x x x x
+
+xxxxxxxx
+oobar x x x
+x x x x
+
+xxxxxx foo-
+bar x x x x
+x x x
+
+xxxxxxx foo-
+bar x x x x
+x x x
+
+xxxxxxxx
+foo-bar x x
+x x x x x
+
+xxxxxxx
+foo-ba x x x
+x x x x
+
+xxxxxxxx
+oo-bar x x x
+x x x x
+
+

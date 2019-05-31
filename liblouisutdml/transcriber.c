@@ -2176,8 +2176,8 @@ hyphenatex (int lastBlank, int lineEnd, int *breakAt, int *insertHyphen)
 			   hyphens, 1))
     return 0;
   
-  for (k = minimum(lineEnd - wordStart, wordLength - minSyllableLength) - 1;
-       k > minSyllableLength;
+  for (k = minimum(lineEnd - wordStart - 1, wordLength - minSyllableLength);
+       k >= minSyllableLength;
        k--)
     if (hyphens[k] == '1')
       {

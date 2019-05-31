@@ -1,0 +1,5 @@
+Testing minSyllableLength setting.
+
+Words can be hyphenated between "o" and "b", after a "-", or at a soft
+hyphen. Testing with different available space and different lengths
+before and after the break point.
