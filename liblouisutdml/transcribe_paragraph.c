@@ -343,12 +343,6 @@ transcribe_paragraph (xmlNode * node, int action)
     }
   else if ((style = is_style (node)) != NULL)
     {
-      if (node->children == NULL)
-	{
-	  if (action != 0)
-	    pop_sem_stack ();
-	  return 0;
-	}
       logMessage(LOU_LOG_DEBUG, "Node has style");
       start_style (style, node);
     }
