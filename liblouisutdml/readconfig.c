@@ -1312,7 +1312,7 @@ read_configuration_file (const char *configFileList, const char
   char subFile[MAXNAMELEN];
   int listLength;
   int currentListPos = 0;
-  logMessage(LOU_LOG_INFO, "Begin read_configuration_file");
+  logMessage(LOU_LOG_DEBUG, "Begin read_configuration_file");
   errorCount = 0;
   fatalErrorCount = 0;
   /*Process logFileName later, after writeablePath is set */
@@ -1473,6 +1473,6 @@ read_configuration_file (const char *configFileList, const char
       ud->back_text = textDevice;
       ud->back_line_length = 70;
     }
-  logMessage(LOU_LOG_INFO, "Finish read_configuration_file");
+  logMessage(LOU_LOG_DEBUG, "Finish read_configuration_file");
   return 1;
 }

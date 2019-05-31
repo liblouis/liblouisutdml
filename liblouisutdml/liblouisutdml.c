@@ -350,7 +350,7 @@ lbu_backTranslateString (const char *configFileList,
 			 *settingsString, unsigned int mode)
 {
   int k;
-  logMessage(LOU_LOG_INFO, "Begin lbu_backTranslateString: inbuf=%s", inbuf);
+  logMessage(LOU_LOG_DEBUG, "Begin lbu_backTranslateString: inbuf=%s", inbuf);
   if (!read_configuration_file
       (configFileList, logFileName, settingsString, mode))
     return 0;
@@ -374,7 +374,7 @@ lbu_backTranslateString (const char *configFileList,
       return 0;
     }
   *outlen = ud->outlen_so_far;
-  logMessage(LOU_LOG_INFO, "Finish lbu_backTranslateString");
+  logMessage(LOU_LOG_DEBUG, "Finish lbu_backTranslateString");
   lbu_logEnd ();
   return 1;
 }

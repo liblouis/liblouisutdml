@@ -870,7 +870,7 @@ sem_compileFile (const char *fileName)
   lbu_FileInfo nested;
   char completePath[MAXNAMELEN];
   int haveAppended = 0;
-  logMessage(LOU_LOG_INFO, "Begin sem_compileFile: fileName=%s", fileName);
+  logMessage(LOU_LOG_DEBUG, "Begin sem_compileFile: fileName=%s", fileName);
   if (!*fileName)
     return 1;			/*Probably run with defaults */
   if (strncmp (fileName, "appended_", 9) == 0)
@@ -912,7 +912,7 @@ sem_compileFile (const char *fileName)
       return 0;
     }
   numEntries += nested.numEntries;
-  logMessage(LOU_LOG_INFO, "Finish sem_compileFile");
+  logMessage(LOU_LOG_DEBUG, "Finish sem_compileFile");
   return 1;
 }
 
