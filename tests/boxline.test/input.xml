@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doc>
+		<box>first box</box>
+		<p>paragraph</p>
+		<box>second box</box>
+		<box>third box</box>
+</doc>

@@ -1,0 +1,3 @@
+root           &xpath(/*)
+p              &xpath(//p)
+box            &xpath(//box)

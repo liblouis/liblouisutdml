@@ -123,6 +123,7 @@ AC_CONFIG_FILES([Makefile
 	liblouisutdml/Makefile
 	liblouisutdml.pc
 	tests/Makefile
+	tests/boxline.test/Makefile
 	tests/firstLineIndent.test/Makefile
 	tests/footer_01.test/Makefile
 	tests/footer_02.test/Makefile

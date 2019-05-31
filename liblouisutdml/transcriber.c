@@ -3634,23 +3634,20 @@ addBoxline(const char *boxChar, int beforeAfter)
 {
   int k;
   int availableCells = 0;
-  widechar wTmpBuf = (widechar)boxChar[0];
-  widechar dots;
   if (ud->format_for == utd)
     return utd_addBoxline(boxChar, beforeAfter);
   logMessage(LOU_LOG_DEBUG, "Begin addBoxline");
   logMessage(LOU_LOG_DEBUG, "styleSpec->node->name=%s", styleSpec->node->name);
+  availableCells = startLine();
   while (availableCells != ud->cells_per_line)
   {
     finishLine();
     availableCells = startLine();
   }
   logMessage(LOU_LOG_DEBUG, "availableCells=%d", availableCells);
-  if (!lou_charToDots(ud->main_braille_table, &wTmpBuf, &dots, 1, 0))
-    return 0;
   for (k = 0; k < availableCells; k++)
   {
-    ud->outbuf1[k+ud->outbuf1_len_so_far] = dots;
+    ud->outbuf1[k+ud->outbuf1_len_so_far] = *boxChar;
   }
   ud->outbuf1_len_so_far += availableCells;
   cellsWritten += availableCells;

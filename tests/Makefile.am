@@ -42,6 +42,7 @@ XFAIL_TESTS =					\
 	testTranslateString
 
 dist_suite_TESTS =				\
+	boxline.test				\
 	pagenum.test				\
 	footer_01.test				\
 	footer_02.test				\
