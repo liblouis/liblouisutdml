@@ -1473,6 +1473,10 @@ read_configuration_file (const char *configFileList, const char
       ud->back_text = textDevice;
       ud->back_line_length = 70;
     }
+  ud->outbuf2_enabled = ud->braille_pages &&
+      ud->print_pages &&
+      ud->print_page_number_range &&
+      ud->print_page_number_at;
   logMessage(LOU_LOG_DEBUG, "Finish read_configuration_file");
   return 1;
 }

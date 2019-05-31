@@ -181,7 +181,6 @@ XFAIL_TESTS +=					\
 	pagenum.test				\
 	footer_01.test				\
 	footer_02.test				\
-	printPageNumberRange_02.test		\
 	orphanControl_02.test			\
 	firstLineIndent.test			\
 	mixed_content.test			\
