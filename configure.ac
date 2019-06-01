@@ -136,7 +136,7 @@ AC_CONFIG_FILES([Makefile
 	tests/printPageNumberRange_01.test/Makefile
 	tests/printPageNumberRange_02.test/Makefile
 	tests/printPageNumberRange_03.test/Makefile
-	tests/printPageNumberRange_04.test/Makefile
+	tests/endNotes.test/Makefile
 	tests/test_mathml_woluwe/Makefile
 	tests/test_mathml_woluwe/test_001.test/Makefile
 	tests/test_mathml_woluwe/test_002.test/Makefile

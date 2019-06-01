@@ -12,7 +12,7 @@ SUBDIRS =					\
 	printPageNumberRange_01.test		\
 	printPageNumberRange_02.test		\
 	printPageNumberRange_03.test		\
-	printPageNumberRange_04.test		\
+	endNotes.test				\
 	test_mathml_woluwe
 
 AM_CPPFLAGS =					\
@@ -55,7 +55,7 @@ dist_suite_TESTS =				\
 	page_numbering.test			\
 	mixed_content.test			\
 	printPageNumberRange_03.test		\
-	printPageNumberRange_04.test		\
+	endNotes.test				\
 	test_mathml_woluwe/test_001.test	\
 	test_mathml_woluwe/test_002.test	\
 	test_mathml_woluwe/test_003.test	\
