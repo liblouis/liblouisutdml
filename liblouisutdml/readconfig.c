@@ -852,8 +852,12 @@ compileConfig (lbu_FileInfo * nested)
 	    }
 	  break;
 	case 13:
-	  if ((k = checkValues (nested, hyphenationModes)) != NOTFOUND)
+	  if ((k = checkValues (nested, hyphenationModes)) != NOTFOUND) {
 	    ud->hyphenate = k;
+	    if (ud->hyphenate == 1)
+	      // "yes" -> combination of "yes" and "pre"
+	      ud->hyphenate += 2;
+	  }
 	  break;
 	case 14:
 	  if ((k = checkValues (nested, encodings)) != NOTFOUND)

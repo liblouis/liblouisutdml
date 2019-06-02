@@ -737,7 +737,7 @@ translate_possibly_prehyphenated (const char *table,
   static int tmp_indices_2[2 * BUFSIZE];
   int tmp_outlen;
   int k;
-  if (ud->hyphenate == 2)
+  if (ud->hyphenate & 2) // pre-hyphenated
     {
       remove_soft_hyphens (inbuf, *inlen, tmp_outbuf, &tmp_outlen,
 			   tmp_indices_1);
@@ -2084,7 +2084,7 @@ hyphenatex (int lastBlank, int lineEnd, int *breakAt, int *insertHyphen)
   if (ud->min_syllable_length > 0)
       minSyllableLength = ud->min_syllable_length;
   
-  if (ud->hyphenate != 1 && ud->hyphenate != 2)
+  if (!ud->hyphenate)
     return 0;
   
   // Don't break if not enough characters remain on next line
@@ -2123,7 +2123,7 @@ hyphenatex (int lastBlank, int lineEnd, int *breakAt, int *insertHyphen)
        k > minSyllableLength;
        k--)
     {
-      if (ud->in_sync && ud->hyphenate == 2)
+      if (ud->in_sync && ud->hyphenate & 2)
 	{
 	  if (textBuffer[positionsArray[wordStart + k] - 1] == ZWSP)
 	    {
@@ -2131,7 +2131,7 @@ hyphenatex (int lastBlank, int lineEnd, int *breakAt, int *insertHyphen)
 	      return 1;
 	    }
 	}
-      else
+      if (ud->hyphenate & 1)
 	{
 	  if(translatedBuffer[wordStart + k - 1] == *ud->lit_hyphen)
 	    {
@@ -2150,19 +2150,26 @@ hyphenatex (int lastBlank, int lineEnd, int *breakAt, int *insertHyphen)
   // Derive hyphen positions in translated buffer from those in text buffer
   if (ud->in_sync)
     {
+      for (k = 0; k < textWordLength; k++)
+	textHyphens[k] = '0';
       switch (ud->hyphenate)
 	{
+	case 2:
+	case 3: {
+	  int containsShy = 0;
+	  for (k = 1; k < textWordLength; k++)
+	    if (textBuffer[textWordStart + k - 1] == SHY) {
+	      textHyphens[k] = '1';
+	      containsShy = 1;
+	    }
+	  if (ud->hyphenate == 2 || containsShy) break;
+	  // if "hyphenate yes" and word contains no SHY
+	}
 	case 1:
 	  if (!lou_hyphenate (ud->main_braille_table,
 			      &textBuffer[textWordStart], textWordLength,
 			      textHyphens, 0))
 	    return 0;
-	  break;
-	case 2:
-	  textHyphens[0] = '0';
-	  for (k = 1; k < textWordLength; k++)
-	    textHyphens[k] =
-	      (textBuffer[textWordStart + k - 1] == SHY) ? '1' : '0';
 	  break;
 	}
       for (k = 1; k < wordLength; k++)

@@ -40,4 +40,24 @@ xxxxxxxx
 oo-bar x x x
 x x x x
 
+xxxxxx ooo-
+ooo x x x x
+x x x
+
+xxxxxxx ooo-
+ooo x x x x
+x x x
+
+xxxxxxxx
+oooooo x x x
+x x x x
+
+xxxxxxx
+ooooo x x x
+x x x x
+
+xxxxxxxx
+ooooo x x x
+x x x x
+
 
