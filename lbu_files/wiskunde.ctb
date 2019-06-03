@@ -103,37 +103,37 @@ exactdots @56
   
 # Lege exponenten en indices
 
-  noback context  ["\ei\e^r\en\ex"]           ?
-  noback context  ["\ei\e^c\en\ex"]           ?
-  noback context  ["\ei\e^l\en\ex"]           ?
-  noback context  ["\ei\e_r\en\ex"]           ?
-  noback context  ["\ei\e_c\en\ex"]           ?
-  noback context  ["\ei\e_l\en\ex"]           ?
-  noback context  ["\en"]                     ?
+  noback context  ["\ei\e⠌r\en\ex"]         ?
+  noback context  ["\ei\e⠌c\en\ex"]         ?
+  noback context  ["\ei\e⠌l\en\ex"]         ?
+  noback context  ["\ei\e_r\en\ex"]         ?
+  noback context  ["\ei\e_c\en\ex"]         ?
+  noback context  ["\ei\e_l\en\ex"]         ?
+  noback context  ["\en"]                   ?
   
 # Gezakte cijfers, exponenten, indices & breuken
 
   noback context  "\ef\es"$d."\ed\es"[$d.]"\ex"            %dropped    # noemer van natuurlijke breuk in gezakte cijfers
-  noback context  "\e^r\es"[$d.]"\ex"                      %dropped    # natuurlijke exponenten en indices in gezakte cijfers
-  noback context  "\e^c\es"[$d.]"\ex"                      %dropped
-  noback context  "\e^l\es"[$d.]"\ex"                      %dropped
+  noback context  "\e⠌r\es"[$d.]"\ex"                      %dropped    # natuurlijke exponenten en indices in gezakte cijfers
+  noback context  "\e⠌c\es"[$d.]"\ex"                      %dropped
+  noback context  "\e⠌l\es"[$d.]"\ex"                      %dropped
   noback context  "\e_r\es"[$d.]"\ex"                      %dropped
   noback context  "\e_c\es"[$d.]"\ex"                      %dropped
   noback context  "\e_l\es"[$d.]"\ex"                      %dropped
   
-  noback context  ["\ei"]"\e^r\es"%operationkeyspace"\ex"  ?           # accenten, bewerkings- en relatietekens als index midden of rechts boven
-  noback context  ["\ei"]"\e^r\es"%operationkey"\ex"       ?
-  noback context  ["\ei"]"\e^r\es"%operationnokey"\ex"     ?
-  noback context  ["\ei"]"\e^c\es"%operationkeyspace"\ex"  ?
-  noback context  ["\ei"]"\e^c\es"%operationkey"\ex"       ?
-  noback context  ["\ei"]"\e^c\es"%operationnokey"\ex"     ?
+  noback context  ["\ei"]"\e⠌r\es"%operationkeyspace"\ex"  ?           # accenten, bewerkings- en relatietekens als index midden of rechts boven
+  noback context  ["\ei"]"\e⠌r\es"%operationkey"\ex"       ?
+  noback context  ["\ei"]"\e⠌r\es"%operationnokey"\ex"     ?
+  noback context  ["\ei"]"\e⠌c\es"%operationkeyspace"\ex"  ?
+  noback context  ["\ei"]"\e⠌c\es"%operationkey"\ex"       ?
+  noback context  ["\ei"]"\e⠌c\es"%operationnokey"\ex"     ?
   
-  noback context  "\e^r\es"%operationkeyspace["\ex"]       ?           # verwijder sluiter
-  noback context  "\e^r\es"%operationkey["\ex"]            ?
-  noback context  "\e^r\es"%operationnokey["\ex"]          ?
-  noback context  "\e^c\es"%operationkeyspace["\ex"]       ?
-  noback context  "\e^c\es"%operationkey["\ex"]            ?
-  noback context  "\e^c\es"%operationnokey["\ex"]          ?
+  noback context  "\e⠌r\es"%operationkeyspace["\ex"]       ?           # verwijder sluiter
+  noback context  "\e⠌r\es"%operationkey["\ex"]            ?
+  noback context  "\e⠌r\es"%operationnokey["\ex"]          ?
+  noback context  "\e⠌c\es"%operationkeyspace["\ex"]       ?
+  noback context  "\e⠌c\es"%operationkey["\ex"]            ?
+  noback context  "\e⠌c\es"%operationnokey["\ex"]          ?
   
   noback context  "\es"[]%operationkeyspace                @5          # sleutel voor bewerkingstekens
   noback context  "\es"[]%operationkey                     @5
@@ -145,15 +145,15 @@ exactdots @56
   noback pass3    @1b-124                                  ?           # \ef
   noback pass3    @1b-234                                  ?           # \es
   
-  noback pass3    @1b-24-1b-34-1235                        @34         # \ei\e^r
-  noback pass3    @1b-24-1b-34-14                          @456@34     # \ei\e^c
-  noback pass3    @1b-24-1b-34-123                         @3456@34    # \ei\e^l
+  noback pass3    @1b-24-1b-34-1235                        @34         # \ei\e⠌r
+  noback pass3    @1b-24-1b-34-14                          @456@34     # \ei\e⠌c
+  noback pass3    @1b-24-1b-34-123                         @3456@34    # \ei\e⠌l
   noback pass3    @1b-24-1b-456-1235                       @16         # \ei\e_r
   noback pass3    @1b-24-1b-456-14                         @456@16     # \ei\e_c
   noback pass3    @1b-24-1b-456-123                        @3456@16    # \ei\e_l  
   noback pass3    @1b-24                                   ?           # \ei
-  noback pass3    @1b-34-1235                              @4          # \e^r
-  noback pass3    @1b-34-14                                @45         # \e^c
+  noback pass3    @1b-34-1235                              @4          # \e⠌r
+  noback pass3    @1b-34-14                                @45         # \e⠌c
   
   noback pass3    %lownum.[@1b-1346]                       ?           # verwijder sluiter na gezakte cijfers
   noback pass4    @1b-1346                                 @156        # sluiter \ex
