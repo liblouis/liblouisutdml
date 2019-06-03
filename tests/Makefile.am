@@ -186,9 +186,7 @@ XFAIL_TESTS +=					\
 	firstLineIndent.test			\
 	mixed_content.test			\
 	printPageNumberRange_03.test		\
-	test_mathml_woluwe/test_034.test	\
 	test_mathml_woluwe/test_044.test	\
-	test_mathml_woluwe/test_053.test	\
 	test_mathml_woluwe/test_060.test	\
 	test_mathml_woluwe/test_061.test	\
 	test_mathml_woluwe/test_062.test	\
@@ -196,30 +194,9 @@ XFAIL_TESTS +=					\
 	test_mathml_woluwe/test_075.test	\
 	test_mathml_woluwe/test_076.test	\
 	test_mathml_woluwe/test_078.test	\
-	test_mathml_woluwe/test_087.test	\
-	test_mathml_woluwe/test_089.test	\
-	test_mathml_woluwe/test_091.test	\
 	test_mathml_woluwe/test_093.test	\
 	test_mathml_woluwe/test_096.test	\
-	test_mathml_woluwe/test_097.test	\
-	test_mathml_woluwe/test_098.test	\
-	test_mathml_woluwe/test_099.test	\
-	test_mathml_woluwe/test_100.test	\
-	test_mathml_woluwe/test_102.test	\
-	test_mathml_woluwe/test_103.test	\
-	test_mathml_woluwe/test_104.test	\
-	test_mathml_woluwe/test_105.test	\
-	test_mathml_woluwe/test_106.test	\
-	test_mathml_woluwe/test_107.test	\
-	test_mathml_woluwe/test_108.test	\
-	test_mathml_woluwe/test_109.test	\
-	test_mathml_woluwe/test_110.test	\
-	test_mathml_woluwe/test_111.test	\
-	test_mathml_woluwe/test_115.test	\
-	test_mathml_woluwe/test_116.test	\
-	test_mathml_woluwe/test_117.test	\
-	test_mathml_woluwe/test_118.test	\
-	test_mathml_woluwe/test_119.test
+	test_mathml_woluwe/test_099.test
 
 TESTS =						\
 	$(check_PROGRAMS)			\
