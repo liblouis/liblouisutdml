@@ -35,13 +35,6 @@
 #include "liblouisutdml.h"
 #include "sem_enum.h"
 
-/* a quick hack; stole some definitions from liblouis internal.h,
-   namely ENDSEGMENT and the enum EncodingType
-   (https://github.com/liblouis/liblouis/blob/master/liblouis/internal.h#L60
-   and
-   https://github.com/liblouis/liblouis/blob/master/liblouis/internal.h#L606) */
-#define ENDSEGMENT 0xffff
-
 typedef enum
 {
   firstCall = 0,

@@ -1152,7 +1152,7 @@ insert_text_string (xmlNode * node, xmlChar * str)
     }
   insert_utf8 (str);
   if (ud->format_for == utd)
-    ud->text_buffer[ud->text_length++] = ENDSEGMENT;
+    ud->text_buffer[ud->text_length++] = LOU_ENDSEGMENT;
   return;
 }
 
@@ -4833,10 +4833,10 @@ assignTranslations ()
   while (curPos < translatedLength && curBrlNode != NULL &&
 	 nextSegment < translatedLength)
     {
-      if (translatedBuffer[curPos] == ENDSEGMENT || nextSegment == 0)
+      if (translatedBuffer[curPos] == LOU_ENDSEGMENT || nextSegment == 0)
 	{
 	  int nextPos = nextSegment;
-	  while (translatedBuffer[nextPos] != ENDSEGMENT && nextPos <
+	  while (translatedBuffer[nextPos] != LOU_ENDSEGMENT && nextPos <
 		 translatedLength)
 	    nextPos++;
 	  makeDotsTextNode (curBrlNode, &translatedBuffer[nextSegment],
@@ -4898,14 +4898,14 @@ assignIndices (xmlNode * startNode, int startPos)
   while (curPos < ud->translated_length && curBrlNode != NULL &&
 	 nextSegment < ud->translated_length)
     {
-      if (ud->translated_buffer[curPos] == ENDSEGMENT || nextSegment ==
+      if (ud->translated_buffer[curPos] == LOU_ENDSEGMENT || nextSegment ==
 	  startPos)
 	{
 	  int indexPos = nextSegment;
 	  int kk = 0;
-	  if (ud->translated_buffer[curPos] == ENDSEGMENT)
+	  if (ud->translated_buffer[curPos] == LOU_ENDSEGMENT)
 	    firstIndex = indices[curPos + 1];
-	  while (ud->translated_buffer[indexPos] != ENDSEGMENT &&
+	  while (ud->translated_buffer[indexPos] != LOU_ENDSEGMENT &&
 		 indexPos < ud->translated_length)
 	    {
 	      char pos[MAXNUMLEN];
@@ -5011,7 +5011,7 @@ utd_insert_text (xmlNode * node, int length)
       for (k = 0; k < ud->text_length; k++)
 	indices[ud->translated_length + k] = k;
       ud->translated_length += ud->text_length;
-      ud->translated_buffer[ud->translated_length++] = ENDSEGMENT;
+      ud->translated_buffer[ud->translated_length++] = LOU_ENDSEGMENT;
       ud->text_length = 0;
       ud->in_sync = 0;
       return;
@@ -5038,7 +5038,7 @@ utd_insert_text (xmlNode * node, int length)
     }
   else
     link_brl_node (xmlAddNextSibling (node, newNode));
-  ud->text_buffer[ud->text_length++] = ENDSEGMENT;
+  ud->text_buffer[ud->text_length++] = LOU_ENDSEGMENT;
   return;
 }
 
@@ -5275,12 +5275,12 @@ utd_doOrdinaryText ()
 	       translatedLength && (dots =
 				    translatedBuffer[charactersWritten +
 						     cellsToWrite]) !=
-	       ENDSEGMENT; cellsToWrite++)
+	       LOU_ENDSEGMENT; cellsToWrite++)
 	    if (dots == SPACE)
 	      lastSpace = cellsToWrite;
 	  if (cellsToWrite == availableCells)
 	    newLineNeeded = 1;
-	  if (dots != ENDSEGMENT && lastSpace != 0)
+	  if (dots != LOU_ENDSEGMENT && lastSpace != 0)
 	    cellsToWrite = lastSpace + 1;
 	  cellsOnLine += cellsToWrite;
 	  availableCells -= cellsToWrite;
@@ -5306,7 +5306,7 @@ utd_doOrdinaryText ()
 	      newLineNeeded = 1;
 	    }
 	}
-      while (dots != ENDSEGMENT && charactersWritten < translatedLength);
+      while (dots != LOU_ENDSEGMENT && charactersWritten < translatedLength);
       charactersWritten++;
       prevBrlNode = brlNode;
       brlNode = brlNode->_private;
