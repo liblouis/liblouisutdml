@@ -174,14 +174,6 @@ static int utd_finishStyle ();
 static const TranslationTableHeader *firstTableHeader;
 static const char *firstTableName;
 
-static TranslationTableRule *
-getLiblouisRule (TranslationTableOffset offset)
-{
-  if (offset == 0)
-    return NULL;
-  return (TranslationTableRule *) & firstTableHeader->ruleArea[offset];
-}
-
 int
 start_document ()
 {
@@ -4730,24 +4722,11 @@ utd_getPrintPageString ()
 {
   widechar printPageString[40];
   int k;
-  TranslationTableRule *rule;
   for (k = 0; ud->print_page_number[k]; k++)
     printPageString[k] = ud->print_page_number[k];
   setOrigTextWidechar (&pageNumber, printPageString, k);
   translateShortBrlOnly (&pageNumber);
-  rule = getLiblouisRule (firstTableHeader->letterSign);
-  if (rule != NULL)
-    {
-      for (k = 0; k < pageNumber.transTextLength; k++)
-	if (pageNumber.transText[k] == rule->charsdots[0])
-	  {
-	    pageNumber.transText[k] = SPACE;
-	    addSpaces (&pageNumber, 2);
-	    break;
-	  }
-    }
-  else
-    addSpaces (&pageNumber, 3);
+  addSpaces (&pageNumber, 3);
   ud->print_page_number[0]++;
   return 1;
 }
