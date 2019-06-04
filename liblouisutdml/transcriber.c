@@ -171,7 +171,7 @@ static void utd_pagebreak (xmlNode * node, char *printPageNumber, int length);
 static int utd_startStyle ();
 static int utd_styleBody ();
 static int utd_finishStyle ();
-static const TranslationTableHeader *firstTableHeader;
+static const void *firstTableHeader;
 static const char *firstTableName;
 
 int
