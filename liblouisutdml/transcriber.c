@@ -3872,35 +3872,15 @@ end_style ()
 
 /* Routines for Unified Tactile Ducument Markup Language (UTDML) */
 
-/**
- * Definitions of braille dots
- */
-#define B1 0X01
-#define B2 0X02
-#define B3 0X04
-#define B4 0X08
-#define B5 0X10
-#define B6 0X20
-#define B7 0X40
-#define B8 0X80
-#define B9 0X100
-#define B10 0X200
-#define B11 0X400
-#define B12 0X800
-#define B13 0X1000
-#define B14 0X2000
-#define B15 0X4000
-#define B16 0X8000
-
-#define SPACE B16
-/* Dot patterns must include B16 and be enclosed in parentheses.*/
-#define NBSP (B16 | B10)
-#define CR (B16 | B11)
-#define HYPHEN (B16 | B3 | B6)
-#define ESCAPE (B16 | B11 | B1)
-#define CDOTS (B16 | B1 | B4)
-#define EDOTS (B16 | B1 |  B5)
-#define RDOTS (B16 | B1 | B2 | B3 | B5)
+#define SPACE LOU_DOT_16
+/* Dot patterns must include LOU_DOT_16 and be enclosed in parentheses.*/
+#define NBSP (LOU_DOT_16 | LOU_DOT_10)
+#define CR (LOU_DOT_16 | LOU_DOT_11)
+#define HYPHEN (LOU_DOT_16 | LOU_DOT_3 | LOU_DOT_6)
+#define ESCAPE (LOU_DOT_16 | LOU_DOT_11 | LOU_DOT_1)
+#define CDOTS (LOU_DOT_16 | LOU_DOT_1 | LOU_DOT_4)
+#define EDOTS (LOU_DOT_16 | LOU_DOT_1 |  LOU_DOT_5)
+#define RDOTS (LOU_DOT_16 | LOU_DOT_1 | LOU_DOT_2 | LOU_DOT_3 | LOU_DOT_5)
 
 static const char *currentTable;
 static char currentTableName[MAXNAMELEN];
@@ -4449,7 +4429,7 @@ checkTextFragment (widechar * text, int length)
   for (k = 0; k < length; k++)
     {
       dots = text[k];
-      if ((dots & (B7 | B8)))
+      if ((dots & (LOU_DOT_7 | LOU_DOT_8)))
 	lineWidth = ud->wide_line;
       if (dots == NBSP)
 	text[k] = SPACE;
