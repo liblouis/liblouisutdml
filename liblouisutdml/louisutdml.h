@@ -41,7 +41,6 @@
    and
    https://github.com/liblouis/liblouis/blob/master/liblouis/internal.h#L606) */
 #define ENDSEGMENT 0xffff
-#define ascii8 3
 
 typedef enum
 {
