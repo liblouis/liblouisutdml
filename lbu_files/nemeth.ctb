@@ -22,7 +22,7 @@
 #  License along with liblouis. If not, see
 #  <http://www.gnu.org/licenses/>.
 
-include chardefs.cti All character definition opcodes
+include en-chardefs.cti All character definition opcodes
 include nemethdefs.cti
 
 # Braille indicators
