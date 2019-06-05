@@ -22,7 +22,7 @@
 #  License along with liblouis. If not, see
 #  <http://www.gnu.org/licenses/>.
 
-include chardefs.cti
+include en-chardefs.cti
 repeated \s 0
 always \ee\s`4 456-256
 always \ee\s`1 6
