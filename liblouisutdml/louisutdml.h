@@ -431,5 +431,4 @@ void do_utdxxxximg (xmlNode *node);
 
 void logWidecharBuf(logLevels level, const char *msg, const widechar *wbuf, int wlen);
 
-// void logMessage(logLevels level, const char *format, ...);
 #endif /*louisutdml_h */
