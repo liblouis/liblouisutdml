@@ -176,6 +176,8 @@ LBUAPI void EXPORT_CALL lbu_logFile(const char *fileName);
 
 LBUAPI void EXPORT_CALL lbu_logEnd();
 
+LBUAPI void EXPORT_CALL /*lbu_*/logMessage(logLevels level, const char *format, ...);
+
 /* This function should be called at the end of the application to free
 all memory allocated by liblouisutdml or liblouis. */
 LBUAPI void EXPORT_CALL lbu_free (void);

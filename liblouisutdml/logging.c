@@ -46,7 +46,7 @@ void EXPORT_CALL lbu_setLogLevel(logLevels level)
   logLevel = level;
 }
 
-void logMessage(logLevels level, const char *format, ...)
+void EXPORT_CALL /*lbu_*/logMessage(logLevels level, const char *format, ...)
 {
   if (format == NULL)
       return;
