@@ -45,12 +45,12 @@ change_table (xmlNode * node)
   if (strlen ((char *) newTable) < 5)
     return 0;
   if (!find_file (newTable, completePath))
+    strcpy(completePath, newTable);
+  if (!lou_getTable (completePath))
     {
       logMessage (LOU_LOG_ERROR, "Table %s cannot be found", newTable);
       return 0;
     }
-  if (!lou_getTable (completePath))
-    return 0;
   insert_translation (ud->main_braille_table);
   oldTable = ud->main_braille_table;
   ud->main_braille_table = completePath;
