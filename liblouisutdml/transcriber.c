@@ -3872,15 +3872,15 @@ end_style ()
 
 /* Routines for Unified Tactile Ducument Markup Language (UTDML) */
 
-#define SPACE LOU_DOT_16
-/* Dot patterns must include LOU_DOT_16 and be enclosed in parentheses.*/
-#define NBSP (LOU_DOT_16 | LOU_DOT_10)
-#define CR (LOU_DOT_16 | LOU_DOT_11)
-#define HYPHEN (LOU_DOT_16 | LOU_DOT_3 | LOU_DOT_6)
-#define ESCAPE (LOU_DOT_16 | LOU_DOT_11 | LOU_DOT_1)
-#define CDOTS (LOU_DOT_16 | LOU_DOT_1 | LOU_DOT_4)
-#define EDOTS (LOU_DOT_16 | LOU_DOT_1 |  LOU_DOT_5)
-#define RDOTS (LOU_DOT_16 | LOU_DOT_1 | LOU_DOT_2 | LOU_DOT_3 | LOU_DOT_5)
+#define SPACE LOU_DOTS
+/* Dot patterns must include LOU_DOTS and be enclosed in parentheses.*/
+#define NBSP (LOU_DOTS | LOU_DOT_10)
+#define CR (LOU_DOTS | LOU_DOT_11)
+#define HYPHEN (LOU_DOTS | LOU_DOT_3 | LOU_DOT_6)
+#define ESCAPE (LOU_DOTS | LOU_DOT_11 | LOU_DOT_1)
+#define CDOTS (LOU_DOTS | LOU_DOT_1 | LOU_DOT_4)
+#define EDOTS (LOU_DOTS | LOU_DOT_1 |  LOU_DOT_5)
+#define RDOTS (LOU_DOTS | LOU_DOT_1 | LOU_DOT_2 | LOU_DOT_3 | LOU_DOT_5)
 
 static const char *currentTable;
 static char currentTableName[MAXNAMELEN];
