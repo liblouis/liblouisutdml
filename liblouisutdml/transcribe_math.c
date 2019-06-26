@@ -130,7 +130,7 @@ mathTrans ()
   translationLength = ud->text_length;
   if (ud->format_for == utd)
     {
-      ud->text_buffer[ud->text_length++] = ENDSEGMENT;
+      ud->text_buffer[ud->text_length++] = LOU_ENDSEGMENT;
       translationLength++;
       k = lou_translate (ud->mathexpr_table_name,
 			 ud->text_buffer,

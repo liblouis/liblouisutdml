@@ -171,16 +171,8 @@ static void utd_pagebreak (xmlNode * node, char *printPageNumber, int length);
 static int utd_startStyle ();
 static int utd_styleBody ();
 static int utd_finishStyle ();
-static const TranslationTableHeader *firstTableHeader;
+static const void *firstTableHeader;
 static const char *firstTableName;
-
-static TranslationTableRule *
-getLiblouisRule (TranslationTableOffset offset)
-{
-  if (offset == 0)
-    return NULL;
-  return (TranslationTableRule *) & firstTableHeader->ruleArea[offset];
-}
 
 int
 start_document ()
@@ -423,7 +415,7 @@ utf8_string_to_wc (const unsigned char *inStr, int *inSize, widechar *
   while (in < *inSize)
     {
       ch = inStr[in++] & 0xff;
-      if (ch < 128 || ud->input_encoding == ascii8)
+      if (ch < 128 || ud->input_encoding == lbu_ascii8)
 	{
 	  outstr[out++] = (widechar) ch;
 	  if (out >= *outSize)
@@ -569,7 +561,7 @@ utf8ToWc (const unsigned char *utf8str, int *inSize, widechar *
   while (in < *inSize)
     {
       ch = utf8str[in++] & 0xff;
-      if (ch < 128 || ud->input_encoding == ascii8)
+      if (ch < 128 || ud->input_encoding == lbu_ascii8)
 	{
 	  utfwcstr[out++] = (widechar) ch;
 	  if (out >= *outSize)
@@ -1160,7 +1152,7 @@ insert_text_string (xmlNode * node, xmlChar * str)
     }
   insert_utf8 (str);
   if (ud->format_for == utd)
-    ud->text_buffer[ud->text_length++] = ENDSEGMENT;
+    ud->text_buffer[ud->text_length++] = LOU_ENDSEGMENT;
   return;
 }
 
@@ -3429,7 +3421,7 @@ back_translate_braille_string ()
       ud->output_encoding = lbu_utf8;
     }
   else
-    ud->output_encoding = ascii8;
+    ud->output_encoding = lbu_ascii8;
   while (charsProcessed < ud->inlen)
     {
       ch = ud->inbuf[charsProcessed++];
@@ -3484,7 +3476,7 @@ back_translate_braille_string ()
       if (!insertCharacters (ud->lineEnd, strlen (ud->lineEnd)))
 	return 0;
       writeOutbuf ();
-      ud->output_encoding = ascii8;
+      ud->output_encoding = lbu_ascii8;
     }
   logMessage(LOU_LOG_DEBUG, "Finish back_translate_braille_string");
   return 1;
@@ -3515,7 +3507,7 @@ back_translate_file ()
       ud->output_encoding = lbu_utf8;
     }
   else
-    ud->output_encoding = ascii8;
+    ud->output_encoding = lbu_ascii8;
   while ((ch = fgetc (ud->inFile)) != EOF)
     {
       if (ch == 13)
@@ -3569,7 +3561,7 @@ back_translate_file ()
       if (!insertCharacters (ud->lineEnd, strlen (ud->lineEnd)))
 	return 0;
       writeOutbuf ();
-      ud->output_encoding = ascii8;
+      ud->output_encoding = lbu_ascii8;
     }
   return 1;
 }
@@ -3880,15 +3872,15 @@ end_style ()
 
 /* Routines for Unified Tactile Ducument Markup Language (UTDML) */
 
-#define SPACE B16
-/* Dot patterns must include B16 and be enclosed in parentheses.*/
-#define NBSP (B16 | B10)
-#define CR (B16 | B11)
-#define HYPHEN (B16 | B3 | B6)
-#define ESCAPE (B16 | B11 | B1)
-#define CDOTS (B16 | B1 | B4)
-#define EDOTS (B16 | B1 |  B5)
-#define RDOTS (B16 | B1 | B2 | B3 | B5)
+#define SPACE LOU_DOTS
+/* Dot patterns must include LOU_DOTS and be enclosed in parentheses.*/
+#define NBSP (LOU_DOTS | LOU_DOT_10)
+#define CR (LOU_DOTS | LOU_DOT_11)
+#define HYPHEN (LOU_DOTS | LOU_DOT_3 | LOU_DOT_6)
+#define ESCAPE (LOU_DOTS | LOU_DOT_11 | LOU_DOT_1)
+#define CDOTS (LOU_DOTS | LOU_DOT_1 | LOU_DOT_4)
+#define EDOTS (LOU_DOTS | LOU_DOT_1 |  LOU_DOT_5)
+#define RDOTS (LOU_DOTS | LOU_DOT_1 | LOU_DOT_2 | LOU_DOT_3 | LOU_DOT_5)
 
 static const char *currentTable;
 static char currentTableName[MAXNAMELEN];
@@ -4014,7 +4006,7 @@ static int
 handleChar (int ch, unsigned char *buf, int *posx)
 {
   int pos = *posx;
-  if (ch > 127 && ud->input_encoding == ascii8)
+  if (ch > 127 && ud->input_encoding == lbu_ascii8)
     {
       buf[pos++] = 0xc3;
       buf[pos++] = ch & 0x3f;
@@ -4437,7 +4429,7 @@ checkTextFragment (widechar * text, int length)
   for (k = 0; k < length; k++)
     {
       dots = text[k];
-      if ((dots & (B7 | B8)))
+      if ((dots & (LOU_DOT_7 | LOU_DOT_8)))
 	lineWidth = ud->wide_line;
       if (dots == NBSP)
 	text[k] = SPACE;
@@ -4710,24 +4702,11 @@ utd_getPrintPageString ()
 {
   widechar printPageString[40];
   int k;
-  TranslationTableRule *rule;
   for (k = 0; ud->print_page_number[k]; k++)
     printPageString[k] = ud->print_page_number[k];
   setOrigTextWidechar (&pageNumber, printPageString, k);
   translateShortBrlOnly (&pageNumber);
-  rule = getLiblouisRule (firstTableHeader->letterSign);
-  if (rule != NULL)
-    {
-      for (k = 0; k < pageNumber.transTextLength; k++)
-	if (pageNumber.transText[k] == rule->charsdots[0])
-	  {
-	    pageNumber.transText[k] = SPACE;
-	    addSpaces (&pageNumber, 2);
-	    break;
-	  }
-    }
-  else
-    addSpaces (&pageNumber, 3);
+  addSpaces (&pageNumber, 3);
   ud->print_page_number[0]++;
   return 1;
 }
@@ -4834,10 +4813,10 @@ assignTranslations ()
   while (curPos < translatedLength && curBrlNode != NULL &&
 	 nextSegment < translatedLength)
     {
-      if (translatedBuffer[curPos] == ENDSEGMENT || nextSegment == 0)
+      if (translatedBuffer[curPos] == LOU_ENDSEGMENT || nextSegment == 0)
 	{
 	  int nextPos = nextSegment;
-	  while (translatedBuffer[nextPos] != ENDSEGMENT && nextPos <
+	  while (translatedBuffer[nextPos] != LOU_ENDSEGMENT && nextPos <
 		 translatedLength)
 	    nextPos++;
 	  makeDotsTextNode (curBrlNode, &translatedBuffer[nextSegment],
@@ -4899,14 +4878,14 @@ assignIndices (xmlNode * startNode, int startPos)
   while (curPos < ud->translated_length && curBrlNode != NULL &&
 	 nextSegment < ud->translated_length)
     {
-      if (ud->translated_buffer[curPos] == ENDSEGMENT || nextSegment ==
+      if (ud->translated_buffer[curPos] == LOU_ENDSEGMENT || nextSegment ==
 	  startPos)
 	{
 	  int indexPos = nextSegment;
 	  int kk = 0;
-	  if (ud->translated_buffer[curPos] == ENDSEGMENT)
+	  if (ud->translated_buffer[curPos] == LOU_ENDSEGMENT)
 	    firstIndex = indices[curPos + 1];
-	  while (ud->translated_buffer[indexPos] != ENDSEGMENT &&
+	  while (ud->translated_buffer[indexPos] != LOU_ENDSEGMENT &&
 		 indexPos < ud->translated_length)
 	    {
 	      char pos[MAXNUMLEN];
@@ -5012,7 +4991,7 @@ utd_insert_text (xmlNode * node, int length)
       for (k = 0; k < ud->text_length; k++)
 	indices[ud->translated_length + k] = k;
       ud->translated_length += ud->text_length;
-      ud->translated_buffer[ud->translated_length++] = ENDSEGMENT;
+      ud->translated_buffer[ud->translated_length++] = LOU_ENDSEGMENT;
       ud->text_length = 0;
       ud->in_sync = 0;
       return;
@@ -5039,7 +5018,7 @@ utd_insert_text (xmlNode * node, int length)
     }
   else
     link_brl_node (xmlAddNextSibling (node, newNode));
-  ud->text_buffer[ud->text_length++] = ENDSEGMENT;
+  ud->text_buffer[ud->text_length++] = LOU_ENDSEGMENT;
   return;
 }
 
@@ -5276,12 +5255,12 @@ utd_doOrdinaryText ()
 	       translatedLength && (dots =
 				    translatedBuffer[charactersWritten +
 						     cellsToWrite]) !=
-	       ENDSEGMENT; cellsToWrite++)
+	       LOU_ENDSEGMENT; cellsToWrite++)
 	    if (dots == SPACE)
 	      lastSpace = cellsToWrite;
 	  if (cellsToWrite == availableCells)
 	    newLineNeeded = 1;
-	  if (dots != ENDSEGMENT && lastSpace != 0)
+	  if (dots != LOU_ENDSEGMENT && lastSpace != 0)
 	    cellsToWrite = lastSpace + 1;
 	  cellsOnLine += cellsToWrite;
 	  availableCells -= cellsToWrite;
@@ -5307,7 +5286,7 @@ utd_doOrdinaryText ()
 	      newLineNeeded = 1;
 	    }
 	}
-      while (dots != ENDSEGMENT && charactersWritten < translatedLength);
+      while (dots != LOU_ENDSEGMENT && charactersWritten < translatedLength);
       charactersWritten++;
       prevBrlNode = brlNode;
       brlNode = brlNode->_private;

@@ -36,7 +36,6 @@
 #include <stdarg.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <internal.h>
 #include "louisutdml.h"
 #include "sem_names.h"
 #include <ctype.h>
@@ -241,7 +240,7 @@ findTable (lbu_FileInfo * nested)
   if (trialPath[0] == 0)
     {
       if (lou_getTable (nested->value) != NULL)
-	strcpy (trialPath, _lou_getLastTableList());
+	strcpy (trialPath, nested->value);
     }
   if (trialPath[0] == 0)
     {
@@ -1358,7 +1357,7 @@ read_configuration_file (const char *configFileList, const char
       style->action = k;
     }
   ud->input_encoding = lbu_utf8;
-  ud->output_encoding = ascii8;
+  ud->output_encoding = lbu_ascii8;
   *ud->print_page_number = '_';
   *ud->print_page_number_first = '_';
   ud->string_escape = ',';
