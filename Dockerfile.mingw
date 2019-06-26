@@ -1,0 +1,39 @@
+FROM debian:stretch
+
+RUN apt-get update && apt-get install -y \
+	make \
+	autoconf \
+	automake \
+	libtool \
+	pkg-config \
+	curl \
+	mingw-w64 \
+	openjdk-8-jdk \
+	zip
+
+ARG LIBLOUIS_VERSION=master
+ARG LIBXML2_VERSION=2.9.9
+
+WORKDIR /root/src/
+RUN curl -L ftp://xmlsoft.org/libxml2/libxml2-${LIBXML2_VERSION}.tar.gz | tar zx
+WORKDIR /root/src/libxml2-${LIBXML2_VERSION}
+RUN autoreconf -i
+RUN ./configure --with-zlib=no --with-iconv=no --with-python=no --host i586-mingw32msvc --prefix=/tmp/liblouis-mingw32msvc
+RUN make
+RUN make install
+
+WORKDIR /root/src/
+RUN curl -L https://github.com/liblouis/liblouis/archive/${LIBLOUIS_VERSION}.tar.gz | tar zx
+WORKDIR /root/src/liblouis-${LIBLOUIS_VERSION}
+RUN ./configure --enable-ucs4 --host i586-mingw32msvc --prefix=/tmp/liblouis-mingw32msvc
+RUN make
+RUN make install
+
+ADD . /root/src/liblouisutdml
+WORKDIR /root/src/liblouisutdml
+ENV PKG_CONFIG_PATH=/tmp/liblouis-mingw32msvc/lib/pkgconfig
+ENV CFLAGS=-I/usr/lib/jvm/java-8-openjdk-amd64/include/
+RUN ./autogen.sh
+RUN ./configure --host i586-mingw32msvc --prefix=/tmp/liblouis-mingw32msvc
+RUN make
+RUN make install
