@@ -240,7 +240,7 @@ findTable (lbu_FileInfo * nested)
   if (trialPath[0] == 0)
     {
       if (lou_getTable (nested->value) != NULL)
-	strcpy (trialPath, _lou_getLastTableList());
+	strcpy (trialPath, nested->value);
     }
   if (trialPath[0] == 0)
     {
