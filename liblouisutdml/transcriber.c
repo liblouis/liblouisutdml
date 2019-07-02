@@ -2142,8 +2142,6 @@ hyphenatex (int lastBlank, int lineEnd, int *breakAt, int *insertHyphen)
     }
   
   // Then look for other break points
-  *insertHyphen = 1;
-  
   for (k = 0; k <= wordLength; k++)
     hyphens[k] = '0';
   
@@ -2182,7 +2180,21 @@ hyphenatex (int lastBlank, int lineEnd, int *breakAt, int *insertHyphen)
 			   &translatedBuffer[wordStart], wordLength,
 			   hyphens, 1))
     return 0;
-  
+
+  // First look for break points that don't require a hyphen character to be
+  // inserted
+  *insertHyphen = 0;
+  for (k = minimum(lineEnd - wordStart, wordLength - minSyllableLength);
+       k >= minSyllableLength;
+       k--)
+    if (hyphens[k] == '2')
+      {
+	*breakAt = wordStart + k;
+	return 1;
+      }
+
+  // Then look for other break points
+  *insertHyphen = 1;
   for (k = minimum(lineEnd - wordStart - 1, wordLength - minSyllableLength);
        k >= minSyllableLength;
        k--)
