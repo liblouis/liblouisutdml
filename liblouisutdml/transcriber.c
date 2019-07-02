@@ -2097,8 +2097,8 @@ hyphenatex (int lastBlank, int lineEnd, int *breakAt, int *insertHyphen)
       break;
   wordLength -= wordStart;
   
-  // Don't break if word is too short or too long
-  if (wordLength < MIN_WORD_LENGTH || wordLength > ud->cells_per_line)
+  // Don't break if word is too short
+  if (wordLength < MIN_WORD_LENGTH)
     return 0;
   
   // Find the word boundaries in the text buffer
@@ -2448,16 +2448,17 @@ doListColumns ()
 		    if (thisRow[charactersWritten + cellsToWrite] == ' ')
 		      break;
 		  if (cellsToWrite == 0)
-		    {
-		      cellsToWrite = availableCells - 1;
-		      wordTooLong = 1;
-		    }
-		  else if (ud->hyphenate)
+		    wordTooLong = 1;
+		  if (ud->hyphenate)
 		    if (hyphenatex (charactersWritten + cellsToWrite,
 				    charactersWritten + availableCells,
 				    &breakAt,
-				    &insertHyphen))
+				    &insertHyphen)) {
 		      cellsToWrite = breakAt - charactersWritten;
+		      wordTooLong = 0;
+		    }
+		  if (wordTooLong)
+		    cellsToWrite = availableCells - 1;
 		}
 	      for (k = charactersWritten;
 		   k < (charactersWritten + cellsToWrite); k++)
@@ -2538,16 +2539,17 @@ doListLines ()
 		  if (thisLine[charactersWritten + cellsToWrite] == ' ')
 		    break;
 		if (cellsToWrite == 0)
-		  {
-		    cellsToWrite = availableCells - 1;
-		    wordTooLong = 1;
-		  }
-		else if (ud->hyphenate)
+		  wordTooLong = 1;
+		if (ud->hyphenate)
 		  if (hyphenatex (charactersWritten + cellsToWrite,
 				  charactersWritten + availableCells,
 				  &breakAt,
-				  &insertHyphen))
+				  &insertHyphen)) {
 		    cellsToWrite = breakAt - charactersWritten;
+		    wordTooLong = 0;
+		  }
+		if (wordTooLong)
+		  cellsToWrite = availableCells - 1;
 	      }
 	    for (k = charactersWritten;
 		 k < (charactersWritten + cellsToWrite); k++)
@@ -2654,16 +2656,17 @@ doLeftJustify ()
 	    if (translatedBuffer[charactersWritten + cellsToWrite] == ' ')
 	      break;
 	  if (cellsToWrite == 0)
-	    {
-	      cellsToWrite = availableCells - 1;
-	      wordTooLong = 1;
-	    }
-	  else if (ud->hyphenate)
+	    wordTooLong = 1;
+	  if (ud->hyphenate)
 	    if (hyphenatex (charactersWritten + cellsToWrite,
 			    charactersWritten + availableCells,
 			    &breakAt,
-			    &insertHyphen))
+			    &insertHyphen)) {
 	      cellsToWrite = breakAt - charactersWritten;
+	      wordTooLong = 0;
+	    }
+	  if (wordTooLong)
+	    cellsToWrite = availableCells - 1;
 	}
       for (k = charactersWritten; k < (charactersWritten + cellsToWrite); k++)
 	if (translatedBuffer[k] == 0xa0)	/*unbreakable space */
@@ -2757,9 +2760,11 @@ doContents ()
 	    if (hyphenatex (charactersWritten + cellsToWrite,
 			    charactersWritten + availableCells -
 			    minSpaceAfterNotLastWord,
-			    &breakAt, &insertHyphen))
+			    &breakAt, &insertHyphen)) {
 	      cellsToWrite = breakAt - charactersWritten;
-	  if (!breakAt && wordTooLong)
+	      wordTooLong = 0;
+	    }
+	  if (wordTooLong)
 	    {
 	      cellsToWrite = availableCells - minSpaceAfterNotLastWord - 1;
 	      if (cellsToWrite <= 0)
@@ -2849,7 +2854,7 @@ doContents ()
 	      (&translatedBuffer[charactersWritten], cellsToWrite))
 	    return 0;
 	  charactersWritten += cellsToWrite;
-	  if ((breakAt && insertHyphen) || lastWordNewRule)
+	  if ((breakAt && insertHyphen) || !breakAt)
 	    if (!insertDubChars (ud->lit_hyphen, strlen (ud->lit_hyphen)))
 	      return 0;
 	}
@@ -2963,16 +2968,17 @@ doCenterRight ()
 	    if (translatedBuffer[charactersWritten + cellsToWrite] == ' ')
 	      break;
 	  if (cellsToWrite == 0)
-	    {
-	      cellsToWrite = availableCells - 1;
-	      wordTooLong = 1;
-	    }
-		else if(ud->hyphenate)
+	    wordTooLong = 1;
+		if(ud->hyphenate)
 			if(hyphenatex(charactersWritten+cellsToWrite,
 			charactersWritten + availableCells,
 			&breakAt,
-			&insertHyphen))
+			&insertHyphen)) {
 				cellsToWrite = breakAt - charactersWritten;
+				wordTooLong = 0;
+			}
+		if (wordTooLong)
+		  cellsToWrite = availableCells - 1;
 	}
       for (k = charactersWritten; k < (charactersWritten + cellsToWrite); k++)
 	if (translatedBuffer[k] == 0xa0)	/*unbreakable space */
