@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mrow>
+    <msqrt>
+      <mfrac>
+        <mrow>
+          <mrow>
+            <mi>x</mi>
+          </mrow>
+        </mrow>
+        <mrow>
+          <mrow>
+            <mi>y</mi>
+          </mrow>
+        </mrow>
+      </mfrac>
+    </msqrt>
+  </mrow>
+</math>

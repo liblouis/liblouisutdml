@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mrow>
+    <mrow>
+      <mn>3.0</mn>
+    </mrow>
+    <msqrt>
+      <mrow>
+        <mi>a</mi>
+      </mrow>
+    </msqrt>
+  </mrow>
+</math>

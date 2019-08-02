@@ -13,6 +13,7 @@ SUBDIRS =					\
 	printPageNumberRange_02.test		\
 	printPageNumberRange_03.test		\
 	endNotes.test				\
+	mathml_nemeth				\
 	test_mathml_woluwe
 
 AM_CPPFLAGS =					\
@@ -58,6 +59,18 @@ dist_suite_TESTS =				\
 	mixed_content.test			\
 	printPageNumberRange_03.test		\
 	endNotes.test				\
+	mathml_nemeth/general_001.test		\
+	mathml_nemeth/mfrac_01.test		\
+	mathml_nemeth/mfrac_02.test		\
+	mathml_nemeth/mfrac_03.test		\
+	mathml_nemeth/mfrac_04.test		\
+	mathml_nemeth/mfrac_05.test		\
+	mathml_nemeth/mfrac_06.test		\
+	mathml_nemeth/mfrac_07.test		\
+	mathml_nemeth/mroot_01.test		\
+	mathml_nemeth/msqrt_01.test		\
+	mathml_nemeth/msqrt_02.test		\
+	mathml_nemeth/msqrt_03.test		\
 	test_mathml_woluwe/test_001.test	\
 	test_mathml_woluwe/test_002.test	\
 	test_mathml_woluwe/test_003.test	\
@@ -176,7 +189,7 @@ dist_suite_TESTS =				\
 	test_mathml_woluwe/test_116.test	\
 	test_mathml_woluwe/test_117.test	\
 	test_mathml_woluwe/test_118.test	\
-	test_mathml_woluwe/test_119.test
+	test_mathml_woluwe/test_119.test	
 
 XFAIL_TESTS +=					\
 	pagenum.test				\
@@ -186,6 +199,13 @@ XFAIL_TESTS +=					\
 	firstLineIndent.test			\
 	mixed_content.test			\
 	printPageNumberRange_03.test		\
+	mathml_nemeth/general_001.test		\
+	mathml_nemeth/mfrac_02.test		\
+	mathml_nemeth/mfrac_03.test		\
+	mathml_nemeth/mfrac_04.test		\
+	mathml_nemeth/mfrac_06.test		\
+	mathml_nemeth/mfrac_07.test		\
+	mathml_nemeth/msqrt_03.test		\
 	test_mathml_woluwe/test_044.test	\
 	test_mathml_woluwe/test_060.test	\
 	test_mathml_woluwe/test_061.test	\

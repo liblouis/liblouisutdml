@@ -139,6 +139,19 @@ AC_CONFIG_FILES([Makefile
 	tests/printPageNumberRange_02.test/Makefile
 	tests/printPageNumberRange_03.test/Makefile
 	tests/endNotes.test/Makefile
+	tests/mathml_nemeth/Makefile
+	tests/mathml_nemeth/general_001.test/Makefile
+	tests/mathml_nemeth/mfrac_01.test/Makefile
+	tests/mathml_nemeth/mfrac_02.test/Makefile
+	tests/mathml_nemeth/mfrac_03.test/Makefile
+	tests/mathml_nemeth/mfrac_04.test/Makefile
+	tests/mathml_nemeth/mfrac_05.test/Makefile
+	tests/mathml_nemeth/mfrac_06.test/Makefile
+	tests/mathml_nemeth/mfrac_07.test/Makefile
+	tests/mathml_nemeth/mroot_01.test/Makefile
+	tests/mathml_nemeth/msqrt_01.test/Makefile
+	tests/mathml_nemeth/msqrt_02.test/Makefile
+	tests/mathml_nemeth/msqrt_03.test/Makefile
 	tests/test_mathml_woluwe/Makefile
 	tests/test_mathml_woluwe/test_001.test/Makefile
 	tests/test_mathml_woluwe/test_002.test/Makefile

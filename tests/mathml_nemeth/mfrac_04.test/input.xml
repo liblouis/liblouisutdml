@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mfrac>
+    <mi>a</mi>
+    <msup>
+      <mi>b</mi>
+      <mstyle displaystyle="true">
+        <mfrac>
+          <mstyle displaystyle="true">
+            <mfrac>
+              <mn>3</mn>
+              <mn>4</mn>
+            </mfrac>
+          </mstyle>
+          <mstyle displaystyle="true">
+            <mfrac>
+              <mn>5</mn>
+              <mn>6</mn>
+            </mfrac>
+          </mstyle>
+        </mfrac>
+      </mstyle>
+    </msup>
+  </mfrac>
+</math>

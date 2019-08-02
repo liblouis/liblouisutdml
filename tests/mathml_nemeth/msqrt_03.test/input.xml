@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mrow>
+    <msqrt>
+      <mrow>
+        <mi>a</mi>
+      </mrow>
+      <mo>+</mo>
+      <msqrt>
+        <mrow>
+          <mi>b</mi>
+        </mrow>
+        <mo>+</mo>
+        <msqrt>
+          <mrow>
+            <mi>c</mi>
+          </mrow>
+          <mo>&#x2062;</mo>
+          <msqrt>
+            <mrow>
+              <mi>d</mi>
+            </mrow>
+          </msqrt>
+        </msqrt>
+      </msqrt>
+    </msqrt>
+  </mrow>
+</math>
