@@ -85,6 +85,15 @@ is not specified the output is sent to stdout.
 Report bugs to <liblouis-liblouisxml@freelists.org>.
 root@74a8b1ad5e03:/usr/src/liblouisutdml# 
 ```
+
+# Docker for cross-compiling
+
+You can use a Docker image to cross-compile liblouisutdml using mingw.
+
+``` console
+docker build -f Dockerfile.mingw .
+```
+
 [liblouis]: http://www.liblouis.org/
 
 <!-- Local Variables: -->
