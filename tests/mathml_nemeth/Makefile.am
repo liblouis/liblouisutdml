@@ -10,7 +10,16 @@ SUBDIRS =			\
 	mroot_01.test		\
 	msqrt_01.test		\
 	msqrt_02.test		\
-	msqrt_03.test	
+	msqrt_03.test		\
+	msup_01.test		\
+	msup_02.test		\
+	msup_03.test		\
+	msup_04.test		\
+	msup_05.test		\
+	msup_06.test		\
+	msup_07.test		\
+	msup_08.test		\
+	msup_09.test
 
 EXTRA_DIST =			\
 	README			\

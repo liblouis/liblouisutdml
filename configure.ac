@@ -152,6 +152,15 @@ AC_CONFIG_FILES([Makefile
 	tests/mathml_nemeth/msqrt_01.test/Makefile
 	tests/mathml_nemeth/msqrt_02.test/Makefile
 	tests/mathml_nemeth/msqrt_03.test/Makefile
+	tests/mathml_nemeth/msup_01.test/Makefile
+	tests/mathml_nemeth/msup_02.test/Makefile
+	tests/mathml_nemeth/msup_03.test/Makefile
+	tests/mathml_nemeth/msup_04.test/Makefile
+	tests/mathml_nemeth/msup_05.test/Makefile
+	tests/mathml_nemeth/msup_06.test/Makefile
+	tests/mathml_nemeth/msup_07.test/Makefile
+	tests/mathml_nemeth/msup_08.test/Makefile
+	tests/mathml_nemeth/msup_09.test/Makefile
 	tests/test_mathml_woluwe/Makefile
 	tests/test_mathml_woluwe/test_001.test/Makefile
 	tests/test_mathml_woluwe/test_002.test/Makefile

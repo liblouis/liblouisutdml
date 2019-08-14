@@ -71,6 +71,15 @@ dist_suite_TESTS =				\
 	mathml_nemeth/msqrt_01.test		\
 	mathml_nemeth/msqrt_02.test		\
 	mathml_nemeth/msqrt_03.test		\
+	mathml_nemeth/msup_01.test		\
+	mathml_nemeth/msup_02.test		\
+	mathml_nemeth/msup_03.test		\
+	mathml_nemeth/msup_04.test		\
+	mathml_nemeth/msup_05.test		\
+	mathml_nemeth/msup_06.test		\
+	mathml_nemeth/msup_07.test		\
+	mathml_nemeth/msup_08.test		\
+	mathml_nemeth/msup_09.test		\
 	test_mathml_woluwe/test_001.test	\
 	test_mathml_woluwe/test_002.test	\
 	test_mathml_woluwe/test_003.test	\
@@ -205,6 +214,9 @@ XFAIL_TESTS +=					\
 	mathml_nemeth/mfrac_04.test		\
 	mathml_nemeth/mfrac_06.test		\
 	mathml_nemeth/mfrac_07.test		\
+	mathml_nemeth/msup_02.test		\
+	mathml_nemeth/msup_06.test		\
+	mathml_nemeth/msup_09.test		\
 	mathml_nemeth/msqrt_03.test		\
 	test_mathml_woluwe/test_044.test	\
 	test_mathml_woluwe/test_060.test	\
