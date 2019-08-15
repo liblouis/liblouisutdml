@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mrow>
+      <mo>(</mo>
+      <mi mathvariant="normal">C</mi>
+      <msub>
+        <mi mathvariant="normal">O</mi>
+        <mn>3</mn>
+      </msub>
+      <mo>)</mo>
+    </mrow>
+    <mn>2</mn>
+  </msub>
+</math>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>P</mi>
+    <mrow>
+      <msub>
+        <mi>s</mi>
+        <mn>1</mn>
+      </msub>
+      <mo>&#x2026;</mo>
+      <msub>
+        <mi>s</mi>
+        <mi>n</mi>
+      </msub>
+    </mrow>
+  </msub>
+</math>

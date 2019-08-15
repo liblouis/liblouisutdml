@@ -11,6 +11,16 @@ SUBDIRS =			\
 	msqrt_01.test		\
 	msqrt_02.test		\
 	msqrt_03.test		\
+	msub_01.test		\
+	msub_02.test		\
+	msub_03.test		\
+	msub_04.test		\
+	msub_05.test		\
+	msub_06.test		\
+	msub_07.test		\
+	msub_08.test		\
+	msub_09.test		\
+	msub_10.test		\
 	msup_01.test		\
 	msup_02.test		\
 	msup_03.test		\
