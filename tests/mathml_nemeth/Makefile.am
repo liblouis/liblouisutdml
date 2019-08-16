@@ -7,6 +7,13 @@ SUBDIRS =			\
 	mfrac_05.test		\
 	mfrac_06.test		\
 	mfrac_07.test		\
+	mixed_scripts_01.test	\
+	mixed_scripts_02.test	\
+	mixed_scripts_03.test	\
+	mixed_scripts_04.test	\
+	mixed_scripts_05.test	\
+	mixed_scripts_06.test	\
+	mixed_scripts_07.test	\
 	mroot_01.test		\
 	msqrt_01.test		\
 	msqrt_02.test		\
@@ -21,6 +28,13 @@ SUBDIRS =			\
 	msub_08.test		\
 	msub_09.test		\
 	msub_10.test		\
+	msubsup_01.test		\
+	msubsup_02.test		\
+	msubsup_03.test		\
+	msubsup_04.test		\
+	msubsup_05.test		\
+	msubsup_06.test		\
+	msubsup_07.test		\
 	msup_01.test		\
 	msup_02.test		\
 	msup_03.test		\
@@ -29,7 +43,9 @@ SUBDIRS =			\
 	msup_06.test		\
 	msup_07.test		\
 	msup_08.test		\
-	msup_09.test
+	msup_09.test		\
+	msup_10.test		\
+	msup_11.test
 
 EXTRA_DIST =			\
 	README			\

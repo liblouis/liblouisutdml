@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msubsup>
+    <mi>P</mi>
+    <mn>1</mn>
+    <msub>
+      <mi>a</mi>
+      <mn>1</mn>
+    </msub>
+  </msubsup>
+  <mo>&#x2026;</mo>
+  <msubsup>
+    <mi>P</mi>
+    <mi>r</mi>
+    <msub>
+      <mi>a</mi>
+      <mi>r</mi>
+    </msub>
+  </msubsup>
+</math>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mstyle displaystyle="false">
+    <munderover>
+      <mrow>
+        <mo>&#x2211;</mo>
+        <msub>
+          <mi>a</mi>
+          <mi>k</mi>
+        </msub>
+      </mrow>
+      <mn>0</mn>
+      <mi>n</mi>
+    </munderover>
+  </mstyle>
+</math>

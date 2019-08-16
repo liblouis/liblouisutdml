@@ -67,6 +67,13 @@ dist_suite_TESTS =				\
 	mathml_nemeth/mfrac_05.test		\
 	mathml_nemeth/mfrac_06.test		\
 	mathml_nemeth/mfrac_07.test		\
+	mathml_nemeth/mixed_scripts_01.test	\
+	mathml_nemeth/mixed_scripts_02.test	\
+	mathml_nemeth/mixed_scripts_03.test	\
+	mathml_nemeth/mixed_scripts_04.test	\
+	mathml_nemeth/mixed_scripts_05.test	\
+	mathml_nemeth/mixed_scripts_06.test	\
+	mathml_nemeth/mixed_scripts_07.test	\
 	mathml_nemeth/mroot_01.test		\
 	mathml_nemeth/msqrt_01.test		\
 	mathml_nemeth/msqrt_02.test		\
@@ -81,6 +88,13 @@ dist_suite_TESTS =				\
 	mathml_nemeth/msub_08.test		\
 	mathml_nemeth/msub_09.test		\
 	mathml_nemeth/msub_10.test		\
+	mathml_nemeth/msubsup_01.test		\
+	mathml_nemeth/msubsup_02.test		\
+	mathml_nemeth/msubsup_03.test		\
+	mathml_nemeth/msubsup_04.test		\
+	mathml_nemeth/msubsup_05.test		\
+	mathml_nemeth/msubsup_06.test		\
+	mathml_nemeth/msubsup_07.test		\
 	mathml_nemeth/msup_01.test		\
 	mathml_nemeth/msup_02.test		\
 	mathml_nemeth/msup_03.test		\
@@ -90,6 +104,8 @@ dist_suite_TESTS =				\
 	mathml_nemeth/msup_07.test		\
 	mathml_nemeth/msup_08.test		\
 	mathml_nemeth/msup_09.test		\
+	mathml_nemeth/msup_10.test		\
+	mathml_nemeth/msup_11.test		\
 	test_mathml_woluwe/test_001.test	\
 	test_mathml_woluwe/test_002.test	\
 	test_mathml_woluwe/test_003.test	\
@@ -224,6 +240,13 @@ XFAIL_TESTS +=					\
 	mathml_nemeth/mfrac_04.test		\
 	mathml_nemeth/mfrac_06.test		\
 	mathml_nemeth/mfrac_07.test		\
+	mathml_nemeth/mixed_scripts_01.test	\
+	mathml_nemeth/mixed_scripts_02.test	\
+	mathml_nemeth/mixed_scripts_03.test	\
+	mathml_nemeth/mixed_scripts_04.test	\
+	mathml_nemeth/mixed_scripts_05.test	\
+	mathml_nemeth/mixed_scripts_06.test	\
+	mathml_nemeth/mixed_scripts_07.test	\
 	mathml_nemeth/msub_02.test		\
 	mathml_nemeth/msub_03.test		\
 	mathml_nemeth/msub_04.test		\
@@ -233,9 +256,16 @@ XFAIL_TESTS +=					\
 	mathml_nemeth/msub_08.test		\
 	mathml_nemeth/msub_09.test		\
 	mathml_nemeth/msub_10.test		\
+	mathml_nemeth/msubsup_02.test		\
+	mathml_nemeth/msubsup_03.test		\
+	mathml_nemeth/msubsup_04.test		\
+	mathml_nemeth/msubsup_05.test		\
+	mathml_nemeth/msubsup_06.test		\
+	mathml_nemeth/msubsup_07.test		\
 	mathml_nemeth/msup_02.test		\
 	mathml_nemeth/msup_06.test		\
 	mathml_nemeth/msup_09.test		\
+	mathml_nemeth/msup_10.test		\
 	mathml_nemeth/msqrt_03.test		\
 	test_mathml_woluwe/test_044.test	\
 	test_mathml_woluwe/test_060.test	\

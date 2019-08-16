@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msubsup>
+    <mo>&#x222B;</mo>
+    <mn>0</mn>
+    <msqrt>
+      <mn>1</mn>
+      <mo>-</mo>
+      <msup>
+        <mi>x</mi>
+        <mn>2</mn>
+      </msup>
+    </msqrt>
+  </msubsup>
+  <mi>f</mi>
+  <mo>(</mo>
+  <mi>x</mi>
+  <mo>)</mo>
+  <mo>d</mo>
+  <mi>x</mi>
+</math>

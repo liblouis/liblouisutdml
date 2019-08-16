@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>t</mi>
+  <msubsup>
+    <mo>]</mo>
+    <mrow>
+      <mi>t</mi>
+      <mo>=</mo>
+      <mi>a</mi>
+    </mrow>
+    <mrow>
+      <mi>t</mi>
+      <mo>=</mo>
+      <mi>b</mi>
+    </mrow>
+  </msubsup>
+  <mo>=</mo>
+  <mi>b</mi>
+  <mo>-</mo>
+  <mi>a</mi>
+</math>
