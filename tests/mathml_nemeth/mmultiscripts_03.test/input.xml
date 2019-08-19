@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mmultiscripts>
+    <mi>n</mi>
+    <mi>y</mi>
+    <none/>
+    <mprescripts/>
+    <mi>x</mi>
+    <none/>
+  </mmultiscripts>
+</math>

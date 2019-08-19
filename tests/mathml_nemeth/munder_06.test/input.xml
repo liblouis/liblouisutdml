@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>X</mi>
+  <mover>
+    <mo>&#x2192;</mo>
+    <mrow>
+      <mi>f</mi>
+      <mo>&#x2218;</mo>
+      <mi>g</mi>
+    </mrow>
+  </mover>
+  <mi>Y</mi>
+</math>

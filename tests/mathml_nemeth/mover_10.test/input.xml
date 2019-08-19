@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mover>
+    <mrow>
+      <mi>A</mi>
+      <mi>B</mi>
+    </mrow>
+    <mo>&#x2192;</mo>
+  </mover>
+</math>
