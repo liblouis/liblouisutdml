@@ -1,0 +1,1 @@
+Note: the MathML follows the Nemeth book description of the image [section 87, (2)]. However, "subscribing" a=3 with b=2 should make the b=2 smaller. In order to produce the image, the actual MathML uses a linebreak and not an <munder>.

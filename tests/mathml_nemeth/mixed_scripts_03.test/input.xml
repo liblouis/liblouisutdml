@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>x</mi>
+    <msup>
+      <mi>a</mi>
+      <msub>
+        <mi>n</mi>
+        <mi>b</mi>
+      </msub>
+    </msup>
+  </msub>
+</math>

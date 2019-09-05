@@ -1,0 +1,3 @@
+The image in the Nemeth book doesn't make it clear, but they shouldn't shrink in size, hence the use of accent and accentunder attributes. It probably makes no difference to the braille though.
+
+Note: there are many synonyms for the bars.

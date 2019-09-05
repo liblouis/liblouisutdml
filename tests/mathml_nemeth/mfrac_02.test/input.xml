@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mfrac bevelled="true">
+    <mrow>
+      <mi>a</mi>
+      <mo>+</mo>
+      <mi>b</mi>
+    </mrow>
+    <mrow>
+      <mi>c</mi>
+      <mo>+</mo>
+      <mi>d</mi>
+    </mrow>
+  </mfrac>
+</math>

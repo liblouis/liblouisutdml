@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <munder>
+    <munder>
+      <mrow>
+        <mi>x</mi>
+        <mo>+</mo>
+        <mi>y</mi>
+      </mrow>
+      <mo>&#xAF;</mo>
+    </munder>
+    <munder>
+      <mrow>
+        <mi>a</mi>
+        <mo>=</mo>
+        <mn>3</mn>
+      </mrow>
+      <mrow>
+        <mi>b</mi>
+        <mo>=</mo>
+        <mn>2</mn>
+      </mrow>
+    </munder>
+  </munder>
+</math>

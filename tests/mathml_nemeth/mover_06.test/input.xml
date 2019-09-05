@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mover accent="true">
+    <mrow>
+      <mover accent="true">
+        <mi>a</mi>
+        <mo>&#xAF;</mo>
+      </mover>
+      <mi mathvariant="bold">A</mi>
+      <mo>+</mo>
+      <mover accent="true">
+        <mi>b</mi>
+        <mo>&#xAF;</mo>
+      </mover>
+      <mi mathvariant="bold">B</mi>
+    </mrow>
+    <mo>&#xAF;</mo>
+  </mover>
+</math>

@@ -1,0 +1,1 @@
+accentunder="true" changes the position of the "accent" and prevents it from shrinking in size. I believe the Nemeth examples from the book don't care about this, hence it doesn't need to be checked for in these examples. However, it does improve the display, and thus was used for generating the images.

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>A</mi>
+    <mrow>
+      <mover>
+        <mi>x</mi>
+        <mo>~</mo>
+      </mover>
+      <mo>+</mo>
+      <mover>
+        <mi>y</mi>
+        <mo>~</mo>
+      </mover>
+    </mrow>
+  </msub>
+</math>
