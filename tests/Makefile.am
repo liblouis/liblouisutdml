@@ -1,8 +1,12 @@
 SUBDIRS =					\
+	boxline.test				\
+	endNotes.test				\
 	firstLineIndent.test			\
 	footer_01.test				\
 	footer_02.test				\
 	hyphenation.test			\
+	mathml_nemeth				\
+	minSyllableWidth.test			\
 	mixed_content.test			\
 	orphanControl_01.test			\
 	orphanControl_02.test			\
@@ -12,8 +16,6 @@ SUBDIRS =					\
 	printPageNumberRange_01.test		\
 	printPageNumberRange_02.test		\
 	printPageNumberRange_03.test		\
-	endNotes.test				\
-	mathml_nemeth				\
 	test_mathml_woluwe
 
 AM_CPPFLAGS =					\
@@ -44,21 +46,11 @@ XFAIL_TESTS =					\
 
 dist_suite_TESTS =				\
 	boxline.test				\
-	pagenum.test				\
+	endNotes.test				\
+	firstLineIndent.test			\
 	footer_01.test				\
 	footer_02.test				\
-	prehyphenation.test			\
-	printPageNumberRange_01.test		\
-	printPageNumberRange_02.test		\
-	orphanControl_01.test			\
-	orphanControl_02.test			\
 	hyphenation.test			\
-	firstLineIndent.test			\
-	page_numbering.test			\
-	minSyllableWidth.test			\
-	mixed_content.test			\
-	printPageNumberRange_03.test		\
-	endNotes.test				\
 	mathml_nemeth/general_001.test		\
 	mathml_nemeth/general_002.test		\
 	mathml_nemeth/general_003.test		\
@@ -141,6 +133,16 @@ dist_suite_TESTS =				\
 	mathml_nemeth/munderover_01.test	\
 	mathml_nemeth/munderover_02.test	\
 	mathml_nemeth/munderover_03.test	\
+	minSyllableWidth.test			\
+	mixed_content.test			\
+	orphanControl_01.test			\
+	orphanControl_02.test			\
+	page_numbering.test			\
+	pagenum.test				\
+	prehyphenation.test			\
+	printPageNumberRange_01.test		\
+	printPageNumberRange_02.test		\
+	printPageNumberRange_03.test		\
 	test_mathml_woluwe/test_001.test	\
 	test_mathml_woluwe/test_002.test	\
 	test_mathml_woluwe/test_003.test	\
