@@ -1,5 +1,30 @@
 liblouisxml NEWS -- history of user-visible changes.
 
+* Noteworthy changes in release 2.8.0 (2019-09-09)
+
+This Liblouisutdml release adds a couple of new features and adds
+support for liblouis 3.11.
+
+** New features
+- Add support for liblouis 3.11
+- Add a setting for minimum syllable length (hyphenation) thanks to
+  Bert Frees
+- Add a new page number format: Roman capitals, thanks to
+  Bert Frees
+
+** Bug fixes
+- Drop the dependecy on internal liblouis API, thanks to Christian
+  Egli and Bert Frees
+- Handle empty elements with style thanks to Bert Frees
+- Fix ~topBoxline~ and ~bottomBoxline~ thanks to Bert Frees
+- Fix ~printPageNumberRange=yes~ with ~printPageNumberAt=bottom~ thanks to Bert Frees
+- Allow Roman numbers greater than 1000 thanks to Bert Frees
+- Fix Belgian math thanks to Bert Frees
+
+** Other
+- Added a huge set of MathML -> Nemeth tests thanks to Neil Soiffer
+- Add description to NAME section of manpage, for whatis thanks to Samuel Thibault
+
 * Noteworthy changes in release 2.7.1 (2019-05-07)
 
 This Liblouisutdml release adds a couple of new features and adds
