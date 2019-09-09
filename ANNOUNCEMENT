@@ -1,55 +1,64 @@
-liblouisutdml 2.6.0 has been released. The release is available for
-download at:
+liblouisutdml 2.8.0 has been released
 
-    https://github.com/liblouis/liblouisutdml/releases
+The liblouis developer team is proud to announce the liblouisutdml
+release 2.8.0. The release is available for download at:
+
+https://github.com/liblouis/liblouisutdml/releases
 
 Introduction
 ============
 
-Liblouisutdml is an open-source braille formatter. The formatting can
-be configured via a style sheet. By incorporating Liblouis[1] it
-provides the capability of translating any XML or plain text file into
-properly transcribed, embosser-ready braille. This includes
-translation into grade two, mathematical codes, etc.
+Liblouisutdml is an open-source braille formatter. The formatting can be
+configured via a style sheet. By incorporating Liblouis [1]_ it provides
+the capability of translating any XML or plain text file into properly
+transcribed, embosser-ready braille. This includes translation into
+grade two, mathematical codes, etc.
 
-Changes in this release
-=======================
+Noteworthy changes in this release
+==================================
 
-This is the first official Liblouisutdml release in a long time. Many
-bug fixes and stability improvements have gone into it. There are a
-couple of new features like end note functionality and boxlines for
-example. Also there is an extensive test suite now and the
-documentation has been vastly enhanced.
+This Liblouisutdml release adds a couple of new features and adds
+support for liblouis 3.11.
+
+For a detailed list of all the changes refer to the list of closed
+issues [2]_.
 
 New features
-~~~~~~~~~~~~
+------------
 
-- Added an extensive test suite which tests liblouisutml under various
-  circumstances.
-- Add a configure option to disable the Java bindings.
-- Added Java bindings for logging callback API in liblouis.
-- Add end note functionality. Thanks to Paul Wood from Torch Trust
+-  Add support for liblouis 3.11
+-  Add a setting for minimum syllable length (hyphenation) thanks to
+   Bert Frees
+-  Add a new page number format: Roman capitals, thanks to Bert Frees
 
 Bug fixes
-~~~~~~~~~
+---------
 
-- fixed a problem with duplicate semantics attributes
-- solve multiple brl nodes after math nodes
-- Improve the documentation on XPath expressions.
-- Fixed numerous problems in the build system.
-- Fixed the character used when UCS2 builds encounter characters above
-  u+ffff
+-  Drop the dependency on internal liblouis API, thanks to Christian
+   Egli and Bert Frees
+-  Handle empty elements with style thanks to Bert Frees
+-  Fix ``topBoxline`` and ``bottomBoxline`` thanks to Bert Frees
+-  Fix ``printPageNumberRange=yes`` with ``printPageNumberAt=bottom``
+   thanks to Bert Frees
+-  Allow Roman numbers greater than 1000 thanks to Bert Frees
+-  Fix Belgian math thanks to Bert Frees
 
-Documentation updates
-~~~~~~~~~~~~~~~~~~~~~
+Other
+-----
 
-- Document the end note functionality
-- Add an index for the default styles
-- Update the documentation appendix
-- Add the boxline style. Thanks to Michael Whapples.
+-  Added a huge set of MathML -&gt; Nemeth tests thanks to Neil Soiffer
+-  Add a description to the NAME section of the man page thanks to
+   Samuel Thibault
+
+Share and Enjoy!
+
+– Christian Egli, on behalf of the liblouis developers
 
 Footnotes
 =========
 
-[1]  See https://github.com/liblouis/liblouis
+.. [1]
+   https://github.com/liblouis/liblouis
 
+.. [2]
+   https://github.com/liblouis/liblouisutdml/milestone/3?closed=1
