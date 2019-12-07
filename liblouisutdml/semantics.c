@@ -527,8 +527,7 @@ insert_code (xmlNode * node, int which)
     }
   else
     {
-      if (inserts->numInserts == 0 || inserts->numInserts < which
-	  || (which == 1 && inserts->numInserts == 1))
+      if (inserts->numInserts == 0 || inserts->numInserts <= which)
 	return 1;
       sumLength = 1;
       for (k = 0; k < which; k++)
