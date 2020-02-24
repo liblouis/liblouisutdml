@@ -243,7 +243,7 @@ fprintf (Makefile_gen, "    %s.obj \n", libxml2Module[kk]);
     {
       fprintf (Makefile_gen, "%s.obj: $(HEADERS) $(SRCDIR)\\%s.c\n",
 	       module[kk], module[kk]);
-    if (strcmp (module[k], "loblouisutdml") == 0)
+    if (strcmp (module[k], "liblouisutdml") == 0)
       fprintf (Makefile_gen, 
 "    $(CC) $(CCFLAGS) /DPACKAGE_VERSION=%s $(SRCDIR)\\%s.c\n",
 	       version, module[kk]);
