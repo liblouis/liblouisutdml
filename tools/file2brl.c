@@ -61,7 +61,7 @@ print_help (void)
 Usage: %s [OPTION] [inputFile] [outputFile]\n", program_name);
 
   fputs ("\
-Translate an xml or a text file into an embosser-ready braille file.\n\
+Translate an xml, html or a text file into an embosser-ready braille file.\n\
 This includes translation into grade two, if desired, mathematical \n\
 codes, etc. It also includes formatting according to a built-in \n\
 style sheet which can be modified by the user.\n\
