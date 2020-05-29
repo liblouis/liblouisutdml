@@ -197,8 +197,8 @@ main (int argc, char **argv)
     whichProc = '0';
   if (logFileName[0] != 0)
   {
-  strcpy (logFileName, lbu_getWriteablePath());
-  strcat (logFileName, "file2brl.log");
+  //strcpy (logFileName, lbu_getWriteablePath());
+  strcpy (logFileName, "file2brl.log");
   }
   if (configSettings != NULL)
     for (k = 0; configSettings[k]; k++)
