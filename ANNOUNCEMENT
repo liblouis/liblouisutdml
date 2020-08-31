@@ -1,7 +1,7 @@
-liblouisutdml 2.8.0 has been released
+liblouisutdml 2.9.0 has been released
 
 The liblouis developer team is proud to announce the liblouisutdml
-release 2.8.0. The release is available for download at:
+release 2.9.0. The release is available for download at:
 
 https://github.com/liblouis/liblouisutdml/releases
 
@@ -17,8 +17,8 @@ grade two, mathematical codes, etc.
 Noteworthy changes in this release
 ==================================
 
-This Liblouisutdml release adds a couple of new features and adds
-support for liblouis 3.11.
+This Liblouisutdml release fixes a couple of bugs and adds support for
+liblouis 3.15.
 
 For a detailed list of all the changes refer to the list of closed
 issues [2]_.
@@ -26,29 +26,21 @@ issues [2]_.
 New features
 ------------
 
--  Add support for liblouis 3.11
--  Add a setting for minimum syllable length (hyphenation) thanks to
-   Bert Frees
--  Add a new page number format: Roman capitals, thanks to Bert Frees
+-  Add support for liblouis 3.15
 
 Bug fixes
 ---------
 
--  Drop the dependency on internal liblouis API, thanks to Christian
-   Egli and Bert Frees
--  Handle empty elements with style thanks to Bert Frees
--  Fix ``topBoxline`` and ``bottomBoxline`` thanks to Bert Frees
--  Fix ``printPageNumberRange=yes`` with ``printPageNumberAt=bottom``
-   thanks to Bert Frees
--  Allow Roman numbers greater than 1000 thanks to Bert Frees
--  Fix Belgian math thanks to Bert Frees
+-  Fix a buffer overflow thanks to Samuel Thibault
+-  Fix a typo in ``make_makefile.c`` thanks to Arend Arends
+-  Fix a few bugs in the windows make file generator thanks to Christian
+   Egli
 
 Other
 -----
 
--  Added a huge set of MathML -&gt; Nemeth tests thanks to Neil Soiffer
--  Add a description to the NAME section of the man page thanks to
-   Samuel Thibault
+-  Improvements to the help screen thanks to Sebastian Humenda
+-  Fix some math test cases thanks to Christian Egli
 
 Share and Enjoy!
 
@@ -61,4 +53,4 @@ Footnotes
    https://github.com/liblouis/liblouis
 
 .. [2]
-   https://github.com/liblouis/liblouisutdml/milestone/3?closed=1
+   https://github.com/liblouis/liblouisutdml/milestone/5?closed=1
