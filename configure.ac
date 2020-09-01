@@ -7,7 +7,7 @@ AC_CONFIG_HEADER([liblouisutdml/config.h])
 
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIR([m4])
-AM_INIT_AUTOMAKE
+AM_INIT_AUTOMAKE([-Wall dist-zip])
 
 # increment if the interface has additions, changes, removals.
 LIBLOUISUTDML_CURRENT=10
