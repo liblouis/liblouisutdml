@@ -37,9 +37,10 @@ AC_PROG_INSTALL
 AC_PROG_LN_S
 AC_PROG_MAKE_SET
 # AC_PROG_RANLIB
-AC_ISC_POSIX
-AC_LIBTOOL_WIN32_DLL
+AM_PROG_AR
 AM_PROG_LIBTOOL
+# see https://www.gnu.org/software/libtool/manual/html_node/LT_005fINIT.html
+LT_INIT([win32-dll])
 
 # GNU help2man creates man pages from --help output; in many cases,
 # this is sufficient, and obviates the need to maintain man pages
