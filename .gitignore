@@ -60,6 +60,7 @@ liblouisutdml/config.h.in
 liblouisutdml/stamp-h1
 
 liblouisutdml-*.tar.gz
+liblouisutdml-*.zip
 
 libtool
 
