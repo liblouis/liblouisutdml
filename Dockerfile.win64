@@ -1,0 +1,73 @@
+FROM debian:latest
+
+# This is a dockerfile that creates an environment to cross-compile
+# liblouisutdml for Windows. It includes libyaml and liblouis.
+
+LABEL maintainer="Liblouis Maintainers <liblouis-liblouisxml@freelists.org>"
+
+# Fetch build dependencies
+RUN apt-get update && apt-get install -y \
+    autoconf \
+    automake \
+    curl \
+    libtool \
+    make \
+    mingw-w64 \
+    pkg-config \
+    texinfo \
+    wine64 \
+    zip \
+    patch \
+   && rm -rf /var/lib/apt/lists/*
+
+ARG LIBYAML_VERSION=0.1.4
+ARG LIBLOUIS_VERSION=3.15.0
+ARG LIBXML2_VERSION=2.9.9
+ENV HOST=x86_64-w64-mingw32 \
+    PREFIX=/usr/build/win64 \
+    SRCDIR=/usr/src/ \
+    PKG_CONFIG_PATH=/usr/build/win64/liblouis/lib/pkgconfig/:/usr/build/win64/lib/pkgconfig/
+
+# Build and install libyaml
+WORKDIR ${SRCDIR}
+RUN curl -L https://github.com/yaml/libyaml/archive/${LIBYAML_VERSION}.tar.gz | tar zx
+WORKDIR ${SRCDIR}/libyaml-${LIBYAML_VERSION}
+# Unfortunately we need to apply a patch to version 0.1.4 of libyaml. But regretfully we
+# depend on 0.1.4 to have a statically linked version of libyaml. With newer versions of
+# liblouis we haven't managed to produce a self-contained lou_checkyaml.exe so far.
+ADD https://raw.githubusercontent.com/liblouis/liblouis/master/libyaml_mingw.patch .
+RUN patch -p1 <libyaml_mingw.patch
+RUN ./bootstrap && \
+    ./configure --host ${HOST} --prefix=${PREFIX}/libyaml && \
+    make && \
+    make install
+
+# Build and install libxml2
+WORKDIR ${SRCDIR}
+RUN curl -L ftp://xmlsoft.org/libxml2/libxml2-${LIBXML2_VERSION}.tar.gz | tar zx
+WORKDIR ${SRCDIR}/libxml2-${LIBXML2_VERSION}
+RUN autoreconf -i && \
+    ./configure --with-zlib=no --with-iconv=no --with-python=no --with-threads=no --host ${HOST} --prefix=${PREFIX} && \
+    make && \
+    make install
+
+# Build and install liblouis
+WORKDIR ${SRCDIR}
+RUN curl -L https://github.com/liblouis/liblouis/archive/v${LIBLOUIS_VERSION}.tar.gz | tar zx
+WORKDIR ${SRCDIR}/liblouis-${LIBLOUIS_VERSION}
+RUN ./autogen.sh && \
+    ./configure  --host ${HOST} --enable-ucs4 \
+        --prefix=${PREFIX}/liblouis \
+        CPPFLAGS="-I${PREFIX}/libyaml/include/" LDFLAGS="-L${PREFIX}/libyaml/lib/" && \
+    make LDFLAGS="-L${PREFIX}/libyaml/lib/ -avoid-version -Xcompiler -static-libgcc" && \
+    make install
+
+# Build release artifact, i.e. liblouisutdml zip
+ADD . ${SRCDIR}/liblouisutdml
+WORKDIR ${SRCDIR}/liblouisutdml
+RUN ./autogen.sh && \
+    ./configure  --host ${HOST} --disable-java-bindings --prefix=${PREFIX}/liblouisutdml && \
+    make && \
+    make install && \
+    cd ${PREFIX}/liblouisutdml && \
+    zip -r ${SRCDIR}/liblouisutdml/liblouisutdml.zip *
