@@ -34,7 +34,7 @@ ARG LIBXML2_VERSION=2.9.9
 ENV HOST=i686-w64-mingw32 \
     PREFIX=/usr/build/win32 \
     SRCDIR=/usr/src/ \
-    PKG_CONFIG_PATH=/usr/build/win32/liblouis/lib/pkgconfig/:/usr/build/win32/lib/pkgconfig/
+    PKG_CONFIG_PATH=/usr/build/win32/lib/pkgconfig/
 
 # Build and install libyaml
 WORKDIR ${SRCDIR}
@@ -46,7 +46,7 @@ WORKDIR ${SRCDIR}/libyaml-${LIBYAML_VERSION}
 ADD https://raw.githubusercontent.com/liblouis/liblouis/master/libyaml_mingw.patch .
 RUN patch -p1 <libyaml_mingw.patch
 RUN ./bootstrap && \
-    ./configure --host ${HOST} --prefix=${PREFIX}/libyaml && \
+    ./configure --host ${HOST} --prefix=${PREFIX} && \
     make && \
     make install
 
@@ -65,18 +65,18 @@ RUN curl -L https://github.com/liblouis/liblouis/archive/v${LIBLOUIS_VERSION}.ta
 WORKDIR ${SRCDIR}/liblouis-${LIBLOUIS_VERSION}
 RUN ./autogen.sh && \
     ./configure  --host ${HOST} --enable-ucs4 \
-	--prefix=${PREFIX}/liblouis \
+	--prefix=${PREFIX} \
         CFLAGS='-O0' \
-        CPPFLAGS="-I${PREFIX}/libyaml/include/" LDFLAGS="-L${PREFIX}/libyaml/lib/" && \
-    make LDFLAGS="-L${PREFIX}/libyaml/lib/ -avoid-version -Xcompiler -static-libgcc" && \
+        CPPFLAGS="-I${PREFIX}/include/" LDFLAGS="-L${PREFIX}/lib/" && \
+    make LDFLAGS="-L${PREFIX}/lib/ -avoid-version -Xcompiler -static-libgcc" && \
     make install
 
 # Build release artifact, i.e. liblouisutdml zip
 ADD . ${SRCDIR}/liblouisutdml
 WORKDIR ${SRCDIR}/liblouisutdml
 RUN ./autogen.sh && \
-    ./configure  --host ${HOST} --disable-java-bindings --prefix=${PREFIX}/liblouisutdml && \
+    ./configure  --host ${HOST} --disable-java-bindings --prefix=${PREFIX} && \
     make && \
     make install && \
-    cd ${PREFIX}/liblouisutdml && \
+    cd ${PREFIX} && \
     zip -r ${SRCDIR}/liblouisutdml/liblouisutdml.zip *
