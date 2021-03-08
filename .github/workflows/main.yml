@@ -1,4 +1,4 @@
-name: Make check/distcheck
+name: Make check
 
 on:
   push:
