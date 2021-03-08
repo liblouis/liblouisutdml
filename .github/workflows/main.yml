@@ -33,6 +33,12 @@ jobs:
       run: make
     - name: make check
       run: make check
+    - name: Store the test suite log
+      if: ${{ always() }} # store the test suite log even if the tests failed
+      uses: actions/upload-artifact@v2
+      with:
+        name: test-suite-liblouis-master.log
+        path: tests/test-suite.log
 
   build-stable:
     name: Build with liblouis stable
@@ -57,3 +63,10 @@ jobs:
       run: make
     - name: make check
       run: make check
+    - name: Store the test suite log
+      if: ${{ always() }} # store the test suite log even if the tests failed
+      uses: actions/upload-artifact@v2
+      with:
+        name: test-suite-liblouis-stable.log
+        path: tests/test-suite.log
+
