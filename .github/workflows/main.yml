@@ -19,8 +19,8 @@ jobs:
       run: |
         wget https://github.com/liblouis/liblouis/archive/master.tar.gz
         tar -xf master.tar.gz
-        ( cd liblouis-* && ./autogen.sh && ./configure && make && make install )
-        ldconfig
+        ( cd liblouis-* && ./autogen.sh && ./configure && make && sudo make install )
+        sudo ldconfig
     - name: Autogen && configure
       run: |
         ./autogen.sh
