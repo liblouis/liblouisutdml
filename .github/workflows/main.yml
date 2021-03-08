@@ -39,6 +39,11 @@ jobs:
       with:
         name: test-suite-liblouis-master.log
         path: tests/test-suite.log
+    - name: Store the run test suite log
+      uses: actions/upload-artifact@v2
+      with:
+        name: run-test-suite-liblouis-master.log
+        path: tests/run_test_suite.sh.log
 
   build-stable:
     name: Build with liblouis stable
@@ -69,4 +74,9 @@ jobs:
       with:
         name: test-suite-liblouis-stable.log
         path: tests/test-suite.log
+    - name: Store the run test suite log
+      uses: actions/upload-artifact@v2
+      with:
+        name: run-test-suite-liblouis-stable.log
+        path: tests/run_test_suite.sh.log
 
