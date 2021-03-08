@@ -45,7 +45,7 @@ jobs:
       run: sudo apt-get update -qq && sudo apt-get install -y texinfo libxml2-dev libxml2 openjdk-8-jdk
     - name: Fetch and build liblouis
       run: |
-        wget wget https://github.com/liblouis/liblouis/releases/download/v${LIBLOUIS_VERSION}/liblouis-${LIBLOUIS_VERSION}.tar.gz
+        wget https://github.com/liblouis/liblouis/releases/download/v${LIBLOUIS_VERSION}/liblouis-${LIBLOUIS_VERSION}.tar.gz
         tar -xf liblouis-*.tar.gz
         ( cd liblouis-* && ./configure && make && sudo make install )
         sudo ldconfig
