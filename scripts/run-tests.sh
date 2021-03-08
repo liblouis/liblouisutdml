@@ -8,7 +8,7 @@ if [ "${LIBLOUIS_VERSION}" = "master" ]; then
 else
     wget https://github.com/liblouis/liblouis/releases/download/v${LIBLOUIS_VERSION}/liblouis-${LIBLOUIS_VERSION}.tar.gz
     tar -xf liblouis-*.tar.gz
-    ( cd liblouis-* && ./configure && make && sudo make install )
+    ( cd liblouis-${LIBLOUIS_VERSION} && ./configure && make && sudo make install )
 fi
 sudo ldconfig
 
