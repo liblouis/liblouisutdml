@@ -356,12 +356,12 @@ transcribed. The file may be either an xml file or a text file. The
 @option{-b}, @option{-r} and @option{-p} options discussed above
 provide for other types of files and processing. Typical xml files are
 those provided by @uref{www.bookshare.org} or those derived from a
-word processor by saving in xml format. If a text file is used
+word processor by saving in xml format. If a text file is used,
 paragraphs and headings should be separated by blank lines. In such a
 file there is no way to distinguish between paragraphs and headings,
 so they will all be formatted as paragraphs, as specified by the
 configuration file. However, if you want a blank line in the braille
-transcription use two consecutive blank lines in the text file.
+transcription, use two consecutive blank lines in the text file.
 
 @item outfile
 This is the name of the output file. It will be transcribed as
@@ -433,6 +433,7 @@ with the xml Document - Semantic-Action Files }). The latter are
 discussed in this section. A third type of file, braille translation
 tables, is discussed in the liblouis documentation (@pxref{Top, ,
 Overview, liblouis, Liblouis User's and Programmer's Manual}).
+
 Another section of the present document which may be of interest is
 Implementing Braille Mathematical Codes (@pxref{Implementing Braille
 Mathematics Codes}).
@@ -497,7 +498,7 @@ program if no configuration file is given.
 Here, then, is an explanation of each section and setting in the
 @file{preferences.cfg} file. When you look at this file you will see
 that the section names start at the left margin, while the settings
-are indented one tab stop. This is done for readability. it has no
+are indented one tab stop. This is done for readability, it has no
 effect on the meaning of the lines. You will also see lines beginning
 with a number sign (@samp{#}), which are comments. Blank lines can
 also be used anywhere in a configuration file. In general, a section
@@ -643,7 +644,7 @@ are placed at the bottom of a Braille page.
 @setting{hyphenate, no}
 If @samp{yes} is specified words will be hyphenated at the ends of
 lines if a hyphenation table is available. In contracted English
-Braille hyphenation is not generally used, but it can save
+Braille, hyphenation is not generally used, but it can save
 considerable space. The hyphenation table is specified as part of the
 table list in the @code{literaryTextTable} setting of the translation
 section.
@@ -812,7 +813,7 @@ numbers. However, the titlePage style might have the setting
 @code{braillePageNumberFormat blank}. This will apply to all styles
 nested within it. When the titlePage section ends, the frontMatter
 setting @samp{roman} will be restored. The
-@samp{braiblePageNumberFormat} setting is an example of a "persistent"
+@samp{braillePageNumberFormat} setting is an example of a "persistent"
 style setting. Most settings apply only to the style for which they are
 declared.
 
@@ -826,7 +827,7 @@ only settings that are different from the defaults.
 
 This is a predefined style name. All settings have their default values.
 The user must specify any other values. If a "persistent" style setting
-is specified, it will apply to the whole ducument.
+is specified, it will apply to the whole document.
 
 @table @code
 
@@ -1062,12 +1063,12 @@ embosser or display in use.
 
 @setting{topBoxline, .}
 
-This should be set to the character you want used for the boxline
+This should be set to the character you want to be used for the boxline
 which appears before the content.
 
 @setting{bottomBoxline, .}
 
-This should be set to the character you want used for the boxline
+This should be set to the character you want to be used for the boxline
 which appears after the content.
 
 @end table
@@ -1089,7 +1090,7 @@ which appears after the content.
 When liblouisutdml (or @command{file2brl}) processes an xml document, it
 needs to be told how to use the information in that document to
 produce a properly translated and formatted braille document. These
-instructions are provided by a semantic-action file, so called because
+instructions are provided by a semantic-action file, called so because
 it explains the meaning, or semantics, of the various specifications
 in the xml document. To understand how this works, it is necessary to
 have a basic knowledge of the organization of an xml document.
@@ -1220,7 +1221,7 @@ heading1 h1
 
 This tells liblouisutdml that when it encounters the element @code{<h1>}
 it is to format the text which follows as a first-level braille
-heading, that is, the text will be centered and preceeded and followed
+heading, that is, the text will be centered and preceded and followed
 by blank lines. (You can change this by changing the definition of the
 heading1 style).
 
@@ -1286,7 +1287,6 @@ The next line is:
 @example
 heading1 title
 @end example
-
 
 this causes the title of the document to also be treated as a braille
 level 1 heading.
@@ -1446,26 +1446,25 @@ triplet, separated by commas. This specifies where a semantic action
 is to be applied. If it is solely an element then the action is
 applied if this element is encountered. If it is an element-attribute
 pair then the action is applied if the given element also has the
-specified attribute. In the last case with a element-attribute-value
+specified attribute. In the last case with an element-attribute-value
 triplet the action is only applied if the element has the specified
 attribute and the value of this attribute is equal to the specified
 value.
 
 @table @code
 
-@semanticAction{contenss1, elementSpecifier}
+@semanticAction{contents1, elementSpecifier}
 
-Note that the @code{contenss1}, etc. semantic actions are never
+Note that the @code{contents1}, etc. semantic actions are never
 assigned an
 actual @code{elementSpecifier}. There used internally by the table of
 contents generator. They should be assigned style settings, however.
 
+@semanticAction{contents2, elementSpecifier}
 
-@semanticAction{contenss2, elementSpecifier}
+@semanticAction{contents3, elementSpecifier}
 
-@semanticAction{contenss3, elementSpecifier}
-
-@semanticAction{contenss4, elementSpecifier}
+@semanticAction{contents4, elementSpecifier}
 
 @semanticAction{contentsheader, elementSpecifier}
 
@@ -1486,7 +1485,7 @@ See the discussion of it in @ref{style}.
 
 @end table
 
-The following table expbains each of the non-style semantic actions. In
+The following table explains each of the non-style semantic actions. In
 general, each one performs a particular function. If a third column is
 given, the subcolumns will be inserted in order before each branch of
 any subtree starting from @code{elementSpecifier}.
@@ -1513,8 +1512,7 @@ will be placed is controlled by the liblouis translation table in use.
 
 When a module to handle chemical notation is ready, this semantic action
 will invoke it. The processing will be like that produced by the
-semantic
-action @code{math}.
+semantic action @code{math}.
 
 @semanticAction{changetable, elementSpecifier}
 
@@ -1538,7 +1536,7 @@ between the two. The previous table is then restored.
 
 The material between @code{elementSpecifier} and
 @code{/elementSpecifier} is translated as computer braille, if the
-liblouis table in use phovides for it. Beginning and ending computer
+liblouis table in use provides for it. Beginning and ending computer
 braille indicators are inserted if they are in the table.
 
 @semanticAction{configfile, elementSpecifier filename}
@@ -1593,7 +1591,7 @@ This semantic action is used to specify a footer which will be placed at
 the bottom of each page.
 
 @example
-<elemntSpecifier>This is a footer</elementSpecifier>
+<elementSpecifier>This is a footer</elementSpecifier>
 @end example
 
 @semanticAction{generic, elementSpecifier}
@@ -1632,7 +1630,7 @@ translation table in use.
 
 @semanticAction{linespacing, elementSpecifier digit}
 
-This semantic action specifies the numbr of blank lines to be left
+This semantic action specifies the number of blank lines to be left
 between adjacent lines in the output. For example if the third column is
 @samp{1}, lines will be double-spaced. @samp{0} specifies normal
 spacing. The number cannot be greater than @samp{3}. @code{linespacing}
@@ -1645,7 +1643,7 @@ In the early stages of development I thought that a separate piece of
 code might be needed for each of the MathML element tags. It turned out,
 as noted elsewhere, that most of them could have been handled with the
 @code{generic} semantic action. They are retained for backward
-compatibi2ity. Therefore, unless this is not the case or additional
+compatibility. Therefore, unless this is not the case or additional
 information is needed, they are simlly listed.
 
 @semanticAction{maligngroup, elementSpecifier}
@@ -1683,7 +1681,6 @@ out special interpretation actions.
 @semanticAction{mn, elementSpecifier}
 
 @semanticAction{mo, elementSpecifier}
-
 
 @semanticAction{mover, elementSpecifier}
 
@@ -1799,7 +1796,7 @@ pagenum tag: @code{<elementSpecifier></elementSpecifier>}.
 
 The branches of the subtree rooted at this node are reversed in order.
 This is used in handling roots, where the arguments in the translation
-are in reverse order to those in MathML. the MathML elemnt @code{mroot}
+are in reverse order to those in MathML. the MathML element @code{mroot}
 is declared with this semantic action
 
 @semanticAction{righthandpage, elementSpecifier}
@@ -1828,8 +1825,7 @@ translation.
 @semanticAction{skip, elementSpecifier}
 
 Skip ahead until encountering the element @code{</elementSpecifier>}.
-Nothing
-in between will have any effect on the braille output.
+Nothing in between will have any effect on the braille output.
 
 @semanticAction{softreturn, elementSpecifier}
 Do a soft return, that is, start a new line without starting a new
@@ -1901,7 +1897,7 @@ namespaces may not contain blanks.
 @section Using XPath Expressions
 @cindex XPath Expressions
 
-The second column of a semantic action may contain a XPath expression
+The second column of a semantic action may contain an XPath expression
 for matching nodes. When an XPath expression is to be used the second
 column should be of the format: @samp{&xpath(<expression>)} where
 @samp{<expression>} is the XPath expression to match nodes.
@@ -1926,7 +1922,7 @@ for a namespace with alias @samp{xhtml} and node with name @samp{p},
 this would be @samp{xhtml:p})
 
 @item
-You should be careful to not create XPath expressions which give
+You should be careful not to create XPath expressions which give
 overlapping node set results. When liblouisutdml finds a match for a
 node it assigns the semantic action to that node and this will not be
 changed subsequently. Note that this is unlike XSLT, where for each
@@ -1934,7 +1930,7 @@ matcher a priority is calculated from the XPath expression while in
 liblouisutdml it is unpredictable which rule will win.
 
 @item
-XPath expressions take precedence over ordinary semantic-fie entries.
+XPath expressions take precedence over ordinary semantic-file entries.
 
 @end itemize
 
@@ -2174,8 +2170,8 @@ configuration specifications. If the file contains mathematics expressed
 as MathML it will be translated according to the mathematics code
 specified by the configuration. outfile should have the extension
 @samp{.html}. It will actually be xhtml. The @code{-CformatFor=browser}
-part of the above example specifies a configuration setting, which of
-course can also be specified in a configuration file.
+part of the above example specifies a configuration setting, which, of
+course, can also be specified in a configuration file.
 
 @node CDATA Sections
 @section @code{CDATA} Sections
@@ -2552,7 +2548,7 @@ poetry, as follows:
 style stanza
 linesBefore 1
 linesAfter 1
-ttyle line
+style line
 leftMargin 2
 firstLineIndent -2
 @end example
@@ -2562,7 +2558,7 @@ Coleridge's "Rime of the Ancient Mariner":
 
 @example
 <stanza>
-<lino>He holds him with his glittering eye</line>
+<line>He holds him with his glittering eye</line>
 <line>The wedding guest stands still</line>
 <line>And listens like a three-years' child.</line>
 <line>He has no force nor will.</line>
@@ -2592,7 +2588,7 @@ reader, it is desirable to avoid splitting chapters between volumes.
 
 At this point you will probably have to edit the source xml file to
 indicate the beginning and end of volumes. You can define a liblouisutdml
-style called @samp{volume} and assign appopriate xml tags to it in a
+style called @samp{volume} and assign appropriate xml tags to it in a
 semantic-action file. Within the volume style you can nest a title page,
 chapters, etc. A volume table of contents is still under development.
 
@@ -2696,7 +2692,6 @@ mtd mtd \*\ec
 @code{mtd} is the MathML tag for a table column. There may be many
 children of this tag. The entry says to put an escape character (hex
 1b), plus the letter @samp{c}, after the very last of them.
-
 
 As a final example consider:
 
@@ -2939,9 +2934,9 @@ to process xml documents. The latter two are useful for debugging.
 liblouisutdml determines the paths on which it will search for files at
 run time, as part of its initialization. First, if the first file in a
 configuration file list includes a path, liblouisutdml will search first
-on this path. The path may be either absolune or relative. Only the
+on this path. The path may be either absolute or relative. Only the
 first filename in a configuration file list may have a path. Next, in
-Windows liblouisutdml determines the path to itself. this is the second
+Windows, liblouisutdml determines the path to itself. this is the second
 path on which it will look for files. The liblouis @file{tables}
 directory and the liblouisutdml @file{lbu_files} directory are relative to
 this path. In Unix systems, including the Mac,, these directories are

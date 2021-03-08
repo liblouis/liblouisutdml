@@ -36,7 +36,7 @@ UTDML file was produced by aplying @file{makeutd.cfg} (via the
 @command{file2brl} command). The essential feature of this file is that
 it has the configuration setting @code{formatFor utd}. The result is a
 file that contains the UTDML tags and Unicode braille encoded as UTF-8.
-This is not very readable, so anotgher step was necessary.
+This is not very readable, so another step was necessary.
 @file{viewxml.cfg} was then applied to the result. 
 This file uses a
 special liblouis table to produce readable text showing everything in
@@ -108,20 +108,20 @@ number="2"/> </brl> </book>
 </dtbook>
 @end example
 
-An analysiis of the example will show the main features of UTDML.
+An analysis of the example will show the main features of UTDML.
 
 The @code{<?xml} processing instruction was added by liblouisutdml to 
-prooduce a well-formed xml document. it is not part of UTDML.
+produce a well-formed xml document. it is not part of UTDML.
 
 In the first example the @code{<head>} element is empty. UTDML has added a 
 @code{<meta>} sub-element with @code{name="utd"} and @code{content} 
-attributes. The value of the latter id a list of confiburation settings 
+attributes. The value of the latter is a list of configuration settings 
 and their values.
 
 The tag @code{<book>} has been assigned the document style in
 @file{dtbook.sem}. UTDML therefore adds the first @code{<brl>} node.  It
 has no @code{index} attribute, since it contains no braille to be
-synchronized with the print text, but does congain braille formatting
+synchronized with the print text, but does contain braille formatting
 information. It contains a @code{<newpage>} node with the attribute
 @code{number="1"}. A @code{<newpage>} node must precede the first
 @code{<newline>} node on a page, of which more below.
@@ -146,7 +146,7 @@ x-coordinate of 18, since the spacing between lines is 8 half-dots. If a
 line contains cells with dots 7 or 8 the next line is spaced 10 
 half-dots.
 
-Following the @code<newline xy="20,10"/>} are a number of strings within 
+Following the @code{<newline xy="20,10"/>} are a number of strings within 
 single quotes which give the braille translation in US English Grade 2. 
 This is Unicode braille, which gives the dot patterns. In the UTDML file 
 it is encoded in UTF-8. It was rendered readable by using a special 
@@ -185,12 +185,12 @@ and synchronization information.
 
 Usually @code{<brl>} nodes follow text nodes in the original document, 
 but they may occur in other places where braille formatting or 
-braill-only information is needed. In such cases they will not have an 
+braille-only information is needed. In such cases they will not have an 
 @code{index} attribute to give synchronization information with the 
 print text.
 
 An extra @code{<meta>} tag is added to the @code{<head>} element, giving 
-information about the braille poortions of the document. An xml file 
+information about the braille portions of the document. An xml file 
 that is to be augmented with UTDML must therefore have a @code{<head>} 
 element or equivalent, but it may be empty.
 
