@@ -6,8 +6,12 @@ on:
   pull_request:
     branches: [ master ]
 
+env:
+  LIBLOUIS_VERSION: 3.17.0
+
 jobs:
   build:
+    name: Build with liblouis master
 
     runs-on: ubuntu-latest
 
@@ -15,11 +19,35 @@ jobs:
     - uses: actions/checkout@v2
     - name: Install dependencies
       run: sudo apt-get update -qq && sudo apt-get install -y texinfo libxml2-dev libxml2 openjdk-8-jdk
-    - name: Fetch liblouis
+    - name: Fetch and build liblouis
       run: |
         wget https://github.com/liblouis/liblouis/archive/master.tar.gz
         tar -xf master.tar.gz
         ( cd liblouis-* && ./autogen.sh && ./configure && make && sudo make install )
+        sudo ldconfig
+    - name: Autogen && configure
+      run: |
+        ./autogen.sh
+        ./configure
+    - name: make
+      run: make
+    - name: make check
+      run: make check
+
+  build-stable:
+    name: Build with liblouis stable
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install dependencies
+      run: sudo apt-get update -qq && sudo apt-get install -y texinfo libxml2-dev libxml2 openjdk-8-jdk
+    - name: Fetch and build liblouis
+      run: |
+        wget wget https://github.com/liblouis/liblouis/releases/download/v${LIBLOUIS_VERSION}/liblouis-${LIBLOUIS_VERSION}.tar.gz
+        tar -xf liblouis-*.tar.gz
+        ( cd liblouis-* && ./configure && make && sudo make install )
         sudo ldconfig
     - name: Autogen && configure
       run: |
