@@ -1,5 +1,22 @@
 liblouisxml NEWS -- history of user-visible changes.
 
+* Noteworthy changes in release 2.10.0 (2021-03-10)
+
+This minor Liblouisutdml release improves the documentation and
+improves the build and test infrastructure. It also adds support for
+liblouis 3.17.
+
+For a detailed list of all the changes refer to [[https://github.com/liblouis/liblouisutdml/milestone/6?closed=1][the list of closed
+issues]].
+
+** New features
+- Add support for liblouis 3.17
+
+** Other
+- Improve the documentation thanks to Norbert Márkus
+- New Dockerfiles to cross-compile using mingw thanks to Christian
+  Egli
+
 * Noteworthy changes in release 2.9.0 (2020-08-31)
 
 This Liblouisutdml release fixes a couple of bugs and adds support for

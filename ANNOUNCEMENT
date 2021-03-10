@@ -1,7 +1,7 @@
-liblouisutdml 2.9.0 has been released
+liblouisutdml 2.10.0 has been released
 
 The liblouis developer team is proud to announce the liblouisutdml
-release 2.9.0. The release is available for download at:
+release 2.10.0. The release is available for download at:
 
 https://github.com/liblouis/liblouisutdml/releases
 
@@ -17,8 +17,9 @@ grade two, mathematical codes, etc.
 Noteworthy changes in this release
 ==================================
 
-This Liblouisutdml release fixes a couple of bugs and adds support for
-liblouis 3.15.
+This minor Liblouisutdml release improves the documentation and improves
+the build and test infrastructure. It also adds support for liblouis
+3.17.
 
 For a detailed list of all the changes refer to the list of closed
 issues [2]_.
@@ -26,21 +27,13 @@ issues [2]_.
 New features
 ------------
 
--  Add support for liblouis 3.15
-
-Bug fixes
----------
-
--  Fix a buffer overflow thanks to Samuel Thibault
--  Fix a typo in ``make_makefile.c`` thanks to Arend Arends
--  Fix a few bugs in the windows make file generator thanks to Christian
-   Egli
+-  Add support for liblouis 3.17
 
 Other
 -----
 
--  Improvements to the help screen thanks to Sebastian Humenda
--  Fix some math test cases thanks to Christian Egli
+-  Improve the documentation thanks to Norbert Márkus
+-  New Dockerfiles to cross-compile using mingw thanks to Christian Egli
 
 Share and Enjoy!
 
@@ -53,4 +46,4 @@ Footnotes
    https://github.com/liblouis/liblouis
 
 .. [2]
-   https://github.com/liblouis/liblouisutdml/milestone/5?closed=1
+   https://github.com/liblouis/liblouisutdml/milestone/6?closed=1
