@@ -88,10 +88,21 @@ root@74a8b1ad5e03:/usr/src/liblouisutdml#
 
 # Docker for cross-compiling
 
-You can use a Docker image to cross-compile liblouisutdml using mingw.
+You can use a Dockerfile to cross-compile liblouisutdml using mingw
+either for 32 or for 64 bit architecture:
 
 ``` console
-docker build -f Dockerfile.mingw .
+# for 32 bit architecture
+docker build -f Dockerfile.win32 .
+# for 64 bit architecture
+docker build -f Dockerfile.win64 .
+```
+Then grab the artifact from the docker container.
+
+Or instead let the Makefile do it all for you:
+
+``` console
+make distwin
 ```
 
 [liblouis]: http://www.liblouis.org/
