@@ -321,10 +321,6 @@ XFAIL_TESTS +=					\
 	mathml_nemeth/mover_06.test		\
 	mathml_nemeth/mover_07.test		\
 	mathml_nemeth/mover_08.test		\
-	mathml_nemeth/mover_09.test		\
-	mathml_nemeth/mover_10.test		\
-	mathml_nemeth/mover_11.test		\
-	mathml_nemeth/mover_12.test		\
 	mathml_nemeth/mover_13.test		\
 	mathml_nemeth/mover_14.test		\
 	mathml_nemeth/mover_15.test		\
@@ -332,7 +328,6 @@ XFAIL_TESTS +=					\
 	mathml_nemeth/munder_01.test		\
 	mathml_nemeth/munder_02.test		\
 	mathml_nemeth/munder_03.test		\
-	mathml_nemeth/munder_04.test		\
 	mathml_nemeth/munder_05.test		\
 	mathml_nemeth/munder_06.test		\
 	mathml_nemeth/munder_07.test		\
