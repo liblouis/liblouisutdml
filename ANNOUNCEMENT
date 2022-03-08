@@ -1,7 +1,7 @@
-liblouisutdml 2.10.0 has been released
+liblouisutdml 2.11.0 has been released
 
 The liblouis developer team is proud to announce the liblouisutdml
-release 2.10.0. The release is available for download at:
+release 2.11.0. The release is available for download at:
 
 https://github.com/liblouis/liblouisutdml/releases
 
@@ -17,9 +17,7 @@ grade two, mathematical codes, etc.
 Noteworthy changes in this release
 ==================================
 
-This minor Liblouisutdml release improves the documentation and improves
-the build and test infrastructure. It also adds support for liblouis
-3.17.
+This minor Liblouisutdml release adds support for liblouis 3.20 and up.
 
 For a detailed list of all the changes refer to the list of closed
 issues [2]_.
@@ -27,13 +25,12 @@ issues [2]_.
 New features
 ------------
 
--  Add support for liblouis 3.17
+-  Add support for liblouis 3.20
 
 Other
 -----
 
--  Improve the documentation thanks to Norbert Márkus
--  New Dockerfiles to cross-compile using mingw thanks to Christian Egli
+-  Add Lithuanian hyphenation table
 
 Share and Enjoy!
 
@@ -46,4 +43,4 @@ Footnotes
    https://github.com/liblouis/liblouis
 
 .. [2]
-   https://github.com/liblouis/liblouisutdml/milestone/6?closed=1
+   https://github.com/liblouis/liblouisutdml/milestone/7?closed=1
