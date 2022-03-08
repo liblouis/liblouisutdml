@@ -49,7 +49,7 @@ LT_INIT([win32-dll])
 AC_CHECK_PROG([HELP2MAN], [help2man], [help2man])
 AM_CONDITIONAL([HAVE_HELP2MAN], [test x$HELP2MAN = xhelp2man])
 
-PKG_CHECK_MODULES(BASE_DEPENDENCIES, [liblouis >= 3.0.0, libxml-2.0])
+PKG_CHECK_MODULES(BASE_DEPENDENCIES, [liblouis >= 3.20.0, libxml-2.0])
 
 # Checks for libraries.
 
