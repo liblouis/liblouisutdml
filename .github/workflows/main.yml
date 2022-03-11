@@ -62,7 +62,7 @@ jobs:
     - name: make
       run: make
     - name: make check
-      run: make check
+      run: UBSAN_OPTIONS=halt_on_error=1 make check
     - name: Store the test suite log
       if: ${{ always() }} # store the test suite log even if the tests failed
       uses: actions/upload-artifact@v2
@@ -70,3 +70,62 @@ jobs:
         name: test-suite-liblouis-stable.log
         path: tests/test-suite.log
 
+  build-asan:
+    name: Build with asan
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install dependencies
+      run: sudo apt-get update -qq && sudo apt-get install -y texinfo libxml2-dev libxml2 openjdk-8-jdk
+    - name: Fetch and build liblouis
+      run: |
+        wget https://github.com/liblouis/liblouis/releases/download/v${LIBLOUIS_VERSION}/liblouis-${LIBLOUIS_VERSION}.tar.gz
+        tar -xf liblouis-*.tar.gz
+        ( cd liblouis-${LIBLOUIS_VERSION} && ./configure && make && sudo make install )
+        sudo ldconfig
+    - name: Autogen && configure
+      run: |
+        ./autogen.sh
+        CFLAGS="-fsanitize=address -g" ./configure
+    - name: make
+      run: make
+    - name: make check
+      run: ASAN_OPTIONS=detect_leaks=0 make check
+    - name: Store the test suite log
+      if: ${{ always() }} # store the test suite log even if the tests failed
+      uses: actions/upload-artifact@v2
+      with:
+        name: test-suite-liblouis-stable.log
+        path: tests/test-suite.log
+
+  build-usan:
+    name: Build with usan
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install dependencies
+      run: sudo apt-get update -qq && sudo apt-get install -y texinfo libxml2-dev libxml2 openjdk-8-jdk
+    - name: Fetch and build liblouis
+      run: |
+        wget https://github.com/liblouis/liblouis/releases/download/v${LIBLOUIS_VERSION}/liblouis-${LIBLOUIS_VERSION}.tar.gz
+        tar -xf liblouis-*.tar.gz
+        ( cd liblouis-${LIBLOUIS_VERSION} && ./configure && make && sudo make install )
+        sudo ldconfig
+    - name: Autogen && configure
+      run: |
+        ./autogen.sh
+        CFLAGS="-fsanitize=undefined -g" ./configure
+    - name: make
+      run: make
+    - name: make check
+      run: UBSAN_OPTIONS=halt_on_error=1 make check
+    - name: Store the test suite log
+      if: ${{ always() }} # store the test suite log even if the tests failed
+      uses: actions/upload-artifact@v2
+      with:
+        name: test-suite-liblouis-stable.log
+        path: tests/test-suite.log
