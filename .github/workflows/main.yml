@@ -11,62 +11,40 @@ env:
 
 jobs:
   build:
-    name: Build with liblouis master
-
     runs-on: ubuntu-latest
+    name: Build with liblouis ${{ matrix.liblouis }}
+    strategy:
+      matrix:
+        liblouis: [stable, master]
 
     steps:
     - uses: actions/checkout@v2
     - name: Install dependencies
       run: sudo apt-get update -qq && sudo apt-get install -y texinfo libxml2-dev libxml2 openjdk-8-jdk
-    - name: Fetch and build liblouis
+    - name: Fetch and build liblouis master
       run: |
         wget https://github.com/liblouis/liblouis/archive/master.tar.gz
         tar -xf master.tar.gz
         ( cd liblouis-* && ./autogen.sh && ./configure && make && sudo make install )
         sudo ldconfig
-    - name: Autogen && configure
-      run: |
-        ./autogen.sh
-        ./configure
-    - name: make
-      run: make
-    - name: make check
-      run: make check
-    - name: Store the test suite log
-      if: ${{ always() }} # store the test suite log even if the tests failed
-      uses: actions/upload-artifact@v2
-      with:
-        name: test-suite-liblouis-master.log
-        path: tests/test-suite.log
-
-  build-stable:
-    name: Build with liblouis stable
-
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v2
-    - name: Install dependencies
-      run: sudo apt-get update -qq && sudo apt-get install -y texinfo libxml2-dev libxml2 openjdk-8-jdk
-    - name: Fetch and build liblouis
+      if: matrix.liblouis == 'master'
+    - name: Fetch and build liblouis stable
       run: |
         wget https://github.com/liblouis/liblouis/releases/download/v${LIBLOUIS_VERSION}/liblouis-${LIBLOUIS_VERSION}.tar.gz
         tar -xf liblouis-*.tar.gz
         ( cd liblouis-${LIBLOUIS_VERSION} && ./configure && make && sudo make install )
         sudo ldconfig
+      if: matrix.liblouis == 'stable'
     - name: Autogen && configure
       run: |
         ./autogen.sh
         ./configure
-    - name: make
-      run: make
     - name: make check
       run: make check
     - name: Store the test suite log
       if: ${{ always() }} # store the test suite log even if the tests failed
       uses: actions/upload-artifact@v2
       with:
-        name: test-suite-liblouis-stable.log
+        name: test-suite-liblouis-${{ matrix.liblouis }}.log
         path: tests/test-suite.log
 
