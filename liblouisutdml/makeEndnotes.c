@@ -254,8 +254,11 @@ int finish_endnote(xmlNode* node)
 	int lines_added;
 	int line_num;
 	int page_num;
+	xmlChar *value;
 	
-	endnotePtr = find_endnote_from_id(get_attr_value(node));
+	value = get_attr_value(node);
+	endnotePtr = find_endnote_from_id(value);
+	xmlFree(value);
 	if(endnotePtr == NULL)
 	{
 		endnotePtr = &workingEndnote;
@@ -425,7 +428,9 @@ int create_endnote_shell(xmlNode* node)
 // from here, but do not link up to a noteref later on, will not be displayed.
 int link_endnote(xmlNode* node)
 {
-	EndnoteStruct* linked = find_endnote_from_id(get_attr_value(node));
+	xmlChar *value = get_attr_value(node);
+	EndnoteStruct* linked = find_endnote_from_id(value);
+	xmlFree(value);
 		
 	if(linked==NULL)
 		create_endnote_shell(node);
@@ -574,6 +579,7 @@ int make_endnotes(void)
 // frees the memory of all resources belonging to 'endnote'
 static void free_endnote(EndnoteStruct* endnote)
 {
+	xmlFree(endnote->id);
 	if(endnote->free_code&1) free(endnote->character);
 	if(endnote->free_code&2) free(endnote->endnote);
 	if(endnote->free_code&4) free(endnote->page_num);
