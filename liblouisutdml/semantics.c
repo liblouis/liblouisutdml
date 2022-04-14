@@ -1186,6 +1186,7 @@ set_sem_attr (xmlNode * node)
 	  oldKeyLength = strlen ((char *) key);
 	  strncat ((char *) key, (char *) attrValue, sizeof (key) -
 		   oldKeyLength - 2);
+	  xmlFree (attrValue);
 	  for (k = 0; key[k]; k++)
 	    if ((key[k] <= 32 || key[k] > 126)
 		|| (k >= oldKeyLength && key[k] == ','))
