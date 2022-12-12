@@ -29,7 +29,7 @@ RUN apt-get update && dpkg --add-architecture i386 && apt-get update && apt-get 
    && rm -rf /var/lib/apt/lists/*
 
 ARG LIBYAML_VERSION=0.1.4
-ARG LIBLOUIS_VERSION=3.21.0
+ARG LIBLOUIS_VERSION=3.24.0
 ARG LIBXML2_VERSION=2.9.9
 ENV HOST=i686-w64-mingw32 \
     PREFIX=/usr/build/win32 \
