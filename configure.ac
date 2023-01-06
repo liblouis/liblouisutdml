@@ -1,9 +1,9 @@
 # Process this file with autoconf to produce a configure script.
 
-AC_PREREQ(2.68)
-AC_INIT([liblouisutdml], [2.11.0], [liblouis-liblouisxml@freelists.org], [liblouisutdml], [http://www.liblouis.org])
+AC_PREREQ([2.71])
+AC_INIT([liblouisutdml],[2.11.0],[liblouis-liblouisxml@freelists.org],[liblouisutdml],[http://www.liblouis.org])
 AC_CONFIG_SRCDIR([liblouisutdml/semantics.c])
-AC_CONFIG_HEADER([liblouisutdml/config.h])
+AC_CONFIG_HEADERS([liblouisutdml/config.h])
 
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIR([m4])
@@ -38,7 +38,7 @@ AC_PROG_LN_S
 AC_PROG_MAKE_SET
 # AC_PROG_RANLIB
 AM_PROG_AR
-AM_PROG_LIBTOOL
+LT_INIT
 # see https://www.gnu.org/software/libtool/manual/html_node/LT_005fINIT.html
 LT_INIT([win32-dll])
 
@@ -54,7 +54,6 @@ PKG_CHECK_MODULES(BASE_DEPENDENCIES, [liblouis >= 3.20.0, libxml-2.0])
 # Checks for libraries.
 
 # Checks for header files.
-AC_HEADER_STDC
 AC_CHECK_HEADERS([stdlib.h string.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
