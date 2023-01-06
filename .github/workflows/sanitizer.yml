@@ -29,7 +29,7 @@ jobs:
           - sanitizer: "undefined"
             options: "UBSAN_OPTIONS=halt_on_error=1"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Install dependencies
         run: sudo apt-get update -qq && sudo apt-get install -y texinfo libxml2-dev libxml2 openjdk-8-jdk
       - name: Fetch and build liblouis
@@ -46,7 +46,7 @@ jobs:
         run: ${{ matrix.options }} make check
       - name: Store the test suite log
         if: ${{ always() }} # store the test suite log even if the tests failed
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: test-suite-${{ matrix.sanitizer }}.log
           path: tests/test-suite.log
