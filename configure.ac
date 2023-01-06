@@ -6,7 +6,7 @@ AC_CONFIG_SRCDIR([liblouisutdml/semantics.c])
 AC_CONFIG_HEADERS([liblouisutdml/config.h])
 
 AC_CONFIG_AUX_DIR([build-aux])
-AC_CONFIG_MACRO_DIR([m4])
+AC_CONFIG_MACRO_DIRS([m4 gnulib/m4])
 AM_INIT_AUTOMAKE([-Wall dist-zip])
 
 # increment if the interface has additions, changes, removals.
