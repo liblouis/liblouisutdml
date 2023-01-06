@@ -369,6 +369,7 @@ int do_newpage ();
 int do_blankline ();
 int do_softreturn ();
 int do_righthandpage ();
+int do_pagenum ();
 void libxml_errors (void *ctx ATTRIBUTE_UNUSED, const char *msg, ...);
 int do_configstring (xmlNode * node);
 StyleType *new_style (xmlChar * name);
@@ -405,6 +406,7 @@ int wc_string_to_utf8 (const widechar * instr, int *inSize, unsigned
 void output_xml (xmlDoc *doc);
 int convert_utd ();
 int utd2bible (xmlNode * node);
+int utd2dsBible (xmlNode * node);
 int utd2brf (xmlNode * node);
 int utd2pef (xmlNode * node);
 int utd2transinxml (xmlNode * node);
