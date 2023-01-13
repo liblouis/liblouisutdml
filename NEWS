@@ -10,6 +10,15 @@ issues]].
 
 ** New features
 - Add support for liblouis 3.20
+- Migrate away from the ~uplow~ opcode to add support for liblouis
+  3.20.
+
+** Regression in nemeth math
+Note that there is a small regression when using Liblouisutdml
+together with liblouis 3.20 that will case some of the nemeth tests
+that include capital letters to fail. For details see
+https://github.com/liblouis/liblouis/issues/1152. Hopefully this will
+be resolved in the next liblouis release.
 
 ** Other
 - Add Lithuanian hyphenation table
