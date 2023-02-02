@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<math>
+            <msub><mi>c</mi><mn>0</mn></msub>
+            <msup><mn>10</mn><mn>2</mn></msup>
+            <mo>+</mo>
+            <msub><mi>c</mi><mn>1</mn></msub>
+            <mn>10</mn><mo>+</mo>
+            <msub><mi>c</mi><mn>2</mn></msub>
+        </math>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<math><mroot>
+    <mrow>
+        <msup> <mi>x</mi><mn>2</mn> </msup>
+        <mo>+</mo>
+        <mroot>
+            <mrow>
+                <msup> <mi>x</mi> <mn>2</mn> </msup>
+                <mo>+</mo>
+                <msup> <mi>y</mi> <mn>2</mn>  </msup>
+            </mrow>
+            <mn>3</mn>
+        </mroot>
+        <mo>+</mo>
+        <msup> <mi>y</mi> <mn>2</mn> </msup>
+    </mrow>
+    <mn>3</mn>
+</mroot></math>
