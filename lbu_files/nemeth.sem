@@ -31,7 +31,7 @@ msub msub ,^;,^"
 msubsup msupsup ,^~,^~^~,^"
 msubsup msubsup ,^;,^~,^"
 msup msup ,^~,^"
-matrix mtable
+# matrix mtable
 mtd mtd \*\ec
 mtext mtext
 mtr mtr ^`^\,^(,\*^`^\,^)\er
