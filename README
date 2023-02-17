@@ -105,7 +105,7 @@ Or instead let the Makefile do it all for you:
 make distwin
 ```
 
-[liblouis]: http://www.liblouis.org/
+[liblouis]: http://www.liblouis.io/
 
 <!-- Local Variables: -->
 <!-- mode: markdown -->

@@ -2906,7 +2906,7 @@ The functions which are not ready for use at the moment, such as
 graphics capability of the Tiger tactile graphics embossers.
 
 The latest versions of liblouisutdml and liblouis can be downloaded
-from @uref{www.liblouis.org}. This site also contains links to a
+from @uref{www.liblouis.io}. This site also contains links to a
 mailing list and to project pages on github.com. Note that
 liblouisutdml will only work with the latest version of liblouis.
 
