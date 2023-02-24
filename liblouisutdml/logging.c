@@ -1,7 +1,7 @@
 /* liblouis Braille Translation and Back-Translation  Library
 
    Copyright (C) 2014 ViewPlus Technologies, Inc. www.viewplus.com
-   and the liblouis team. http://liblouis.org
+   and the liblouis team. http://liblouis.io
    All rights reserved
 
    This file is free software; you can redistribute it and/or modify it
