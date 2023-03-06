@@ -29,7 +29,7 @@ RUN apt-get update && dpkg --add-architecture i386 && apt-get update && apt-get 
    && rm -rf /var/lib/apt/lists/*
 
 ARG LIBYAML_VERSION=0.1.4
-ARG LIBLOUIS_VERSION=3.24.0
+ARG LIBLOUIS_VERSION=3.25.0
 ARG LIBXML2_VERSION=2.9.9
 ENV HOST=i686-w64-mingw32 \
     PREFIX=/usr/build/win32 \
@@ -47,7 +47,7 @@ ADD https://raw.githubusercontent.com/liblouis/liblouis/master/libyaml_mingw.pat
 RUN patch -p1 <libyaml_mingw.patch
 RUN ./bootstrap && \
     ./configure --host ${HOST} --prefix=${PREFIX} && \
-    make && \
+    make LDFLAGS="-L${PREFIX}/lib/ -avoid-version -Xcompiler -static-libgcc" && \
     make install
 
 # Build and install libxml2
@@ -56,7 +56,7 @@ RUN curl -L ftp://xmlsoft.org/libxml2/libxml2-${LIBXML2_VERSION}.tar.gz | tar zx
 WORKDIR ${SRCDIR}/libxml2-${LIBXML2_VERSION}
 RUN autoreconf -i && \
     ./configure --with-zlib=no --with-iconv=no --with-python=no --with-threads=no --host ${HOST} --prefix=${PREFIX} && \
-    make && \
+    make LDFLAGS="-L${PREFIX}/lib/ -avoid-version -Xcompiler -static-libgcc" && \
     make install
 
 # Build and install liblouis
@@ -76,7 +76,7 @@ ADD . ${SRCDIR}/liblouisutdml
 WORKDIR ${SRCDIR}/liblouisutdml
 RUN ./autogen.sh && \
     ./configure  --host ${HOST} --disable-java-bindings --prefix=${PREFIX} && \
-    make && \
+    make LDFLAGS="-L${PREFIX}/lib/ -avoid-version -Xcompiler -static-libgcc" && \
     make install && \
     cd ${PREFIX} && \
     zip -r ${SRCDIR}/liblouisutdml/liblouisutdml.zip *
