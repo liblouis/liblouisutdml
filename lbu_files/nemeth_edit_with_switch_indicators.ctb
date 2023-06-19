@@ -1,0 +1,57 @@
+# liblouis Table for Post-Translation Editing
+#Complying with BANA's 2018 Nemeth rules
+#
+#  Based on the Linux screenreader BRLTTY, copyright (C) 1999-2006 by
+#  The BRLTTY Team
+#
+#  Copyright (C) 2004-2006 ViewPlus Technologies, Inc. www.viewplus.com
+#  Copyright (C) 2004-2006 JJB Software, Inc. www.jjb-software.com
+#  Copyright (C) 2023 Norbert Márkus (hamilfonz at gmail dot com),
+# Hungary
+#
+#  This file is part of liblouis.
+#
+#  liblouis is free software: you can redistribute it and/or modify it
+#  under the terms of the GNU Lesser General Public License as
+#  published by the Free Software Foundation, either version 2.1 of the
+#  License, or (at your option) any later version.
+#
+#  liblouis is distributed in the hope that it will be useful, but
+#  WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+#  Lesser General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public
+#  License along with liblouis. If not, see
+#  <http://www.gnu.org/licenses/>.
+
+include en-chardefs.cti
+repeated \s 0
+always \ee\s`4 1b-15-256 (2023)
+always \ee\s`6 1b-15-235 (2023)
+always \ee\s`8 1b-15-236 (2023)
+always \ee\s`1 1b-15-2 (2023)
+always \ee\s`3p 1b-15-4-25-1234 (2023)
+always \ee\s`3 1b-15-25 (2023)
+always \ee\s`2 1b-15-23 (2023)
+always \ee\s`' 1b-15-3 (2023)
+always \ee\s- 1b-15-36 (2023)
+always \ee\s_/ 1b-15-456-34 (2023)
+always \ee\s99 1b-15-35-35 (2023)
+always `7\s\eb 2356-1b-12 (2023)
+always \ee\s`7 1b-15-2356 (2023)
+always `8\s\eb 236-1b-12 (2023)
+#always "\s 0 (2023)
+#always \s,\s 6-0 (2023)
+noback correct "\eb\s" "\eb"
+noback context "\eb"[]$l"\ee" @56
+noback context "\eb"[]","$l"\ee" @56
+#noback pass2 @1b-12 ?
+noback pass2 @1b-12 @456-146-0 #Nemeth block start indicator (2023)
+#noback pass2 @1b-15 ?
+noback pass2 @1b-15 @0-456-156 Nemeth block end indicator (2023)
+
+#Trying to detect whether the math excerpt is preceded and followed by quotes and then restoring the ending quotation mark.
+noback pass2 [@236-1b-12] #1=1@236-456-146-0 #(2023)
+noback pass2 #1=1[@1b-15-236] #1=0@0-456-156-356 #(2023)
+noback pass2 @1b-12-4-4 @456-146-0-4 (2023)
