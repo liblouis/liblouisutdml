@@ -439,7 +439,6 @@ XFAIL_TESTS +=					\
 	firstLineIndent.test			\
 	mixed_content.test			\
 	printPageNumberRange_03.test		\
-	mathml_nemeth/general_001.test		\
 	mathml_nemeth/general_002.test		\
 	mathml_nemeth/general_003.test		\
 	mathml_nemeth/mfrac_02.test		\
@@ -456,20 +455,16 @@ XFAIL_TESTS +=					\
 	mathml_nemeth/mixed_scripts_07.test	\
 	mathml_nemeth/msub_02.test		\
 	mathml_nemeth/msub_03.test		\
-	mathml_nemeth/msub_04.test		\
 	mathml_nemeth/msub_05.test		\
-	mathml_nemeth/msub_06.test		\
-	mathml_nemeth/msub_07.test		\
 	mathml_nemeth/msub_08.test		\
 	mathml_nemeth/msub_09.test		\
 	mathml_nemeth/msub_10.test		\
-	mathml_nemeth/msubsup_02.test		\
 	mathml_nemeth/msubsup_03.test		\
-	mathml_nemeth/msubsup_04.test		\
 	mathml_nemeth/msubsup_05.test		\
 	mathml_nemeth/msubsup_06.test		\
 	mathml_nemeth/msubsup_07.test		\
 	mathml_nemeth/msup_02.test		\
+	mathml_nemeth/msup_03.test		\
 	mathml_nemeth/msup_06.test		\
 	mathml_nemeth/msup_09.test		\
 	mathml_nemeth/msup_10.test		\
@@ -481,16 +476,12 @@ XFAIL_TESTS +=					\
 	mathml_nemeth/mmultiscripts_05.test	\
 	mathml_nemeth/mmultiscripts_06.test	\
 	mathml_nemeth/mmultiscripts_07.test	\
-	mathml_nemeth/mover_02.test		\
-	mathml_nemeth/mover_03.test		\
 	mathml_nemeth/mover_04.test		\
 	mathml_nemeth/mover_05.test		\
 	mathml_nemeth/mover_06.test		\
 	mathml_nemeth/mover_07.test		\
 	mathml_nemeth/mover_13.test		\
-	mathml_nemeth/mover_14.test		\
 	mathml_nemeth/mover_15.test		\
-	mathml_nemeth/munder_01.test		\
 	mathml_nemeth/munder_02.test		\
 	mathml_nemeth/munder_03.test		\
 	mathml_nemeth/munder_06.test		\
@@ -506,14 +497,12 @@ XFAIL_TESTS +=					\
 	nemeth_MathCAT/boldface_32_b_6.test				\
 	nemeth_MathCAT/cap_22_a_1.test					\
 	nemeth_MathCAT/cap_roman_numeral_18_a_3.test			\
-	nemeth_MathCAT/carrot_98_1.test					\
 	nemeth_MathCAT/comma_78_2.test					\
 	nemeth_MathCAT/comma_78_2_invisible.test			\
 	nemeth_MathCAT/comma_78_3.test					\
 	nemeth_MathCAT/comma_78_6.test					\
 	nemeth_MathCAT/comma_ellipsis_in_sub_79_b_5.test		\
 	nemeth_MathCAT/comma_in_sup_79_b_4.test				\
-	nemeth_MathCAT/comma_number_77_4_20.test			\
 	nemeth_MathCAT/comma_space_78_1.test				\
 	nemeth_MathCAT/comparison_79_g_2.test				\
 	nemeth_MathCAT/complex_frac_66_1.test				\
@@ -571,13 +560,10 @@ XFAIL_TESTS +=					\
 	nemeth_MathCAT/mmultiscripts_82_b_6.test			\
 	nemeth_MathCAT/ms.test						\
 	nemeth_MathCAT/ms_38_4_8.test					\
-	nemeth_MathCAT/msubsup_82_a_3.test				\
 	nemeth_MathCAT/multipurpose_177_2_1.test			\
 	nemeth_MathCAT/multipurpose_177_2_2.test			\
-	nemeth_MathCAT/multipurpose_177_3_1.test			\
 	nemeth_MathCAT/multipurpose_177_5_1.test			\
 	nemeth_MathCAT/multipurpose_177_7_1.test			\
-	nemeth_MathCAT/munder_lesson_12_5_5_5.test			\
 	nemeth_MathCAT/nested_root_105_2.test				\
 	nemeth_MathCAT/nested_sqrt_105_1.test				\
 	nemeth_MathCAT/nested_sqrt_105_3.test				\
@@ -587,20 +573,15 @@ XFAIL_TESTS +=					\
 	nemeth_MathCAT/nested_sup_74_b_4.test				\
 	nemeth_MathCAT/nested_sup_mmultiscripts_74_b_1.test		\
 	nemeth_MathCAT/nested_sup_sup_space_79_d_9.test			\
+	nemeth_MathCAT/nested_super_79_a_3.test			\
 	nemeth_MathCAT/nested_super_space_79_d_3.test			\
 	nemeth_MathCAT/nested_super_space_79_d_7.test			\
 	nemeth_MathCAT/non_hyper_complex_frac_67_1.test			\
 	nemeth_MathCAT/non_list_10_4.test				\
 	nemeth_MathCAT/number_space_before.test				\
 	nemeth_MathCAT/number_space_before_and_after.test		\
-	nemeth_MathCAT/numeric_sub_81_a_1.test				\
 	nemeth_MathCAT/order2_overbar_87_a_1.test			\
-	nemeth_MathCAT/overbar_86_a_4.test				\
-	nemeth_MathCAT/overbar_86_a_5.test				\
-	nemeth_MathCAT/overbar_86_b_1.test				\
-	nemeth_MathCAT/overbar_86_b_10.test				\
 	nemeth_MathCAT/overbar_86_b_11.test				\
-	nemeth_MathCAT/prescript_77_4_18.test				\
 	nemeth_MathCAT/prescript_77_4_6.test				\
 	nemeth_MathCAT/prescript_77_4_7.test				\
 	nemeth_MathCAT/prime_172_5.test					\
@@ -618,8 +599,6 @@ XFAIL_TESTS +=					\
 	nemeth_MathCAT/prime_mmultiscripts_83_b_2.test			\
 	nemeth_MathCAT/prime_mmultiscripts_83_b_4.test			\
 	nemeth_MathCAT/prime_wiris_83_b_2.test				\
-	nemeth_MathCAT/primed_86_b_6.test				\
-	nemeth_MathCAT/product_77_4_24.test				\
 	nemeth_MathCAT/punct_37_1_2.test				\
 	nemeth_MathCAT/punct_37_2_2.test				\
 	nemeth_MathCAT/punct_37_7_1.test				\
@@ -632,14 +611,12 @@ XFAIL_TESTS +=					\
 	nemeth_MathCAT/sub_ind_80_b_3.test				\
 	nemeth_MathCAT/sub_ind_80_b_4.test				\
 	nemeth_MathCAT/sub_ind_mmultiscripts_80_b_3.test		\
-	nemeth_MathCAT/sum_77_4_23.test					\
 	nemeth_MathCAT/superscript_80_a_2.test				\
 	nemeth_MathCAT/tensor_from_mathml_spec.test			\
 	nemeth_MathCAT/test_9_d_2.test					\
 	nemeth_MathCAT/test_9_d_3.test					\
 	nemeth_MathCAT/text_after_sup_79_c_3.test			\
 	nemeth_MathCAT/trilinear_not_ratio_151_11.test			\
-	nemeth_MathCAT/underbar_86_a_1.test				\
 	nemeth_MathCAT/vertical_bar_145_4.test				\
 	nemeth_MathCAT/whitespace_in_sup_79_e_1.test			\
 	nemeth_MathCAT/word_77_4_12.test				\
