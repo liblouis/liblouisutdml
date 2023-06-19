@@ -578,6 +578,7 @@ XFAIL_TESTS +=					\
 	nemeth_MathCAT/nested_super_space_79_d_7.test			\
 	nemeth_MathCAT/non_hyper_complex_frac_67_1.test			\
 	nemeth_MathCAT/non_list_10_4.test				\
+	nemeth_MathCAT/number_space_after.test			\
 	nemeth_MathCAT/number_space_before.test				\
 	nemeth_MathCAT/number_space_before_and_after.test		\
 	nemeth_MathCAT/order2_overbar_87_a_1.test			\

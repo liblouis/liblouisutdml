@@ -1,6 +1,7 @@
 # Licensed under LGPL
 
 # Updated 6-18-08 by Mike Sivill <mike.sivill@viewplus.com>
+#  Updated and modified by Norbert Márkus (hamilfonz at gmail dot com), Hungary, 2023.
 
 # You must edit this file as explained in the documentation to get
 # proper output.
@@ -33,7 +34,8 @@ msubsup msubsup ,^;,^~,^"
 msup msup ,^~,^"
 matrix mtable
 mtd mtd \*\ec
-mtext mtext
+#text items are surrounded by a preceding and a trailing space and receive a single-word switch indicator
+mtext mtext \s^\,^',\s
 mtr mtr ^`^\,^(,\*^`^\,^)\er
 munder munder ^",^%,^}
 munderover munderover ^",^%,^<,^}
