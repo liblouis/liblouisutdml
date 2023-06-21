@@ -11,6 +11,7 @@ maligngroup maligngroup
 malignmark malignmark
 math math \eb,\*\ee
 menclose menclose
+mfrac mfrac,bevelled,true ^?,^_/,^#
 mfrac mfrac ^?,/,^#
 mfenced mfenced ^(,^)
 mfenced mfenced,open,{ ^{,^}
