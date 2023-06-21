@@ -441,7 +441,6 @@ XFAIL_TESTS +=					\
 	printPageNumberRange_03.test		\
 	mathml_nemeth/general_002.test		\
 	mathml_nemeth/general_003.test		\
-	mathml_nemeth/mfrac_03.test		\
 	mathml_nemeth/mfrac_04.test		\
 	mathml_nemeth/mfrac_06.test		\
 	mathml_nemeth/mfrac_07.test		\
@@ -543,7 +542,6 @@ XFAIL_TESTS +=					\
 	nemeth_MathCAT/menclose_lesson_12_5_5_5.test			\
 	nemeth_MathCAT/menclose_primed_86_b_6.test			\
 	nemeth_MathCAT/menclose_top_bottom_88_1.test			\
-	nemeth_MathCAT/mixed_frac_63_a_1.test				\
 	nemeth_MathCAT/mixed_frac_64_2.test				\
 	nemeth_MathCAT/mmultiscripts_77_4_10.test			\
 	nemeth_MathCAT/mmultiscripts_77_4_18.test			\

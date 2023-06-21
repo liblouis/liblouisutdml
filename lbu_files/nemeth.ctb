@@ -322,8 +322,9 @@ noback pass3 @5-1b-15 @1b-15 #(2023)
 # get rid of superscript ind. on prime sign
 noback pass2 @45-3-5 @3
 # Put 456 in mixed numbers
-noback pass2 $d[]@1456 @456
-noback pass2 @456-1456!$s3-8[]@3456 @456
+noback pass2 $d[]@1456 @456#1=1 #(2023)
+#noback pass2 @456-1456!$s3-8[]@3456 @456
+noback pass2 #1=1[]@3456 @456#1=0 #(2023)
 # Put number sign on numbers after spaces
 noback pass2 @a[]$d @3456
 noback pass2 [@a-0]$d @a-3456
