@@ -88,8 +88,8 @@ endcomp 456-156
 
 prepunc " 236
 postpunc " 356
-prepunc ' 6-236
-postpunc ' 356-3
+#prepunc ' 6-236 #(2023)
+#postpunc ' 356-3 #(2023)
 postpunc , 6
 always , 6-a
 always # 35-2345 print number sign before number
@@ -304,10 +304,14 @@ noback pass3 @1b-12-56$d1-5[@5] @5 #(2023)
 ##noback pass2 $l@56$d1-5[@5]@56 ? #(2023)
 ##noback pass3 $l@56$d1-5[@56] @56 #(2023)
 
-#Remove the subscript prefix if it is preceded by a letter.
+#Remove the subscript prefix if it is preceded by a letter or a letter and prime(s).
 #But after this numeric subscript, do not remove the base-line ind. if it is followed by a number
 noback pass2 $l@56$d1-5[@5]!$d ? #added in 2023
+noback pass2 $l@3-56$d1-5[@5]!$d ? #added in 2023
+noback pass2 $l@3-3-56$d1-5[@5]!$d ? #added in 2023
 noback pass3 $l[@56]$d1-5 ? #added in 2023
+noback pass3 $l@3[@56]$d1-5 ? #added in 2023
+noback pass3 $l@3-3[@56]$d1-5 ? #added in 2023
 
 # insert another superscript ind. on double superscripts
 #noback pass2 @45[]$d@5-5 @45 #often it does not yield the expected output (2023)
@@ -321,6 +325,7 @@ noback pass2 @5-1b-15 @1b-15
 noback pass3 @5-1b-15 @1b-15 #(2023)
 # get rid of superscript ind. on prime sign
 noback pass2 @45-3-5 @3
+noback pass2 @45-3-3-5 @3-3 #(2023)
 # Put 456 in mixed numbers
 noback pass2 $d[]@1456 @456#1=1 #(2023)
 #noback pass2 @456-1456!$s3-8[]@3456 @456

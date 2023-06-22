@@ -447,7 +447,6 @@ XFAIL_TESTS +=					\
 	mathml_nemeth/mixed_scripts_01.test	\
 	mathml_nemeth/mixed_scripts_02.test	\
 	mathml_nemeth/mixed_scripts_03.test	\
-	mathml_nemeth/mixed_scripts_04.test	\
 	mathml_nemeth/mixed_scripts_05.test	\
 	mathml_nemeth/mixed_scripts_06.test	\
 	mathml_nemeth/mixed_scripts_07.test	\
@@ -465,7 +464,6 @@ XFAIL_TESTS +=					\
 	mathml_nemeth/msup_03.test		\
 	mathml_nemeth/msup_06.test		\
 	mathml_nemeth/msup_09.test		\
-	mathml_nemeth/msup_10.test		\
 	mathml_nemeth/msqrt_03.test		\
 	mathml_nemeth/mmultiscripts_01.test	\
 	mathml_nemeth/mmultiscripts_02.test	\
@@ -583,16 +581,11 @@ XFAIL_TESTS +=					\
 	nemeth_MathCAT/prescript_77_4_7.test				\
 	nemeth_MathCAT/prime_172_5.test					\
 	nemeth_MathCAT/prime_172_6.test					\
-	nemeth_MathCAT/prime_172_8.test					\
-	nemeth_MathCAT/prime_172_9.test					\
-	nemeth_MathCAT/prime_77_4_4.test				\
 	nemeth_MathCAT/prime_83_b_1.test				\
 	nemeth_MathCAT/prime_83_b_3.test				\
-	nemeth_MathCAT/prime_83_b_4.test				\
 	nemeth_MathCAT/prime_83_b_5.test				\
 	nemeth_MathCAT/prime_83_b_6.test				\
 	nemeth_MathCAT/prime_83_b_8.test				\
-	nemeth_MathCAT/prime_mathjax_83_b_2.test			\
 	nemeth_MathCAT/prime_mmultiscripts_83_b_2.test			\
 	nemeth_MathCAT/prime_mmultiscripts_83_b_4.test			\
 	nemeth_MathCAT/prime_wiris_83_b_2.test				\
