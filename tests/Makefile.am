@@ -481,22 +481,20 @@ XFAIL_TESTS +=					\
 	mathml_nemeth/mmultiscripts_05.test	\
 	mathml_nemeth/mmultiscripts_06.test	\
 	mathml_nemeth/mmultiscripts_07.test	\
-	mathml_nemeth/mover_01.test		\
 	mathml_nemeth/mover_02.test		\
 	mathml_nemeth/mover_03.test		\
 	mathml_nemeth/mover_04.test		\
 	mathml_nemeth/mover_05.test		\
 	mathml_nemeth/mover_06.test		\
 	mathml_nemeth/mover_07.test		\
-	mathml_nemeth/mover_08.test		\
 	mathml_nemeth/mover_13.test		\
 	mathml_nemeth/mover_14.test		\
 	mathml_nemeth/mover_15.test		\
+	mathml_nemeth/munder_01.test		\
 	mathml_nemeth/munder_02.test		\
 	mathml_nemeth/munder_03.test		\
 	mathml_nemeth/munder_06.test		\
 	mathml_nemeth/munder_07.test		\
-	mathml_nemeth/munderover_02.test	\
 	mathml_nemeth/munderover_03.test	\
 	nemeth_MathCAT/above_and_below_88_2.test			\
 	nemeth_MathCAT/arrow_96_4.test					\
