@@ -69,6 +69,7 @@ punctuation ; 456-23-0 #Added in 2023
 include nemethdefs.cti
 include en-chardefs.cti All character definition opcodes
 attribute mathdot \x00B7\x02D9\x22C5
+attribute greekletter abgdez:?jklmnxoprstuf&yw3
 
 # Braille indicators
 multind 56-6 letsign capsletter
@@ -343,15 +344,41 @@ noback pass2 @0-a @a
 noback pass2 @45-0-5 @45
 noback pass2 @45-5 @45
 
+#Handle bold prefix on English and Greek lower-case and capital letters
+#noback pass2 @456-56-46 @456-46 #remove English letter sign from before Greek letters (2023)
+noback pass2 @456-56-46-6[%greekletter] @456-46-6* #remove the unnecessary English letter sign (2023)
+noback pass2 @456-56-46-4[%greekletter] @456-46-4* #remove the unnecessary English letter sign (2023)
+noback pass2 @456-56-46[%greekletter] @456-46* #remove the unnecessary English letter sign (2023)
+noback pass2 @456-56-6$l * #English capital letter with bold prefix must remain unchanged (2023)
+noback pass2 @456-56$l * #English lower-case letter must remain unchanged (2023)
+noback pass2 @456-56 ? #Otherwise the prefix is removed (2023)
+
 # Fix single letter and digit with overbar
 #noback pass2 @5$l[@126-12456] @156
-noback pass2 @5[$l]@126-156-12456 *@156 #(2023)
-noback pass2 @5[@6$l]@126-156-12456 *@156 #(2023)
-noback pass2 @5[$d]@126-156-12456 *@156 #(2023)
+noback pass2 @5[$l]@126-156-12456 *@156 #English small letter (2023)
+noback pass2 @5[@6$l]@126-156-12456 *@156 #English capital letter (2023)
+noback pass2 @5[@456-56$l]@126-156-12456 *@156 #boldface English small letter (2023)
+noback pass2 @5[@456-56-6$l]@126-156-12456 *@156 #boldface English capital letter (2023)
+noback pass2 @5[@46%greekletter]@126-156-12456 *@156 #Greek small letter (2023)
+noback pass2 @5[@46-4%greekletter]@126-156-12456 *@156 #Greek small letter math variant (2023)
+noback pass2 @5[@46-6%greekletter]@126-156-12456 *@156 #Greek capital letter (2023)
+noback pass2 @5-456-56[@46%greekletter]@126-156-12456 @456*@156 #boldface Greek small letter (2023)
+noback pass2 @5-456-56[@46-4%greekletter]@126-156-12456 @456*@156 #boldface Greek small letter math variant (2023)
+noback pass2 @5-456-56[@46-6%greekletter]@126-156-12456 @456*@156 #boldface Greek capital letter (2023)
+noback pass2 @5[$d]@126-156-12456 *@156 #digit (2023)
 
 # Fix single letter and digit with bar directly under
-noback pass2 @5[$l]@146-156-12456 *@146-156 #(2023)
-noback pass2 @5[@6$l]@146-156-12456 *@146-156 #(2023)
+noback pass2 @5[$l]@146-156-12456 *@146-156 #English small letter (2023)
+noback pass2 @5[@6$l]@146-156-12456 *@146-156 #English capital letter (2023)
+
+noback pass2 @5[@456-56$l]@146-156-12456 *@146-156 #boldface English small letter (2023)
+noback pass2 @5[@456-56-6$l]@146-156-12456 *@146-156 #boldface English capital letter (2023)
+noback pass2 @5[@46%greekletter]@146-156-12456 *@146-156 #Greek small letter (2023)
+noback pass2 @5[@46-4%greekletter]@146-156-12456 *@146-156 #Greek small letter math variant (2023)
+noback pass2 @5[@46-6%greekletter]@146-156-12456 *@146-156 #Greek capital letter (2023)
+noback pass2 @5-456-56[@46%greekletter]@146-156-12456 @456*@146-156 #boldface Greek small letter (2023)
+noback pass2 @5-456-56[@46-4%greekletter]@146-156-12456 @456*@146-156 #boldface Greek small letter math variant (2023)
+noback pass2 @5-456-56[@46-6%greekletter]@146-156-12456 @456*@146-156 #boldface Greek capital letter (2023)
 noback pass2 @5[$d]@146-156-12456 *@146-156 #(2023)
 
 #It is sufficient to indicate one dot above a series of digits if two or more consecutive digits each have a dot above

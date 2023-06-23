@@ -104,7 +104,7 @@ skip mphantom
 no mo,maxsize
 no mo,maxsize,3
 no mo,mathsize
-no mi,mathvariant
+mi mi,mathvariant,bold ^_^;
 no mo,mathvariant
 no munder,accentunder
 no mn,mathvariant

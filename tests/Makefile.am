@@ -472,9 +472,7 @@ XFAIL_TESTS +=					\
 	mathml_nemeth/mmultiscripts_05.test	\
 	mathml_nemeth/mmultiscripts_06.test	\
 	mathml_nemeth/mmultiscripts_07.test	\
-	mathml_nemeth/mover_04.test		\
 	mathml_nemeth/mover_05.test		\
-	mathml_nemeth/mover_06.test		\
 	mathml_nemeth/mover_07.test		\
 	mathml_nemeth/mover_13.test		\
 	mathml_nemeth/mover_15.test		\
@@ -576,7 +574,6 @@ XFAIL_TESTS +=					\
 	nemeth_MathCAT/number_space_before.test				\
 	nemeth_MathCAT/number_space_before_and_after.test		\
 	nemeth_MathCAT/order2_overbar_87_a_1.test			\
-	nemeth_MathCAT/overbar_86_b_11.test				\
 	nemeth_MathCAT/prescript_77_4_6.test				\
 	nemeth_MathCAT/prescript_77_4_7.test				\
 	nemeth_MathCAT/prime_172_5.test					\
