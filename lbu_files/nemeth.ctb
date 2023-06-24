@@ -317,7 +317,7 @@ noback pass3 $l@3-3[@56]$d1-5 ? #added in 2023
 # insert another superscript ind. on double superscripts
 #noback pass2 @45[]$d@5-5 @45 #often it does not yield the expected output (2023)
 #get rid of extra baseline inds.
-noback pass2 @5-5 @5 
+noback pass4 @5-5 @5
 noback pass2 @5-0 @0 
 noback pass3 @5-0 @0 #(2023)
 noback pass2 @5-a @a 
