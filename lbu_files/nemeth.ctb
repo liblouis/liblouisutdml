@@ -71,6 +71,8 @@ include en-chardefs.cti All character definition opcodes
 attribute mathdot \x00B7\x02D9\x22C5
 attribute greekletter abgdez:?jklmnxoprstuf&yw3
 
+math \x00a8 16-16 DIAERESIS (double dots) in math expressions #(2023)
+
 # Braille indicators
 multind 56-6 letsign capsletter
 capsletter 6
