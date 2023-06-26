@@ -452,7 +452,6 @@ XFAIL_TESTS +=					\
 	mathml_nemeth/mixed_scripts_07.test	\
 	mathml_nemeth/msub_02.test		\
 	mathml_nemeth/msub_03.test		\
-	mathml_nemeth/msub_05.test		\
 	mathml_nemeth/msub_08.test		\
 	mathml_nemeth/msub_09.test		\
 	mathml_nemeth/msub_10.test		\

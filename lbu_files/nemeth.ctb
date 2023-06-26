@@ -70,6 +70,7 @@ include nemethdefs.cti
 include en-chardefs.cti All character definition opcodes
 attribute mathdot \x00B7\x02D9\x22C5
 attribute greekletter abgdez:?jklmnxoprstuf&yw3
+attribute notadotfiveorspaceorescape abcdefghijklmnopqrstuvwxyz1234567890'+!%/=(),.-?:_<>&@{};*~^`[]$|\x0023\x005C
 
 math \x00a8 16-16 DIAERESIS (double dots) in math expressions #(2023)
 
@@ -309,6 +310,9 @@ noback pass3 @1b-12-56$d1-5[@5] @5 #(2023)
 
 #Remove the subscript prefix if it is preceded by a letter or a letter and prime(s).
 #But after this numeric subscript, do not remove the base-line ind. if it is followed by a number
+noback pass2 @123-135-1245-56$d1-5[@5] @a #following the subscript, introduce a space required for the function abbreviation (log) (2023)
+noback pass2 @123-135-1245-56%notadotfiveorspaceorescape1-100[@5] @a #following the subscript, introduce a space required for the function abbreviation (log) (2023)
+noback pass2 @123-135-1245-45%notadotfiveorspaceorescape1-100[@5] @a #following the subscript, introduce a space required for the function abbreviation (log) (2023)
 noback pass2 $l@56$d1-5[@5]!$d ? #added in 2023
 noback pass2 $l@3-56$d1-5[@5]!$d ? #added in 2023
 noback pass2 $l@3-3-56$d1-5[@5]!$d ? #added in 2023
