@@ -29,10 +29,12 @@ ms ms
 mspace mspace
 msqrt msqrt ^>,\*^}
 mstyle mstyle
-msub msub ,^;,^"
+#There is an escape sequence instead of The dot 5 at the end
+msub msub ,^;,\e0
 msubsup msupsup ,^~,^~^~,^"
 msubsup msubsup ,^;,^~,^"
-msup msup ,^~,^"
+#There is an escape sequence instead of The dot 5 at the end
+msup msup ,^~,\e0
 matrix mtable
 mtd mtd \*\ec
 #text items are surrounded by a preceding and a trailing space and receive a single-word switch indicator

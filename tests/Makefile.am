@@ -457,8 +457,6 @@ XFAIL_TESTS +=					\
 	mathml_nemeth/msub_10.test		\
 	mathml_nemeth/msubsup_03.test		\
 	mathml_nemeth/msubsup_05.test		\
-	mathml_nemeth/msubsup_06.test		\
-	mathml_nemeth/msubsup_07.test		\
 	mathml_nemeth/msup_02.test		\
 	mathml_nemeth/msup_03.test		\
 	mathml_nemeth/msup_06.test		\
@@ -475,10 +473,7 @@ XFAIL_TESTS +=					\
 	mathml_nemeth/mover_07.test		\
 	mathml_nemeth/mover_13.test		\
 	mathml_nemeth/mover_15.test		\
-	mathml_nemeth/munder_02.test		\
 	mathml_nemeth/munder_03.test		\
-	mathml_nemeth/munder_06.test		\
-	mathml_nemeth/munder_07.test		\
 	mathml_nemeth/munderover_03.test	\
 	nemeth_MathCAT/above_and_below_88_2.test			\
 	nemeth_MathCAT/arrow_96_4.test					\
@@ -575,9 +570,6 @@ XFAIL_TESTS +=					\
 	nemeth_MathCAT/order2_overbar_87_a_1.test			\
 	nemeth_MathCAT/prescript_77_4_6.test				\
 	nemeth_MathCAT/prescript_77_4_7.test				\
-	nemeth_MathCAT/prime_172_5.test					\
-	nemeth_MathCAT/prime_172_6.test					\
-	nemeth_MathCAT/prime_83_b_1.test				\
 	nemeth_MathCAT/prime_83_b_3.test				\
 	nemeth_MathCAT/prime_83_b_5.test				\
 	nemeth_MathCAT/prime_83_b_6.test				\

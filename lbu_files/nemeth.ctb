@@ -63,14 +63,19 @@ math ~ 45
 punctuation : 456-25-0
 punctuation ; 456-23-0
 
+math \x2218 45-46-16-5 degrees sign (actually a composit sign, in Braille shown in superscript)
+
 #Reversed the order of the two include lines below to give priority to the math character definitions
 include nemethdefs.cti
 include en-chardefs.cti All character definition opcodes
+attribute spacetildedotfive \x0020\x00A0~\x0022
+attribute rightbrace }
 attribute mathdot \x00B7\x02D9\x22C5
 attribute greekletter abgdez:?jklmnxoprstuf&yw3
-attribute notadotfiveorspaceorescape abcdefghijklmnopqrstuvwxyz1234567890'+!%/=(),.-?:_<>&@{};*~^`[]$|\x0023\x005C
 
 math \x00a8 16-16 DIAERESIS (double dots) in math expressions
+math \x2322 1246-1 FROWN (CONCAVE UPWARD ARC)
+math \x2323 1246-3 SMILE (CONCAVE DOWNWARD ARC)
 
 # Braille indicators
 multind 56-6 letsign capsletter
@@ -91,6 +96,7 @@ endcomp 456-156
 prepunc " 236
 postpunc " 356
 postpunc , 6
+always \e0 5
 always , 6-a
 always # 35-2345 print number sign before number
 decpoint . 46
@@ -120,7 +126,7 @@ always \x2015 156 horizontal bar above accented centered
 repeated \s 0
 noback context ["\x25A1"]$d @1246-256-5
 noback context ["\x25A0"]$d @1246-456-256-5
-always \x00b0 45-46-16 #This is not a simple symbol. It also implies a local superscript and may require a baseline suffix
+always \x00b0 45-46-16-5 #This is not a simple symbol. It contains a local superscript and a base-line suffix that may get removed if it is not needed
 always \x00B1 346-36
 
 # semantic character pairs
@@ -275,8 +281,13 @@ compbrl .wav
 compbrl .tar
 compbrl .zip
 
-# pass 2 corrections
+# multipass corrections
 
+#Fix the context of the hollow dot for its uses as degrees sign or composit operator
+noback pass2 @45[@45-46-16-5]@5 * #remove the nesting superscript in cases the degrees sign happens to be in the correct syntax
+noback pass3 $d@45-46-16[@5]@6-124 @a #insert space before the F for Fahrenheit
+noback pass3 $d@45-46-16[@5]@6-14 @a #insert space before the C for Celsius
+noback pass2 $l[@45-46-16-5]$l @46-16 #composit sign between two functions like f ring g
 # get rid of base-line ind. after subscripts
 #Handle stand-alone subscripts
 noback pass2 @1b-12-56[]$d1-5@5-1b-15 @3456
@@ -294,9 +305,26 @@ noback pass3 @1b-12-56$d1-5[@5] @5
 #but remove the base-line ind. if the subscript is either followed by a superscript or a subscript
 #Remove the subscript prefix if it is preceded by a letter or a letter and prime(s).
 #But after this numeric subscript, do not remove the base-line ind. if it is followed by a number
-noback pass2 @123-135-1245-56$d1-5[@5] @a #following the subscript, introduce a space required for the function abbreviation (log)
-noback pass2 @123-135-1245-56%notadotfiveorspaceorescape1-100[@5] @a #following the subscript, introduce a space required for the function abbreviation (log) 
-noback pass2 @123-135-1245-45%notadotfiveorspaceorescape1-100[@5] @a #following the subscript, introduce a space required for the function abbreviation (log)
+noback pass2 @123-135-1245-56$d1-5[@5] @a #following a numeric subscript, introduce a space required for the function abbreviation (log)
+#If the function "log" has a subscript or superscript, find the indication of its end (\e0 or quotation mark" and replace it with a dot 5 followed by a space
+noback context "log"["^;"] @56#11=1
+noback context "log"["^~"] @45#11=1
+noback context #11=1["\e0"] #11=0@5-a
+noback context #11=1["\""] #11=0@5-a
+
+#Handle when a letter has a prime or a double prime in superscript and something else in subscript (needs to be shown in reverse order in Nemeth)
+noback context $l[]"^;"!$w1-100"~'^\"" #19=1@3
+noback context $l[]"^;"!$w1-100"~\x2032^\"" #19=1@3
+noback context $l[]"^;"!$w1-100"~''^\"" #18=1@3-3
+noback context $l[]"^;"!$w1-100"~\"^\"" #18=1@3-3
+noback context $l[]"^;"!$w1-100"~\x2033^\"" #18=1@3-3
+noback context #19=1["^~'^\""] #19=0@5
+noback context #19=1["^~\x2032^\""] #19=0@5
+noback context #18=1["^~''^\""] #18=0@5
+noback context #18=1["^~\"^\""] #18=0@5
+noback context #18=1["^~\x2033^\""] #18=0@5
+#Else replace \e0 with a dot 5 unconditionally
+noback context "\e0" @5
 noback pass2 $l@56$d1-5[@5]!$d ?
 noback pass2 $l@3-56$d1-5[@5]!$d ?
 noback pass2 $l@3-3-56$d1-5[@5]!$d ?
@@ -304,7 +332,6 @@ noback pass3 $l[@56]$d1-5 ?
 noback pass3 $l@3[@56]$d1-5 ?
 noback pass3 $l@3-3[@56]$d1-5 ?
 
-# insert another superscript ind. on double superscripts
 #get rid of extra baseline inds.
 noback pass4 @5-5 @5
 noback pass2 @5-0 @0 
@@ -371,7 +398,10 @@ noback pass2 @5[$d]@146-156-12456 *@146-156
 
 #It is sufficient to indicate one dot above a series of digits if two or more consecutive digits each have a dot above
 noback pass2 @5$d2-100@126[%mathdot2-100]@12456 @16
-#noback pass2 [@5]!$s@156 @a
+#Fix the appearance of double dots in overscript or underscript
+noback pass2 @126[@456-256-456-256]@12456 @16-16
+noback pass2 @146[@456-256-456-256]@12456 @16-16
+
 noback pass2 @46-a @456-256
 noback pass2 [@456-256]@5$d @46
 # get rid of space for overscripts 
@@ -383,8 +413,16 @@ noback pass2 @a-12456 @12456
 # fix complex fraction begin and end (not perfectly)
 noback pass2 @1456-1456 @6-1456-1456
 noback pass2 @3456-3456 @3456-6-3456
+
+#Insert the missing space for "lim" after the termination of the "directly under" passage
+noback context []"^\"lim^%"!$x1-100"}" #20=1
+noback context #20=1["^}"] #20=0@12456-a
 # Fix lim with overbar sign
 noback pass2 @5-123-24-134-126-12456 @126-123-24-134
+#Fix the modified right arrow: use the full form of the arrow and move its surrounding spaces outside the five-step modification structure
+noback context ["^\"\x2192^<"] #21=1@a-5-1246-25-25-135-126 #when something is placed over the arrow
+noback context ["^\"\x2192^%"] #21=1@a-5-1246-25-25-135-146 #when something is placed under the arrow
+noback context #21=1["^}"] #21=0@12456-a #the space is moved beyond the termination of the modification
 # Get rid of open paren before matrices
 noback pass2 @12356-4-6-12356 @4-6-12356
 noback pass2 @1256-4-6-12356 @4-6-12356
