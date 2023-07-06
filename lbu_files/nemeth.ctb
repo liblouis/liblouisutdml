@@ -77,6 +77,8 @@ math \x00a8 16-16 DIAERESIS (double dots) in math expressions
 math \x2322 1246-1 FROWN (CONCAVE UPWARD ARC)
 math \x2323 1246-3 SMILE (CONCAVE DOWNWARD ARC)
 
+math \x0023 3456a pseudo hash mark for further processing
+
 # Braille indicators
 multind 56-6 letsign capsletter
 capsletter 6
@@ -98,7 +100,8 @@ postpunc " 356
 postpunc , 6
 always \e0 5
 always , 6-a
-always # 35-2345 print number sign before number
+#always # 35-2345 print number sign before number
+always # 3456a number sign (hashmark) in print - a temporary representation for further processing
 decpoint . 46
 hyphen - 36
 postpunc . 456-256
@@ -283,6 +286,9 @@ compbrl .zip
 
 # multipass corrections
 
+#Process print number sign (hash mark)
+noback pass2 [@3456a]$d @46-3456-3456 #a digit following a print hash mark needs its own Braille number sign
+noback pass2 @3456a @46-3456 #produce a hash mark symbol when not followed by a number
 #Fix the context of the hollow dot for its uses as degrees sign or composit operator
 noback pass2 @45[@45-46-16-5]@5 * #remove the nesting superscript in cases the degrees sign happens to be in the correct syntax
 noback pass3 $d@45-46-16[@5]@6-124 @a #insert space before the F for Fahrenheit

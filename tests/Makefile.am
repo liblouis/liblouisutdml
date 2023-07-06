@@ -591,7 +591,6 @@ XFAIL_TESTS +=					\
 	nemeth_MathCAT/sub_ind_mmultiscripts_80_b_3.test		\
 	nemeth_MathCAT/superscript_80_a_2.test				\
 	nemeth_MathCAT/tensor_from_mathml_spec.test			\
-	nemeth_MathCAT/test_9_d_2.test					\
 	nemeth_MathCAT/test_9_d_3.test					\
 	nemeth_MathCAT/text_after_sup_79_c_3.test			\
 	nemeth_MathCAT/trilinear_not_ratio_151_11.test			\
