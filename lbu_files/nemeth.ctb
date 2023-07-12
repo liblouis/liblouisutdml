@@ -112,7 +112,7 @@ always < a-5-13-a
 always = a-46-13-a
 always > a-46-2-a
 postpunc ? 456-236
-endnum % 4-356
+#endnum % 4-356
 always ~~ 4-156-5-4-156
 always ~ 4-156
 always & 456-12346
@@ -226,7 +226,7 @@ always ^/ 34
 always ^* 16
 repeated ^1 a
 always ^ 456-126 #default the CARET character to its Nemeth Braille representation if it has not been consumed as a prefix in the lines above
-
+always % 4-356 #default the actual percent sign to its Nemeth Braille representation if it has not been consumed earlier
 # Function names and abbreviations
 always acos 1-14-135-234-a
 always antilog 1-1345-2345-24-123-135-1245-a
