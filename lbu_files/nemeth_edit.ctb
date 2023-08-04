@@ -1,4 +1,9 @@
 # liblouis Table for Post-Translation Editing
+#Use it for EBAE literary texts surrounding Nemeth math blocks
+#Typical usecase:
+# mathtextTable en-us-g1.ctb or en-us-g2.ctb
+# mathexprTable nemeth.ctb
+# editTable nemeth_edit.ctb
 #
 #  Based on the Linux screenreader BRLTTY, copyright (C) 1999-2006 by
 #  The BRLTTY Team
@@ -22,19 +27,46 @@
 #  License along with liblouis. If not, see
 #  <http://www.gnu.org/licenses/>.
 
-include en-chardefs.cti
-repeated \s 0
-always \ee\s`4 456-256
-always \ee\s`1 6
-always \ee\s`3 456-25
-always \ee\s`2 456-23
-always `7\s\eb 12356
-always \ee\s`7 23456
-always "\s 0
-always \s,\s 6-0
-noback context "\eb"[]$l"\ee" @56
-noback context "\eb"[]","$l"\ee" @56
+#liblouisutdml inserts a space before and after each math block to separate it from the literary text.
+#Such spaces are often undesirable, e.g., for punctuation and grouping symbols around the math blocks.
+#In many cases these signs do not take their most appropriate forms as the math blocks
+#are not yet present at the stage of literary Braille translation.
+#This table makes a limited attempt to reconstruct the most likely form of some of the signs
+#directly preceding or following a math block and to decide which of the automatically added spaces
+#are to be kept or removed.
 
-noback pass2 @1b-12 ?
-noback pass2 @1b-15 ?
+include en-chardefs.cti
+#remove any extra spaces added by shapes or ellipses at the beginning of Nemeth blocks
+noback correct "\eb\s" "\eb"
+repeated \s 0
+#corrections after the math blocks
+always \ee\s,8;s 456-3-234 plural or possessive
+always \ee\s`4 456-256 period
+always \ee\s`6 456-235 exclamation point
+#Try to detect whether the math excerpt is preceded and followed by double quotes and then restore the ending quotation mark.
+noback context ["`8\s\eb"] #1=1@236
+noback context #1=1["\ee\s`8"] #1=0@456-356
+#Otherwise consider it as a question mark following the Nemeth block
+always \ee\s`8 456-236
+#Try to detect whether the math excerpt is preceded and followed by single quotes (apostrophe) and then restore the ending single quotation mark.
+noback context ["`'\s\eb"] #2=1@6-236
+noback context #2=1["\ee\s`'"] #2=0@456-356-3
+#Otherwise consider it as an apostrophe following the Nemeth block
+always \ee\s`' 456-3
+always \ee\s`1 6-0 comma after the math block
+#prevent the first two cells of a percent sign from being treated as a prefixed colon after the math block
+always \ee\s`3p 0-4-25-1234
+always \ee\s`3 456-25 colon
+always \ee\s`2 456-23 semicolon
+always `7\s\eb 12356 left parenthesis before math block
+always \ee\s`7' 0-4-2356-3 right bracket after math block
+always \ee\s`72 0-4-2356-23 right brace after math block
+always \ee\s`7 23456 right parenthesis after math block
+always "\s 0
+always \s,\s 6-0 use a Nemeth comma
+noback context "\eb"[]$l"\ee" @56 add a letsign (letter prefix) when the math block contains a single letter only
+noback context "\eb"[]","$l"\ee" @56 add a letsign to a single capital letter making up the math block
+
+noback pass2 @1b-12 ? remove the escape sequences for the beginning of math blocks
+noback pass2 @1b-15 ? remove the escape sequences for the end of math blocks
 noback pass2 @1b-12-4-4 @4
