@@ -24,6 +24,7 @@ lbu_files_DATA =				\
 	nemeth.ctb				\
 	nemeth.sem				\
 	nemeth_edit.ctb				\
+	nemeth_edit_en_ueb_with_switch_indicators.ctb				\
 	nemeth_edit_en_us_with_switch_indicators.ctb				\
 	nimas.cfg				\
 	nimas.sem				\
