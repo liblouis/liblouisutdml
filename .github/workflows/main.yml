@@ -7,7 +7,7 @@ on:
     branches: [ master ]
 
 env:
-  LIBLOUIS_VERSION: 3.24.0
+  LIBLOUIS_VERSION: 3.26.0
 
 jobs:
   build:
