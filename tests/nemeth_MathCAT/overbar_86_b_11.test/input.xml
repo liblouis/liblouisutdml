@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<math><mover><mfenced>
+            <mrow><mover><mi>a</mi><mo>&#xAF;</mo></mover><mi mathvariant='bold'>A</mi><mo>+</mo>
+                <mover><mi>b</mi><mo>&#xAF;</mo></mover><mi mathvariant='bold'>B</mi></mrow>
+        </mfenced><mo>&#xAF;</mo></mover></math>

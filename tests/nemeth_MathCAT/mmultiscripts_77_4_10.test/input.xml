@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<math>
+    <mmultiscripts>
+        <mrow>
+            <mo>(</mo>
+            <mi mathvariant='normal'>C</mi>
+            <mmultiscripts>  <mi mathvariant='normal'>O</mi> <mn>3</mn> <none/> </mmultiscripts>
+            <mo>)</mo>
+        </mrow>
+        <mn>2</mn>
+        <none/>
+    </mmultiscripts>
+</math>
+
