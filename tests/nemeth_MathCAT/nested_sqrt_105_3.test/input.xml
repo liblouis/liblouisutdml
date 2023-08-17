@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<math>
+        <msqrt> <mroot> <mi>x</mi><mn>3</mn> </mroot> </msqrt>
+        <mo>=</mo>
+        <mroot> <msqrt><mi>x</mi></msqrt> <mn>3</mn></mroot>
+    </math>

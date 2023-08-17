@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<math>
+    <mo stretchy='false'>(</mo>
+    <mi>x</mi>
+    <mo>+</mo>
+    <mi>a</mi>
+    <msup>
+        <mo stretchy='false'>)</mo>
+        <mrow>
+            <mi>n</mi>
+        </mrow>
+    </msup>
+    <mo>=</mo>
+    <munderover>
+        <mo>∑</mo>
+        <mrow>
+            <mi>k</mi>
+            <mo>=</mo>
+            <mn>0</mn>
+        </mrow>
+        <mrow>
+            <mi>n</mi>
+        </mrow>
+    </munderover>
+    <mrow>
+        <mo>(</mo>
+        <mfrac linethickness='0'>
+            <mi>n</mi>
+            <mi>k</mi>
+        </mfrac>
+        <mo>)</mo>
+    </mrow>
+    <msup>
+        <mi>x</mi>
+        <mrow>
+            <mi>k</mi>
+        </mrow>
+    </msup>
+    <msup>
+        <mi>a</mi>
+        <mrow>
+            <mi>n</mi>
+            <mo>−</mo>
+            <mi>k</mi>
+        </mrow>
+    </msup>
+</math>
+

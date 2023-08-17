@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<math><mfrac><mi>a</mi><msup><mi>b</mi>
+            <mfrac>
+                <mfrac><mn>3</mn><mn>4</mn></mfrac>
+                <mfrac><mn>5</mn><mn>6</mn></mfrac>
+            </mfrac>
+        </msup></mfrac></math>

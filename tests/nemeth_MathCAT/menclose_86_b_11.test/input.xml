@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<math><menclose notation='top'><mfenced>
+            <mrow><menclose notation='top'><mi>a</mi></menclose><mi mathvariant='bold'>A</mi><mo>+</mo>
+            <menclose notation='top'><mi>b</mi></menclose><mi mathvariant='bold'>B</mi></mrow>
+        </mfenced></menclose></math>

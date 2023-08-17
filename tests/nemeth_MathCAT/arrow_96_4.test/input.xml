@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<math>
+        <mi>X</mi>
+        <mover>
+        <mo>→</mo>
+        <mrow><mi>f</mi> <mo>∘</mo><mi>g</mi></mrow>
+        </mover>
+        <mi>Y</mi>
+    </math>
