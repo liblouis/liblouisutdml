@@ -173,7 +173,6 @@ dist_suite_TESTS =				\
 	nemeth_MathCAT/function_space_119_c_3.test			\
 	nemeth_MathCAT/german_base_77_4_3.test			\
 	nemeth_MathCAT/hyper_complex_frac_68_a_1.test			\
-	nemeth_MathCAT/identity_matrix_126.test			\
 	nemeth_MathCAT/integral_77_4_26.test			\
 	nemeth_MathCAT/left_sup_75_12.test			\
 	nemeth_MathCAT/left_sup_75_1.test			\
@@ -295,7 +294,6 @@ dist_suite_TESTS =				\
 	nemeth_MathCAT/sub_sup_82_b_2.test			\
 	nemeth_MathCAT/sum_77_4_23.test			\
 	nemeth_MathCAT/superscript_80_a_2.test			\
-	nemeth_MathCAT/table_entry_after_sup_79_c_4.test			\
 	nemeth_MathCAT/tensor_from_mathml_spec.test			\
 	nemeth_MathCAT/test_9_d_2.test			\
 	nemeth_MathCAT/test_9_d_3.test			\
@@ -533,7 +531,6 @@ XFAIL_TESTS +=					\
 	nemeth_MathCAT/function_space_119_c_3.test			\
 	nemeth_MathCAT/german_base_77_4_3.test				\
 	nemeth_MathCAT/hyper_complex_frac_68_a_1.test			\
-	nemeth_MathCAT/identity_matrix_126.test				\
 	nemeth_MathCAT/integral_77_4_26.test				\
 	nemeth_MathCAT/left_sup_75_1.test				\
 	nemeth_MathCAT/left_sup_75_12.test				\
@@ -639,7 +636,6 @@ XFAIL_TESTS +=					\
 	nemeth_MathCAT/sub_ind_mmultiscripts_80_b_3.test		\
 	nemeth_MathCAT/sum_77_4_23.test					\
 	nemeth_MathCAT/superscript_80_a_2.test				\
-	nemeth_MathCAT/table_entry_after_sup_79_c_4.test		\
 	nemeth_MathCAT/tensor_from_mathml_spec.test			\
 	nemeth_MathCAT/test_9_d_2.test					\
 	nemeth_MathCAT/test_9_d_3.test					\
