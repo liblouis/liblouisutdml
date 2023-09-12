@@ -494,21 +494,16 @@ XFAIL_TESTS +=					\
 	mathml_nemeth/mover_13.test		\
 	mathml_nemeth/mover_14.test		\
 	mathml_nemeth/mover_15.test		\
-	mathml_nemeth/mover_16.test		\
-	mathml_nemeth/munder_01.test		\
 	mathml_nemeth/munder_02.test		\
 	mathml_nemeth/munder_03.test		\
-	mathml_nemeth/munder_05.test		\
 	mathml_nemeth/munder_06.test		\
 	mathml_nemeth/munder_07.test		\
-	mathml_nemeth/munderover_01.test	\
 	mathml_nemeth/munderover_02.test	\
 	mathml_nemeth/munderover_03.test	\
 	nemeth_MathCAT/above_and_below_88_2.test			\
 	nemeth_MathCAT/arrow_96_4.test					\
 	nemeth_MathCAT/as_multiscript_nested_sub_sup_74_c_5.test	\
 	nemeth_MathCAT/bar_97_b_1.test					\
-	nemeth_MathCAT/bar_above_and_below_88_1.test			\
 	nemeth_MathCAT/beveled_frac_62_b_1.test				\
 	nemeth_MathCAT/binomial_90_1.test				\
 	nemeth_MathCAT/boldface_32_b_3.test				\
@@ -563,7 +558,6 @@ XFAIL_TESTS +=					\
 	nemeth_MathCAT/menclose_86_b_1.test				\
 	nemeth_MathCAT/menclose_86_b_11.test				\
 	nemeth_MathCAT/menclose_bar_97_b_1.test				\
-	nemeth_MathCAT/menclose_bar_97_b_3.test				\
 	nemeth_MathCAT/menclose_lesson_12_5_5_5.test			\
 	nemeth_MathCAT/menclose_primed_86_b_6.test			\
 	nemeth_MathCAT/menclose_top_bottom_88_1.test			\
@@ -655,7 +649,6 @@ XFAIL_TESTS +=					\
 	nemeth_MathCAT/vertical_bar_145_4.test				\
 	nemeth_MathCAT/whitespace_in_sup_79_e_1.test			\
 	nemeth_MathCAT/word_77_4_12.test				\
-	test_mathml_woluwe/test_044.test	\
 	test_mathml_woluwe/test_060.test	\
 	test_mathml_woluwe/test_061.test	\
 	test_mathml_woluwe/test_062.test	\
