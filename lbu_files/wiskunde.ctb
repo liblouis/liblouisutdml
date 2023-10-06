@@ -40,16 +40,16 @@ midnum . 3
 repeated \x0020 0
 repeated \x00A0 a
 
-class  uppergreek          \x0391\x0392\x0393\x0394\x0395\x0396\x0397\x0398\x0399\x039A\x039B\x039C\x039D\x039E\x039F\x03A0\x03A1\x03A3\x03A4\x03A5\x03A6\x03A7\x03A8\x03A9
-class  lowergreek          \x03B1\x03B2\x03B3\x03B4\x03B5\x03B6\x03B7\x03B8\x03B9\x03BA\x03BB\x03BC\x03BD\x03BE\x03BF\x03C0\x03C1\x03C2\x03C3\x03C4\x03C5\x03C6\x03C7\x03C8\x03C9\x03D5
-class  operationkeyspace   \x002B\x002D\x002E\x003D\x007E\x00B1\x00D7\x00F7\x2190\x2191\x2192\x2193\x2194\x21D0\x21D2\x21D4\x2209\x220C\x2212\x2217\x2223\x2224\x2226\x2243\x2248\x2260\x2261\x2284\x2285\x2288\x2289\x22C5
-class  operationkey        \x002F\x003C\x2215\x2216\x2225\x2227\x2228\x2229\x222A\x2264\x2282\x2283\x2286\x2287\x22A5\x22D5
-class  operationnokey      \x003E\x00AF\x0302\x0303\x0304\x2191\x2193\x2208\x220B\x2265
+attribute  uppergreek          \x0391\x0392\x0393\x0394\x0395\x0396\x0397\x0398\x0399\x039A\x039B\x039C\x039D\x039E\x039F\x03A0\x03A1\x03A3\x03A4\x03A5\x03A6\x03A7\x03A8\x03A9
+attribute  lowergreek          \x03B1\x03B2\x03B3\x03B4\x03B5\x03B6\x03B7\x03B8\x03B9\x03BA\x03BB\x03BC\x03BD\x03BE\x03BF\x03C0\x03C1\x03C2\x03C3\x03C4\x03C5\x03C6\x03C7\x03C8\x03C9\x03D5
+attribute  operationkeyspace   \x002B\x002D\x002E\x003D\x007E\x00B1\x00D7\x00F7\x2190\x2191\x2192\x2193\x2194\x21D0\x21D2\x21D4\x2209\x220C\x2212\x2217\x2223\x2224\x2226\x2243\x2248\x2260\x2261\x2284\x2285\x2288\x2289\x22C5
+attribute  operationkey        \x002F\x003C\x2215\x2216\x2225\x2227\x2228\x2229\x222A\x2264\x2282\x2283\x2286\x2287\x22A5\x22D5
+attribute  operationnokey      \x003E\x00AF\x0302\x0303\x0304\x2191\x2193\x2208\x220B\x2265
 # class relation
-class  digitletter         abcdefghij
-swapcd dropped             0123456789                           356,2,23,25,256,26,235,2356,236,35
-swapdd upnum               245,1,12,14,145,15,124,1245,125,24   0,0,0,0,0,0,0,0,0,0
-swapdd lownum              356,2,23,25,256,26,235,2356,236,35   0,0,0,0,0,0,0,0,0,0
+attribute  digitletter         abcdefghij
+swapcd dropped             0123456789                                     356,2,23,25,256,26,235,2356,236,35
+swapdd upnum               2459,19,129,149,1459,159,1249,12459,1259,249   0,0,0,0,0,0,0,0,0,0
+swapdd lownum              356,2,23,25,256,26,235,2356,236,35             0,0,0,0,0,0,0,0,0,0
 
 exactdots @0
 exactdots @123456
@@ -148,9 +148,9 @@ exactdots @56
   noback pass3    @1b-24-1b-34-1235                        @34         # \ei\e⠌r
   noback pass3    @1b-24-1b-34-14                          @456@34     # \ei\e⠌c
   noback pass3    @1b-24-1b-34-123                         @3456@34    # \ei\e⠌l
-  noback pass3    @1b-24-1b-456-1235                       @16         # \ei\e_r
-  noback pass3    @1b-24-1b-456-14                         @456@16     # \ei\e_c
-  noback pass3    @1b-24-1b-456-123                        @3456@16    # \ei\e_l  
+  noback pass3    @1b-24-1b-4569-1235                      @16         # \ei\e_r
+  noback pass3    @1b-24-1b-4569-14                        @4569@16    # \ei\e_c
+  noback pass3    @1b-24-1b-4569-123                       @3456@16    # \ei\e_l
   noback pass3    @1b-24                                   ?           # \ei
   noback pass3    @1b-34-1235                              @4          # \e⠌r
   noback pass3    @1b-34-14                                @45         # \e⠌c

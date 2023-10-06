@@ -21,7 +21,7 @@ RUN apt-get update && apt-get install -y \
    && rm -rf /var/lib/apt/lists/*
 
 ARG LIBYAML_VERSION=0.1.4
-ARG LIBLOUIS_VERSION=3.26.0
+ARG LIBLOUIS_VERSION=3.27.0
 ARG LIBXML2_VERSION=2.9.9
 ENV HOST=x86_64-w64-mingw32 \
     PREFIX=/usr/build/win64 \
