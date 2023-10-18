@@ -1,15 +1,19 @@
 # liblouis Table for Post-Translation Editing
+#with Nemeth switch indicators added
+#
 #Use it for EBAE literary texts surrounding Nemeth math blocks
 #Typical usecase:
 # mathtextTable en-us-g1.ctb or en-us-g2.ctb
 # mathexprTable nemeth.ctb
-# editTable nemeth_edit.ctb
+# editTable nemeth_edit_en_us_with_switch_indicators.ctb
 #
 #  Based on the Linux screenreader BRLTTY, copyright (C) 1999-2006 by
 #  The BRLTTY Team
 #
 #  Copyright (C) 2004-2006 ViewPlus Technologies, Inc. www.viewplus.com
 #  Copyright (C) 2004-2006 JJB Software, Inc. www.jjb-software.com
+#  Copyright (C) 2023 Norbert Márkus (hamilfonz at gmail dot com),
+# Hungary
 #
 #  This file is part of liblouis.
 #
@@ -27,6 +31,9 @@
 #  License along with liblouis. If not, see
 #  <http://www.gnu.org/licenses/>.
 
+#This table marks the beginning and end of math blocks with Nemeth switch indicators.
+#The switch indicators help distinguish literary text from technical content.
+#
 #liblouisutdml inserts a space before and after each math block to separate it from the literary text.
 #Such spaces are often undesirable, e.g., for punctuation and grouping symbols around the math blocks.
 #In many cases these signs do not take their most appropriate forms as the math blocks
@@ -40,33 +47,34 @@ include en-chardefs.cti
 noback correct "\eb\s" "\eb"
 repeated \s 0
 #corrections after the math blocks
-always \ee\s,8;s 456-3-234 plural or possessive
-always \ee\s`4 456-256 period
-always \ee\s`6 456-235 exclamation point
+always \ee\s`4 1b-15-256 period
+always \ee\s`6 1b-15-235 exclamation point
 #Try to detect whether the math excerpt is preceded and followed by double quotes and then restore the ending quotation mark.
-noback context ["`8\s\eb"] #1=1@236
-noback context #1=1["\ee\s`8"] #1=0@456-356
+noback context ["`8\s\eb"] #1=1@236-1b-12
+noback context #1=1["\ee\s`8"] #1=0@1b-15-356
 #Otherwise consider it as a question mark following the Nemeth block
-always \ee\s`8 456-236
-#Try to detect whether the math excerpt is preceded and followed by single quotes (apostrophe) and then restore the ending single quotation mark.
-noback context ["`'\s\eb"] #2=1@6-236
-noback context #2=1["\ee\s`'"] #2=0@456-356-3
-#Otherwise consider it as an apostrophe following the Nemeth block
-always \ee\s`' 456-3
-always \ee\s`1 6-0 comma after the math block
+always \ee\s`8 1b-15-236
+always \ee\s`1 1b-15-2 comma after the math block
 #prevent the first two cells of a percent sign from being treated as a prefixed colon after the math block
-always \ee\s`3p 0-4-25-1234
-always \ee\s`3 456-25 colon
-always \ee\s`2 456-23 semicolon
-always `7\s\eb 12356 left parenthesis before math block
-always \ee\s`7' 0-4-2356-3 right bracket after math block
-always \ee\s`72 0-4-2356-23 right brace after math block
-always \ee\s`7 23456 right parenthesis after math block
-always "\s 0
-always \s,\s 6-0 use a Nemeth comma
+always \ee\s`3p 1b-15-4-25-1234
+always \ee\s`3 1b-15-25 colon
+always \ee\s`2 1b-15-23 semicolon
+#Try to detect whether the math excerpt is preceded and followed by single quotes (apostrophe) and then restore the ending single quotation mark.
+noback context ["`'\s\eb"] #2=1@6-236-1b-12
+noback context #2=1["\ee\s`'"] #2=0@1b-15-356-3
+#Otherwise consider it as an apostrophe following the Nemeth block
+always \ee\s`' 1b-15-3
+always \ee\s- 1b-15-36 hyphen
+always \ee\s99 1b-15-35-35 asterisk
+always `,7\s\eb 6-2356-1b-12 left bracket before math block
+always `;7\s\eb 56-2356-1b-12 left brace before math block
+always `7\s\eb 2356-1b-12 left parenthesis before math block
+always \ee\s`7 1b-15-2356 right parenthesis after math block
+always \ee\s,8;s 1b-15-3-234 plural or possessive
+always \ee\s''' 1b-15-3-3-3 horizontal ellipsis
 noback context "\eb"[]$l"\ee" @56 add a letsign (letter prefix) when the math block contains a single letter only
 noback context "\eb"[]","$l"\ee" @56 add a letsign to a single capital letter making up the math block
+noback pass2 @1b-12 @456-146-0 add Nemeth block start indicators
+noback pass2 @1b-15 @0-456-156 add Nemeth block end indicators
 
-noback pass2 @1b-12 ? remove the escape sequences for the beginning of math blocks
-noback pass2 @1b-15 ? remove the escape sequences for the end of math blocks
-noback pass2 @1b-12-4-4 @4
+noback pass2 @1b-12-4-4 @456-146-0-4

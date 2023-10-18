@@ -5,6 +5,7 @@
 #
 #  Copyright (C) 2004-2008 ViewPlus Technologies, Inc. www.viewplus.com
 #  Copyright (C) 2004-2006 JJB Software, Inc. www.jjb-software.com
+#  Expanded and modified by Norbert Márkus (hamilfonz at gmail dot com), Hungary, 2023.
 #
 #  This file is part of liblouis.
 #
@@ -22,8 +23,61 @@
 #  License along with liblouis. If not, see
 #  <http://www.gnu.org/licenses/>.
 
-include en-chardefs.cti All character definition opcodes
+space \x001b 1b escape character for html back-translation
+include loweredDigits6Dots.uti
+include latinLetterDef6Dots.uti
+include latinUppercaseComp6.uti
+replace \x00AF \x2015
+punctuation ( 12356
+punctuation } 12456
+punctuation ] 124567
+punctuation ? 1456
+punctuation : 156
+punctuation ) 23456
+punctuation ! 2346
+punctuation { 246
+punctuation [ 2467
+punctuation ' 3
+punctuation - 36
+punctuation . 46
+punctuation " 5
+punctuation ; 56
+punctuation , 6
+sign & 12346
+sign $ 1246
+sign | 1256
+sign \\ 12567
+sign % 146
+sign * 16
+sign # 3456
+punctuation ` 4
+sign _ 456
+sign ^ 457
+sign @ 47
+math = 123456
+math < 126
+math / 34
+math > 345
+math + 346
+math ~ 45
+punctuation : 456-25-0
+punctuation ; 456-23-0
+
+math \x2218 45-46-16-5 degrees sign (actually a composit sign, in Braille shown in superscript)
+
+#Reversed the order of the two include lines below to give priority to the math character definitions
 include nemethdefs.cti
+include en-chardefs.cti All character definition opcodes
+attribute spacetildedotfive \x0020\x00A0~\x0022
+attribute rightbrace }
+attribute mathdot \x00B7\x02D9\x22C5
+attribute greekletter abgdez:?jklmnxoprstuf&yw3
+
+math \x00a8 16-16 DIAERESIS (double dots) in math expressions
+math \x2322 1246-1 FROWN (CONCAVE UPWARD ARC)
+math \x2323 1246-3 SMILE (CONCAVE DOWNWARD ARC)
+
+math \x0023 3456a pseudo hash mark for further processing
 
 # Braille indicators
 multind 56-6 letsign capsletter
@@ -43,24 +97,22 @@ endcomp 456-156
 
 prepunc " 236
 postpunc " 356
-prepunc ' 6-236
-postpunc ' 356-3
 postpunc , 6
+always \e0 5
 always , 6-a
-always # 35-2345 print number sign before number
+#always # 35-2345 print number sign before number
+always # 3456a number sign (hashmark) in print - a temporary representation for further processing
 decpoint . 46
 hyphen - 36
 postpunc . 456-256
 endnum . 456-256
 always . 256
-postpunc ; 456-23
-postpunc : 456-25
 always ! 12346 factorial
 always < a-5-13-a
 always = a-46-13-a
 always > a-46-2-a
 postpunc ? 456-236
-endnum % 4-356
+#endnum % 4-356
 always ~~ 4-156-5-4-156
 always ~ 4-156
 always & 456-12346
@@ -73,10 +125,11 @@ always @ 4-1
 always \\ 456-16
 always | 1256
 always $ 4-234
+always \x2015 156 horizontal bar above accented centered
 repeated \s 0
 noback context ["\x25A1"]$d @1246-256-5
 noback context ["\x25A0"]$d @1246-456-256-5
-always \x00b0 45-46-16
+always \x00b0 45-46-16-5 #This is not a simple symbol. It contains a local superscript and a base-line suffix that may get removed if it is not needed
 always \x00B1 346-36
 
 # semantic character pairs
@@ -172,16 +225,17 @@ always ^| 1256
 always ^/ 34
 always ^* 16
 repeated ^1 a
-
+always ^ 456-126 #default the CARET character to its Nemeth Braille representation if it has not been consumed as a prefix in the lines above
+always % 4-356 #default the actual percent sign to its Nemeth Braille representation if it has not been consumed earlier
 # Function names and abbreviations
 always acos 1-14-135-234-a
-always antilog 1-1345-2345-24-123-135-1234-a
+always antilog 1-1345-2345-24-123-135-1245-a
 always arc 1-1235-14-a
 always arccos 1-1235-14-14-135-234-a
 always arg 1-1235-1245-a
 always asin 1-234-24-1345-a
 always atan 1-2345-1-1345-a
-always colog 14-123-135-1245-a
+always colog 14-123-135-1245 #-a
 always cos 14-135-234-a
 always cosh 14-135-234-125-a
 always cot 14-135-2345-a
@@ -192,7 +246,7 @@ always csch 14-234-14-125-a
 always erf 15-1235-124-a
 always inf 24-1345-124-a
 always ln 123-1345-a
-always log 123-135-1234-a
+always log 123-135-1245 #-a
 always max 134-1-1346-a
 always min 134-24-1345-a
 always sec 234-15-14-a
@@ -202,8 +256,12 @@ always sinh 234-24-1345-125-a
 always tan 2345-1-1345-a
 always tanh 2345-1-135-125-a
 always vers 1236-15-1235-234-a
-
-
+always sgn 234-1245-1345-a
+always tg 2345-1245-a
+always ctg 14-2345-1245-a
+always lg 123-1245-a
+always arcsin 1-1235-14-234-24-1345-a
+always arctg 1-1235-14-2345-1245-a
 
 # computer braille character sequences
 compbrl :// URLs
@@ -226,22 +284,74 @@ compbrl .wav
 compbrl .tar
 compbrl .zip
 
-# pass 2 corrections
+# multipass corrections
 
+#Process print number sign (hash mark)
+noback pass2 [@3456a]$d @46-3456-3456 #a digit following a print hash mark needs its own Braille number sign
+noback pass2 @3456a @46-3456 #produce a hash mark symbol when not followed by a number
+#Fix the context of the hollow dot for its uses as degrees sign or composit operator
+noback pass2 @45[@45-46-16-5]@5 * #remove the nesting superscript in cases the degrees sign happens to be in the correct syntax
+noback pass3 $d@45-46-16[@5]@6-124 @a #insert space before the F for Fahrenheit
+noback pass3 $d@45-46-16[@5]@6-14 @a #insert space before the C for Celsius
+noback pass2 $l[@45-46-16-5]$l @46-16 #composit sign between two functions like f ring g
 # get rid of base-line ind. after subscripts
-noback pass2 @56[$d1-5]@5!$d *
-# insert another superscript ind. on doube superscripts
-noback pass2 @45[]$d@5-5 @45
+#Handle stand-alone subscripts
+noback pass2 @1b-12-56[]$d1-5@5-1b-15 @3456
+noback pass2 @1b-12-56[]$d1-5@5$s @3456
+noback pass2 $s@56[]$d1-5@5-1b-15 @3456
+noback pass2 $s@56[]$d1-5@5$s @3456
+
+#handle prescribed subscripts
+noback pass2 @1b-12-56$d1-5[@5]@45 ? #testing for a preceding letter won't work because the math start sign ends with letter b
+noback pass2 @1b-12-56$d1-5[@5]@56 ?
+noback pass2 @1b-12-56$d1-5[@5] @5
+noback pass3 @1b-12-56$d1-5[@5] @5
+
+#Preserve the subscript ind. and the base-line ind. if the subscript is not preceded by a letter
+#but remove the base-line ind. if the subscript is either followed by a superscript or a subscript
+#Remove the subscript prefix if it is preceded by a letter or a letter and prime(s).
+#But after this numeric subscript, do not remove the base-line ind. if it is followed by a number
+noback pass2 @123-135-1245-56$d1-5[@5] @a #following a numeric subscript, introduce a space required for the function abbreviation (log)
+#If the function "log" has a subscript or superscript, find the indication of its end (\e0 or quotation mark" and replace it with a dot 5 followed by a space
+noback context "log"["^;"] @56#11=1
+noback context "log"["^~"] @45#11=1
+noback context #11=1["\e0"] #11=0@5-a
+noback context #11=1["\""] #11=0@5-a
+
+#Handle when a letter has a prime or a double prime in superscript and something else in subscript (needs to be shown in reverse order in Nemeth)
+noback context $l[]"^;"!$w1-100"~'^\"" #19=1@3
+noback context $l[]"^;"!$w1-100"~\x2032^\"" #19=1@3
+noback context $l[]"^;"!$w1-100"~''^\"" #18=1@3-3
+noback context $l[]"^;"!$w1-100"~\"^\"" #18=1@3-3
+noback context $l[]"^;"!$w1-100"~\x2033^\"" #18=1@3-3
+noback context #19=1["^~'^\""] #19=0@5
+noback context #19=1["^~\x2032^\""] #19=0@5
+noback context #18=1["^~''^\""] #18=0@5
+noback context #18=1["^~\"^\""] #18=0@5
+noback context #18=1["^~\x2033^\""] #18=0@5
+#Else replace \e0 with a dot 5 unconditionally
+noback context "\e0" @5
+noback pass2 $l@56$d1-5[@5]!$d ?
+noback pass2 $l@3-56$d1-5[@5]!$d ?
+noback pass2 $l@3-3-56$d1-5[@5]!$d ?
+noback pass3 $l[@56]$d1-5 ?
+noback pass3 $l@3[@56]$d1-5 ?
+noback pass3 $l@3-3[@56]$d1-5 ?
+
 #get rid of extra baseline inds.
-noback pass2 @5-5 @5 
+noback pass4 @5-5 @5
 noback pass2 @5-0 @0 
+noback pass3 @5-0 @0
 noback pass2 @5-a @a 
+noback pass3 @5-a @a
 noback pass2 @5-1b-15 @1b-15
-# get rid rid of superscript ind. on prime sign
+noback pass3 @5-1b-15 @1b-15
+# get rid of superscript ind. on prime sign
 noback pass2 @45-3-5 @3
+noback pass2 @45-3-3-5 @3-3
 # Put 456 in mixed numbers
-noback pass2 $d[]@1456 @456
-noback pass2 @456-1456!$s3-8[]@3456 @456
+noback pass2 $d[]@1456 @456#1=1
+noback pass2 #1=1[]@3456 @456#1=0 #
 # Put number sign on numbers after spaces
 noback pass2 @a[]$d @3456
 noback pass2 [@a-0]$d @a-3456
@@ -254,11 +364,52 @@ noback pass2 @0-a @a
 # fix anomaly with superscripts
 noback pass2 @45-0-5 @45
 noback pass2 @45-5 @45
+
+#Handle bold prefix on English and Greek lower-case and capital letters
+#noback pass2 @456-56-46 @456-46 #remove English letter sign from before Greek letters
+noback pass2 @456-56-46-6[%greekletter] @456-46-6* #remove the unnecessary English letter sign
+noback pass2 @456-56-46-4[%greekletter] @456-46-4* #remove the unnecessary English letter sign 
+noback pass2 @456-56-46[%greekletter] @456-46* #remove the unnecessary English letter sign
+noback pass2 @456-56-6$l * #English capital letter with bold prefix must remain unchanged
+noback pass2 @456-56$l * #English lower-case letter must remain unchanged
+noback pass2 @456-56 ? #Otherwise the prefix is removed
+
 # Fix single letter and digit with overbar
-noback pass2 @5$l[@126-12456] @156
-noback pass2 @5-6$l[@126-12456] @156
-noback pass2 [@5]!$s@156 @a
+#noback pass2 @5$l[@126-12456] @156
+noback pass2 @5[$l]@126-156-12456 *@156 #English small letter
+noback pass2 @5[@6$l]@126-156-12456 *@156 #English capital letter
+noback pass2 @5[@456-56$l]@126-156-12456 *@156 #boldface English small letter
+noback pass2 @5[@456-56-6$l]@126-156-12456 *@156 #boldface English capital letter
+noback pass2 @5[@46%greekletter]@126-156-12456 *@156 #Greek small letter
+noback pass2 @5[@46-4%greekletter]@126-156-12456 *@156 #Greek small letter math variant
+noback pass2 @5[@46-6%greekletter]@126-156-12456 *@156 #Greek capital letter
+noback pass2 @5-456-56[@46%greekletter]@126-156-12456 @456*@156 #boldface Greek small letter
+noback pass2 @5-456-56[@46-4%greekletter]@126-156-12456 @456*@156 #boldface Greek small letter math variant
+noback pass2 @5-456-56[@46-6%greekletter]@126-156-12456 @456*@156 #boldface Greek capital letter
+noback pass2 @5[$d]@126-156-12456 *@156 #digit
+
+# Fix single letter and digit with bar directly under
+noback pass2 @5[$l]@146-156-12456 *@146-156 #English small letter
+noback pass2 @5[@6$l]@146-156-12456 *@146-156 #English capital letter
+
+noback pass2 @5[@456-56$l]@146-156-12456 *@146-156 #boldface English small letter
+noback pass2 @5[@456-56-6$l]@146-156-12456 *@146-156 #boldface English capital letter
+noback pass2 @5[@46%greekletter]@146-156-12456 *@146-156 #Greek small letter
+noback pass2 @5[@46-4%greekletter]@146-156-12456 *@146-156 #Greek small letter math variant
+noback pass2 @5[@46-6%greekletter]@146-156-12456 *@146-156 #Greek capital letter
+noback pass2 @5-456-56[@46%greekletter]@146-156-12456 @456*@146-156 #boldface Greek small letter
+noback pass2 @5-456-56[@46-4%greekletter]@146-156-12456 @456*@146-156 #boldface Greek small letter math variant
+noback pass2 @5-456-56[@46-6%greekletter]@146-156-12456 @456*@146-156 #boldface Greek capital letter
+noback pass2 @5[$d]@146-156-12456 *@146-156
+
+#It is sufficient to indicate one dot above a series of digits if two or more consecutive digits each have a dot above
+noback pass2 @5$d2-100@126[%mathdot2-100]@12456 @16
+#Fix the appearance of double dots in overscript or underscript
+noback pass2 @126[@456-256-456-256]@12456 @16-16
+noback pass2 @146[@456-256-456-256]@12456 @16-16
+
 noback pass2 @46-a @456-256
+noback pass2 [@456-256]@5$d @46
 # get rid of space for overscripts 
 noback pass2 @126-a @126
 noback pass2 @146-a @146
@@ -268,17 +419,85 @@ noback pass2 @a-12456 @12456
 # fix complex fraction begin and end (not perfectly)
 noback pass2 @1456-1456 @6-1456-1456
 noback pass2 @3456-3456 @3456-6-3456
+
+#Insert the missing space for "lim" after the termination of the "directly under" passage
+noback context []"^\"lim^%"!$x1-100"}" #20=1
+noback context #20=1["^}"] #20=0@12456-a
 # Fix lim with overbar sign
 noback pass2 @5-123-24-134-126-12456 @126-123-24-134
+#Fix the modified right arrow: use the full form of the arrow and move its surrounding spaces outside the five-step modification structure
+noback context ["^\"\x2192^<"] #21=1@a-5-1246-25-25-135-126 #when something is placed over the arrow
+noback context ["^\"\x2192^%"] #21=1@a-5-1246-25-25-135-146 #when something is placed under the arrow
+noback context #21=1["^}"] #21=0@12456-a #the space is moved beyond the termination of the modification
 # Get rid of open paren before matrices
 noback pass2 @12356-4-6-12356 @4-6-12356
 noback pass2 @1256-4-6-12356 @4-6-12356
 # take off baseline ind. comma space
 noback pass2 [@5-6]!$l @6
 noback pass2 @1b-12[]$d @3456 number sign before digit at beginning
+noback pass2 @1b-12[]@5$d @3456
+noback pass2 $s[]@5$d @3456
+noback pass3 @1b-12[]$d @3456
 noback pass2 @1b-12-36[]$d @3456 number sign before minus before digit at beginning
+noback pass2 @1b-12-5-36[]$d @3456
+noback pass2 @1b-12-36[]@5$d @3456
+noback pass2 $s@5-36[]$d @3456
+noback pass2 $s@36[]@5$d @3456
+noback pass3 @1b-12-36[]$d @3456
 noback pass2 [@12e]$d @3456
 noback pass2 [@12e-36]$d @36-3456
 noback pass2 [@12e-46]$d @3456-46
 noback pass2 @12e ?
 noback pass2 @15e ?
+#Remove space from behind colon or semicolon when followed by other than a number
+noback pass2 @456-25[@0]!$d ?
+noback pass2 @456-23[@0]!$d ?
+#Insert space between {} for the empty set
+noback pass2 @46-12356[]@46-23456 @a
+#Remove space between a grouping symbol and a horizontal ellipsis
+noback pass2 @46-46-12356[@0]@3-3-3 ?
+noback pass2 @46-12356[@0]@3-3-3 ?
+noback pass2 @4-12356[@0]@3-3-3 ?
+noback pass2 @12356[@0]@3-3-3 ?
+noback pass2 @3-3-3[@0]@46-46-23456 ?
+noback pass2 @3-3-3[@0]@46-23456 ?
+noback pass2 @3-3-3[@0]@4-23456 ?
+noback pass2 @3-3-3[@0]@23456 ?
+
+#function names with superscript, remove the space from before the superscript prefix
+noback pass2 @1-14-135-234[@a]@45 ? #acos
+noback pass2 @1-1345-2345-24-123-135-1245[@a]@45 ? #antilog
+noback pass2 @1-1235-14[@a]@45 ? #arc
+noback pass2 @1-1235-14-14-135-234[@a]@45 ? #arccos
+noback pass2 @1-1235-1245[@a]@45 ? #arg
+noback pass2 @1-234-24-1345[@a]@45 ? #asin
+noback pass2 @1-2345-1-1345[@a]@45 ? #atan
+noback pass2 @14-135-123-135-1245[@a]@45 ? #colog
+noback pass2 @14-135-234[@a]@45 ? #cos
+noback pass2 @14-135-234-125[@a]@45 ? #cosh
+noback pass2 @14-135-2345[@a]@45 ? #cot
+noback pass2 @14-135-2345-125[@a]@45 ? #coth
+noback pass2 @14-135-1236-15-1235-234[@a]@45 ? #covers
+noback pass2 @14-234-14[@a]@45 ? #csc
+noback pass2 @14-234-14-125[@a]@45 ? #csch
+noback pass2 @15-1235-124[@a]@45 ? #erf
+noback pass2 @24-1345-124[@a]@45 ? #inf
+noback pass2 @123-1345[@a]@45 ? #ln
+noback pass2 @123-135-1245[@a]@45 ? #log
+noback pass2 @134-1-1346[@a]@45 ? #max
+noback pass2 @134-24-1345[@a]@45 ? #min
+noback pass2 @234-15-14[@a]@45 ? #sec
+noback pass2 @234-15-14-125[@a]@45 ? #sech
+noback pass2 @234-24-1345[@a]@45 ? #sin
+noback pass2 @234-24-1345-125[@a]@45 ? #sinh
+noback pass2 @2345-1-1345[@a]@45 ? #tan
+noback pass2 @2345-1-1345-125[@a]@45 ? #tanh
+noback pass2 @1236-15-1235-234[@a]@45 ? #vers
+noback pass2 @234-1245-1345[@a]@45 ? #sgn
+noback pass2 @123-1245[@a]@45 ? #lg
+noback pass2 @2345-1245[@a]@45 ? #tg with superscript
+noback pass2 @14-2345-1245[@a]@45 ? #ctg with superscript
+noback pass2 @1-1235-14-234-24-1345[@a]@45 ? #arcsin with superscript
+noback pass2 @1-1235-14-2345-1245[@a]@45 ? #arctg with superscript
+
+noback pass4 [$s]$s ?

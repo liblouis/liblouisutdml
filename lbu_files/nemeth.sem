@@ -1,6 +1,7 @@
 # Licensed under LGPL
 
 # Updated 6-18-08 by Mike Sivill <mike.sivill@viewplus.com>
+#  Updated and modified by Norbert Márkus (hamilfonz at gmail dot com), Hungary, 2023.
 
 # You must edit this file as explained in the documentation to get
 # proper output.
@@ -10,6 +11,7 @@ maligngroup maligngroup
 malignmark malignmark
 math math \eb,\*\ee
 menclose menclose
+mfrac mfrac,bevelled,true ^?,^_/,^#
 mfrac mfrac ^?,/,^#
 mfenced mfenced ^(,^)
 mfenced mfenced,open,{ ^{,^}
@@ -27,13 +29,16 @@ ms ms
 mspace mspace
 msqrt msqrt ^>,\*^}
 mstyle mstyle
-msub msub ,^;,^"
+#There is an escape sequence instead of The dot 5 at the end
+msub msub ,^;,\e0
 msubsup msupsup ,^~,^~^~,^"
 msubsup msubsup ,^;,^~,^"
-msup msup ,^~,^"
+#There is an escape sequence instead of The dot 5 at the end
+msup msup ,^~,\e0
 matrix mtable
 mtd mtd \*\ec
-mtext mtext
+#text items are surrounded by a preceding and a trailing space and receive a single-word switch indicator
+mtext mtext \s^\,^',\s
 mtr mtr ^`^\,^(,\*^`^\,^)\er
 munder munder ^",^%,^}
 munderover munderover ^",^%,^<,^}
@@ -101,7 +106,7 @@ skip mphantom
 no mo,maxsize
 no mo,maxsize,3
 no mo,mathsize
-no mi,mathvariant
+mi mi,mathvariant,bold ^_^;
 no mo,mathvariant
 no munder,accentunder
 no mn,mathvariant
