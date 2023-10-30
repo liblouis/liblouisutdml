@@ -1,7 +1,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.69])
-AC_INIT([liblouisutdml],[2.11.0],[liblouis-liblouisxml@freelists.org],[liblouisutdml],[http://www.liblouis.io])
+AC_INIT([liblouisutdml],[2.12.0],[liblouis-liblouisxml@freelists.org],[liblouisutdml],[http://www.liblouis.io])
 AC_CONFIG_SRCDIR([liblouisutdml/semantics.c])
 AC_CONFIG_HEADERS([liblouisutdml/config.h])
 
@@ -10,16 +10,16 @@ AC_CONFIG_MACRO_DIRS([m4 gnulib/m4])
 AM_INIT_AUTOMAKE([-Wall dist-zip])
 
 # increment if the interface has additions, changes, removals.
-LIBLOUISUTDML_CURRENT=10
+LIBLOUISUTDML_CURRENT=11
 
 # increment any time the source changes; set to
 # 0 if you increment CURRENT
-LIBLOUISUTDML_REVISION=2
+LIBLOUISUTDML_REVISION=0
 
 # increment if any interfaces have been added; set to 0
 # if any interfaces have been changed or removed. removal has
 # precedence over adding, so set to 0 if both happened.
-LIBLOUISUTDML_AGE=1
+LIBLOUISUTDML_AGE=2
 
 AC_SUBST(LIBLOUISUTDML_CURRENT)
 AC_SUBST(LIBLOUISUTDML_REVISION)
