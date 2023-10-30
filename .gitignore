@@ -46,9 +46,13 @@ doc/version.texi
 file2brl.temp
 file2brl.log
 
-gnulib/unistd.h
+gnulib/inttypes.h
+gnulib/limits.h
 gnulib/stdlib.h
+gnulib/string.h
 gnulib/sys/types.h
+gnulib/unistd.h
+gnulib/wchar.h
 
 INSTALL
 
