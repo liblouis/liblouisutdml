@@ -1,5 +1,9 @@
 liblouisxml NEWS -- history of user-visible changes.
 
+* Noteworthy changes in release 2.13.0 (2024-??-??)
+This Liblouisutdml release adds support for liblouis 3.28. Thanks to
+Attila Hammer for providing a patch.
+
 * Noteworthy changes in release 2.12.0 (2023-11-02)
 
 This Liblouisutdml release brings major improvements to Nemeth Math
