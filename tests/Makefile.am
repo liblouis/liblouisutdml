@@ -431,6 +431,9 @@ dist_suite_TESTS =				\
 	test_mathml_woluwe/test_118.test	\
 	test_mathml_woluwe/test_119.test	
 
+# some of the woluwe tests fail because utdml has not been updated to
+# a change in liblouis 3.28, see
+# https://github.com/liblouis/liblouisutdml/pull/101
 XFAIL_TESTS +=					\
 	pagenum.test				\
 	footer_01.test				\
