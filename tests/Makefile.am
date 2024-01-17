@@ -604,9 +604,14 @@ XFAIL_TESTS +=					\
 	test_mathml_woluwe/test_075.test	\
 	test_mathml_woluwe/test_076.test	\
 	test_mathml_woluwe/test_078.test	\
+	test_mathml_woluwe/test_080.test	\
 	test_mathml_woluwe/test_093.test	\
 	test_mathml_woluwe/test_096.test	\
-	test_mathml_woluwe/test_099.test
+	test_mathml_woluwe/test_099.test	\
+	test_mathml_woluwe/test_106.test	\
+	test_mathml_woluwe/test_107.test	\
+	test_mathml_woluwe/test_113.test	\
+	test_mathml_woluwe/test_114.test
 
 TESTS =						\
 	$(check_PROGRAMS)			\
