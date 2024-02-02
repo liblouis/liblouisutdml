@@ -34,6 +34,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "louisutdml.h"
+#include <libxml/xmlsave.h>
 #include <libxml/HTMLparser.h>
 #include <libxml/catalog.h>
 

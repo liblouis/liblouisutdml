@@ -32,6 +32,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <libxml/parser.h>
+#include <libxml/xmlsave.h>
 #include "louisutdml.h"
 
 static xmlNode *firstBrlNode;
