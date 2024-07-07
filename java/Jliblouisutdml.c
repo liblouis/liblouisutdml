@@ -703,7 +703,7 @@ JNIEXPORT void JNICALL Java_org_liblouis_LibLouis_setLogLevel
 }
 
 static jobject louLogCBFunc;
-static void javaLouLogCallback(int level, const char *message)
+static void javaLouLogCallback(logLevels level, const char *message)
 {
   execJavaLogCallback(louLogCBFunc, level, message);
 }
@@ -1340,7 +1340,7 @@ JNIEXPORT void JNICALL Java_org_liblouis_LibLouisUTDML_logEnd
 }
 
 static jobject lbuLogCBFunc;
-static void javaLbuLogCallbackFunc(int level, const char *message)
+static void javaLbuLogCallbackFunc(logLevels level, const char *message)
 {
   execJavaLogCallback(lbuLogCBFunc, level, message);
 }
