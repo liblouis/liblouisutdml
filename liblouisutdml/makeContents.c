@@ -270,7 +270,7 @@ make_contents (void)
 		  currentHeading->headingLength * CHARSIZE);
 	  ud->translated_length = currentHeading->headingLength;
 	  ud->in_sync = 0;
-	  end_style (style);
+	  end_style ();
 	  currentHeading = currentHeading->next;
 	}
       do_newpage ();

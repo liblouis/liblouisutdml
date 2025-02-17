@@ -519,7 +519,7 @@ int make_endnotes(void)
 			start_style(style,NULL);
 			memcpy(&ud->translated_buffer[ud->translated_length],notes_header,notes_header_length*CHARSIZE);
 			ud->translated_length+=notes_header_length;
-			end_style(style);
+			end_style();
 			do_blankline();
 			has_newline=1;
 			free(notes_header);
@@ -530,7 +530,7 @@ int make_endnotes(void)
 			start_style(style,NULL);
 			memcpy(&ud->translated_buffer[ud->translated_length],notes_description,notes_description_length*CHARSIZE);
 			ud->translated_length+=notes_description_length;
-			end_style(style);
+			end_style();
 			do_blankline();
 			has_newline=1;
 			free(notes_description);
@@ -564,7 +564,7 @@ int make_endnotes(void)
 			ud->translated_buffer[ud->translated_length++] = ' ';
 			memcpy(&ud->translated_buffer[ud->translated_length],current_endnote->endnote,current_endnote->endnote_length*CHARSIZE);
 			ud->translated_length += current_endnote->endnote_length;
-			end_style(style);
+			end_style();
 			ud->in_sync=0;
 			current_endnote = current_endnote->next;
 		}
