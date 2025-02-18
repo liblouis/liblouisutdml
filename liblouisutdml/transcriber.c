@@ -331,14 +331,14 @@ transcribe_text_string ()
 	return 0;
       if (ch == 10)
 	do_blankline ();
-      end_style (paraStyle);
+      end_style ();
       charsInParagraph = 0;
       pch = 0;
       if (ch > 32)
 	paragraphBuffer[charsInParagraph++] = ch;
     }
   ud->input_encoding = lbu_utf8;
-  end_style (docStyle);
+  end_style ();
   end_document ();
   return 1;
 }
@@ -3917,7 +3917,7 @@ start_style (StyleType * curStyle, xmlNode * node)
 }
 
 int
-end_style ()
+end_style (void)
 {
   logMessage(LOU_LOG_DEBUG, "Begin end_style");
   styleSpec = &ud->style_stack[ud->style_top];

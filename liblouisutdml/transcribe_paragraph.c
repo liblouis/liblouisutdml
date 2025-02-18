@@ -318,7 +318,7 @@ transcribe_paragraph (xmlNode * node, int action)
       break;
 	case noteref:							////
 		if(ud->endnotes)
-			start_endnote(node);
+			start_endnote();
 		else
 		{
 			if(action!=0)
