@@ -46,7 +46,7 @@ jobs:
         run: ${{ matrix.options }} make check
       - name: Store the test suite log
         if: ${{ always() }} # store the test suite log even if the tests failed
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: test-suite-${{ matrix.sanitizer }}.log
           path: tests/test-suite.log
