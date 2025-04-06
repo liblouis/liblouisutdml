@@ -47,8 +47,8 @@ This file may contain code borrowed from the Linux screenreader
 
 @noindent
 Copyright @copyright{} 2004-2009 ViewPlus Technologies, Inc.
-@uref{www.viewplus.com} and Copyright @copyright{} 2006,2009
-Abilitiessoft, Inc. @uref{www.abilitiessoft.org}.
+@uref{https://www.viewplus.com} and Copyright @copyright{} 2006,2009
+Abilitiessoft, Inc. @uref{https://www.abilitiessoft.org}.
 
 @quotation
 This file is free software; you can redistribute it and/or modify it
@@ -355,7 +355,7 @@ This is the name of the input file containing the material to be
 transcribed. The file may be either an xml file or a text file. The
 @option{-b}, @option{-r} and @option{-p} options discussed above
 provide for other types of files and processing. Typical xml files are
-those provided by @uref{www.bookshare.org} or those derived from a
+those provided by @uref{https://www.bookshare.org} or those derived from a
 word processor by saving in xml format. If a text file is used,
 paragraphs and headings should be separated by blank lines. In such a
 file there is no way to distinguish between paragraphs and headings,
@@ -2841,11 +2841,11 @@ by the BRLTTY Team.
 
 @noindent
 Copyright @copyright{} 2004-2009 ViewPlus Technologies, Inc.
-@uref{www.viewplus.com}.
+@uref{https://www.viewplus.com}.
 
 @noindent
 Copyright @copyright{} 2006,2009 Abilitiessoft, Inc.
-@uref{www.abilitiessoft.org}.
+@uref{https://www.abilitiessoft.org}.
 
 Liblouisutdml is free software: you can redistribute it and/or modify it
 under the terms of the GNU Lesser General Public License as published
@@ -2906,7 +2906,7 @@ The functions which are not ready for use at the moment, such as
 graphics capability of the Tiger tactile graphics embossers.
 
 The latest versions of liblouisutdml and liblouis can be downloaded
-from @uref{www.liblouis.io}. This site also contains links to a
+from @uref{https://www.liblouis.io}. This site also contains links to a
 mailing list and to project pages on github.com. Note that
 liblouisutdml will only work with the latest version of liblouis.
 
