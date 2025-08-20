@@ -56,7 +56,7 @@ LBUAPI void EXPORT_CALL lbu_loadXMLCatalog(const char *filename)
   xmlLoadCatalog(filename);
 }
 void
-libxml_errors (void *ctx ATTRIBUTE_UNUSED, const char *msg, ...)
+libxml_errors (void *ctx, const char *msg, ...)
 {
   va_list args;
   char buffer[MAXNAMELEN];
