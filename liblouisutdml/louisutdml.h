@@ -370,7 +370,7 @@ int do_blankline ();
 int do_softreturn ();
 int do_righthandpage ();
 int do_pagenum ();
-void libxml_errors (void *ctx ATTRIBUTE_UNUSED, const char *msg, ...);
+void libxml_errors (void *ctx, const char *msg, ...);
 int do_configstring (xmlNode * node);
 StyleType *new_style (xmlChar * name);
 StyleType *lookup_style (xmlChar * name);
