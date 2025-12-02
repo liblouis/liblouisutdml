@@ -12,7 +12,7 @@ on:
     branches: [ master ]
 
 env:
-  LIBLOUIS_VERSION: 3.35.0
+  LIBLOUIS_VERSION: 3.36.0
 
 jobs:
   sanitizer:
