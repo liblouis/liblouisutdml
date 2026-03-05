@@ -1,4 +1,4 @@
-FROM debian:latest
+FROM debian:bookworm@sha256:8738a0fdc7a61feebbeb625c41b405443639ea0a04ecc0d481d92b4720fd8566
 
 # This is a dockerfile that creates an environment to cross-compile
 # liblouisutdml for Windows. It includes libyaml and liblouis.
@@ -52,7 +52,7 @@ RUN ./bootstrap && \
 
 # Build and install libxml2
 WORKDIR ${SRCDIR}
-RUN curl -L ftp://xmlsoft.org/libxml2/libxml2-${LIBXML2_VERSION}.tar.gz | tar zx
+RUN curl -L http://xmlsoft.org/ftp/libxml2/libxml2-${LIBXML2_VERSION}.tar.gz | tar zx
 WORKDIR ${SRCDIR}/libxml2-${LIBXML2_VERSION}
 RUN autoreconf -i && \
     ./configure --with-zlib=no --with-iconv=no --with-python=no --with-threads=no --host ${HOST} --prefix=${PREFIX} && \
