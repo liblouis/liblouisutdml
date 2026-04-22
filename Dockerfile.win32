@@ -16,6 +16,7 @@ RUN apt-get update && apt-get install -y \
     texinfo \
     zip \
     patch \
+    xz-utils \
    && rm -rf /var/lib/apt/lists/*
 
 # install wine for 32-bit architecture
@@ -52,7 +53,7 @@ RUN ./bootstrap && \
 
 # Build and install libxml2
 WORKDIR ${SRCDIR}
-RUN curl -L http://xmlsoft.org/ftp/libxml2/libxml2-${LIBXML2_VERSION}.tar.gz | tar zx
+RUN curl -L https://download.gnome.org/sources/libxml2/2.9/libxml2-${LIBXML2_VERSION}.tar.xz | tar xJ
 WORKDIR ${SRCDIR}/libxml2-${LIBXML2_VERSION}
 RUN autoreconf -i && \
     ./configure --with-zlib=no --with-iconv=no --with-python=no --with-threads=no --host ${HOST} --prefix=${PREFIX} && \
