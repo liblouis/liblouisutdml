@@ -1,0 +1,6 @@
+# Post-translation editing table for Russian mathematical Braille.
+# Licensed under LGPLv3+.
+
+# Preserve one blank for runs introduced while linearizing MathML.
+repeated \s 0
+noback pass2 @0-0 @0

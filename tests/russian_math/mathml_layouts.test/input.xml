@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mstack>
+    <msrow><mn>15</mn></msrow>
+    <msrow><mo>+</mo><mn>27</mn></msrow>
+    <msline/>
+    <msrow><mn>42</mn></msrow>
+  </mstack>
+  <mlongdiv longdivstyle="mediumstackedrightright">
+    <mn>3</mn><mn>4</mn><mn>12</mn>
+    <msrow><mo>−</mo><mn>12</mn></msrow>
+    <msline/>
+    <msrow><mn>0</mn></msrow>
+  </mlongdiv>
+  <mtable data-braille-frame="joining-left">
+    <mtr><mtd><mi>a</mi></mtd></mtr>
+    <mtr><mtd><mi>b</mi></mtd></mtr>
+    <mtr><mtd><mi>c</mi></mtd></mtr>
+  </mtable>
+  <mtable data-braille-frame="joining-right">
+    <mtr><mtd><mi>d</mi></mtd></mtr>
+    <mtr><mtd><mi>e</mi></mtd></mtr>
+    <mtr><mtd><mi>f</mi></mtd></mtr>
+  </mtable>
+  <mtable data-braille-frame="joining-left">
+    <mtr><mtd><mtext>одна</mtext></mtd></mtr>
+  </mtable>
+</math>

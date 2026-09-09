@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mrow><mfenced open="[" close="]"><mi>x</mi></mfenced><mfenced open="[" close="]"><mn>1</mn></mfenced></mrow>
+  <mrow><mfenced open="&lt;" close=">"><mi>y</mi></mfenced><mfenced open="&lt;" close=">"><mn>2</mn></mfenced></mrow>
+  <mfenced open="[" close="]"><mtext>текст</mtext></mfenced>
+  <mrow><mo>[</mo><mi>z</mi><mo>]</mo></mrow>
+  <mrow><mo>[</mo><mn>3</mn><mo>]</mo></mrow>
+  <mrow><mo>⟨</mo><mtext>а</mtext><mo>⟩</mo></mrow>
+</math>

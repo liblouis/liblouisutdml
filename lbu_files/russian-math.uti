@@ -1,0 +1,370 @@
+# liblouis: Russian mathematical Braille definitions
+#
+# This is a compatibility backport of the current Liblouis ru-math.uti input
+# contract. Formatter-only extensions which have not yet entered upstream are
+# identified below and do not override upstream character rules.
+#
+# Copyright (C) 2020-2022, 2025 Andrey Yakuboy <braille@yakuboy.ru>
+# Copyright (C) 2026 Danil Kostenkov <danilkostenkov38@gmail.com>
+#
+# This file is distributed under the terms of the GNU Lesser General Public
+# License, version 2.1 or (at your option) any later version.
+
+# Semantic characters for structured mathematics.
+
+noback math \xf400 0
+noback math \xf401 0
+noback math \xf402 0
+noback math \xf403 0
+
+replace \xf32e
+replace \xf32f
+noback math \xf328 6
+noback math \xf329 5
+
+# Right/left lower and upper indices.
+noback math \xf320 16
+replace \xf401\xf320
+noback always \xf402\xf320 156
+noback math \xf321 34
+replace \xf401\xf321
+noback always \xf402\xf321 156
+
+# Exactly-below and exactly-above scripts.
+noback math \xf322 46-16
+noback always \xf402\xf322 156
+noback math \xf323 46-34
+noback always \xf402\xf323 156
+
+# Roots.
+noback math \xf32a 146
+noback always \xf403\xf32a 146
+noback math \xf32b 1456
+noback math \xf32c 146-34
+
+# Fractions and formatter-supplied numeric structure.
+noback math \xf500 23
+noback math \xf501 56
+noback math \xf502 6-34
+noback math \xf503 1256
+replace \xf504
+noback always \xf505 6-3
+noback always \xf506 5
+noback always \xf507 6
+noback digit \xf50c 3
+replace \xf554
+noback math \xf555 256
+noback digit \xf556 346
+
+# Formatter-selected joining braces and multi-line frame segments.
+noback always \xf570 12346
+noback always \xf571 13456
+noback always \xf572 1234
+noback always \xf573 123
+noback always \xf574 1236
+noback always \xf575 1456
+noback always \xf576 456
+noback always \xf577 3456
+
+# Periodic decimal fractions.
+noback always \xf55a 2
+noback always \xf55b 126
+noback always \xf55c 345
+noback always \xf560 245
+noback always \xf561 1
+noback always \xf562 12
+noback always \xf563 14
+noback always \xf564 145
+noback always \xf565 15
+noback always \xf566 124
+noback always \xf567 1245
+noback always \xf568 125
+noback always \xf569 24
+
+# Suppress the number sign for digits inside explicitly structured fractions.
+# F401 + an ordinary digit is the current Liblouis contract.
+noback always \xf4010 245
+noback always \xf4011 1
+noback always \xf4012 12
+noback always \xf4013 14
+noback always \xf4014 145
+noback always \xf4015 15
+noback always \xf4016 124
+noback always \xf4017 1245
+noback always \xf4018 125
+noback always \xf4019 24
+
+# Brackets with explicit recognition dots.
+noback always \xf508 6-12356
+noback always \xf509 6-23456
+noback always \xf50a 4-246
+noback always \xf50b 4-135
+
+# Function tokens from the 2010 manual.
+noback always \xf510 1246-234
+noback always \xf511 1246-14
+noback always \xf512 1246-2345
+noback always \xf513 1246-14-2345
+noback always \xf514 1246-1-234
+noback always \xf515 1246-1-14
+noback always \xf516 1246-1-2345
+noback always \xf517 1246-1-14-2345
+noback always \xf518 1246-123
+noback always \xf519 1246-123-1245
+noback always \xf51a 1246-123-1345
+noback always \xf51b 1246-134-1346
+noback always \xf51c 1246-134-1345
+noback always \xf51d 1246-15
+noback always \xf51e 1246-123-134
+replace \xf51f
+replace \xf52f
+
+# Structured mark positions and contents.
+noback always \xf530 46
+noback always \xf531 456
+noback always \xf532 45
+noback always \xf533 56
+noback always \xf534 5
+noback always \xf540 25
+noback always \xf541 35
+noback always \xf542 23
+noback always \xf543 236
+noback always \xf544 356
+noback always \xf545 2356
+noback always \xf546 26
+noback always \xf547 256
+noback always \xf548 56-35
+noback always \xf549 46-35
+noback always \xf54a 46-35-35
+noback always \xf54b 25-2
+noback always \xf54c 5-25
+noback always \xf54d 235
+noback always \xf54e 36
+
+# Vector notation.
+noback always \xf550 25-2
+noback always \xf551 45-25-2
+noback always \xf552 25
+noback always \xf553 45-25
+noback always \xf557 456-345
+noback always \xf558 456-246
+noback always \xf559 456-145
+
+# Set theory and mathematical logic with spacing supplied by the formatter.
+noback always \xf5a0 5-246
+noback always \xf5a1 45-246
+noback always \xf5a2 12346
+noback always \xf5a3 4-12346
+noback always \xf5a4 56-256
+noback always \xf5a5 56-356
+noback always \xf5a6 56-36
+noback always \xf5a7 4-356
+noback always \xf5a8 2356-345
+noback always \xf5a9 236-2356
+noback always \xf5aa 236-2356-345
+noback always \xf5ab 1246-3
+noback always \xf5ac 1246-26
+noback always \xf5ad 456-456
+noback always \xf5ae 3456-3
+noback always \xf5af 26
+noback always \xf5c0 236
+noback always \xf5c1 36
+noback always \xf5c2 235
+
+# Plain-Unicode integer scripts.
+attribute superscriptdigits \x2070\x00b9\x00b2\x00b3\x2074\x2075\x2076\x2077\x2078\x2079
+attribute subscriptdigits \x2080\x2081\x2082\x2083\x2084\x2085\x2086\x2087\x2088\x2089
+noback math \x2070 356
+noback math \x00b9 2
+noback math \x00b2 23
+noback math \x00b3 25
+noback math \x2074 256
+noback math \x2075 26
+noback math \x2076 235
+noback math \x2077 2356
+noback math \x2078 236
+noback math \x2079 35
+noback math \x2080 356
+noback math \x2081 2
+noback math \x2082 23
+noback math \x2083 25
+noback math \x2084 256
+noback math \x2085 26
+noback math \x2086 235
+noback math \x2087 2356
+noback math \x2088 236
+noback math \x2089 35
+
+# Protect against isolated semantic prefixes.
+replace \xf400
+replace \xf401
+replace \xf402
+replace \xf403
+
+# General mathematical symbols synchronized with current ru-math.uti.
+noback math + 235
+nofor math + 56-235
+noback math \x2212 36
+nofor math \x2212 56-36
+noback math \x00d7 236
+nofor math \x00d7 56-236
+noback math \x00b7 3
+noback math \x00f7 256
+nofor math \x00f7 56-256
+noback math \x00b1 235-36
+noback math \x2213 36-235
+noback math > 135
+noback math < 246
+noback math \x2265 135-2356
+noback math \x2264 246-2356
+noback math \x2260 23456
+math % 3456-356
+math \x2030 3456-356-356
+noback math \x2116 1345
+noback always \x2116\s 1345
+noback math \x2248 26-26
+
+# Greek alphabet.
+lowercase \x03b1 1
+lowercase \x03b2 12
+lowercase \x03b3 1245
+lowercase \x03b4 145
+lowercase \x03b5 15
+lowercase \x03b6 1356
+lowercase \x03b7 245
+lowercase \x03b8 125
+lowercase \x03b9 24
+lowercase \x03ba 13
+lowercase \x03bb 123
+lowercase \x03bc 134
+lowercase \x03bd 1345
+lowercase \x03be 1346
+lowercase \x03bf 135
+lowercase \x03c0 1234
+lowercase \x03c1 1235
+lowercase \x03c3 234
+lowercase \x03c4 2345
+lowercase \x03c5 136
+lowercase \x03c6 124
+lowercase \x03c7 14
+lowercase \x03c8 13456
+lowercase \x03c9 2456
+noback math \x03d5 56-124
+base uppercase \x0391 \x03b1
+base uppercase \x0392 \x03b2
+base uppercase \x0393 \x03b3
+base uppercase \x0394 \x03b4
+base uppercase \x0395 \x03b5
+base uppercase \x0396 \x03b6
+base uppercase \x0397 \x03b7
+base uppercase \x0398 \x03b8
+base uppercase \x0399 \x03b9
+base uppercase \x039a \x03ba
+base uppercase \x039b \x03bb
+base uppercase \x039c \x03bc
+base uppercase \x039d \x03bd
+base uppercase \x039e \x03be
+base uppercase \x039f \x03bf
+base uppercase \x03a0 \x03c0
+base uppercase \x03a1 \x03c1
+base uppercase \x03a3 \x03c3
+base uppercase \x03a4 \x03c4
+base uppercase \x03a5 \x03c5
+base uppercase \x03a6 \x03c6
+base uppercase \x03a7 \x03c7
+base uppercase \x03a8 \x03c8
+base uppercase \x03a9 \x03c9
+
+# Other mathematical symbols.
+noback math \x2032 35
+noback math \x2033 35-35
+math \x2208 5-246
+math \x2209 45-246
+noback math \x2202 1456
+noback math \x2215 356
+noback math \x2217 35
+math \x00b0 46-356
+noback math \x2103 46-356-46-14
+noback math \x2109 46-356-46-124
+noback math \x221e 12456
+noback math \x222b 2346
+noback math \x222c 2346-2346
+noback math \x222d 2346-2346-2346
+noback math \x222e 2346-356
+noback math \x222f 2346-2346-356
+noback math \x2282 12346
+math \x2284 4-12346
+noback math \x2229 56-256
+math \x222a 56-356
+noback math \x2216 56-36
+math \x2205 4-356
+noback math \x22c5 3
+math \x21d2 2356-345
+math \x21d0 236-2356
+math \x21d4 236-2356-345
+math \x2200 1246-3
+math \x2203 1246-26
+noback math \x2261 56-2356
+noback math \x2227 56-26
+noback math \x2228 56-35
+noback math \x00ac 146
+noback math \x221a 146-156
+noback math \x221b 146-25-156
+noback math \x221c 146-256-156
+noback math \x2329 246
+noback math \x232a 135
+noback math \x27e8 246
+noback math \x27e9 135
+
+# Geometry.
+math \x2220 456-246
+noback math \x2245 26
+math \x25b3 456-145
+math \x2312 456-345
+math \x2225 456-456
+noback math \x22a5 3456-3
+math \x27c2 3456-3
+noback math \x223c 26
+noback math ~ 26
+
+# Precomposed fraction symbols and fraction slash.
+noback math \x00bd 3456-1-23
+noback math \x2155 3456-1-26
+noback math \x00bc 3456-1-256
+noback math \x00be 3456-14-256
+noback math \x2150 3456-1-2356
+noback math \x2151 3456-1-35
+noback math \x2152 3456-1-2-356
+noback math \x2153 3456-1-25
+noback math \x2154 3456-12-25
+noback math \x2156 3456-12-26
+noback math \x2157 3456-14-26
+noback math \x2158 3456-145-26
+noback math \x2159 3456-1-235
+noback math \x215a 3456-15-235
+noback math \x215b 3456-1-236
+noback math \x215c 3456-14-236
+noback math \x215d 3456-15-236
+noback math \x215e 3456-1245-236
+noback math \x2189 3456-245-25
+noback math \x2044 1256
+noback math \x2236 1256
+
+# Standard arrows. Short arrows used as marks after letters have distinct
+# semantic tokens F54B/F54C in the current Liblouis contract.
+noback math \x2190 246-25
+noback math \x2191 56-34
+noback math \x2192 25-135
+noback math \x2193 45-16
+noback math \x27f5 246-25
+noback math \x27f6 25-135
+
+# Additional arrows from the current Liblouis table.
+noback math \x2194 246-25-135
+noback math \x2195 1456-3
+noback math \x2196 5-26
+noback math \x2197 35-2
+noback math \x2198 26-3
+noback math \x2199 6-35
+noback math \x21d1 34-34
+noback math \x21d3 16-16

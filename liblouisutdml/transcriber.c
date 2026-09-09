@@ -3012,6 +3012,8 @@ editTrans ()
   int translationLength;
   if (ud->needs_editing && !(ud->contents == 2) && !(ud->style_format
 						     == computerCoded) &&
+      ud->style_format != alignColumnsLeft &&
+      ud->style_format != alignColumnsRight &&
       ud->edit_table_name != NULL && (ud->has_math || ud->has_chem ||
 				      ud->has_music))
     {
@@ -5685,6 +5687,8 @@ utd_editTrans ()
   int translationLength;
   if (ud->needs_editing && !(ud->contents == 2)
       && !(style->format == computerCoded)
+      && style->format != alignColumnsLeft
+      && style->format != alignColumnsRight
       && ud->edit_table_name && (ud->has_math || ud->has_chem
 				 || ud->has_music))
     {

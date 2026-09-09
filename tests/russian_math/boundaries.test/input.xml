@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+  <p>Значение <math xmlns="http://www.w3.org/1998/Math/MathML"><mfrac><mn>1</mn><mn>2</mn></mfrac><mo>,</mo></math> верно.</p>
+  <p>Пусть <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi>x</mi><mn>2</mn></msup><mo>!</mo></math></p>
+  <p><math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>y</mi><mo>;</mo><mi>z</mi></mrow></math></p>
+  <p><math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mn>1</mn><mo>,</mo><mn>5</mn></mrow></math></p>
+</document>

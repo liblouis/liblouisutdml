@@ -61,11 +61,38 @@ addPath (const char *path)
   return 1;
 }
 
+static int
+addPathList (const char *pathList)
+{
+  const char *start = pathList;
+  const char *end;
+  char path[MAXNAMELEN];
+  size_t length;
+
+  if (pathList == NULL)
+    return 1;
+  while (*start != 0)
+    {
+      end = strchr (start, ',');
+      length = end == NULL ? strlen (start) : (size_t) (end - start);
+      if (length >= sizeof (path))
+	return 0;
+      memcpy (path, start, length);
+      path[length] = 0;
+      if (!addPath (path))
+	return 0;
+      if (end == NULL)
+	break;
+      start = end + 1;
+    }
+  return 1;
+}
+
 int
 set_paths (const char *configPath)
 {
   char currentPath[MAXNAMELEN];
-  char *dataPath = NULL;
+  const char *tablePath;
   char *writePath = NULL;
 
 /*Set configuration path first*/
@@ -79,34 +106,12 @@ set_paths (const char *configPath)
 
 /*Set other paths here*/
 
-/* First, see if the program has set a path. */
-  dataPath = lou_getDataPath ();
-  if (dataPath)
-    {
-#ifdef _Win32
-      strcpy (currentPath, dataPath);
-      strcat (currentPath, "\\liblouis\\tables\\");
-      if (!addPath (currentPath))
-	return 0;
-      strcpy (currentPath, dataPath);
-      strcat (currentPath, "\\liblouisutdml\\lbu_files\\");
-      ud->lbu_files_path = alloc_string (currentPath);
-      if (!addPath (currentPath))
-	return 0;
-#else
-      strcpy (currentPath, dataPath);
-      strcat (currentPath, "/liblouis/tables/");
-      if (!addPath (currentPath))
-	return 0;
-      strcpy (currentPath, dataPath);
-      strcat (currentPath, "/liblouisutdml/lbu_files/");
-      ud->lbu_files_path = alloc_string (currentPath);
-      if (!addPath (currentPath))
-	return 0;
-#endif
-    }
-  else
-    {
+/* Liblouis deprecated lou_getDataPath(). Mirror its current recommended
+ * configuration mechanism for files which liblouisutdml resolves itself. */
+  tablePath = getenv ("LOUIS_TABLEPATH");
+  if (!addPathList (tablePath))
+    return 0;
+
 #ifdef _WIN32
 /* Set Windows Paths */
       {
@@ -130,7 +135,6 @@ set_paths (const char *configPath)
       addPath (LBU_PATH);
       ud->lbu_files_path = alloc_string (LBU_PATH);
 #endif /*WWIN32 */
-    }
 
 /* set current directory last*/
   currentPath[0] = '.';

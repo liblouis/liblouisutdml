@@ -9,6 +9,7 @@ SUBDIRS =					\
 	minSyllableWidth.test			\
 	mixed_content.test			\
 	nemeth_MathCAT			\
+	russian_math				\
 	orphanControl_01.test			\
 	orphanControl_02.test			\
 	page_numbering.test			\
@@ -134,6 +135,27 @@ dist_suite_TESTS =				\
 	mathml_nemeth/munderover_01.test	\
 	mathml_nemeth/munderover_02.test	\
 	mathml_nemeth/munderover_03.test	\
+	russian_math/alphabets.test		\
+	russian_math/arithmetic.test		\
+	russian_math/boundaries.test		\
+	russian_math/brackets.test		\
+	russian_math/extensions.test		\
+	russian_math/algebraic_fraction.test	\
+	russian_math/functions.test		\
+	russian_math/functions_analysis.test	\
+	russian_math/marks_geometry.test	\
+	russian_math/geometry.test		\
+	russian_math/sets_logic.test		\
+	russian_math/layouts.test		\
+	russian_math/fraction.test		\
+	russian_math/formatting.test		\
+	russian_math/multiscripts.test		\
+	russian_math/operators.test		\
+	russian_math/root.test			\
+	russian_math/scripts.test		\
+	russian_math/variants.test		\
+	russian_math/regressions.test		\
+	russian_math/mathml_layouts.test	\
 	minSyllableWidth.test			\
 	mixed_content.test			\
 	nemeth_MathCAT/above_and_below_88_2.test			\

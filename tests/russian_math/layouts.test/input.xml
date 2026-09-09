@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<math xmlns="http://www.w3.org/1998/Math/MathML"><mtable data-braille-layout="column-arithmetic"><mtr><mtd><mn>15</mn></mtd></mtr><mtr><mtd><mo>+</mo><mn>27</mn></mtd></mtr><mtr><mtd><mo>=</mo><mn>42</mn></mtd></mtr></mtable><mtable data-braille-frame="joining"><mtr><mtd><mi>a</mi></mtd></mtr><mtr><mtd><mi>b</mi></mtd></mtr><mtr><mtd><mi>c</mi></mtd></mtr></mtable></math>
