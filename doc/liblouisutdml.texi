@@ -692,6 +692,18 @@ This setting defines the fill character that will be used before the
 page numbers in the table of contents for example. The default fill
 character is an apostrophe (dot 3).
 
+@anchor{letterSign setting}
+@setting{letterSign, \\_}
+This setting defines the text that is put in front of page numbers that
+consist of letters. It is used for Roman braille page numbers
+(@samp{roman} and @samp{romancaps} in the @samp{braillePageNumberFormat}
+style setting) and for print page numbers that do not start with a
+digit. The text is translated with the braille table that is used for
+page numbers. The default, @samp{\_}, gives the letter sign in English
+braille. Use @code{letterSign ""} if no letter sign is wanted, for
+example when the braille code marks Roman numerals with capital signs
+only. The value can be at most four characters long.
+
 @end table
 
 @node translation
@@ -911,6 +923,8 @@ interpoint is @samp{no} this setting is equivalent to newPageBefore.
 
 This setting specifies the format of braille page numbers. @samp{normal}
 means ordinary Arabic numbers. @samp{roman} means Roman numbers.
+@samp{romancaps} means Roman numbers in capital letters. Both Roman
+formats are preceded by the @settingref{letterSign}.
 @samp{p} means to precede Arabic numbers with the letter "p" (for
 preliminary). Finally, @samp{blank} causes the page number to be blank
 (no page numbers). This is a "persistent" style setting.
