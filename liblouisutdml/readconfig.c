@@ -718,6 +718,8 @@ compileConfig (lbu_FileInfo * nested)
     "59",
     "macro",
     "60",
+    "letterSign",
+    "61",
     "style",
     "90",
     NULL
@@ -1087,6 +1089,18 @@ compileConfig (lbu_FileInfo * nested)
 	  break;
 	case 60:
 	  new_macro (nested->value, nested->value2);
+	  break;
+	case 61:
+	  /* Text put before page numbers that are letters, such as Roman
+	     numerals. An empty value ("") means no letter sign. */
+	  if (strlen (nested->value) >= sizeof (ud->letsign))
+	    {
+	      configureError (nested,
+			      "letterSign can be at most %d characters long",
+			      (int) sizeof (ud->letsign) - 1);
+	      return 0;
+	    }
+	  strcpy (ud->letsign, nested->value);
 	  break;
 	case 90:
 	  {
