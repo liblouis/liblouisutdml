@@ -1478,7 +1478,10 @@ table of contents, as a line of its own without a page number, formatted
 with the @code{contentsentry} style. Nothing is written to the body, and
 the element adds no lines or pages there. This can be used to mark where
 each volume starts in the table of contents of a book that is divided into
-volumes. It has no effect if no table of contents is made.
+volumes. Consecutive @code{contentsentry} lines form one block: the
+@code{linesBefore} and @code{linesAfter} settings of the style apply only
+before the first and after the last of them. It has no effect if no table
+of contents is made.
 
 @semanticAction{document, elementSpecifier}
 
@@ -2096,7 +2099,11 @@ saying where a new volume starts, can be put in a tag with the
 table of contents, at its place among the headings, without a page
 number. It is formatted with the @code{contentsentry} style, so that you
 can, for example, give it @code{linesBefore 1}. Nothing is written to the
-body.
+body. Several such tags in a row, or one tag with line breaks
+(@code{softreturn}) in it, give several lines with no blank lines between
+them; @code{linesBefore} and @code{linesAfter} apply to the block as a
+whole. For example, a volume heading followed by a line of braille cells
+underlining it.
 
 It is not necessary that an xml file contain a tag with the
 @code{contentsheader} semantic action. If the file contains headers
