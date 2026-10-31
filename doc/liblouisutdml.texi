@@ -1471,6 +1471,15 @@ contents generator. They should be assigned style settings, however.
 This semantic action must be assigned an element specifier if used.
 See the discussion of it in @ref{style}.
 
+@semanticAction{contentsentry, elementSpecifier}
+
+The text of an element with this semantic action appears only in the
+table of contents, as a line of its own without a page number, formatted
+with the @code{contentsentry} style. Nothing is written to the body, and
+the element adds no lines or pages there. This can be used to mark where
+each volume starts in the table of contents of a book that is divided into
+volumes. It has no effect if no table of contents is made.
+
 @semanticAction{document, elementSpecifier}
 
 @semanticAction{heading1, elementSpecifier}
@@ -2080,6 +2089,14 @@ completed the braille page number is reset to
 means that the xml tag with the @code{contentsheader} semantic action
 should occur at the end of the information which you want to be at the
 head of the output, such as a title page, dedication, etc.
+
+Text that should appear only in the table of contents, such as a line
+saying where a new volume starts, can be put in a tag with the
+@code{contentsentry} semantic action. It gets a line of its own in the
+table of contents, at its place among the headings, without a page
+number. It is formatted with the @code{contentsentry} style, so that you
+can, for example, give it @code{linesBefore 1}. Nothing is written to the
+body.
 
 It is not necessary that an xml file contain a tag with the
 @code{contentsheader} semantic action. If the file contains headers
