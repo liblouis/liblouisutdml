@@ -123,7 +123,7 @@ start_heading (sem_act action, widechar * translatedBuffer, int
 			 action == heading5 || action == heading6 ||
 			 action == heading7 || action == heading8 ||
 			 action == heading9 || action == heading10 ||
-			 action == contentsheader)))
+			 action == contentsheader || action == contentsentry)))
     return 1;
   if (translatedLength > 3 * MAXNAMELEN)
     translatedLength = 3 * MAXNAMELEN;
@@ -146,10 +146,10 @@ finish_heading (sem_act action)
 			 action == heading5 || action == heading6 ||
 			 action == heading7 || action == heading8 ||
 			 action == heading9 || action == heading10 ||
-			 action == contentsheader)))
+			 action == contentsheader || action == contentsentry)))
     return 1;
   heading.next = NULL;
-  if (action != contentsheader)
+  if (action != contentsheader && action != contentsentry)
     {
       if (ud->print_pages &&
 	  ud->print_page_numbers_in_contents && *ud->print_page_number != '_')
@@ -199,6 +199,7 @@ make_contents (void)
   SaveHeading *currentHeading = NULL;
   int old_braillePageNumber;
   sem_act action;
+  sem_act previousAction = no;
   int bytesRead;
   StyleType *style;
   if (!ud->contents)
@@ -266,6 +267,12 @@ make_contents (void)
 	    }
 	  style = action_to_style (action);
 	  start_style (style, NULL);
+	  /* Consecutive contentsentry lines form one block: linesBefore
+	     applies before the first and linesAfter after the last, with
+	     no blank lines between them. */
+	  if (action == contentsentry && previousAction == contentsentry)
+	    ud->blank_lines = 0;
+	  previousAction = action;
 	  memcpy (ud->translated_buffer, currentHeading->headingChars,
 		  currentHeading->headingLength * CHARSIZE);
 	  ud->translated_length = currentHeading->headingLength;
