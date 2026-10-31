@@ -203,6 +203,7 @@ make_contents (void)
   SaveHeading *currentHeading = NULL;
   int old_braillePageNumber;
   sem_act action;
+  sem_act previousAction = no;
   int bytesRead;
   StyleType *style;
   if (!ud->contents)
@@ -270,6 +271,12 @@ make_contents (void)
 	    }
 	  style = action_to_style (action);
 	  start_style (style, NULL);
+	  /* Consecutive contentsentry lines form one block: linesBefore
+	     applies before the first and linesAfter after the last, with
+	     no blank lines between them. */
+	  if (action == contentsentry && previousAction == contentsentry)
+	    ud->blank_lines = 0;
+	  previousAction = action;
 	  memcpy (ud->translated_buffer, currentHeading->headingChars,
 		  currentHeading->headingLength * CHARSIZE);
 	  ud->translated_length = currentHeading->headingLength;
