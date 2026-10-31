@@ -3828,6 +3828,21 @@ do_righthandpage ()
   return 1;
 }
 
+/* Start a new page on the same side of the paper as a page with the
+   braille page number pageNumber would be on: in interpoint braille, odd
+   numbers are on right-hand pages and even numbers on left-hand pages. A
+   blank page is added if needed, as for styles with rightHandPage (fillPage
+   does nothing when the current page is already empty). */
+int
+do_newpage_on_side_of (int pageNumber)
+{
+  do_newpage ();
+  if (ud->braille_pages && ud->interpoint
+      && ((ud->braille_page_number ^ pageNumber) & 1))
+    makeBlankPage ();
+  return 1;
+}
+
 int
 do_pagenum ()
 {
