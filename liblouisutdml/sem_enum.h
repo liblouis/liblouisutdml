@@ -70,6 +70,7 @@ typedef enum
   contents8,
   contents9,
   contents10,
+  contentsentry,
   /* Endnotes */
   note,
   notesheader,
