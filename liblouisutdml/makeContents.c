@@ -273,7 +273,12 @@ make_contents (void)
 	  end_style ();
 	  currentHeading = currentHeading->next;
 	}
-      do_newpage ();
+      /* The body was numbered from beginningPageNumber (or 1 without a
+         contents header); see initialize_contents. In interpoint braille
+         its first page must be on the matching side of the paper, so an
+         odd page number does not end up on a left-hand page. */
+      do_newpage_on_side_of (ud->has_contentsheader ?
+			     ud->beginning_braille_page_number : 1);
       ud->prelim_pages = ud->braille_page_number;
       ud->braille_page_number = saved_braillePageNumber;
       free_headings (firstHeading);

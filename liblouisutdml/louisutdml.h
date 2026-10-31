@@ -369,6 +369,7 @@ int do_newpage ();
 int do_blankline ();
 int do_softreturn ();
 int do_righthandpage ();
+int do_newpage_on_side_of (int pageNumber);
 int do_pagenum ();
 void libxml_errors (void *ctx, const char *msg, ...);
 int do_configstring (xmlNode * node);
