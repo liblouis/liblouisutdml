@@ -197,6 +197,8 @@ transcribe_paragraph (xmlNode * node, int action)
   int haveMacro = 0;
   xmlNode *child;
   int branchCount = 0;
+  /* Set for configtweak, whose insertions are settings, not text. */
+  int noInserts = 0;
   int i;
   logMessage(LOU_LOG_DEBUG, "Begin transcribe_paragraph");
   if (node == NULL)
@@ -231,7 +233,15 @@ transcribe_paragraph (xmlNode * node, int action)
 	  return 0;
 	}
       if (node->children == NULL)
-	return 1;
+	{
+	  if (action != 0)
+	    pop_sem_stack ();
+	  return 1;
+	}
+      /* The settings were taken from the insertions above. Do not insert
+         them again as text while the content of the element is
+         transcribed. */
+      noInserts = 1;
       break;
     case htmllink:
       if (ud->format_for != browser)
@@ -349,7 +359,8 @@ transcribe_paragraph (xmlNode * node, int action)
   child = node->children;
   while (child)
     {
-      insert_code (node, branchCount);
+      if (!noInserts)
+	insert_code (node, branchCount);
       branchCount++;
       dont_split_this = 0;
       orphan_control_this = 0;
@@ -590,8 +601,11 @@ transcribe_paragraph (xmlNode * node, int action)
 		widow_control = 0;
 	}
     }
-  insert_code (node, branchCount);
-  insert_code (node, -1);
+  if (!noInserts)
+    {
+      insert_code (node, branchCount);
+      insert_code (node, -1);
+    }
   if (haveMacro)
     end_macro ();
   else if (style)
