@@ -649,6 +649,23 @@ considerable space. The hyphenation table is specified as part of the
 table list in the @code{literaryTextTable} setting of the translation
 section.
 
+@anchor{compbrlHyphen setting}
+@setting{compbrlHyphen, 0}
+This setting changes how words of computer braille are broken at the
+ends of lines. Computer braille is text marked with the
+@code{compbrl} semantic action, for example web addresses and e-mail
+addresses. When the setting is used, such a word is never hyphenated.
+If it fits on a whole line of the current style, not counting the indent
+of the first line, it is moved to the next line. If it is longer than
+that, it is split at the end of the line, and the line ends with the
+braille cells given here instead of a hyphen. The value is given as dot
+patterns, with cells separated by @samp{-}, for example @samp{6} for dot
+6 or @samp{456-6} for two cells. The cells are shown with the display
+table of the braille table in use. The default, @samp{0}, means that
+computer braille is broken at the ends of lines like other text. This
+setting does not affect the @code{computerCoded} format, which uses its
+own continuation sign.
+
 @setting{outputEncoding, ascii8}
 This specifies that the output is to be in the form of 8-bit ASCII
 characters. This is generally used if the output is intended directly
@@ -1538,6 +1555,8 @@ The material between @code{elementSpecifier} and
 @code{/elementSpecifier} is translated as computer braille, if the
 liblouis table in use provides for it. Beginning and ending computer
 braille indicators are inserted if they are in the table.
+See also the @settingref{compbrlHyphen} for how words of computer
+braille are broken at the ends of lines.
 
 @semanticAction{configfile, elementSpecifier filename}
 
