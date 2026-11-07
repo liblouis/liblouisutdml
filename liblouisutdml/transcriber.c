@@ -727,6 +727,16 @@ remove_soft_hyphens (const widechar * inbuf, const int inlen,
   return (*outlen == inlen);
 }
 
+/* compbrlMarks[k] is 1 if translated_buffer[k] comes from text with the
+   computer_braille typeform (for example a web address marked with the
+   compbrl semantic action). The marks are only valid while
+   compbrlMarksLength equals the length of the translated text they were
+   made for, and are only made when the compbrlHyphen setting is used. */
+static char compbrlMarks[2 * BUFSIZE];
+static int compbrlMarksLength = 0;
+static char saved_compbrlMarks[2 * BUFSIZE];
+static int saved_compbrlMarksLength = 0;
+
 int
 translate_possibly_prehyphenated (const char *table,
 				  const widechar * inbuf, int *inlen,
@@ -767,6 +777,10 @@ insert_translation (const char *table)
   int translationLength;
   int translatedLength;
   int k;
+  static formtype compbrlTypeform[2 * BUFSIZE];
+  static int localIndices[2 * BUFSIZE];
+  int *compbrlIndices;
+  int hasCompbrl = 0;
   logMessage(LOU_LOG_DEBUG, "Begin insert_translation");
   if (style->translation_table != NULL)
     table = style->translation_table;
@@ -808,11 +822,35 @@ insert_translation (const char *table)
 	    ud->sync_text_length;
 	  ud->sync_text_buffer[ud->sync_text_length++] = 32;
 	}
+      if (compbrlMarksLength == ud->translated_length - 1)
+	compbrlMarks[compbrlMarksLength++] = 0;
     }
   translatedLength = MAX_TRANS_LENGTH - ud->translated_length;
   translationLength = ud->text_length;
+  /* Marks for computer braille, used when lines are broken. */
+  if (ud->translated_length == 0)
+    compbrlMarksLength = 0;
+  if (ud->compbrl_hyphen_length > 0)
+    {
+      hasCompbrl = 0;
+      for (k = 0; k < translationLength; k++)
+	if (ud->typeform[k] & computer_braille)
+	  {
+	    hasCompbrl = 1;
+	    break;
+	  }
+      if (hasCompbrl)
+	memcpy (compbrlTypeform, ud->typeform,
+		translationLength * sizeof (formtype));
+    }
   ud->text_buffer[ud->text_length++] = 32;
   ud->text_buffer[ud->text_length++] = 32;
+  if (ud->in_sync)
+    compbrlIndices = &ud->positions_array[ud->translated_length];
+  else if (hasCompbrl)
+    compbrlIndices = localIndices;
+  else
+    compbrlIndices = NULL;
   k = translate_possibly_prehyphenated (table,
 					&ud->text_buffer[0],
 					&translationLength,
@@ -820,16 +858,30 @@ insert_translation (const char *table)
 							       translated_length],
 					&translatedLength,
 					&ud->typeform[0],
-					ud->in_sync ? &ud->
-					positions_array[ud->
-							translated_length] :
-					NULL, 0);
+					compbrlIndices, 0);
   memset (ud->typeform, 0, sizeof (ud->typeform));
   ud->text_length = 0;
   if (!k)
     {
       logMessage (LOU_LOG_ERROR, "Cannot find table %s", table);
       return 0;
+    }
+  if (ud->compbrl_hyphen_length > 0)
+    {
+      if (compbrlMarksLength == ud->translated_length)
+	{
+	  for (k = 0; k < translatedLength
+	       && ud->translated_length + k < MAX_TRANS_LENGTH; k++)
+	    compbrlMarks[ud->translated_length + k] = hasCompbrl
+	      && compbrlIndices[k] >= 0
+	      && compbrlIndices[k] < translationLength
+	      && (compbrlTypeform[compbrlIndices[k]] & computer_braille);
+	  compbrlMarksLength = ud->translated_length + k;
+	}
+      else
+	/* Text was put in translated_buffer some other way, so the marks
+	   no longer match it. Do without them for this paragraph. */
+	compbrlMarksLength = 0;
     }
   if (ud->in_sync)
     {
@@ -2025,6 +2077,8 @@ save_translated_buffer ()
   saved_translatedBuffer = translatedBuffer;
   saved_translatedLength = translatedLength;
   saved_positionsArray = positionsArray;
+  saved_compbrlMarksLength = compbrlMarksLength;
+  memcpy (saved_compbrlMarks, compbrlMarks, compbrlMarksLength);
 }
 
 void
@@ -2033,6 +2087,8 @@ restore_translated_buffer ()
   translatedBuffer = saved_translatedBuffer;
   translatedLength = saved_translatedLength;
   positionsArray = saved_positionsArray;
+  compbrlMarksLength = saved_compbrlMarksLength;
+  memcpy (compbrlMarks, saved_compbrlMarks, compbrlMarksLength);
 }
 
 /**
@@ -2605,6 +2661,53 @@ doComputerCode ()
   return 1;
 }
 
+/* Position of the text being formatted in translated_buffer. Blanks at
+   the start may have been skipped by moving translatedBuffer forward. */
+static int compbrlOffset = 0;
+
+/* Whether the computer braille marks can be used for the text that is
+   being formatted: it must be in translated_buffer and all of it must
+   have marks. */
+static int
+compbrlMarksUsable (void)
+{
+  if (ud->compbrl_hyphen_length <= 0
+      || translatedBuffer < ud->translated_buffer
+      || translatedBuffer >= ud->translated_buffer + MAX_TRANS_LENGTH)
+    return 0;
+  compbrlOffset = translatedBuffer - ud->translated_buffer;
+  return compbrlMarksLength >= compbrlOffset + translatedLength;
+}
+
+/* Length of the word starting at start, and whether any of its
+   characters is computer braille. */
+static int
+compbrlWord (int start, int *length)
+{
+  int k;
+  int isCompbrl = 0;
+  for (k = start; k < translatedLength && translatedBuffer[k] != ' '
+       && translatedBuffer[k] != 0xa0; k++)
+    if (compbrlMarks[compbrlOffset + k])
+      isCompbrl = 1;
+  *length = k - start;
+  return isCompbrl;
+}
+
+/* Put the compbrlHyphen setting at the end of the line, translated to
+   characters with the display table of the main braille table. */
+static int
+insertCompbrlHyphen (void)
+{
+  widechar dots[8];
+  widechar chars[8];
+  int length = ud->compbrl_hyphen_length;
+  memcpy (dots, ud->compbrl_hyphen, length * CHARSIZE);
+  if (!lou_dotsToChar (ud->main_braille_table, dots, chars, length, 0))
+    return 0;
+  return insertWidechars (chars, length);
+}
+
 static int
 doLeftJustify ()
 {
@@ -2612,9 +2715,11 @@ doLeftJustify ()
   int cellsToWrite = 0;
   int availableCells = 0;
   int k;
+  int useCompbrlMarks = compbrlMarksUsable ();
   while (charactersWritten < translatedLength)
     {
       int wordTooLong = 0;
+      int compbrlBreak = 0;
       int breakAt = 0;
       int insertHyphen;
       int leadingBlanks = 0;
@@ -2639,11 +2744,34 @@ doLeftJustify ()
 	}
       else
 	{
+	  int wordStart;
+	  int wordLength;
 	  for (cellsToWrite = availableCells; cellsToWrite > 0;
 	       cellsToWrite--)
 	    if (translatedBuffer[charactersWritten + cellsToWrite] == ' ')
 	      break;
-	  if (cellsToWrite == 0)
+	  wordStart = charactersWritten + cellsToWrite + (cellsToWrite > 0);
+	  if (useCompbrlMarks && compbrlWord (wordStart, &wordLength))
+	    {
+	      /* A word of computer braille, such as a web address, is not
+	         hyphenated. If it fits on a line, it is moved to the next
+	         line. If it is longer than a line, it is split at the end of
+	         the line, which then ends with compbrlHyphen. */
+	      int roomForWord = charactersWritten + availableCells
+		- ud->compbrl_hyphen_length - wordStart;
+	      /* Compare with a whole line without the first-line indent,
+	         so that a word which fits on the next line is not split on
+	         the first line of a paragraph. */
+	      int fullLine = ud->cells_per_line - ud->style_left_margin
+		- ud->style_right_margin;
+	      if (cellsToWrite == 0
+		  || (wordLength > fullLine && roomForWord >= 2))
+		{
+		  cellsToWrite = availableCells - ud->compbrl_hyphen_length;
+		  compbrlBreak = 1;
+		}
+	    }
+	  else if (cellsToWrite == 0)
 	    {
 	      cellsToWrite = availableCells - 1;
 	      wordTooLong = 1;
@@ -2666,6 +2794,9 @@ doLeftJustify ()
 	charactersWritten++;
       if ((breakAt && insertHyphen) || wordTooLong)
 	if (!insertDubChars (ud->lit_hyphen, strlen (ud->lit_hyphen)))
+	  return 0;
+      if (compbrlBreak)
+	if (!insertCompbrlHyphen ())
 	  return 0;
       finishLine ();
     }
@@ -3199,6 +3330,7 @@ styleBody ()
     finish_heading (action);
   styleSpec->status = resumeBody;
   ud->translated_length = ud->sync_text_length = 0;
+  compbrlMarksLength = 0;
   ud->in_sync = ud->hyphenate;
   return 1;
 }
