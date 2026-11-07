@@ -756,8 +756,10 @@ compileConfig (lbu_FileInfo * nested)
     "italic", "1",
     "underline", "2",
     "bold", "4",
-    "computer_braille", "8",
-    "all", "15",
+    /* computer_braille must match the computer_braille typeform of
+       liblouis (0x0400); "all" includes it. */
+    "computer_braille", "1024",
+    "all", "1039",
     "none", "0x100",
     NULL
   };
@@ -1350,7 +1352,7 @@ read_configuration_file (const char *configFileList, const char
   ud->mode = mode;
   ud->top = -1;
   ud->style_top = -1;
-  ud->emphasis = 15;
+  ud->emphasis = 15 | computer_braille;
   /* There will be configuration settings for these values */
   ud->cell_width = 5;
   ud->normal_line = 8;
