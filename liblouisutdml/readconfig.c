@@ -720,6 +720,8 @@ compileConfig (lbu_FileInfo * nested)
     "60",
     "letterSign",
     "61",
+    "compbrlHyphen",
+    "62",
     "style",
     "90",
     NULL
@@ -1104,6 +1106,58 @@ compileConfig (lbu_FileInfo * nested)
 	    }
 	  strcpy (ud->letsign, nested->value);
 	  break;
+	case 62:
+	  /* Dot patterns, cells separated by '-', for example "6" or
+	     "456-6". "0" or an empty value turns the setting off. */
+	  {
+	    const char *v = nested->value;
+	    int length = 0;
+	    widechar cell = 0;
+	    int inCell = 0;
+	    if (strcmp (v, "0") == 0)
+	      v = "";
+	    for (; ; v++)
+	      {
+		if (*v >= '1' && *v <= '8')
+		  {
+		    cell |= 1 << (*v - '1');
+		    inCell = 1;
+		  }
+		else if (*v == '-' || *v == 0)
+		  {
+		    if (!inCell && !(*v == 0 && length == 0))
+		      {
+			configureError (nested,
+					"invalid compbrlHyphen '%s'",
+					nested->value);
+			return 0;
+		      }
+		    if (inCell)
+		      {
+			if (length >= (int) (sizeof (ud->compbrl_hyphen)
+					     / sizeof (widechar)))
+			  {
+			    configureError (nested,
+					    "compbrlHyphen has too many cells");
+			    return 0;
+			  }
+			ud->compbrl_hyphen[length++] = cell | LOU_DOTS;
+		      }
+		    cell = 0;
+		    inCell = 0;
+		    if (*v == 0)
+		      break;
+		  }
+		else
+		  {
+		    configureError (nested, "invalid compbrlHyphen '%s'",
+				    nested->value);
+		    return 0;
+		  }
+	      }
+	    ud->compbrl_hyphen_length = length;
+	  }
+	  break;
 	case 90:
 	  {
 	    static const char *actions[] = {
@@ -1374,6 +1428,7 @@ read_configuration_file (const char *configFileList, const char
   ud->dpi = 20.0;
   strcpy (ud->lit_hyphen, "-");
   strcpy (ud->comp_hyphen, "_&");
+  ud->compbrl_hyphen_length = 0;
   strcpy (ud->letsign, "\\_");
   /*End of values */
   for (k = document; k < notranslate; k++)

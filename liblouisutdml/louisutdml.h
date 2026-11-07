@@ -274,6 +274,10 @@ typedef struct
   char line_fill;
   char lit_hyphen[5];
   char comp_hyphen[5];
+  /* Dot patterns (with LOU_DOTS) put at the end of a line where a word
+     of computer braille is split. Empty: no special handling. */
+  widechar compbrl_hyphen[8];
+  int compbrl_hyphen_length;
   char letsign[5];
   char *config_path;
   char *lbu_files_path;
