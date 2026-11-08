@@ -193,6 +193,87 @@ finish_heading (sem_act action)
   return 1;
 }
 
+/* The action used in the table of contents for a saved heading. */
+static sem_act
+contents_action (sem_act action)
+{
+  switch (action)
+    {
+    case heading1:
+      return contents1;
+    case heading2:
+      return contents2;
+    case heading3:
+      return contents3;
+    case heading4:
+      return contents4;
+    case heading5:
+      return contents5;
+    case heading6:
+      return contents6;
+    case heading7:
+      return contents7;
+    case heading8:
+      return contents8;
+    case heading9:
+      return contents9;
+    case heading10:
+      return contents10;
+    default:
+      return action;
+    }
+}
+
+/* Roughly the number of lines an entry takes in the table of contents. */
+static int
+entry_lines (SaveHeading *entry, StyleType *style)
+{
+  int width = ud->cells_per_line - style->left_margin - style->right_margin;
+  int length = entry->headingLength;
+  if (length > 0 && entry->headingChars[length - 1] == 0xa0)
+    length--;
+  if (width < 1)
+    width = 1;
+  if (length == 0)
+    return 1;
+  return (length + width - 1) / width;
+}
+
+/* Start a new page before an entry, or a block of consecutive contentsentry
+   lines, whose style has dontSplit or keepWithNext, if the entry and, for
+   keepWithNext, the first line of the next entry do not fit on what is left
+   of the page. The entries are written with start_style and end_style, so
+   the handling of these settings for body text in transcribe_paragraph does
+   not apply here. */
+static void
+keep_contents_entry (SaveHeading *entry, sem_act action, StyleType *style)
+{
+  SaveHeading *next = entry;
+  StyleType *nextStyle;
+  int lines;
+  if (!ud->braille_pages || ud->lines_on_page == 0 || style == NULL
+      || !(style->dont_split || style->keep_with_next))
+    return;
+  lines = ud->blank_lines > style->lines_before ?
+    ud->blank_lines : style->lines_before;
+  do
+    {
+      lines += entry_lines (next, style);
+      next = next->next;
+    }
+  while (action == contentsentry && next != NULL
+	 && next->action == contentsentry);
+  if (style->keep_with_next && next != NULL)
+    {
+      nextStyle = action_to_style (contents_action (next->action));
+      if (nextStyle != NULL)
+	lines += 1 + (style->lines_after > nextStyle->lines_before ?
+		      style->lines_after : nextStyle->lines_before);
+    }
+  if (ud->lines_per_page - ud->lines_on_page < lines)
+    do_newpage ();
+}
+
 int
 make_contents (void)
 {
@@ -228,44 +309,10 @@ make_contents (void)
       currentHeading = firstHeading;
       while (currentHeading != NULL)
 	{
-	  switch (currentHeading->action)
-	    {
-	    case contentsheader:
-	    default:
-	      action = currentHeading->action;
-	      break;
-	    case heading1:
-	      action = contents1;
-	      break;
-	    case heading2:
-	      action = contents2;
-	      break;
-	    case heading3:
-	      action = contents3;
-	      break;
-	    case heading4:
-	      action = contents4;
-	      break;
-	    case heading5:
-	      action = contents5;
-	      break;
-	    case heading6:
-	      action = contents6;
-	      break;
-	    case heading7:
-	      action = contents7;
-	      break;
-	    case heading8:
-	      action = contents8;
-	      break;
-	    case heading9:
-	      action = contents9;
-	      break;
-	    case heading10:
-	      action = contents10;
-	      break;
-	    }
+	  action = contents_action (currentHeading->action);
 	  style = action_to_style (action);
+	  if (!(action == contentsentry && previousAction == contentsentry))
+	    keep_contents_entry (currentHeading, action, style);
 	  start_style (style, NULL);
 	  /* Consecutive contentsentry lines form one block: linesBefore
 	     applies before the first and linesAfter after the last, with
