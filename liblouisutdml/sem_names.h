@@ -36,6 +36,7 @@ static const char *semNames[] = {
   "contents8",
   "contents9",
   "contents10",
+  "contentsentry",
   "note",
   "notesheader",
   "notesdescription",

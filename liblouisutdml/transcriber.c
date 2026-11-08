@@ -3048,6 +3048,10 @@ startStyle ()
     return utd_startStyle ();
   if (!ud->paragraphs)
     return 1;
+  /* A contentsentry only appears in the table of contents, so it must not
+     add lines or pages to the body. */
+  if (style->action == contentsentry && ud->contents != 2)
+    return 1;
   if (ud->braille_pages && prevStyle->action != document)
     {
       if (style->righthand_page)
@@ -3103,6 +3107,20 @@ styleBody ()
   if (translatedLength <= 0)
     {
       ud->translated_length = ud->sync_text_length = 0;
+      ud->in_sync = ud->hyphenate;
+      return 1;
+    }
+  if (action == contentsentry && ud->contents != 2)
+    {
+      /* Text that only goes into the table of contents, such as a volume
+         heading: record it while the body is transcribed, but write
+         nothing to the body. */
+      if (ud->contents == 1)
+	{
+	  start_heading (action, translatedBuffer, translatedLength);
+	  finish_heading (action);
+	}
+      ud->text_length = ud->translated_length = ud->sync_text_length = 0;
       ud->in_sync = ud->hyphenate;
       return 1;
     }
@@ -3209,6 +3227,8 @@ finishStyle ()
 /*Skip lines or pages after body*/
   if (ud->format_for == utd)
     return utd_finishStyle ();
+  if (style->action == contentsentry && ud->contents != 2)
+    return 1;
   if (style->bottomBoxline[0])
   {
     addBoxline(style->bottomBoxline, 1);
