@@ -2099,8 +2099,10 @@ hyphenatex (int lastBlank, int lineEnd, int *breakAt, int *insertHyphen)
       break;
   wordLength -= wordStart;
   
-  // Don't break if word is too short or too long
-  if (wordLength < MIN_WORD_LENGTH || wordLength > ud->cells_per_line)
+  // Don't break if word is too short, or too long for the buffers. A word
+  // longer than a line is hyphenated too, so that it is not just cut off
+  // at the end of the line.
+  if (wordLength < MIN_WORD_LENGTH || wordLength >= MAXNAMELEN)
     return 0;
   
   // Find the word boundaries in the text buffer
@@ -2113,7 +2115,8 @@ hyphenatex (int lastBlank, int lineEnd, int *breakAt, int *insertHyphen)
 	textWordLength =
 	  positionsArray[wordStart + wordLength] - textWordStart;
       if (textWordStart < 0 || textWordLength < 1
-	  || textWordStart + textWordLength > textLength)
+	  || textWordStart + textWordLength > textLength
+	  || textWordLength >= MAXNAMELEN)
 	return 0;
     }
   
@@ -2645,8 +2648,18 @@ doLeftJustify ()
 	      break;
 	  if (cellsToWrite == 0)
 	    {
-	      cellsToWrite = availableCells - 1;
-	      wordTooLong = 1;
+	      /* The word is longer than the line. Hyphenate it if possible;
+	         otherwise cut it off at the end of the line. */
+	      if (ud->hyphenate
+		  && hyphenatex (charactersWritten - 1,
+				 charactersWritten + availableCells,
+				 &breakAt, &insertHyphen))
+		cellsToWrite = breakAt - charactersWritten;
+	      else
+		{
+		  cellsToWrite = availableCells - 1;
+		  wordTooLong = 1;
+		}
 	    }
 	  else if (ud->hyphenate)
 	    if (hyphenatex (charactersWritten + cellsToWrite,
@@ -2743,12 +2756,17 @@ doContents ()
 	      wordTooLong = 1;
 	      cellsToWrite = 0;
 	    }
+	  /* For a word longer than the line (wordTooLong), the word starts
+	     at charactersWritten, so the blank before it is one cell back. */
 	  if (ud->hyphenate)
-	    if (hyphenatex (charactersWritten + cellsToWrite,
+	    if (hyphenatex (charactersWritten + cellsToWrite - wordTooLong,
 			    charactersWritten + availableCells -
 			    minSpaceAfterNotLastWord,
 			    &breakAt, &insertHyphen))
-	      cellsToWrite = breakAt - charactersWritten;
+	      {
+		cellsToWrite = breakAt - charactersWritten;
+		wordTooLong = 0;
+	      }
 	  if (!breakAt && wordTooLong)
 	    {
 	      cellsToWrite = availableCells - minSpaceAfterNotLastWord - 1;
@@ -2960,8 +2978,18 @@ doCenterRight ()
 	      break;
 	  if (cellsToWrite == 0)
 	    {
-	      cellsToWrite = availableCells - 1;
-	      wordTooLong = 1;
+	      /* The word is longer than the line. Hyphenate it if possible;
+	         otherwise cut it off at the end of the line. */
+	      if (ud->hyphenate
+		  && hyphenatex (charactersWritten - 1,
+				 charactersWritten + availableCells,
+				 &breakAt, &insertHyphen))
+		cellsToWrite = breakAt - charactersWritten;
+	      else
+		{
+		  cellsToWrite = availableCells - 1;
+		  wordTooLong = 1;
+		}
 	    }
 		else if(ud->hyphenate)
 			if(hyphenatex(charactersWritten+cellsToWrite,
