@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mrow><msub><mi>x</mi><mo>∞</mo></msub><mo>;</mo><msup><mi>y</mi><mo>∞</mo></msup></mrow>
+  <mspace width="1em"/>
+  <mfrac>
+    <mrow><mrow><mfrac><mi>a</mi><mi>b</mi></mfrac></mrow></mrow>
+    <mrow><mrow><mfrac><mi>c</mi><mi>d</mi></mfrac></mrow></mrow>
+  </mfrac>
+  <mspace width="1em"/>
+  <mrow><mo>[</mo><mtext>а</mtext><mo>]</mo></mrow>
+  <mspace width="1em"/>
+  <mrow><mo>[</mo><mtext>б</mtext><mo>]</mo></mrow>
+  <mspace width="1em"/>
+  <mrow><mtext>в</mtext><mrow><mo>[</mo><mn>1</mn><mo>]</mo></mrow></mrow>
+  <mspace width="1em"/>
+  <mrow><mrow><mo>[</mo><mtext>б</mtext><mo>]</mo></mrow><mo>.</mo></mrow>
+  <mspace width="1em"/>
+  <mrow><mtext>а</mtext><mrow><mo>[</mo><mtext>б</mtext><mo>]</mo></mrow></mrow>
+  <mspace width="1em"/>
+  <mrow><mo>⟨</mo><mn>1</mn><mo>⟩</mo></mrow>
+  <mspace width="1em"/>
+  <mrow><mo>⟨</mo><mi>x</mi><mo>⟩</mo></mrow>
+  <mspace width="1em"/>
+  <mrow><mi>a</mi><mo linebreak="newline" lspace="0" rspace="0">+</mo><mi>b</mi></mrow>
+  <mspace width="1em"/>
+  <mrow><mi>c</mi><mo linebreak="newline">−</mo><mi>d</mi></mrow>
+  <mspace width="1em"/>
+  <mrow><mi>e</mi><mo linebreak="newline">,</mo><mi>f</mi></mrow>
+  <mspace width="1em"/>
+  <mrow>
+    <mn mathvariant="italic">12</mn>
+    <mo mathvariant="bold">+</mo>
+    <mtext mathvariant="italic">текст</mtext>
+    <ms mathvariant="bold">строка</ms>
+    <mi mathvariant="bold-italic">z</mi>
+  </mrow>
+</math>

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mrow><mfrac><mn>1</mn><mn>2</mn></mfrac><mo>;</mo></mrow>
+  <mfrac><mrow><mi>x</mi><mo>+</mo><mn>1</mn></mrow><mi>y</mi></mfrac>
+</math>

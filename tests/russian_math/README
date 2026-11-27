@@ -1,0 +1,35 @@
+Testing MathML transcription with Russian mathematical Braille.
+
+The expected output uses Unicode Braille patterns. Structural MathML is
+linearized with the same PUA contract as the latest upstream Liblouis
+ru-math.uti. The historical sources in Russian_braille_info are reference
+material and do not override the current Liblouis implementation.
+
+Integer fractions, powers, indices and root indices use the forms selected by
+the current Liblouis table, locally generated without MathCAT. General
+symbolic structures remain covered separately. The suite also covers corrected
+operators and arrows from the current Liblouis table, promille,
+digit grouping, mathematical line breaks, recognized brackets, left and
+multiple indices, italic/bold signs and Russian text/formula/punctuation
+boundaries.
+
+The runtime consists only of liblouisutdml and the latest Liblouis. MathCAT is
+not loaded or called.
+
+The 2010 extensions are selected directly from ordinary presentation MathML:
+periodic and mixed numbers, compact or delimited fractions, named functions,
+scripts, marks, vectors, geometry, sets and logic.  Layouts which cannot be
+inferred safely from an ordinary `mtable` use an explicit formatter contract:
+
+* `data-braille-layout="column-arithmetic"` or the intent token
+  `:column-arithmetic` suppresses the number sign after the first row;
+* `data-braille-layout="long-division"` or `:long-division` applies the same
+  continuation-number rule to long division;
+* standard MathML `mstack` and `mlongdiv` produce real aligned rows; the
+  legacy `data-braille-layout` values remain covered for older producers;
+* `data-braille-frame="joining-left"` and `joining-right` select the frame
+  side, keep the mandatory blank, and produce one real line per table row;
+  the older `joining` and `:joining-frame` spellings mean a left frame.
+
+These attributes only convey print layout that MathML itself does not encode;
+they do not invoke or depend on MathCAT.

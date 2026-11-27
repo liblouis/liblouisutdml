@@ -146,6 +146,24 @@ typedef enum
   utdbrlonly,
   utddispimg,
   utdinlnimg,
+  /* Profile-specific structured mathematics */
+  russianmmultiscripts,
+  russianintegerstructure,
+  russianrecognizedbracket,
+  russianfraction,
+  russianmixednumber,
+  russianperiodicdecimal,
+  russianfunction,
+  russianfunctionstructure,
+  russianfunctionargument,
+  russiangeometryprefix,
+  russiangeometryrelation,
+  russiansetoperator,
+  russianmark,
+  russiancontinuednumber,
+  russianfenced,
+  russianmathstack,
+  russianlongdivision,
   /* End marker */
   end_all
 }

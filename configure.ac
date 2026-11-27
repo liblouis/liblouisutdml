@@ -222,6 +222,28 @@ AC_CONFIG_FILES([Makefile
 	tests/mathml_nemeth/munderover_01.test/Makefile
 	tests/mathml_nemeth/munderover_02.test/Makefile
 	tests/mathml_nemeth/munderover_03.test/Makefile
+	tests/russian_math/Makefile
+	tests/russian_math/alphabets.test/Makefile
+	tests/russian_math/arithmetic.test/Makefile
+	tests/russian_math/boundaries.test/Makefile
+	tests/russian_math/brackets.test/Makefile
+	tests/russian_math/extensions.test/Makefile
+	tests/russian_math/algebraic_fraction.test/Makefile
+	tests/russian_math/functions.test/Makefile
+	tests/russian_math/functions_analysis.test/Makefile
+	tests/russian_math/marks_geometry.test/Makefile
+	tests/russian_math/geometry.test/Makefile
+	tests/russian_math/sets_logic.test/Makefile
+	tests/russian_math/layouts.test/Makefile
+	tests/russian_math/fraction.test/Makefile
+	tests/russian_math/formatting.test/Makefile
+	tests/russian_math/multiscripts.test/Makefile
+	tests/russian_math/operators.test/Makefile
+	tests/russian_math/root.test/Makefile
+	tests/russian_math/scripts.test/Makefile
+	tests/russian_math/variants.test/Makefile
+	tests/russian_math/regressions.test/Makefile
+	tests/russian_math/mathml_layouts.test/Makefile
 	tests/nemeth_MathCAT/Makefile
 	tests/nemeth_MathCAT/above_and_below_88_2.test/Makefile
 	tests/nemeth_MathCAT/arrow_96_1.test/Makefile

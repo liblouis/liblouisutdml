@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mroot><mn>8</mn><mn>3</mn></mroot>
+  <mroot><mi>x</mi><mrow><mi>n</mi><mo>+</mo><mn>1</mn></mrow></mroot>
+</math>

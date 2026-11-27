@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mrow><msub><mi>x</mi><mn>10</mn></msub><mo>,</mo></mrow>
+  <msup><mi>x</mi><mn>2</mn></msup>
+  <msubsup><mi>x</mi><mi>i</mi><mi>n</mi></msubsup>
+</math>

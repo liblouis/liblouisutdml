@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mrow><mn>12 345</mn><mo>+</mo><mn>67 890</mn></mrow>
+  <mrow><mi>a</mi><mspace linebreak="newline" width="0"/><mo>+</mo><mi>b</mi></mrow>
+  <mrow><mi>c</mi><mspace linebreak="newline" width="1em"/><mo>+</mo><mi>d</mi></mrow>
+</math>

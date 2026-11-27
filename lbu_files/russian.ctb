@@ -1,0 +1,22 @@
+# Russian literary and mathematical Braille for current Liblouis.
+#
+# ru-litbrl.ctb supplies Russian text, numeric modes and alphabet switching.
+# russian-math.uti carries formatter-only extensions and mirrors the current
+# structured-math contract used by ru-litbrl.ctb.
+
+include ru-litbrl.ctb
+include russian-math.uti
+
+# Digit grouping in mathematical numbers. The source may use either
+# no-break space character; both become the formatter contract token F50C.
+noback correct _$d["\x00a0"]$d "\xf50c"
+noback correct _$d["\x202f"]$d "\xf50c"
+
+# Paired mathematical typeface signs emitted by russian.sem. These private
+# formatter markers deliberately live outside the public ru-math.uti contract.
+noback always \xf590 456
+noback always \xf591 12456
+
+# Semantic token boundary appended by russian.sem. Column and row escapes are
+# intentionally retained for the formatter's matrix/stack layout pass.
+replace \es

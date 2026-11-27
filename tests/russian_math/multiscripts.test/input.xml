@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mmultiscripts>
+    <mi>x</mi><mn>1</mn><mn>2</mn><mn>3</mn><none/>
+    <mprescripts/><mn>4</mn><mn>5</mn><none/><mn>6</mn>
+  </mmultiscripts>
+  <mmultiscripts><mi>W</mi><mprescripts/><none/><mn>4</mn></mmultiscripts>
+  <mmultiscripts><mi>F</mi><mn>2</mn><none/></mmultiscripts>
+  <mmultiscripts><mi>q</mi><mn>2</mn><none/><mi>n</mi><none/></mmultiscripts>
+</math>

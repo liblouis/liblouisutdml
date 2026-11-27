@@ -31,6 +31,11 @@ lbu_files_DATA =				\
 	package.sem				\
 	preface.sem				\
 	preferences.cfg				\
+	russian.cfg				\
+	russian.ctb				\
+	russian-math.uti			\
+	russian.sem				\
+	russian_edit.ctb			\
 	sample-utd.cfg				\
 	set.sem					\
 	ThML.sem				\
