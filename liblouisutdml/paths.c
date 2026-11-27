@@ -112,13 +112,17 @@ set_paths (const char *configPath)
       {
 	char louisPath[MAXNAMELEN];
 	char lbuPath[MAXNAMELEN];
-	strcpy (currentPath, lou_getProgramPath ());
+	char *programPath = lou_getProgramPath ();
+	if (programPath == NULL)
+	  return 0;
+	strcpy (currentPath, programPath);
+	free (programPath);
 	strcat (currentPath, "..\\");
 	if (!addPath (currentPath))
 	  return 0;
 	strcpy (lbuPath, currentPath);
 	strcat (lbuPath, "share\\liblouisutdml\\lbu_files\\");
-      ud->lbu_files_path = alloc_string (lbuPath);
+	ud->lbu_files_path = alloc_string (lbuPath);
 	strcpy (louisPath, currentPath);
 	strcat (louisPath, "share\\liblouis\\tables\\");
 	addPath (louisPath);

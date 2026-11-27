@@ -284,6 +284,20 @@ hashLookup (HashTable * table, const unsigned char *key)
 static char firstFileName[MAXNAMELEN];
 static int haveSemanticFile = 1;
 
+/* The file name part of a path, without the directories. The first
+   semantic-action file may be given with a path, but the appended_ file
+   for it is always in the writeable path. */
+static const char *
+base_name (const char *path)
+{
+  const char *name = path;
+  const char *p;
+  for (p = path; *p; p++)
+    if (*p == '/' || *p == '\\')
+      name = p + 1;
+  return name;
+}
+
 #define SEMANTICSUF " mes"
 sem_act
 find_semantic_number (const char *name)
@@ -1001,7 +1015,7 @@ compile_semantic_table (xmlNode * rootElement)
 	return (haveSemanticFile = 0);
     }
   strcpy (fileName, "appended_");
-  strcat (fileName, firstFileName);
+  strcat (fileName, base_name (firstFileName));
   sem_compileFile (fileName);
   if (numEntries == 0)
     {
@@ -1391,8 +1405,15 @@ append_new_entries ()
     }
   strcpy (outFileName, lbu_getWriteablePath ());
   strcat (outFileName, filePrefix);
-  strcat (outFileName, firstFileName);
+  strcat (outFileName, base_name (firstFileName));
   semOut = fopen ((char *) outFileName, fileMode);
+  if (semOut == NULL)
+    {
+      logMessage (LOU_LOG_ERROR, "Can't write semantic-action file '%s'.",
+		  outFileName);
+      moreEntries = 0;
+      return;
+    }
   if (!haveSemanticFile)
     {
       fprintf (semOut,
@@ -1422,10 +1443,10 @@ append_new_entries ()
   fclose (semOut);
   if (haveSemanticFile)
     logMessage (LOU_LOG_WARN, "%d new entries appended to '%s%s'.", numEntries,
-		  filePrefix, firstFileName);
+		  filePrefix, base_name (firstFileName));
   else
     logMessage (LOU_LOG_WARN, "%d entries written to new semantic-action file '%s%s'.",
-		  numEntries, filePrefix, firstFileName);
+		  numEntries, filePrefix, base_name (firstFileName));
   moreEntries = 0;
 }
 

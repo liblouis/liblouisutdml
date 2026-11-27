@@ -1077,6 +1077,7 @@ jboolean JNICALL
   jbyte *outbufY = NULL;
   jint outlenY = EMPTY;
   jbyte *typeformY = NULL;
+  jsize typeformLen = 0;
   jint *outputposY = NULL;
   jint *inputposY = NULL;
   jint cursorposY = EMPTY;
@@ -1086,7 +1087,7 @@ jboolean JNICALL
   jint inlenX = 0;
   widechar *outbufX = NULL;
   jint outlenX = 0;
-#define typeformX typeformY
+  formtype *typeformX = NULL;
   jint *outputposX = NULL;
   jint *inputposX = NULL;
   jint cursorposX = 0;
@@ -1109,13 +1110,6 @@ jboolean JNICALL
     goto release;
   outbufY = malloc (outlenY + 4);
   outbufX = malloc ((outlenY + 4) * CHARSIZE);
-  if (typeform != NULL)
-    {
-      typeformY = malloc (inlenY);
-      (*env)->GetByteArrayRegion (env, typeform, 0, inlenY, typeformY);
-      if (typeformY == NULL)
-	goto release;
-    }
   if (outputpos != NULL)
     {
       outputposX = malloc ((inlenY + 4) * sizeof (int));
@@ -1140,6 +1134,23 @@ jboolean JNICALL
   utf8Length = inlenY;
   wcLength = inlenY;
   utf8_string_to_wc (inbufY, &utf8Length, inbufX, &wcLength);
+  /* liblouis wants one formtype (unsigned short) per input character,
+     the Java API passes one byte per character. Widen here and narrow
+     back after the call. */
+  if (typeform != NULL)
+    {
+      int i;
+      typeformLen = (*env)->GetArrayLength (env, typeform);
+      if (typeformLen > wcLength)
+	typeformLen = wcLength;
+      typeformY = malloc (wcLength + 1);
+      typeformX = calloc (wcLength + 1, sizeof (formtype));
+      if (typeformY == NULL || typeformX == NULL)
+	goto release;
+      (*env)->GetByteArrayRegion (env, typeform, 0, typeformLen, typeformY);
+      for (i = 0; i < typeformLen; i++)
+	typeformX[i] = (unsigned char) typeformY[i];
+    }
   if (forBack == 0)
     result = lou_translate (tableListX, inbufX, &wcLength, outbufX,
 			    &outlenX, typeformX, NULL,
@@ -1156,7 +1167,13 @@ jboolean JNICALL
       wc_string_to_utf8 (outbufX, &wcLength, outbufY, &utf8Length);
       (*env)->SetByteArrayRegion (env, outbuf, 0, utf8Length, outbufY);
       if (typeformX != NULL)
-	(*env)->SetByteArrayRegion (env, typeform, 0, inlenY, typeformX);
+	{
+	  int i;
+	  for (i = 0; i < typeformLen; i++)
+	    typeformY[i] = (jbyte) typeformX[i];
+	  (*env)->SetByteArrayRegion (env, typeform, 0, typeformLen,
+				      typeformY);
+	}
       if (outputpos != NULL)
 	(*env)->SetIntArrayRegion (env, outputpos, 0, inlenY, outputposX);
       if (inputpos != NULL)
@@ -1171,8 +1188,8 @@ release:
     (*env)->ReleaseStringUTFChars (env, tableList, tableListX);
   if (inbufY != NULL)
     (*env)->ReleaseByteArrayElements (env, inbuf, inbufY, 0);
-  if (typeformX != NULL)
-    free (typeformX);
+  free (typeformX);
+  free (typeformY);
   if (outputposX != NULL)
     free (outputposX);
   if (inputposX != NULL)
