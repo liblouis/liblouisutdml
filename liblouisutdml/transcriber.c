@@ -5859,6 +5859,10 @@ static int
 utd_startStyle ()
 {
   firstBrlNode = NULL;
+  /* A contentsentry only appears in the table of contents, so it must not
+     add lines or pages to the body. */
+  if (style->action == contentsentry && ud->contents != 2)
+    return 1;
   if (styleSpec->node != NULL && style->action == document)
     {
       documentNode = styleSpec->node;
@@ -5935,6 +5939,14 @@ utd_styleBody ()
 	  ud->in_sync = ud->hyphenate;
 	  return 1;
 	}
+      if (action == contentsentry && ud->contents != 2)
+	{
+	  /* Text for the table of contents only. A table of contents is not
+	     made for UTD output, so just write nothing to the body. */
+	  ud->text_length = ud->translated_length = ud->sync_text_length = 0;
+	  ud->in_sync = ud->hyphenate;
+	  return 1;
+	}
       if (ud->contents == 1)
 	{
 	  if (ud->braille_page_number_at
@@ -5981,6 +5993,8 @@ utd_finishStyle ()
 {
   PageStatus curPageStatus = checkPageStatus ();
   logMessage(LOU_LOG_DEBUG, "Begin utd_finishStyle");
+  if (style->action == contentsentry && ud->contents != 2)
+    return 1;
   if (style->bottomBoxline[0])
   {
     utd_addBoxline(style->bottomBoxline, 1);
