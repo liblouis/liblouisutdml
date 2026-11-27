@@ -179,8 +179,12 @@ finish_heading (sem_act action)
 	      ud->braille_page_string[k++];
 	}
     }
-  if (initHeadingLength == heading.headingLength)
-    /* No page numbers */
+  /* An entry without page numbers ends with an unbreakable space, which
+     doContents uses to find where the page numbers start. The contents
+     header has no page numbers and is not formatted by doContents, so it
+     does not get one; otherwise it would be printed and counted when the
+     header is centered. */
+  if (initHeadingLength == heading.headingLength && action != contentsheader)
     heading.headingChars[heading.headingLength++] = 0xa0;
   headingSize += heading.headingLength * CHARSIZE;
   headingPtr = malloc (headingSize);
