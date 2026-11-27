@@ -2941,6 +2941,9 @@ doCenterRight ()
 			if (!insertCharacters (blanks, leadingBlanks))
 			return 0;
 			
+			for (k = charactersWritten; k < translatedLength; k++)
+			  if (translatedBuffer[k] == 0xa0)	/*unbreakable space */
+			    translatedBuffer[k] = 0x20;	/*space */
 			if (!insertWidechars(
 						&translatedBuffer[charactersWritten],translatedLength - charactersWritten)
 					)
@@ -2956,6 +2959,9 @@ doCenterRight ()
 			return 0;
 		if (!insertCharacters (blanks, leadingBlanks + k))
 			return 0;
+		for (k = charactersWritten; k < translatedLength; k++)
+		  if (translatedBuffer[k] == 0xa0)	/*unbreakable space */
+		    translatedBuffer[k] = 0x20;	/*space */
 		if (!insertWidechars(&translatedBuffer[charactersWritten],
 			translatedLength - charactersWritten))
 		return 0;
